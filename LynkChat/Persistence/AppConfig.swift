@@ -1,0 +1,54 @@
+//
+//  AppConfig.swift
+//  LynkChat
+//
+//  Created by Zabir Raihan on 08/07/2024.
+//
+
+import SwiftUI
+
+class AppConfig: ObservableObject {
+    static let shared = AppConfig()
+    private init() {}
+    
+    var proxy: ScrollViewProxy?
+    @Published var hasUserScrolled = false
+    
+    @Published var showCamera = false
+    
+    // Appearance
+    @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .webview
+    @AppStorage("codeBlockTheme") var codeBlockTheme: CodeTheme = .atomOne
+    #if os(macOS)
+    @AppStorage("fontSize") var fontSize: Double = 13
+    #else
+    @AppStorage("fontSize") var fontSize: Double = 17
+    #endif
+    
+    // General
+    @AppStorage("autogenTitle") var autogenTitle: Bool = true
+    @AppStorage("enterToSend") var enterToSend: Bool = false
+    @AppStorage("hideDock") var hideDock = false
+    @AppStorage("onlyOneWindow") var onlyOneWindow = false
+    
+    // Onboarding
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
+    @AppStorage("hasUsedChatStatusFilter") var hasUsedChatStatusFilter = false
+    
+    // Quick
+    @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses extremeley concise."
+    
+    func resetFontSize() {
+        #if os(macOS)
+        fontSize = 13
+        #else
+        fontSize = 17
+        #endif
+    }
+}
+
+enum SidebarIconSize: String, Codable, CaseIterable {
+    case system
+    case medium
+    case large
+}
