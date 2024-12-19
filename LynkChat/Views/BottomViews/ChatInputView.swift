@@ -33,48 +33,24 @@ struct ChatInputView: View {
                 .padding(.bottom, 5)
             }
             
-            InputEditor(chat: chat)
-                .padding(3)
-//                .onChange(of: chat.inputManager.prompt) {
-//                    showExpandButton = chat.inputManager.prompt.contains("\n")
-//                }
+            HStack(alignment: .top) {
+                InputEditor(chat: chat)
+                    .padding(3)
+                    .onChange(of: chat.inputManager.prompt) {
+                        showExpandButton = chat.inputManager.prompt.contains("\n")
+                    }
+                
+                if showExpandButton {
+                    expandInput
+                }
+            }
             
-//            Divider()
+            //            Divider()
             
             HStack {
                 ChatInputMenu(chat: chat)
                 
-                #if os(macOS)
-                HStack {
-                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                        .toggleStyle(.button)
-                        .labelStyle(.iconOnly)
-                        .buttonStyle(.borderless)
-                        .font(.title3)
-                }
-                .padding(3)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(.background.secondary)
-                )
-                .roundedRectangleOverlay(radius: 8)
-                #else
-                Menu {
-                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                } label: {
-                    Image(systemName: "hammer.fill")
-                        .opacity(0.9)
-                }
-                .controlSize(.small)
-                .foregroundStyle(.teal)
-                .padding(6)
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(.background.secondary)
-                )
-                .fixedSize()
-                #endif
-
+                toolControls
                 
                 if horizontalSizeClass != .compact {
                     ProviderPicker(provider: $chat.config.provider, providers: providers) { provider in
@@ -98,6 +74,17 @@ struct ChatInputView: View {
                 
                 if chat.inputManager.state == .editing {
                     cancelEditing
+                } else {
+                    GroupBox {
+                        ResetContextButton {
+                            if let last = chat.currentThread.last {
+                                chat.resetContext(at: last)
+                            }
+                        }
+                        .padding(-1)
+                    }
+                    .buttonStyle(.borderless)
+                    .labelStyle(.iconOnly)
                 }
                 
                 ActionButton(isStop: chat.isReplying) {
@@ -157,6 +144,40 @@ struct ChatInputView: View {
         .transition(.symbolEffect(.appear))
         .buttonStyle(.plain)
         .keyboardShortcut(.cancelAction)
+    }
+    
+    var toolControls: some View {
+        #if os(macOS)
+        HStack {
+            ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+                .toggleStyle(.button)
+                .labelStyle(.iconOnly)
+                .buttonStyle(.borderless)
+                .font(.title3).fontWeight(.regular)
+        }
+        .padding(3)
+        .padding(.horizontal, 3)
+        .background(
+            RoundedRectangle(cornerRadius: 9)
+                .fill(.background.secondary)
+        )
+        .roundedRectangleOverlay(radius: 9)
+        #else
+        Menu {
+            ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+        } label: {
+            Image(systemName: "hammer.fill")
+                .opacity(0.9)
+        }
+        .controlSize(.small)
+        .foregroundStyle(.teal)
+        .padding(6)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(.background.secondary)
+        )
+        .fixedSize()
+        #endif
     }
     
     private func sendInput() {

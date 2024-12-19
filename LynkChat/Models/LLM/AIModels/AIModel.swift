@@ -32,6 +32,7 @@ extension AIModel {
             .init(code: "gpt-4o", name: "GPT-4o", type: .chat),
             .init(code: "chatgpt-4o-latest", name: "ChatGPT-4o-Latest", type: .chat),
             .init(code: "o1-mini", name: "o1-mini", type: .chat),
+            .init(code: "o1", name: "o1", type: .chat),
             .init(code: "o1-preview", name: "o1-preview", type: .chat),
             .init(code: "dall-e-2", name: "DALL-E-2", type: .image),
             .init(code: "dall-e-3", name: "DALL-E-3", type: .image),
@@ -52,13 +53,6 @@ extension AIModel {
             .init(code: "gemini-1.5-flash-8b-latest", name: "Gemini-1.5F-8B", type: .chat),
             .init(code: "gemini-1.5-pro-latest", name: "Gemini-1.5P", type: .chat),
             .init(code: "gemini-2.0-flash-latest", name: "Gemini-2F", type: .chat),
-        ]
-    }
-    
-    static func getVertexModels() -> [AIModel] {
-        return [
-            .init(code: "claude-3-5-haiku@20241022", name: "Claude-3.5H", type: .chat),
-            .init(code: "claude-3-5-sonnet@20240620", name: "Claude-3.5S", type: .chat),
         ]
     }
     

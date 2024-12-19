@@ -40,7 +40,7 @@ struct InputEditor: View {
                     
                     TextEditor(text: $chat.inputManager.prompt)
 
-                        .frame(maxHeight: 400)
+                        .frame(maxHeight: 370)
                         .fixedSize(horizontal: false, vertical: true)
                         .scrollContentBackground(.hidden)
                 }
