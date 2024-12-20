@@ -20,10 +20,15 @@ struct EmptyChat: View {
             
             if chat.status == .temporary {
                 Text("Temporary Chat")
-                    .font(.title2)
+                    .font(.title2).fontWeight(.bold)
+                    .foregroundStyle(.tertiary)
+                
+                Text("Click button on top right of window to save this chat")
+                    .font(.body)
                     .foregroundStyle(.tertiary)
             }
         }
+        .multilineTextAlignment(.center)
         .fullScreenBackground()
     }
 }

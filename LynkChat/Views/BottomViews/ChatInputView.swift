@@ -23,19 +23,23 @@ struct ChatInputView: View {
     var providers: [Provider]
     
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             if !chat.inputManager.dataFiles.isEmpty {
                 DataFilesView(dataFiles: chat.inputManager.dataFiles, edge: .leading) { file in
                     withAnimation {
                         chat.inputManager.dataFiles.removeAll(where: { $0 == file })
                     }
                 }
-                .padding(.bottom, 5)
+                .padding(.horizontal, 4)
+                .padding(.top, 4)
+                
+                Divider()
+//                    .padding(.vertical, -2)
             }
             
             HStack(alignment: .top) {
                 InputEditor(chat: chat)
-                    .padding(3)
+                    .padding(.horizontal, 3)
                     .onChange(of: chat.inputManager.prompt) {
                         showExpandButton = chat.inputManager.prompt.contains("\n")
                     }
@@ -45,7 +49,7 @@ struct ChatInputView: View {
                 }
             }
             
-            //            Divider()
+//            Divider()
             
             HStack {
                 ChatInputMenu(chat: chat)
@@ -75,16 +79,21 @@ struct ChatInputView: View {
                 if chat.inputManager.state == .editing {
                     cancelEditing
                 } else {
-                    GroupBox {
-                        ResetContextButton {
-                            if let last = chat.currentThread.last {
-                                chat.resetContext(at: last)
-                            }
+                    Button {
+                        if let last = chat.currentThread.last {
+                            chat.resetContext(at: last)
                         }
-                        .padding(-1)
+                    } label: {
+                        Label("Reset Context", systemImage: "eraser")
+                            .opacity(0.8)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(.background.tertiary)
+                            )
                     }
-                    .buttonStyle(.borderless)
                     .labelStyle(.iconOnly)
+                    .buttonStyle(.plain)
                 }
                 
                 ActionButton(isStop: chat.isReplying) {

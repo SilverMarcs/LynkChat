@@ -228,9 +228,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         guard forced || adjustedContext.count <= 2 else { return }
         
         if let newTitle = await TitleGenerator.generateTitle(messages: adjustedContext, provider: config.provider) {
-            withAnimation {
-                self.title = newTitle
-            }
+            self.title = newTitle
         }
     }
 

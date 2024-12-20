@@ -34,12 +34,13 @@ struct InputEditor: View {
                 ZStack(alignment: .leading) {
                     if chat.inputManager.prompt.isEmpty {
                         Text(placeHolder)
-                            .padding(.leading, 6)
+//                            .padding(.leading, 6)
+                            .padding(.leading, 1)
                             .foregroundStyle(.placeholder)
                     }
                     
                     TextEditor(text: $chat.inputManager.prompt)
-
+                        .padding(.leading, -4)
                         .frame(maxHeight: 370)
                         .fixedSize(horizontal: false, vertical: true)
                         .scrollContentBackground(.hidden)
