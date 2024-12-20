@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import TipKit
 
 struct ChatInputView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -18,9 +17,7 @@ struct ChatInputView: View {
 
     @State private var isExpanded = false
     @State private var showExpandButton = false
-    
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
+    @State private var showPickers = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -34,12 +31,12 @@ struct ChatInputView: View {
                 .padding(.top, 4)
                 
                 Divider()
-//                    .padding(.vertical, -2)
             }
             
             HStack(alignment: .top) {
                 InputEditor(chat: chat)
-                    .padding(.horizontal, 3)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 2)
                     .onChange(of: chat.inputManager.prompt) {
                         showExpandButton = chat.inputManager.prompt.contains("\n")
                     }
@@ -49,29 +46,11 @@ struct ChatInputView: View {
                 }
             }
             
-//            Divider()
-            
             HStack {
                 ChatInputMenu(chat: chat)
                 
-                toolControls
-                
                 if horizontalSizeClass != .compact {
-                    ProviderPicker(provider: $chat.config.provider, providers: providers) { provider in
-                        chat.config.model = provider.chatModel
-                    }
-                        .labelsHidden()
-                        .buttonStyle(.borderless)
-                        .fixedSize()
-                        .opacity(0.7)
-                        .padding(.trailing, -5)
-                    
-                    ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels)
-                        .labelsHidden()
-                        .buttonStyle(.borderless)
-                        .fixedSize()
-                        .opacity(0.7)
-                        .textCase(.uppercase)
+                    quickControls
                 }
                 
                 Spacer()
@@ -79,21 +58,8 @@ struct ChatInputView: View {
                 if chat.inputManager.state == .editing {
                     cancelEditing
                 } else {
-                    Button {
-                        if let last = chat.currentThread.last {
-                            chat.resetContext(at: last)
-                        }
-                    } label: {
-                        Label("Reset Context", systemImage: "eraser")
-                            .opacity(0.8)
-                            .padding(4)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(.background.tertiary)
-                            )
-                    }
-                    .labelStyle(.iconOnly)
-                    .buttonStyle(.plain)
+//                    resetContext
+                    // TODO: Dictation here
                 }
                 
                 ActionButton(isStop: chat.isReplying) {
@@ -104,22 +70,6 @@ struct ChatInputView: View {
         .padding(5)
         .roundedRectangleOverlay(radius: radius)
         .modifier(CommonInputStyling())
-    }
-    
-    var radius: CGFloat {
-        #if os(macOS)
-        16
-        #else
-        24
-        #endif
-    }
-    
-    var truncateLimit: Int {
-        #if os(macOS)
-        130
-        #else
-        35
-        #endif
     }
         
     var expandInput: some View {
@@ -154,39 +104,22 @@ struct ChatInputView: View {
         .buttonStyle(.plain)
         .keyboardShortcut(.cancelAction)
     }
-    
-    var toolControls: some View {
-        #if os(macOS)
-        HStack {
-            ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                .toggleStyle(.button)
-                .labelStyle(.iconOnly)
-                .buttonStyle(.borderless)
-                .font(.title3).fontWeight(.regular)
+
+    private var quickControls: some View {
+        Button(action: { showPickers.toggle() }) {
+            Text("Config")
+                .padding(4)
+                .padding(.horizontal, 2)
+                .background(
+                    RoundedRectangle(cornerRadius: 6, style: .circular)
+                        .fill(.accent.quinary)
+                )
         }
-        .padding(3)
-        .padding(.horizontal, 3)
-        .background(
-            RoundedRectangle(cornerRadius: 9)
-                .fill(.background.secondary)
-        )
-        .roundedRectangleOverlay(radius: 9)
-        #else
-        Menu {
-            ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-        } label: {
-            Image(systemName: "hammer.fill")
-                .opacity(0.9)
+        .buttonStyle(.link)
+        .opacity(0.7)
+        .popover(isPresented: $showPickers) {
+            InputModelPickers(chat: chat)
         }
-        .controlSize(.small)
-        .foregroundStyle(.teal)
-        .padding(6)
-        .background(
-            RoundedRectangle(cornerRadius: 15)
-                .fill(.background.secondary)
-        )
-        .fixedSize()
-        #endif
     }
     
     private func sendInput() {
@@ -197,6 +130,14 @@ struct ChatInputView: View {
         Task { @MainActor in
             await chat.sendInput()
         }
+    }
+    
+    var radius: CGFloat {
+        #if os(macOS)
+        16
+        #else
+        24
+        #endif
     }
 }
 

@@ -46,10 +46,10 @@ import PhotosUI
     }
     
     func setupEditing(message: MessageGroup) {
-        Scroller.scroll(to: .top, of: message, animated: false)
-        
+//        Scroller.scroll(to: .top, of: message, animated: false)
         withAnimation {
             state = .editing
+            Scroller.scroll(to: .top, of: message, animated: true)
         }
         
         tempNormalPrompt = normalPrompt
