@@ -56,6 +56,11 @@ struct ChatList: View {
                 .onDelete(perform: deleteItems)
             }
         }
+        .navigationTitle("Chats")
+        .toolbar {
+            toolbar
+        }
+        #if os(macOS)
         .contextMenu(forSelectionType: Chat.self) { item in
             
         } primaryAction: { items in
@@ -63,11 +68,6 @@ struct ChatList: View {
                 openWindow(value: item.id)
             }
         }
-        .navigationTitle("Chats")
-        .toolbar {
-            toolbar
-        }
-        #if os(macOS)
         .task {
             if let first = chats.first, chatVM.selections.isEmpty {
                 chatVM.selections = [first]
