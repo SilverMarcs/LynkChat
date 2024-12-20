@@ -37,7 +37,7 @@ struct AboutSettings: View {
             
             Section("Connect") {
                 LabeledContent{
-                    Link("Company Website", destination: URL(string: "https://github.com/SilverMarcs/LynkChat")!)
+                    Link("Company Website", destination: URL(string: "https://LynkSphere.com")!)
                 } label: {
                     Text("\(Image(systemName: "link")) Site")
                 }
