@@ -16,6 +16,7 @@ struct UserMessage: View {
 
     @State var isExpanded: Bool = false
     @State var showingTextSelection = false
+//    @State private var height: CGFloat = 25
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
@@ -32,6 +33,18 @@ struct UserMessage: View {
                         .lineSpacing(2)
                         .padding(5)
                         #endif
+
+                    
+//                    ResizingTextView(text: displayedText, height: $height)
+//                        .lineSpacing(2)
+//                        .frame(height: message.activeMessage.height, alignment: .top)
+//                        .onChange(of: height) {
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                                if height > 0 {
+//                                    message.activeMessage.height = height
+//                                }
+//                            }
+//                        }
                     
                     if shouldShowMoreButton {
                         Button {
