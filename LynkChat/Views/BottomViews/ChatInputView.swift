@@ -88,17 +88,20 @@ struct ChatInputView: View {
     
     @ViewBuilder
     var cancelEditing: some View {
-        Text("Editing")
-            .foregroundStyle(.secondary)
-        
         Button {
             withAnimation {
                 chat.inputManager.reset()
             }
         } label: {
-            Image(systemName: "xmark.circle.fill")
-                .font(.title).fontWeight(.semibold)
+            Text("Cancel Editing")
+                .padding(4)
+                .padding(.horizontal, 2)
+                .background(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(.red.quinary)
+                )
                 .foregroundStyle(.red)
+                .opacity(0.8)
         }
         .transition(.symbolEffect(.appear))
         .buttonStyle(.plain)
