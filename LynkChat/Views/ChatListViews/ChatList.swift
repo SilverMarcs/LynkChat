@@ -44,7 +44,7 @@ struct ChatList: View {
             if isSearching && chats.isEmpty {
                 ContentUnavailableView.search
             } else {
-                ForEach(chats) { chat in
+                ForEach(chats, id: \.self) { chat in
                     ChatListRow(chat: chat)
                         .tag(chat)
                         .deleteDisabled(chat.status == .starred)
@@ -54,6 +54,13 @@ struct ChatList: View {
                         #endif
                 }
                 .onDelete(perform: deleteItems)
+            }
+        }
+        .contextMenu(forSelectionType: Chat.self) { item in
+            
+        } primaryAction: { items in
+            for item in items {
+                openWindow(value: item.id)
             }
         }
         .navigationTitle("Chats")

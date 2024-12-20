@@ -115,7 +115,9 @@ struct ChatInputView: View {
                         .fill(.accent.quinary)
                 )
         }
+        #if os(macOS)
         .buttonStyle(.link)
+        #endif
         .opacity(0.7)
         .popover(isPresented: $showPickers) {
             InputModelPickers(chat: chat)
