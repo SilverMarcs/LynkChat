@@ -23,13 +23,12 @@ struct InputModelPickers: View {
             ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels)
             
             LabeledContent {
-//                ControlGroup {
-                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                        .toggleStyle(.button)
-                        .labelStyle(.iconOnly)
-                        .buttonStyle(.borderless)
-//                        .font(.title3).fontWeight(.regular)
-//                }
+//                ControlGroup {}
+                ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+                    .toggleStyle(.button)
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.borderless)
+
             } label: {
                 Text("Plugins")
             }

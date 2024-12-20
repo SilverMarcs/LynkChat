@@ -21,27 +21,24 @@ struct BedrockService: AIService {
     typealias ConvertedType = ClaudeMessage
     
     static func convert(conversation: Message) -> ClaudeMessage {
-        var finalContent = ""
+        var contents = [ClaudeMessage.Content]()
         
         let contentItems = FileHelper.processDataFiles(conversation.dataFiles, messageId: conversation.id.uuidString, role: conversation.role)
         for item in contentItems {
             switch item {
             case .text(let text):
-                finalContent += text
+                contents.append(ClaudeMessage.Content(type: "text", text: text))
             default: break
             }
         }
         
-        finalContent += conversation.content
+        if !conversation.content.isEmpty {
+            contents.append(ClaudeMessage.Content(type: "text", text: conversation.content))
+        }
         
         return ClaudeMessage(
             role: conversation.role.rawValue,
-            content: [
-                ClaudeMessage.Content(
-                    type: "text",
-                    text: finalContent
-                )
-            ]
+            content: contents
         )
     }
     

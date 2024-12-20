@@ -23,9 +23,13 @@ struct ChatDetail: View {
         ScrollViewReader { proxy in
             content
             .safeAreaInset(edge: .bottom, spacing: 0) {
+                #if os(macOS)
                 if chat.status != .quick {
                     ChatInputView(chat: chat)
                 }
+                #else
+                ChatInputViewOld(chat: chat)
+                #endif
             }
             .toolbar {
                 ChatToolbar(chat: chat)
