@@ -126,6 +126,9 @@ struct ChatDetail: View {
                 }
                 
                 Color.clear
+                    #if os(macOS)
+                    .listRowInsets(.init(top: -5, leading: 0, bottom: -5, trailing: 0))
+                    #endif
                     .frame(height: 1)
                     .transaction { $0.animation = nil }
                     .id(String.bottomID)
@@ -144,6 +147,9 @@ struct ChatDetail: View {
     var resizingColor: some View {
         Color.clear
             .frame(height: colorViewHeight)
+            #if os(macOS)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            #endif
             .listRowSeparator(.hidden)
             .onChange(of: chat.isReplying) {
                 if chat.isReplying {
