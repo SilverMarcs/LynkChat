@@ -22,15 +22,17 @@ struct InputModelPickers: View {
             
             ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels)
             
-            LabeledContent {
-//                ControlGroup {}
-                ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                    .toggleStyle(.button)
-                    .labelStyle(.iconOnly)
-                    .buttonStyle(.borderless)
-
-            } label: {
-                Text("Plugins")
+            if chat.config.provider.type != .bedrock {
+                LabeledContent {
+                    //                ControlGroup {}
+                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+                        .toggleStyle(.button)
+                        .labelStyle(.iconOnly)
+                        .buttonStyle(.borderless)
+                    
+                } label: {
+                    Text("Plugins")
+                }
             }
         }
         .padding(-5)

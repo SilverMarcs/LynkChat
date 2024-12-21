@@ -23,15 +23,26 @@ struct BedrockService: AIService {
     static func convert(conversation: Message) -> ClaudeMessage {
         var contents = [ClaudeMessage.Content]()
         
+        // Process data files (images and other content)
         let contentItems = FileHelper.processDataFiles(conversation.dataFiles, messageId: conversation.id.uuidString, role: conversation.role)
         for item in contentItems {
             switch item {
             case .text(let text):
                 contents.append(ClaudeMessage.Content(type: "text", text: text))
-            default: break
+            case .image(let mimeType, let imageData):
+                // Convert image data to base64
+                let base64String = imageData.base64EncodedString()
+                
+                // Create image content with source
+                contents.append(ClaudeMessage.Content(
+                    type: "image",
+                    text: nil,
+                    source: base64String
+                ))
             }
         }
         
+        // Add text content if present
         if !conversation.content.isEmpty {
             contents.append(ClaudeMessage.Content(type: "text", text: conversation.content))
         }
@@ -251,6 +262,37 @@ struct ClaudeMessage: Codable {
     struct Content: Codable {
         let type: String
         let text: String?
+        let source: ImageSource?
+        
+        // Custom initializer for text content
+        init(type: String, text: String? = nil) {
+            self.type = type
+            self.text = text
+            self.source = nil
+        }
+        
+        // Custom initializer for image content
+        init(type: String, text: String? = nil, source: String) {
+            self.type = type
+            self.text = text
+            self.source = ImageSource(
+                type: "base64",
+                mediaType: "image/jpeg", // Adjust based on your image type
+                data: source
+            )
+        }
+        
+        struct ImageSource: Codable {
+            let type: String
+            let mediaType: String
+            let data: String
+            
+            enum CodingKeys: String, CodingKey {
+                case type
+                case mediaType = "media_type"
+                case data
+            }
+        }
     }
 }
 
