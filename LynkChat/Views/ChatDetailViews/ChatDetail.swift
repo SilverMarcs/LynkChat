@@ -45,6 +45,16 @@ struct ChatDetail: View {
                 }
             }
             .toolbarTitleDisplayMode(.inline)
+//            .onChange(of: chat.inputManager.prompt) {
+//                if chat.inputManager.state == .normal {
+//                    Scroller.scrollToBottom(animated: false)
+//                }
+//            }
+//            .onChange(of: chat.inputManager.dataFiles) {
+//                if chat.inputManager.state == .normal {
+//                    Scroller.scrollToBottom(animated: false)
+//                }
+//            }
             #if os(macOS)
             .onAppear {
                 if chatVM.searchText.isEmpty {

@@ -29,7 +29,7 @@ struct ChatInputViewOld: View {
                 ChatInputMenu(chat: chat)
             }
             
-            HStack(alignment: .center) {
+            HStack(alignment: .bottom) {
                 VStack(alignment: .leading) {
                     #if os(macOS)
                     TipView(PlusButtonTip())
@@ -50,7 +50,7 @@ struct ChatInputViewOld: View {
                     }
                     
                     InputEditor(chat: chat)
-                        .frame(minHeight: 15)
+                        .frame(minHeight: 18)
                         .padding(.leading, 2)
                         .onChange(of: chat.inputManager.prompt) {
                             showExpandButton = chat.inputManager.prompt.contains("\n")
@@ -69,13 +69,10 @@ struct ChatInputViewOld: View {
                     ActionButton(isStop: chat.isReplying) {
                         chat.isReplying ? chat.stopStreaming() : sendInput()
                     }
-                    .if(showExpandButton) {
-                        $0.padding(2)
-                    }
                 }
             }
             .padding(2)
-            .roundedRectangleOverlay(radius: 15)
+            .roundedRectangleOverlay(radius: 14)
         }
         .modifier(CommonInputStyling())
     }

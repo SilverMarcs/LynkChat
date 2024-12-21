@@ -19,8 +19,8 @@ struct ImageViewer: View {
                 .aspectRatio(contentMode: .fill)
 //                .frame(width: 125, height: 48)
                 .frame(width: 125, height: 47)
-                .roundedRectangleOverlay(radius: 6)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
+                .roundedRectangleOverlay(radius: 5)
+                .clipShape(RoundedRectangle(cornerRadius: 5))
         } else {
             Text("Image Unable to Load")
                 .frame(width: 125, height: 47)
