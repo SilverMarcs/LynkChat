@@ -13,6 +13,7 @@ struct ChatWindow: Scene {
         Window("Chats", id: WindowID.chats) {
             ChatContentView()
         }
+        .defaultSize(.init(width: 1200, height: 900))
         .commands {
             ChatCommands()
         }
