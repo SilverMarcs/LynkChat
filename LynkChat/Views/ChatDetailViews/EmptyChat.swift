@@ -18,6 +18,10 @@ struct EmptyChat: View {
                 .frame(width: 100, height: 100)
                 .foregroundStyle(.quaternary)
             
+            InputModelPickers(chat: chat)
+                .scrollContentBackground(.hidden)
+                .fixedSize()
+            
             if chat.status == .temporary {
                 Text("Temporary Chat")
                     .font(.title2).fontWeight(.bold)

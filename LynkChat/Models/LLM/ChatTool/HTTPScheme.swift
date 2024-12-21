@@ -7,7 +7,9 @@
 
 import Foundation
 
-enum HTTPScheme: String, Codable, CaseIterable {
+enum HTTPScheme: String, Codable, CaseIterable, Hashable, Identifiable {
+    var id: String { rawValue }
+    
     case http
     case https
 }

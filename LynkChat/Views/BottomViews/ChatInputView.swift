@@ -35,8 +35,8 @@ struct ChatInputView: View {
             
             HStack(alignment: .top) {
                 InputEditor(chat: chat)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 2)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 3)
                     .onChange(of: chat.inputManager.prompt) {
                         showExpandButton = chat.inputManager.prompt.contains("\n")
                     }
@@ -67,7 +67,7 @@ struct ChatInputView: View {
                 }
             }
         }
-        .padding(5)
+        .padding(4)
         .roundedRectangleOverlay(radius: radius)
         .modifier(CommonInputStyling())
     }

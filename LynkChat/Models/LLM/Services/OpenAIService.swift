@@ -13,6 +13,7 @@ struct OpenAIService: AIService {
     typealias ConvertedType = ChatQuery.ChatCompletionMessageParam
     
     static func refreshModels(provider: Provider) async -> [GenericModel] {
+//        print("hi")
         let service = getService(provider: provider)
         
         do {

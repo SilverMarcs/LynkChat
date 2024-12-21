@@ -15,6 +15,8 @@
 		080A18792D12241C0081C6B1 /* RegularProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A18782D12241C0081C6B1 /* RegularProviderHost.swift */; };
 		080A187B2D1224300081C6B1 /* BedrockProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */; };
 		080A187D2D1402DA0081C6B1 /* ChatInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187C2D1402DA0081C6B1 /* ChatInputView.swift */; };
+		080E3FA82D1699EC00F2840F /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 080E3FA72D1699EC00F2840F /* OpenAI */; };
+		080E3FAB2D16D55B00F2840F /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 080E3FAA2D16D55B00F2840F /* OpenAI */; };
 		080E70E82CDF1BC100A949C9 /* Tips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70E72CDF1BC100A949C9 /* Tips.swift */; };
 		080E70EC2CDF380500A949C9 /* InspectorTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70EB2CDF380500A949C9 /* InspectorTab.swift */; };
 		080E70EE2CDF498F00A949C9 /* ChatStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70ED2CDF498F00A949C9 /* ChatStatus.swift */; };
@@ -52,8 +54,6 @@
 		082F09ED2CB3668800B7860A /* ModelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082F09EC2CB3668800B7860A /* ModelPicker.swift */; };
 		0834E7792C719C00007CB294 /* DataFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0834E7782C719C00007CB294 /* DataFileView.swift */; };
 		0834E77B2C71A42F007CB294 /* TypedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0834E77A2C71A42F007CB294 /* TypedData.swift */; };
-		0839A92E2D15ADB800564429 /* AWSBedrock in Frameworks */ = {isa = PBXBuildFile; productRef = 0839A92D2D15ADB800564429 /* AWSBedrock */; };
-		0839A9302D15ADB800564429 /* AWSBedrockRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 0839A92F2D15ADB800564429 /* AWSBedrockRuntime */; };
 		08436F222CDE9182007A160F /* Acknowledgement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08436F212CDE9182007A160F /* Acknowledgement.swift */; };
 		08436F2C2CDEAB3B007A160F /* ListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08436F2B2CDEAB3B007A160F /* ListState.swift */; };
 		08436F2E2CDF07C2007A160F /* FocusedField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08436F2D2CDF07C2007A160F /* FocusedField.swift */; };
@@ -80,7 +80,6 @@
 		085910CA2C4F7A720086E493 /* ImageVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085910C92C4F7A720086E493 /* ImageVM.swift */; };
 		085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */; };
 		086346AB2CE78078006E5927 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 086346AA2CE78078006E5927 /* SwiftMarkdownView */; };
-		086346AE2CE7808B006E5927 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 086346AD2CE7808B006E5927 /* OpenAI */; };
 		086346B12CE780B6006E5927 /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = 086346B02CE780B6006E5927 /* SwiftAnthropic */; };
 		0865E0962CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */; };
 		0867741C2CE682C700FF2A3C /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 0867741B2CE682C700FF2A3C /* OpenAI */; };
@@ -155,8 +154,6 @@
 		08B5D7B82C77A64000D1F100 /* ChatWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B5D7B72C77A64000D1F100 /* ChatWindow.swift */; platformFilters = (macos, ); };
 		08B82C1D2C74EA9400DC0183 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B82C1C2C74EA9400DC0183 /* ImageViewer.swift */; };
 		08B82C1F2C74EAFD00DC0183 /* FileViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B82C1E2C74EAFD00DC0183 /* FileViewer.swift */; };
-		08B831E52D15A73F00083486 /* AWSBedrock in Frameworks */ = {isa = PBXBuildFile; productRef = 08B831E42D15A73F00083486 /* AWSBedrock */; };
-		08B831E72D15A73F00083486 /* AWSBedrockRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 08B831E62D15A73F00083486 /* AWSBedrockRuntime */; };
 		08B8DE132C97F3550041A690 /* MDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B8DE122C97F3550041A690 /* MDView.swift */; };
 		08B8DE1F2C97F3D10041A690 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B8DE1E2C97F3D10041A690 /* AppConfig.swift */; };
 		08B8DE212C97F3E10041A690 /* ChatConfigDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B8DE202C97F3E10041A690 /* ChatConfigDefaults.swift */; };
@@ -191,12 +188,6 @@
 		08CA42C62CF1F3FE0073BB01 /* NavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CA42C52CF1F3FE0073BB01 /* NavigationButtons.swift */; };
 		08CD009B2CBA20E900A96425 /* PasteHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD009A2CBA20E900A96425 /* PasteHandler.swift */; };
 		08CF5B892C68980B0079D5EE /* HighlightableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CF5B882C68980B0079D5EE /* HighlightableTextView.swift */; };
-		08D50D0E2D164A1300D58D4E /* AWSBedrock in Frameworks */ = {isa = PBXBuildFile; productRef = 08D50D0D2D164A1300D58D4E /* AWSBedrock */; };
-		08D50D102D164A1300D58D4E /* AWSBedrockRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 08D50D0F2D164A1300D58D4E /* AWSBedrockRuntime */; };
-		08D50D132D164D2A00D58D4E /* AWSBedrock in Frameworks */ = {isa = PBXBuildFile; productRef = 08D50D122D164D2A00D58D4E /* AWSBedrock */; };
-		08D50D152D164D2A00D58D4E /* AWSBedrockRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 08D50D142D164D2A00D58D4E /* AWSBedrockRuntime */; };
-		08D50D182D16504A00D58D4E /* AWSBedrock in Frameworks */ = {isa = PBXBuildFile; productRef = 08D50D172D16504A00D58D4E /* AWSBedrock */; };
-		08D50D1A2D16504A00D58D4E /* AWSBedrockRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 08D50D192D16504A00D58D4E /* AWSBedrockRuntime */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08D89AFC2D15882900532024 /* InputModelPickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D89AFB2D15882900532024 /* InputModelPickers.swift */; };
 		08D913EC2CD9CAF7002E4E53 /* AIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D913EB2CD9CAF7002E4E53 /* AIModel.swift */; };
@@ -433,28 +424,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08B831E72D15A73F00083486 /* AWSBedrockRuntime in Frameworks */,
-				08D50D132D164D2A00D58D4E /* AWSBedrock in Frameworks */,
 				082AA6F62CE683C40088A8B2 /* OpenAI in Frameworks */,
 				0823550D2CDBB74900388273 /* GoogleGenerativeAI in Frameworks */,
+				080E3FAB2D16D55B00F2840F /* OpenAI in Frameworks */,
 				089FDB642D0A9FB50005CD26 /* GoogleGenerativeAI in Frameworks */,
 				082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */,
 				089FDB672D0AA0010005CD26 /* GoogleGenerativeAI in Frameworks */,
 				089EFA3B2D0D08C000FF032C /* KeyboardShortcuts in Frameworks */,
-				08D50D0E2D164A1300D58D4E /* AWSBedrock in Frameworks */,
-				08D50D102D164A1300D58D4E /* AWSBedrockRuntime in Frameworks */,
-				08B831E52D15A73F00083486 /* AWSBedrock in Frameworks */,
-				0839A92E2D15ADB800564429 /* AWSBedrock in Frameworks */,
+				080E3FA82D1699EC00F2840F /* OpenAI in Frameworks */,
 				086346B12CE780B6006E5927 /* SwiftAnthropic in Frameworks */,
-				0839A9302D15ADB800564429 /* AWSBedrockRuntime in Frameworks */,
-				08D50D1A2D16504A00D58D4E /* AWSBedrockRuntime in Frameworks */,
 				08DB150B2CDC5B2200DC5B90 /* OpenAI in Frameworks */,
 				086346AB2CE78078006E5927 /* SwiftMarkdownView in Frameworks */,
 				0823551E2CDBC94D00388273 /* SwiftAnthropic in Frameworks */,
 				0867741C2CE682C700FF2A3C /* OpenAI in Frameworks */,
-				08D50D152D164D2A00D58D4E /* AWSBedrockRuntime in Frameworks */,
-				086346AE2CE7808B006E5927 /* OpenAI in Frameworks */,
-				08D50D182D16504A00D58D4E /* AWSBedrock in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -969,21 +951,12 @@
 				0867741B2CE682C700FF2A3C /* OpenAI */,
 				082AA6F52CE683C40088A8B2 /* OpenAI */,
 				086346AA2CE78078006E5927 /* SwiftMarkdownView */,
-				086346AD2CE7808B006E5927 /* OpenAI */,
 				086346B02CE780B6006E5927 /* SwiftAnthropic */,
 				089FDB632D0A9FB50005CD26 /* GoogleGenerativeAI */,
 				089FDB662D0AA0010005CD26 /* GoogleGenerativeAI */,
 				089EFA3A2D0D08C000FF032C /* KeyboardShortcuts */,
-				08B831E42D15A73F00083486 /* AWSBedrock */,
-				08B831E62D15A73F00083486 /* AWSBedrockRuntime */,
-				0839A92D2D15ADB800564429 /* AWSBedrock */,
-				0839A92F2D15ADB800564429 /* AWSBedrockRuntime */,
-				08D50D0D2D164A1300D58D4E /* AWSBedrock */,
-				08D50D0F2D164A1300D58D4E /* AWSBedrockRuntime */,
-				08D50D122D164D2A00D58D4E /* AWSBedrock */,
-				08D50D142D164D2A00D58D4E /* AWSBedrockRuntime */,
-				08D50D172D16504A00D58D4E /* AWSBedrock */,
-				08D50D192D16504A00D58D4E /* AWSBedrockRuntime */,
+				080E3FA72D1699EC00F2840F /* OpenAI */,
+				080E3FAA2D16D55B00F2840F /* OpenAI */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -1015,11 +988,10 @@
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
 				086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
-				086346AC2CE7808B006E5927 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				086346AF2CE780B6006E5927 /* XCRemoteSwiftPackageReference "SwiftAnthropic" */,
 				089FDB652D0AA0010005CD26 /* XCRemoteSwiftPackageReference "GoogleGenerativeAI" */,
 				089EFA392D0D08C000FF032C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
-				08D50D162D16504A00D58D4E /* XCRemoteSwiftPackageReference "aws-sdk-swift" */,
+				080E3FA92D16D55B00F2840F /* XCRemoteSwiftPackageReference "OpenAI" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -1485,17 +1457,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */ = {
+		080E3FA92D16D55B00F2840F /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SilverMarcs/SwiftMarkdownView";
+			repositoryURL = "https://github.com/SilverMarcs/OpenAI";
 			requirement = {
 				branch = main;
 				kind = branch;
 			};
 		};
-		086346AC2CE7808B006E5927 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+		086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SilverMarcs/OpenAI";
+			repositoryURL = "https://github.com/SilverMarcs/SwiftMarkdownView";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -1525,17 +1497,18 @@
 				kind = branch;
 			};
 		};
-		08D50D162D16504A00D58D4E /* XCRemoteSwiftPackageReference "aws-sdk-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SilverMarcs/aws-sdk-swift";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		080E3FA72D1699EC00F2840F /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OpenAI;
+		};
+		080E3FAA2D16D55B00F2840F /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 080E3FA92D16D55B00F2840F /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
 		0823550C2CDBB74900388273 /* GoogleGenerativeAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GoogleGenerativeAI;
@@ -1552,23 +1525,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = OpenAI;
 		};
-		0839A92D2D15ADB800564429 /* AWSBedrock */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AWSBedrock;
-		};
-		0839A92F2D15ADB800564429 /* AWSBedrockRuntime */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AWSBedrockRuntime;
-		};
 		086346AA2CE78078006E5927 /* SwiftMarkdownView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */;
 			productName = SwiftMarkdownView;
-		};
-		086346AD2CE7808B006E5927 /* OpenAI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 086346AC2CE7808B006E5927 /* XCRemoteSwiftPackageReference "OpenAI" */;
-			productName = OpenAI;
 		};
 		086346B02CE780B6006E5927 /* SwiftAnthropic */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1592,40 +1552,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 089FDB652D0AA0010005CD26 /* XCRemoteSwiftPackageReference "GoogleGenerativeAI" */;
 			productName = GoogleGenerativeAI;
-		};
-		08B831E42D15A73F00083486 /* AWSBedrock */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AWSBedrock;
-		};
-		08B831E62D15A73F00083486 /* AWSBedrockRuntime */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AWSBedrockRuntime;
-		};
-		08D50D0D2D164A1300D58D4E /* AWSBedrock */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AWSBedrock;
-		};
-		08D50D0F2D164A1300D58D4E /* AWSBedrockRuntime */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AWSBedrockRuntime;
-		};
-		08D50D122D164D2A00D58D4E /* AWSBedrock */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AWSBedrock;
-		};
-		08D50D142D164D2A00D58D4E /* AWSBedrockRuntime */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AWSBedrockRuntime;
-		};
-		08D50D172D16504A00D58D4E /* AWSBedrock */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 08D50D162D16504A00D58D4E /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
-			productName = AWSBedrock;
-		};
-		08D50D192D16504A00D58D4E /* AWSBedrockRuntime */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 08D50D162D16504A00D58D4E /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
-			productName = AWSBedrockRuntime;
 		};
 		08DB150A2CDC5B2200DC5B90 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;

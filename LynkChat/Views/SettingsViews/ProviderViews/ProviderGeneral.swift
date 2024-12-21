@@ -47,6 +47,13 @@ struct ProviderGeneral: View {
 
             if provider.type == .custom {
                 Section("Customisation") {
+                    Picker("Scheme", selection: $provider.scheme) {
+                        ForEach(HTTPScheme.allCases) { scheme in
+                            Text(scheme.rawValue.uppercased())
+                                .tag(scheme)
+                        }
+                    }
+                    
                     HStack {
                         Text("Accent Color")
                         

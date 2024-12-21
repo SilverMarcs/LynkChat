@@ -144,8 +144,8 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
             ClaudeService.self
         case .google:
             GoogleService.self
-        case .bedrock:
-            BedrockService.self
+//        case .bedrock:
+//            BedrockService.self
         default:
             OpenAIService.self
         }

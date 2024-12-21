@@ -25,7 +25,8 @@ struct ChatDetail: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 #if os(macOS)
                 if chat.status != .quick {
-                    ChatInputView(chat: chat)
+//                    ChatInputView(chat: chat)
+                    ChatInputViewOld(chat: chat)
                 }
                 #else
                 ChatInputViewOld(chat: chat)

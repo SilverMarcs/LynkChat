@@ -16,6 +16,8 @@ struct ChatInputViewOld: View {
 
     @State private var isExpanded = false
     @State private var showExpandButton = false
+//    @State private var showPickers = false
+//    @State private var showPQuickControls = false
     
     var body: some View {
         HStack(alignment: .bottom) {
@@ -27,8 +29,8 @@ struct ChatInputViewOld: View {
                 ChatInputMenu(chat: chat)
             }
             
-            HStack(alignment: .center, spacing: 0) {
-                VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading) {
                     #if os(macOS)
                     TipView(PlusButtonTip())
                         .frame(height: 30)
@@ -41,10 +43,15 @@ struct ChatInputViewOld: View {
                                 chat.inputManager.dataFiles.removeAll(where: { $0 == file })
                             }
                         }
-                        .padding(.bottom, 5)
+                        .padding(2)
+                        .padding(.bottom, -2)
+                        
+//                        Divider()
                     }
                     
                     InputEditor(chat: chat)
+                        .frame(minHeight: 15)
+                        .padding(.leading, 2)
                         .onChange(of: chat.inputManager.prompt) {
                             showExpandButton = chat.inputManager.prompt.contains("\n")
                         }
@@ -52,7 +59,7 @@ struct ChatInputViewOld: View {
                 .padding(4)
                 
                 VStack {
-                    if showExpandButton || isExpanded {
+                    if showExpandButton || isExpanded || !chat.inputManager.dataFiles.isEmpty {
                         expandInput
                             .padding(3)
                         
@@ -68,7 +75,7 @@ struct ChatInputViewOld: View {
                 }
             }
             .padding(2)
-            .roundedRectangleOverlay()
+            .roundedRectangleOverlay(radius: 15)
         }
         .modifier(CommonInputStyling())
     }
@@ -113,6 +120,23 @@ struct ChatInputViewOld: View {
         .buttonStyle(.plain)
         .keyboardShortcut(.cancelAction)
     }
+    
+//    private var quickControls: some View {
+//        Button(action: { showPickers.toggle() }) {
+//            Image(systemName: "gearshape")
+//                .font(.system(size: 14, weight: .semibold))
+//                .padding(5)
+//                .background(
+//                    RoundedRectangle(cornerRadius: 13, style: .continuous)
+//                        .fill(.quaternary)
+//                )
+//        }
+//        .buttonStyle(.plain)
+//        .opacity(0.7)
+//        .popover(isPresented: $showPickers) {
+//            InputModelPickers(chat: chat)
+//        }
+//    }
     
     private func sendInput() {
         #if os(iOS)
