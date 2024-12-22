@@ -42,11 +42,14 @@ struct MDView: View {
                 .font(.system(size: config.fontSize))
                 
         case .webview:
-            SwiftMarkdownView(content, calculatedHeight: calculatedHeight)
-                .markdownBaseURL("LynkChat Web Content")
-                .markdownHighlightString(searchText)
-                .markdownFontSize(CGFloat(config.fontSize))
-                .codeBlockTheme(config.codeBlockTheme.toCodeBlockTheme())
+            SwiftMarkdownView(
+                content,
+                calculatedHeight: calculatedHeight,
+                fontSize: CGFloat(config.fontSize),
+                highlightString: searchText,
+                baseURL: "LynkChat Web Content",
+                codeBlockTheme: config.codeBlockTheme.toCodeBlockTheme()
+            )
         }
     }
 }
