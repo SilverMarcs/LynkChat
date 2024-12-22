@@ -32,6 +32,6 @@ struct CommonInputStyling: ViewModifier {
 }
 
 #Preview {
-    ChatInputView(chat: .mockChat)
+    MultiLineInputView(chat: .mockChat)
         .modifier(CommonInputStyling())
 }

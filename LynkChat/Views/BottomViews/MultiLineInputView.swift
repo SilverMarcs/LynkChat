@@ -1,5 +1,5 @@
 //
-//  ChatInputView.swift
+//  MultiLineInputView.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 19/12/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct ChatInputView: View {
+struct MultiLineInputView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @ObservedObject var config = AppConfig.shared

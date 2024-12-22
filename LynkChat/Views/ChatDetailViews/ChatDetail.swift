@@ -25,11 +25,11 @@ struct ChatDetail: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 #if os(macOS)
                 if chat.status != .quick {
-//                    ChatInputView(chat: chat)
-                    ChatInputViewOld(chat: chat)
+//                    MultiLineInputView(chat: chat)
+                    SingleLineInputView(chat: chat)
                 }
                 #else
-                ChatInputViewOld(chat: chat)
+                SingleLineInputView(chat: chat)
                 #endif
             }
             .toolbar {
