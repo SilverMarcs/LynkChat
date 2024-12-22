@@ -51,8 +51,6 @@ struct ChatToolbar: ToolbarContent {
         }
         
         ToolbarItemGroup(placement: .keyboard) {
-            ModelSwitchButtons(chat: chat)
-            
             Section {
                 Button("Edit Last Message") {
                     guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }

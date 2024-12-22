@@ -46,7 +46,8 @@ struct SingleLineInputView: View {
                         }
 
                         InputEditor(chat: chat)
-                            .padding(.leading, 2)
+                            .frame(minHeight: 16)
+                            .padding(.leading, 3)
                         
                         Spacer(minLength: 0)
                     }
