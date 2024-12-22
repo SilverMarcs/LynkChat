@@ -15,6 +15,7 @@
 		080A18792D12241C0081C6B1 /* RegularProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A18782D12241C0081C6B1 /* RegularProviderHost.swift */; };
 		080A187B2D1224300081C6B1 /* BedrockProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */; };
 		080A187D2D1402DA0081C6B1 /* MultiLineInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187C2D1402DA0081C6B1 /* MultiLineInputView.swift */; };
+		080E0F752D18593200DCA9E3 /* ToolsController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E0F742D18593200DCA9E3 /* ToolsController2.swift */; };
 		080E3FA82D1699EC00F2840F /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 080E3FA72D1699EC00F2840F /* OpenAI */; };
 		080E3FAB2D16D55B00F2840F /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 080E3FAA2D16D55B00F2840F /* OpenAI */; };
 		080E70E82CDF1BC100A949C9 /* Tips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70E72CDF1BC100A949C9 /* Tips.swift */; };
@@ -226,6 +227,7 @@
 		080A18782D12241C0081C6B1 /* RegularProviderHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularProviderHost.swift; sourceTree = "<group>"; };
 		080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedrockProviderHost.swift; sourceTree = "<group>"; };
 		080A187C2D1402DA0081C6B1 /* MultiLineInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineInputView.swift; sourceTree = "<group>"; };
+		080E0F742D18593200DCA9E3 /* ToolsController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsController2.swift; sourceTree = "<group>"; };
 		080E70E72CDF1BC100A949C9 /* Tips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tips.swift; sourceTree = "<group>"; };
 		080E70EB2CDF380500A949C9 /* InspectorTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorTab.swift; sourceTree = "<group>"; };
 		080E70ED2CDF498F00A949C9 /* ChatStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatStatus.swift; sourceTree = "<group>"; };
@@ -916,6 +918,7 @@
 		08F815302C97F62B00B49355 /* ChatInspector */ = {
 			isa = PBXGroup;
 			children = (
+				080E0F742D18593200DCA9E3 /* ToolsController2.swift */,
 				08F815372C97F65E00B49355 /* ToolsController.swift */,
 				08F815352C97F65500B49355 /* ChatInspector.swift */,
 				08F815332C97F64E00B49355 /* BasicInspector.swift */,
@@ -1017,6 +1020,7 @@
 			files = (
 				089825332CE9ECF000980468 /* PluginsOnboarding.swift in Sources */,
 				082181602C3880F700171BF3 /* RoundedRectangleOverlay.swift in Sources */,
+				080E0F752D18593200DCA9E3 /* ToolsController2.swift in Sources */,
 				08D913EC2CD9CAF7002E4E53 /* AIModel.swift in Sources */,
 				08B8DE132C97F3550041A690 /* MDView.swift in Sources */,
 				087F3F922CDDF00C001298B3 /* SettingsVM.swift in Sources */,

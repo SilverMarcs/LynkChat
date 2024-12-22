@@ -18,6 +18,8 @@ struct MultiLineInputView: View {
     @State private var isExpanded = false
     @State private var showExpandButton = false
     @State private var showPickers = false
+    @State private var isHovering = false
+
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -50,7 +52,10 @@ struct MultiLineInputView: View {
                 ChatInputMenu(chat: chat)
                 
                 if horizontalSizeClass != .compact {
-                    quickControls
+                    configInfo
+                        .onHover { hovering in
+                            isHovering = hovering
+                        }
                 }
                 
                 Spacer()
@@ -58,8 +63,13 @@ struct MultiLineInputView: View {
                 if chat.inputManager.state == .editing {
                     cancelEditing
                 } else {
-//                    resetContext
-                    // TODO: Dictation here
+                    Button {
+//                        chat.startDictation()
+                    } label: {
+                        Image(systemName: "mic")
+                    }
+                    .foregroundStyle(.secondary)
+                    .buttonStyle(.plain)
                 }
                 
                 ActionButton(isStop: chat.isReplying) {
@@ -108,22 +118,32 @@ struct MultiLineInputView: View {
         .keyboardShortcut(.cancelAction)
     }
 
-    private var quickControls: some View {
-        Button(action: { showPickers.toggle() }) {
-            Text("Config")
-                .padding(4)
-                .padding(.horizontal, 2)
-                .background(
-                    RoundedRectangle(cornerRadius: 6, style: .circular)
-                        .fill(.accent.quinary)
-                )
-        }
-        #if os(macOS)
-        .buttonStyle(.link)
-        #endif
-        .opacity(0.7)
-        .popover(isPresented: $showPickers) {
-            InputModelPickers(chat: chat)
+    private var configInfo: some View {
+        HStack(spacing: 4) {
+            ToolsController2(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+                .toggleStyle(.button)
+                .labelStyle(.iconOnly)
+                .buttonStyle(.borderless)
+                .padding(.trailing, 5)
+            
+            if isHovering {
+                InputModelPickers(chat: chat)
+                    .labelsHidden()
+                    .opacity(0.65)
+                
+            } else {
+                HStack(spacing: 6) {
+                    Text(chat.config.provider.name)
+                        .padding(.leading, 3)
+                        .padding(.trailing, 15)
+                        .textCase(.uppercase)
+                        .foregroundStyle(.secondary)
+                    
+                    Text(chat.config.model.name)
+                        .padding(.leading, 3)
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
     }
     

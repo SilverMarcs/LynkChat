@@ -15,29 +15,15 @@ struct InputModelPickers: View {
     var providers: [Provider]
     
     var body: some View {
-        Form {
+        Group {
             ProviderPicker(provider: $chat.config.provider, providers: providers) { provider in
                 chat.config.model = provider.chatModel
             }
+//            .frame(width: 80)
             
             ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels)
-            
-            if chat.config.provider.type != .bedrock {
-                LabeledContent {
-                    //                ControlGroup {}
-                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                        .toggleStyle(.button)
-                        .labelStyle(.iconOnly)
-                        .buttonStyle(.borderless)
-                    
-                } label: {
-                    Text("Plugins")
-                }
-            }
         }
-        .padding(-5)
-        .frame(width: 250)
-        .formStyle(.grouped)
+        .buttonStyle(.borderless)
     }
 }
 
