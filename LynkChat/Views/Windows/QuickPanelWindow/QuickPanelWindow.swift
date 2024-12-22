@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import KeyboardShortcuts
 
 class QuickPanelWindow: NSPanel {
     private var heightConstraint: NSLayoutConstraint?
@@ -82,7 +81,7 @@ class QuickPanelWindow: NSPanel {
         self.contentMinSize = NSSize(width: contentRect.width, height: contentRect.height)
         self.contentMaxSize = NSSize(width: contentRect.width, height: 500)
         
-        KeyboardShortcuts.onKeyDown(for: .togglePanel) { [weak self] in
+        qpHotkey.keyDownHandler = { [weak self] in
             self?.toggleVisibility()
         }
         

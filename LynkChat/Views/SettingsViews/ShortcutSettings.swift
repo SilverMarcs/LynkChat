@@ -6,13 +6,13 @@
 //
 
 import SwiftUI
-import KeyboardShortcuts
 
 struct ShortcutSettings: View {
     var body: some View {
         Form {
             LabeledContent {
-                KeyboardShortcuts.Recorder(for: .togglePanel)
+//                KeyboardShortcuts.Recorder(for: .togglePanel)
+                Text("⌥ + Space")
             } label: {
                 Text("Quick Panel Shortcut")
             }

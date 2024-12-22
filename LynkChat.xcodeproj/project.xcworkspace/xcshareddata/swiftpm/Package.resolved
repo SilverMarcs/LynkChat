@@ -1,5 +1,5 @@
 {
-  "originHash" : "211c1a8813d9485c231bb5e458631c42c4133dfdad699c5f1930e4f2e9b6acb9",
+  "originHash" : "572fe1f14aaaba0abe779f44659a0924e8233d90793fb583047c995564ce1329",
   "pins" : [
     {
       "identity" : "googlegenerativeai",
@@ -11,12 +11,12 @@
       }
     },
     {
-      "identity" : "keyboardshortcuts",
+      "identity" : "hotkey",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sindresorhus/KeyboardShortcuts",
+      "location" : "https://github.com/soffes/HotKey",
       "state" : {
-        "revision" : "7ecc38bb6edf7d087d30e737057b8d8a9b7f51eb",
-        "version" : "2.2.4"
+        "branch" : "main",
+        "revision" : "4d02d80de143d69b7eeb5962729591a157a57ede"
       }
     },
     {

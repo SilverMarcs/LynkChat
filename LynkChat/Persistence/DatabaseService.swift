@@ -8,9 +8,6 @@
 import SwiftUI
 import Foundation
 import SwiftData
-#if os(macOS)
-import KeyboardShortcuts
-#endif
 import Observation
 
 // TODO: make modelactor 
@@ -71,7 +68,10 @@ final class DatabaseService: NSObject {
             }
             
             #if os(macOS)
-            KeyboardShortcuts.setShortcut(.init(.space, modifiers: .option), for: .togglePanel)
+//            KeyboardShortcuts.setShortcut(.init(.space, modifiers: .option), for: .togglePanel)
+//            qpHotkey.keyDownHandler = {
+//              print("Pressed at \(Date())")
+//            }
             #endif
             
             // Adding default providers

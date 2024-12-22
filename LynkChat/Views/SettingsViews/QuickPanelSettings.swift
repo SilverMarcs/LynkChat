@@ -5,7 +5,6 @@
 //  Created by Zabir Raihan on 12/07/2024.
 //
 
-import KeyboardShortcuts
 import SwiftUI
 import SwiftData
 
@@ -21,7 +20,8 @@ struct QuickPanelSettings: View {
         Form {
             Section("Launch") {
                 LabeledContent {
-                    KeyboardShortcuts.Recorder(for: .togglePanel)
+//                    KeyboardShortcuts.Recorder(for: .togglePanel)
+                    Text("⌥ + Space")
                 } label: {
                     Text("Global shortcut")
                     Text("Access from anywhere in the OS")

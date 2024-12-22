@@ -16,6 +16,7 @@
 		080A187B2D1224300081C6B1 /* BedrockProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */; };
 		080A187D2D1402DA0081C6B1 /* MultiLineInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187C2D1402DA0081C6B1 /* MultiLineInputView.swift */; };
 		080E0F752D18593200DCA9E3 /* ToolsController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E0F742D18593200DCA9E3 /* ToolsController2.swift */; };
+		080E0F782D18819500DCA9E3 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 080E0F772D18819500DCA9E3 /* HotKey */; };
 		080E3FA82D1699EC00F2840F /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 080E3FA72D1699EC00F2840F /* OpenAI */; };
 		080E3FAB2D16D55B00F2840F /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 080E3FAA2D16D55B00F2840F /* OpenAI */; };
 		080E70E82CDF1BC100A949C9 /* Tips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70E72CDF1BC100A949C9 /* Tips.swift */; };
@@ -130,7 +131,6 @@
 		089C7E142C405B01005E3BE9 /* QuickPanelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089C7E132C405B01005E3BE9 /* QuickPanelSettings.swift */; platformFilters = (macos, ); };
 		089DB5162CA865F70013E5C3 /* MockedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089DB5152CA865F70013E5C3 /* MockedData.swift */; };
 		089DB5182CA8EC140013E5C3 /* ImageViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089DB5172CA8EC140013E5C3 /* ImageViewerData.swift */; };
-		089EFA3B2D0D08C000FF032C /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 089EFA3A2D0D08C000FF032C /* KeyboardShortcuts */; };
 		089FDB642D0A9FB50005CD26 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 089FDB632D0A9FB50005CD26 /* GoogleGenerativeAI */; };
 		089FDB672D0AA0010005CD26 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 089FDB662D0AA0010005CD26 /* GoogleGenerativeAI */; };
 		08A1DDBB2CE0024A00DAF6F9 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1DDBA2CE0024A00DAF6F9 /* Source.swift */; };
@@ -430,7 +430,7 @@
 				089FDB642D0A9FB50005CD26 /* GoogleGenerativeAI in Frameworks */,
 				082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */,
 				089FDB672D0AA0010005CD26 /* GoogleGenerativeAI in Frameworks */,
-				089EFA3B2D0D08C000FF032C /* KeyboardShortcuts in Frameworks */,
+				080E0F782D18819500DCA9E3 /* HotKey in Frameworks */,
 				080E3FA82D1699EC00F2840F /* OpenAI in Frameworks */,
 				086346B12CE780B6006E5927 /* SwiftAnthropic in Frameworks */,
 				08DB150B2CDC5B2200DC5B90 /* OpenAI in Frameworks */,
@@ -954,9 +954,9 @@
 				086346B02CE780B6006E5927 /* SwiftAnthropic */,
 				089FDB632D0A9FB50005CD26 /* GoogleGenerativeAI */,
 				089FDB662D0AA0010005CD26 /* GoogleGenerativeAI */,
-				089EFA3A2D0D08C000FF032C /* KeyboardShortcuts */,
 				080E3FA72D1699EC00F2840F /* OpenAI */,
 				080E3FAA2D16D55B00F2840F /* OpenAI */,
+				080E0F772D18819500DCA9E3 /* HotKey */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -990,8 +990,8 @@
 				086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
 				086346AF2CE780B6006E5927 /* XCRemoteSwiftPackageReference "SwiftAnthropic" */,
 				089FDB652D0AA0010005CD26 /* XCRemoteSwiftPackageReference "GoogleGenerativeAI" */,
-				089EFA392D0D08C000FF032C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				080E3FA92D16D55B00F2840F /* XCRemoteSwiftPackageReference "OpenAI" */,
+				080E0F762D18819500DCA9E3 /* XCRemoteSwiftPackageReference "HotKey" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -1457,6 +1457,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		080E0F762D18819500DCA9E3 /* XCRemoteSwiftPackageReference "HotKey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/soffes/HotKey";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		080E3FA92D16D55B00F2840F /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SilverMarcs/OpenAI";
@@ -1481,14 +1489,6 @@
 				kind = branch;
 			};
 		};
-		089EFA392D0D08C000FF032C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.2;
-			};
-		};
 		089FDB652D0AA0010005CD26 /* XCRemoteSwiftPackageReference "GoogleGenerativeAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SilverMarcs/GoogleGenerativeAI";
@@ -1500,6 +1500,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		080E0F772D18819500DCA9E3 /* HotKey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 080E0F762D18819500DCA9E3 /* XCRemoteSwiftPackageReference "HotKey" */;
+			productName = HotKey;
+		};
 		080E3FA72D1699EC00F2840F /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OpenAI;
@@ -1538,11 +1543,6 @@
 		0867741B2CE682C700FF2A3C /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OpenAI;
-		};
-		089EFA3A2D0D08C000FF032C /* KeyboardShortcuts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 089EFA392D0D08C000FF032C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
-			productName = KeyboardShortcuts;
 		};
 		089FDB632D0A9FB50005CD26 /* GoogleGenerativeAI */ = {
 			isa = XCSwiftPackageProductDependency;

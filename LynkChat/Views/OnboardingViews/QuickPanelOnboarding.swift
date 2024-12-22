@@ -7,7 +7,6 @@
 
 #if os(macOS)
 import SwiftUI
-import KeyboardShortcuts
 
 struct QuickPanelOnboarding: View {
     @Bindable var provider: Provider
@@ -20,7 +19,8 @@ struct QuickPanelOnboarding: View {
             content: {
                 Form {
                     LabeledContent {
-                        KeyboardShortcuts.Recorder(for: .togglePanel)
+//                        KeyboardShortcuts.Recorder(for: .togglePanel)
+                        Text("⌥ + Space")
                     } label: {
                         Text("Global shortcut")
 
