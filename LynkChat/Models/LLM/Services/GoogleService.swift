@@ -42,7 +42,10 @@ struct GoogleService: AIService {
         }
         
         for call in conversation.toolCalls {
-            parts.append(.functionCall(FunctionCall(name: call.tool.rawValue, args:  ["json_string": JSONValue.string(call.arguments)])))
+            if let jsonData = call.arguments.data(using: .utf8),
+               let jsonObject = try? JSONDecoder().decode(JSONObject.self, from: jsonData) {
+                parts.append(.functionCall(FunctionCall(name: call.tool.rawValue, args: jsonObject)))
+            }
         }
         
         if let response = conversation.toolResponse {
