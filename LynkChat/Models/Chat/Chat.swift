@@ -214,6 +214,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         errorMessage = error.localizedDescription
         scrollDown()
         resetScroll()
+        stopStreaming()
         
         // TODO: only delete last mesasage and not entire group if group has other messages
 //        DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {

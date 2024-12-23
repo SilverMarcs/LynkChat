@@ -24,10 +24,11 @@ struct ToolsController2: View {
             }
         }
         .background {
-            RoundedRectangle(cornerRadius: 5)
+            RoundedRectangle(cornerRadius: 7, style: .circular)
                 .fill(.background.tertiary)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .clipShape(RoundedRectangle(cornerRadius: 7, style: .circular))
+        .roundedRectangleOverlay(radius: 7, style: .circular)
     }
     
     @ViewBuilder
@@ -41,13 +42,14 @@ struct ToolsController2: View {
             Image(systemName: systemImage)
                 .padding(4)
                 .imageScale(.medium)
-                .foregroundStyle(isEnabled ? tintColor : .gray.opacity(0.8))
+                .foregroundStyle(isEnabled ? AnyShapeStyle(tintColor) : AnyShapeStyle(.secondary))
                 .background {
                     if isEnabled {
                         Rectangle()
                             .fill(tintColor.opacity(0.2))
                     }
                 }
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }

@@ -105,6 +105,7 @@ struct MultiLineInputView: View {
         } label: {
             Text("Cancel Editing")
                 .padding(4)
+                .font(.system(size: 12))
                 .padding(.horizontal, 2)
                 .background(
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
