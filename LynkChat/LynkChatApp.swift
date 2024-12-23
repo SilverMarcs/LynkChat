@@ -7,9 +7,11 @@
 
 import SwiftUI
 import TipKit
-import HotKey
 
+#if os(macOS)
+import HotKey 
 let qpHotkey = HotKey(key: .space, modifiers: [.option])
+#endif
 
 @main
 struct LynkChatApp: App {

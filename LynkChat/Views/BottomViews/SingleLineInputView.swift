@@ -59,7 +59,7 @@ struct SingleLineInputView: View {
                 }
             }
             .padding(2)
-            .roundedRectangleOverlay(radius: 15)
+            .roundedRectangleOverlay(radius: 17)
         }
         .modifier(CommonInputStyling())
     }

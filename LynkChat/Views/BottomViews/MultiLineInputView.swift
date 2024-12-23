@@ -35,18 +35,17 @@ struct MultiLineInputView: View {
                 Divider()
             }
             
-            HStack(alignment: .top) {
-                InputEditor(chat: chat)
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 3)
-                    .onChange(of: chat.inputManager.prompt) {
-                        showExpandButton = chat.inputManager.prompt.contains("\n")
-                    }
-                
-                if showExpandButton {
-                    expandInput
+            InputEditor(chat: chat)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 3)
+                .onChange(of: chat.inputManager.prompt) {
+                    showExpandButton = chat.inputManager.prompt.contains("\n")
                 }
-            }
+                .overlay(alignment: .topTrailing) {
+                    if showExpandButton {
+                        expandInput
+                    }
+                }
             
             HStack {
                 ChatInputMenu(chat: chat)
@@ -78,7 +77,7 @@ struct MultiLineInputView: View {
             }
         }
         .padding(4)
-        .roundedRectangleOverlay(radius: radius)
+        .roundedRectangleOverlay(radius: 15, style: .circular)
         .modifier(CommonInputStyling())
     }
         
@@ -149,21 +148,9 @@ struct MultiLineInputView: View {
     }
     
     private func sendInput() {
-        #if os(iOS)
-//        isFocused = nil // doesn't work
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        #endif
         Task { @MainActor in
             await chat.sendInput()
         }
-    }
-    
-    var radius: CGFloat {
-        #if os(macOS)
-        16
-        #else
-        24
-        #endif
     }
 }
 

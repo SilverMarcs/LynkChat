@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+// TODO: split into diff view pehraps inloen with multine singlelineviews
 struct InputEditor: View {
     @Environment(ChatVM.self) private var chatVM
     @ObservedObject var config = AppConfig.shared
