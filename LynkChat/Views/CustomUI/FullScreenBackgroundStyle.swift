@@ -13,8 +13,6 @@ struct FullScreenBackgroundStyle: ViewModifier {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             #if !os(visionOS)
             .background(.background)
-            #endif
-            #if os(macOS)
             .toolbarBackground(.hidden)
             #endif
     }

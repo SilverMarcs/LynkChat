@@ -91,13 +91,11 @@ struct ChatDetail: View {
         }
         
         if chatVM.searchText.isEmpty {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                #if os(macOS)
-                scrollToBottom(proxy: proxy, animated: false)
-                #else
-                scrollToBottom(proxy: proxy, delay: 0.3)
-                #endif
-            }
+            #if os(macOS)
+            scrollToBottom(proxy: proxy, animated: false)
+            #else
+            scrollToBottom(proxy: proxy, delay: 0.3)
+            #endif
         }
     }
     
