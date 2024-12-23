@@ -1,5 +1,5 @@
 //
-//  ToolsController2.swift
+//  CustomToolsView.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 22/12/2024.
@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct ToolsController2: View {
+struct CustomToolsView: View {
     @Binding var tools: ChatConfigTools
     let isGoogle: Bool
     
     var body: some View {
+        // TODO: GroupBox
         HStack(spacing: 0) {
             ForEach(ChatTool.allCases, id: \.self) { tool in
                 toolButton(
@@ -24,11 +25,11 @@ struct ToolsController2: View {
             }
         }
         .background {
-            RoundedRectangle(cornerRadius: 7, style: .circular)
+            RoundedRectangle(cornerRadius: 6, style: .circular)
                 .fill(.background.tertiary)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 7, style: .circular))
-        .roundedRectangleOverlay(radius: 7, style: .circular)
+        .clipShape(RoundedRectangle(cornerRadius: 6, style: .circular))
+        .roundedRectangleOverlay(radius: 6, style: .circular)
     }
     
     @ViewBuilder
@@ -59,7 +60,7 @@ struct ToolsController2: View {
 #Preview {
     @Previewable @State var tools = ChatConfigTools()
     
-    ToolsController2(tools: $tools, isGoogle: false)
+    CustomToolsView(tools: $tools, isGoogle: false)
         .toggleStyle(.button)
         .labelStyle(.iconOnly)
         .buttonStyle(.borderless)

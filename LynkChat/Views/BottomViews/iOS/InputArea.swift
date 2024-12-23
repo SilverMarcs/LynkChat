@@ -1,5 +1,5 @@
 //
-//  SingleLineInputView.swift
+//  InputArea.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 04/07/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import TipKit
 
-struct SingleLineInputView: View {
+struct InputArea: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var config = AppConfig.shared
     
@@ -26,12 +26,6 @@ struct SingleLineInputView: View {
             
             HStack(alignment: .bottom) {
                 VStack(alignment: .leading) {
-                    #if os(macOS)
-                    TipView(PlusButtonTip())
-                        .frame(height: 30)
-                        .padding(.bottom, 20)
-                    #endif
-                    
                     VStack(alignment: .leading) {
                         Spacer(minLength: 0)
                         
@@ -63,15 +57,7 @@ struct SingleLineInputView: View {
         }
         .modifier(CommonInputStyling())
     }
-    
-    var truncateLimit: Int {
-        #if os(macOS)
-        130
-        #else
-        35
-        #endif
-    }
-    
+
     var cancelEditing: some View {
         Button {
             withAnimation {
@@ -79,11 +65,7 @@ struct SingleLineInputView: View {
             }
         } label: {
             Image(systemName: "xmark.circle.fill")
-                #if os(macOS)
-                .font(.system(size: 25, weight: .semibold))
-                #else
                 .font(.system(size: 31, weight: .semibold))
-                #endif
                 .foregroundStyle(.red)
         }
         .transition(.symbolEffect(.appear))
@@ -93,10 +75,8 @@ struct SingleLineInputView: View {
     
     
     private func sendInput() {
-        #if os(iOS)
 //        isFocused = nil // doesn't work
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        #endif
         Task { @MainActor in
             await chat.sendInput()
         }

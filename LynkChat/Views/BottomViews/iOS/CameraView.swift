@@ -5,7 +5,6 @@
 //  Created by Zabir Raihan on 18/09/2024.
 //
 
-#if !os(macOS)
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -68,4 +67,3 @@ class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerContro
         AppConfig.shared.showCamera = false
     }
 }
-#endif

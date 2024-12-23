@@ -2,13 +2,11 @@
 //  InputEditor.swift
 //  LynkChat
 //
-//  Created by Zabir Raihan on 16/09/2024.
+//  Created by Zabir Raihan on 23/12/2024.
 //
 
 import SwiftUI
 
-
-// TODO: split into diff view pehraps inloen with multine singlelineviews
 struct InputEditor: View {
     @Environment(ChatVM.self) private var chatVM
     @ObservedObject var config = AppConfig.shared
@@ -17,7 +15,7 @@ struct InputEditor: View {
     @FocusState var isFocused: FocusedField?
     
     var body: some View {
-        #if os(macOS)
+        // TODO: split into diff view pehraps inloen with multine singlelineviews
         Group {
             if config.enterToSend {
                 TextField(placeHolder, text: $chat.inputManager.prompt, axis: .vertical)
@@ -36,7 +34,6 @@ struct InputEditor: View {
                 ZStack(alignment: .leading) {
                     if chat.inputManager.prompt.isEmpty {
                         Text(placeHolder)
-//                            .padding(.leading, 6)
                             .padding(.leading, 1)
                             .foregroundStyle(.placeholder)
                     }
@@ -65,30 +62,9 @@ struct InputEditor: View {
                 .keyboardShortcut("l")
             }
         }
-        #else
-        TextField(placeHolder, text: $chat.inputManager.prompt, axis: .vertical)
-            .padding(.leading, 6)
-            .focused($isFocused, equals: .textEditor)
-            .lineLimit(10, reservesSpace: false)
-            .onSubmit {
-                if config.enterToSend {
-//                    isFocused = nil // doesn't work
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    Task { @MainActor in
-                        await chat.sendInput()
-                    }
-                } else {
-                    chat.inputManager.prompt += "\n"
-                }
-            }
-        #endif
-    }
-    
-    var placeHolder: String {
-        #if os(macOS)
-        "Send a prompt"
-        #else
-        "Send a prompt • \(chat.config.provider.name)"
-        #endif
+        
+        var placeHolder: String {
+            "Send a prompt"
+        }
     }
 }

@@ -43,9 +43,9 @@ struct LynkChatApp: App {
     }
     
     init() {
-//        #if DEBUG
-//        try? Tips.resetDatastore()
-//        #endif        
+        #if DEBUG
+        try? Tips.resetDatastore()
+        #endif        
         try? Tips.configure()
 
         #if os(macOS)

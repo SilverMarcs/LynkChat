@@ -19,7 +19,6 @@ struct InputModelPickers: View {
             ProviderPicker(provider: $chat.config.provider, providers: providers) { provider in
                 chat.config.model = provider.chatModel
             }
-//            .frame(width: 80)
             
             ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels)
         }

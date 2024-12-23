@@ -1,5 +1,5 @@
 //
-//  MultiLineInputView.swift
+//  InputArea.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 19/12/2024.
@@ -7,8 +7,10 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
-struct MultiLineInputView: View {
+struct InputArea: View {
+    @Environment(ChatVM.self) private var chatVM
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @ObservedObject var config = AppConfig.shared
@@ -17,9 +19,9 @@ struct MultiLineInputView: View {
 
     @State private var isExpanded = false
     @State private var showExpandButton = false
-    @State private var showPickers = false
     @State private var isHovering = false
-
+    
+    @FocusState var isFocused: FocusedField?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -34,6 +36,9 @@ struct MultiLineInputView: View {
                 
                 Divider()
             }
+            
+            TipView(PlusButtonTip())
+                .frame(height: 30)
             
             InputEditor(chat: chat)
                 .padding(.horizontal, 5)
@@ -120,7 +125,7 @@ struct MultiLineInputView: View {
 
     private var configInfo: some View {
         HStack(spacing: 4) {
-            ToolsController2(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+            CustomToolsView(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
                 .toggleStyle(.button)
                 .labelStyle(.iconOnly)
                 .buttonStyle(.borderless)
