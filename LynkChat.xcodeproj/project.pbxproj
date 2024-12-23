@@ -41,7 +41,7 @@
 		0823550D2CDBB74900388273 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 0823550C2CDBB74900388273 /* GoogleGenerativeAI */; };
 		082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 082355142CDBBB2B00388273 /* SwiftMarkdownView */; };
 		0823551E2CDBC94D00388273 /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = 0823551D2CDBC94D00388273 /* SwiftAnthropic */; };
-		0828E5462D157AF900DED52B /* ResizingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828E5452D157AF900DED52B /* ResizingTextView.swift */; };
+		0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828E5452D157AF900DED52B /* AutoHeightTextView.swift */; platformFilters = (macos, ); };
 		082A63322C551108003996B7 /* MarkdownBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63312C551108003996B7 /* MarkdownBackup.swift */; };
 		082A63382C55175E003996B7 /* MiscUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63372C55175E003996B7 /* MiscUtils.swift */; };
 		082AA6F62CE683C40088A8B2 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 082AA6F52CE683C40088A8B2 /* OpenAI */; };
@@ -247,7 +247,7 @@
 		0821816E2C39082900171BF3 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		082255612CE22D3200AAD32B /* SecretInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretInputView.swift; sourceTree = "<group>"; };
 		0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedInputEditor.swift; sourceTree = "<group>"; };
-		0828E5452D157AF900DED52B /* ResizingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizingTextView.swift; sourceTree = "<group>"; };
+		0828E5452D157AF900DED52B /* AutoHeightTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHeightTextView.swift; sourceTree = "<group>"; };
 		082A63312C551108003996B7 /* MarkdownBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownBackup.swift; sourceTree = "<group>"; };
 		082A63372C55175E003996B7 /* MiscUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscUtils.swift; sourceTree = "<group>"; };
 		082B88162CD36CD80092C4D0 /* PlatformSpecificGroupBoxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformSpecificGroupBoxStyle.swift; sourceTree = "<group>"; };
@@ -579,7 +579,7 @@
 		08915D922C373332008ADE27 /* CustomUI */ = {
 			isa = PBXGroup;
 			children = (
-				0828E5452D157AF900DED52B /* ResizingTextView.swift */,
+				0828E5452D157AF900DED52B /* AutoHeightTextView.swift */,
 				08AC26142CF5553D00750269 /* Markdown */,
 				08AAFB912C3C88CA002C04E0 /* Buttons */,
 				08B4F45F2CE3B87A004B3618 /* FullScreenBackgroundStyle.swift */,
@@ -1031,7 +1031,7 @@
 				08915D942C373340008ADE27 /* ProviderImage.swift in Sources */,
 				087906872CA6C73100E5DCAD /* ImageWindow.swift in Sources */,
 				0810F5892CEAFB5C002D4ACF /* ContextResetDivider.swift in Sources */,
-				0828E5462D157AF900DED52B /* ResizingTextView.swift in Sources */,
+				0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */,
 				08B8DE232C97F4EA0041A690 /* ToolResponseMessage.swift in Sources */,
 				087906892CA6E22900E5DCAD /* ImageContentView.swift in Sources */,
 				0805DEEF2C58CB1400A8354A /* OpenAIService.swift in Sources */,

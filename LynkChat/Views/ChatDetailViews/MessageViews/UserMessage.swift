@@ -16,8 +16,8 @@ struct UserMessage: View {
 
     @State var isExpanded: Bool = false
     @State var showingTextSelection = false
-//    @State private var height: CGFloat = 25
-
+//    @State private var textViewHeight: CGFloat = 0
+    
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
             if !message.dataFiles.isEmpty {
@@ -33,18 +33,16 @@ struct UserMessage: View {
                         .lineSpacing(2)
                         .padding(5)
                         #endif
-
                     
-//                    ResizingTextView(text: displayedText, height: $height)
-//                        .lineSpacing(2)
+//                    AutoHeightTextView(text: displayedText, height: $textViewHeight)
 //                        .frame(height: message.activeMessage.height, alignment: .top)
-//                        .onChange(of: height) {
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//                                if height > 0 {
-//                                    message.activeMessage.height = height
-//                                }
-//                            }
-//                        }
+//                         .onChange(of: textViewHeight) {
+//                             DispatchQueue.main.async {
+//                                 message.activeMessage.height = textViewHeight
+//                             }
+//                         }
+                        
+
                     
                     if shouldShowMoreButton {
                         Button {
