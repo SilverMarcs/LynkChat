@@ -32,6 +32,9 @@ struct ChatContentView: View {
         } detail: {
             if let chat = chatVM.activeChat {
                 ChatDetail(chat: chat)
+                #if os(macOS)
+                    .frame(minWidth: 600)
+                #endif
                     .id(chat.id)
             } else {
                 Text("^[\(chatVM.selections.count) Chat](inflect: true) Selected")

@@ -25,7 +25,7 @@ struct DataFilesView: View {
     var body: some View {
         VStack {
             if adaptiveGrid {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))], spacing: 8) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 135), spacing: 8)], spacing: 8) {
                     ForEach(dataFiles.indices, id: \.self) { index in
                         fileItemView(for: dataFiles[index])
                     }

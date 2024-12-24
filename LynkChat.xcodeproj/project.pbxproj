@@ -583,9 +583,9 @@
 		08915D922C373332008ADE27 /* CustomUI */ = {
 			isa = PBXGroup;
 			children = (
-				0828E5452D157AF900DED52B /* AutoHeightTextView.swift */,
 				08AC26142CF5553D00750269 /* Markdown */,
 				08AAFB912C3C88CA002C04E0 /* Buttons */,
+				0828E5452D157AF900DED52B /* AutoHeightTextView.swift */,
 				08B4F45F2CE3B87A004B3618 /* FullScreenBackgroundStyle.swift */,
 				0821815F2C3880F700171BF3 /* RoundedRectangleOverlay.swift */,
 				08915D932C373340008ADE27 /* ProviderImage.swift */,
