@@ -14,24 +14,37 @@ struct RegularProviderHost: View {
     
     var body: some View {
         HStack {
-            TextField("Host URL", text: $provider.host)
-            
-            Button {
-                showPopover.toggle()
-            } label: {
-                Image(systemName: "info.circle")
-                    .foregroundStyle(.secondary)
+            if isHostDisabled {
+                LabeledContent("Host URL") {
+                    Text(provider.host)
+                }
+            } else {
+                TextField("Host URL", text: $provider.host)
             }
-            .buttonStyle(.plain)
-            .popover(isPresented: $showPopover) {
-                Text("Omit https:// and /v1/ from the URL.\nCorrect input example: api.openai.com")
-                    .padding()
-                    .presentationCompactAdaptation(.popover)
+            
+            if !isHostDisabled {
+                Button {
+                    showPopover.toggle()
+                } label: {
+                    Image(systemName: "info.circle")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .popover(isPresented: $showPopover) {
+                    Text("Omit https:// and /v1/ from the URL.\nCorrect input example: api.openai.com")
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
+                }
             }
         }
         
         SecretInputView(label: provider.type == .github ? "Personal Access Token" : "API Key", secret: $provider.apiKey)
     }
+    
+    var isHostDisabled: Bool {
+        provider.type != .openai && provider.type != .custom && provider.type != .ollama && provider.type != .lmstudio
+    }
+    
 }
 
 #Preview {

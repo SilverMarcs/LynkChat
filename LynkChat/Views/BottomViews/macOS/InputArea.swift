@@ -26,7 +26,7 @@ struct InputArea: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if !chat.inputManager.dataFiles.isEmpty {
-                DataFilesView(dataFiles: chat.inputManager.dataFiles, edge: .leading) { file in
+                DataFilesView(dataFiles: chat.inputManager.dataFiles, adaptiveGrid: true) { file in
                     withAnimation {
                         chat.inputManager.dataFiles.removeAll(where: { $0 == file })
                     }
@@ -35,6 +35,7 @@ struct InputArea: View {
                 .padding(.top, 4)
                 
                 Divider()
+                    .padding(.vertical, -1)
             }
             
             TipView(PlusButtonTip())
