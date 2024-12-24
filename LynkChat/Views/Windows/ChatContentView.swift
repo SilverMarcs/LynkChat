@@ -54,7 +54,13 @@ struct ChatContentView: View {
                     .searchCompletion(suggestion)
             }
         }
-        .searchFocused($isSearchFieldFocused, equals: .searchBox)
+        .apply {
+            if #available(iOS 18.0, macOS 15.0, *) {
+                $0.searchFocused($isSearchFieldFocused, equals: .searchBox)
+            } else {
+                $0
+            }
+        }
         .onSubmit(of: .search) {
             if chatVM.searchTokens.isEmpty {
                 chatVM.searchTokens = [.messages]

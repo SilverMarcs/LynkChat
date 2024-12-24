@@ -15,7 +15,13 @@ struct WelcomeOnboarding: View {
             Spacer()
             
             Image(systemName: "hand.wave.fill")
-                .symbolEffect(.wiggle, options: .repeating, value: isAppear)
+                .apply {
+                    if #available(iOS 18.0, macOS 15.0, *) {
+                        $0.symbolEffect(.wiggle, options: .repeating, value: isAppear)
+                    } else {
+                        $0.symbolEffect(.pulse, value: isAppear)
+                    }
+                }
                 .font(.system(size: 60))
                 .foregroundStyle(.blue)
             

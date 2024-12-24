@@ -214,3 +214,26 @@ extension WindowID {
 }
 
 
+extension View {
+    func apply<V: View>(@ViewBuilder _ block: (Self) -> V) -> V { block(self) }
+}
+
+
+extension Scene {
+    @available(macOS 15.0, *)
+    func ifAvailable15(_ modify: (Self) -> some Scene) -> some Scene {
+        modify(self)
+    }
+}
+
+#if os(macOS)
+extension Scene {
+    func disableWindowRestoration() -> some Scene {
+        if #available(macOS 15, *) {
+            return self.restorationBehavior(.disabled)
+        } else {
+            return self
+        }
+    }
+}
+#endif

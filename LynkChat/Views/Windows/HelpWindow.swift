@@ -9,11 +9,22 @@ import SwiftUI
 
 struct HelpWindow: Scene {
     var body: some Scene {
-        UtilityWindow("Help", id: WindowID.help) {
-            GuidesSettings()
-                .frame(width: 400, height: 500)
+        conditionalAboutWindow()
+    }
+    
+    func conditionalAboutWindow() -> some Scene {
+        if #available(macOS 15.0, *) {
+            return UtilityWindow("Help", id: WindowID.help) {
+                GuidesSettings()
+                    .frame(width: 400, height: 500)
+            }
+            .restorationBehavior(.disabled)
+            .windowIdealSize(.fitToContent)
+        } else {
+            return Window("Help", id: WindowID.help) {
+                GuidesSettings()
+                    .frame(width: 400, height: 500)
+            }
         }
-        .restorationBehavior(.disabled)
-        .windowIdealSize(.fitToContent)
     }
 }

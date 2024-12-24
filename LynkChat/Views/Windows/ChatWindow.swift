@@ -28,7 +28,6 @@ struct ChatWindow: Scene {
             }
         }
         .defaultSize(.init(width: 1000, height: 800))
-        .restorationBehavior(.disabled)
     }
 }
 

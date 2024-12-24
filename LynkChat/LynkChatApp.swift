@@ -26,11 +26,7 @@ struct LynkChatApp: App {
     var body: some Scene {
         Group {
             #if os(macOS)
-            ChatWindow()
-            ImageWindow()
-            SettingsWindow()
-            AboutWindow()
-            HelpWindow()
+            WindowScenesCollection()
             #else
             IOSWindow()
             #endif
@@ -62,4 +58,3 @@ struct LynkChatApp: App {
         #endif
     }
 }
-

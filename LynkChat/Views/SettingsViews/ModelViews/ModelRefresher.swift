@@ -103,7 +103,13 @@ struct ModelRefresher: View {
             .frame(width: 400, height: 450)
             #else
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search models")
-            .searchPresentationToolbarBehavior(.avoidHidingContent)
+            .apply {
+                if #available(iOS 18.0, *) {
+                    $0.searchPresentationToolbarBehavior(.avoidHidingContent)
+                } else {
+                    $0
+                }
+            }
             .navigationTitle("Add Models")
             #endif
         }

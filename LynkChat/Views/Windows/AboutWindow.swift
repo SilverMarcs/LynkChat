@@ -16,10 +16,9 @@ struct AboutWindow: Scene {
                 .scrollDisabled(true)
                 .scrollContentBackground(.hidden)
                 .frame(minWidth: 325, maxWidth: 325, minHeight: 388, maxHeight: 388)
-                .windowMinimizeBehavior(.disabled)
+//                .windowMinimizeBehavior(.disabled)
         }
         .windowStyle(.hiddenTitleBar)
-        .restorationBehavior(.disabled)
         .windowResizability(.contentSize)
     }
 }

@@ -46,6 +46,13 @@ struct GuidesSettings: View {
             }
         }
         .searchable(text: $searchText, placement: .toolbar, prompt: "Search Guides")
+        .apply {
+            if #available(iOS 18.0, *) {
+                $0.searchPresentationToolbarBehavior(.avoidHidingContent)
+            } else {
+                $0
+            }
+        }
         .onChange(of: searchText) {
             isExpanded = searchText.isEmpty
         }
