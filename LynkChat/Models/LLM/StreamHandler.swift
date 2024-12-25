@@ -37,7 +37,7 @@ struct StreamHandler {
         let service = chat.config.provider.type.getService()
 
         // must do droplast since last is the empty assistant message
-        for try await response in service.streamResponse(from: chat.adjustedContext.dropLast(), config: chat.config) {
+        for try await response in APIService.streamResponse(from: chat.adjustedContext.dropLast(), config: chat.config) {
             switch response {
             case .content(let content):
                 streamText += content
@@ -82,9 +82,9 @@ struct StreamHandler {
 
     @MainActor
     private func handleNonStream() async throws {
-        let service = chat.config.provider.type.getService()
+//        let service = chat.config.provider.type.getService()
         let adjustedContext: [Message] = chat.adjustedContext.dropLast()
-        let response = try await service.nonStreamingResponse(from: adjustedContext, config: chat.config)
+        let response = try await APIService.nonStreamingResponse(from: adjustedContext, config: chat.config)
         
         if let content = response.content {
             assistant.content = content

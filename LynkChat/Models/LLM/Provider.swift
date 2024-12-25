@@ -102,7 +102,7 @@ class Provider {
 
 extension Provider {
     func refreshModels() async -> [GenericModel] {
-        let refreshedChatModels: [GenericModel] = await type.getService().refreshModels(provider: self)
+        let refreshedChatModels: [GenericModel] = await APIService.refreshModels(provider: self.type.rawValue.lowercased())
         let newModels = refreshedChatModels.filter { model in
             !chatModels.contains(where: { $0.code == model.code }) || !imageModels.contains(where: { $0.code == model.code }) || !sttModels.contains(where: { $0.code == model.code })
         }

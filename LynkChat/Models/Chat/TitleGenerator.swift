@@ -22,8 +22,7 @@ enum TitleGenerator {
         let titleConfig = ChatConfig(provider: provider, purpose: .title)
         
         do {
-            let serviceType = titleConfig.provider.type.getService()
-            let response = try await serviceType.nonStreamingResponse(from: [user], config: titleConfig)
+            let response = try await APIService.nonStreamingResponse(from: [user], config: titleConfig)
             let title = response.content ?? "Error generating title"
             
             return title.trimmingCharacters(in: .whitespacesAndNewlines)

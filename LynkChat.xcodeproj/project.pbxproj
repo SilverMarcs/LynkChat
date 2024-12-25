@@ -93,6 +93,7 @@
 		086E620C2C39BC4500AB4110 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */; };
 		087906872CA6C73100E5DCAD /* ImageWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087906862CA6C73100E5DCAD /* ImageWindow.swift */; platformFilters = (macos, ); };
 		087906892CA6E22900E5DCAD /* ImageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087906882CA6E22900E5DCAD /* ImageContentView.swift */; platformFilters = (macos, ); };
+		087B30942D1C39C200FB135A /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087B30932D1C39C200FB135A /* APIService.swift */; };
 		087BB68A2CF707B500B50001 /* Scroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087BB6892CF707B500B50001 /* Scroller.swift */; };
 		087F3F852CDDD99E001298B3 /* GuidesSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087F3F842CDDD99E001298B3 /* GuidesSettings.swift */; };
 		087F3F872CDDDC3C001298B3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087F3F862CDDDC3C001298B3 /* AboutSettings.swift */; };
@@ -297,6 +298,7 @@
 		086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessageView.swift; sourceTree = "<group>"; };
 		087906862CA6C73100E5DCAD /* ImageWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageWindow.swift; sourceTree = "<group>"; };
 		087906882CA6E22900E5DCAD /* ImageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageContentView.swift; sourceTree = "<group>"; };
+		087B30932D1C39C200FB135A /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		087BB6892CF707B500B50001 /* Scroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scroller.swift; sourceTree = "<group>"; };
 		087F3F842CDDD99E001298B3 /* GuidesSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidesSettings.swift; sourceTree = "<group>"; };
 		087F3F862CDDDC3C001298B3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
@@ -841,6 +843,7 @@
 		08C8004E2C36F648009581C5 /* LLM */ = {
 			isa = PBXGroup;
 			children = (
+				087B30932D1C39C200FB135A /* APIService.swift */,
 				082F09BD2CB1974000B7860A /* AIModels */,
 				08F815272C97F5D400B49355 /* ChatTool */,
 				0805DEEB2C58CAF900A8354A /* Services */,
@@ -1110,6 +1113,7 @@
 				08A222852C2AB4FD00D76C8B /* ChatContentView.swift in Sources */,
 				081F58B82C6C8FFE00565F20 /* HoverScaleButton.swift in Sources */,
 				08C800572C36F843009581C5 /* SettingsView.swift in Sources */,
+				087B30942D1C39C200FB135A /* APIService.swift in Sources */,
 				08AC26112CF4F71500750269 /* ChatInputMenu.swift in Sources */,
 				08C1ACE02C54BC8A00B86D37 /* TemperatureSlider.swift in Sources */,
 				080E70F02CDF781500A949C9 /* HTTPScheme.swift in Sources */,

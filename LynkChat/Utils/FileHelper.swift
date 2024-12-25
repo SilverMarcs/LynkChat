@@ -71,6 +71,18 @@ struct FileHelper {
         }
     }
     
+    static func processDataFiles2(_ dataFiles: [TypedData]) -> [ContentItem] {
+        return dataFiles.map { data in
+            if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
+                return .text(data.formattedTextContent)
+            } else if data.fileType.conforms(to: .image) {
+                return .image(data.mimeType, data.data)
+            } else {
+                return .text("Error")
+            }
+        }
+    }
+    
     enum ContentItem {
         case text(String)
         case image(String, Data)  // mimeType, data
