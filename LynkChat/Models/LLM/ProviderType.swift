@@ -140,10 +140,10 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     
     func getService() -> any AIService.Type {
         switch self {
-        case .anthropic:
-            ClaudeService.self
-        case .google:
-            GoogleService.self
+//        case .anthropic:
+//            ClaudeService.self
+//        case .google:
+//            GoogleService.self
 //        case .bedrock:
 //            BedrockService.self
         default:

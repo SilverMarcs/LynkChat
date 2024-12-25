@@ -1,15 +1,6 @@
 {
-  "originHash" : "572fe1f14aaaba0abe779f44659a0924e8233d90793fb583047c995564ce1329",
+  "originHash" : "9fbe270431abf9789a98b907ec9d2c9a67e6bcf9d31bf1415663091eb37dee23",
   "pins" : [
-    {
-      "identity" : "googlegenerativeai",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SilverMarcs/GoogleGenerativeAI",
-      "state" : {
-        "branch" : "main",
-        "revision" : "88c1601cff8fafcbd48802d1bb1c11d155a4a235"
-      }
-    },
     {
       "identity" : "hotkey",
       "kind" : "remoteSourceControl",
@@ -26,15 +17,6 @@
       "state" : {
         "branch" : "main",
         "revision" : "d83f91da36e87991d4c61463cf721ea56b254ed5"
-      }
-    },
-    {
-      "identity" : "swiftanthropic",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SilverMarcs/SwiftAnthropic",
-      "state" : {
-        "branch" : "main",
-        "revision" : "95524ed1d36b5de6e051cc82db95962959ff6efe"
       }
     },
     {

@@ -102,32 +102,8 @@ struct OpenAIService: AIService {
         return AsyncThrowingStream { continuation in
             Task {
                 do {
-                    var currentToolCalls: [ChatToolCall] = []
-                    
                     for try await result in service.chatsStream(query: query) {
-                        if let toolCallsDelta = result.choices.first?.delta.toolCalls {
-                            for toolCallDelta in toolCallsDelta {
-                                let index = toolCallDelta.index
-                                
-                                if currentToolCalls.count <= index {
-                                    if let tool = ChatTool(rawValue: toolCallDelta.function?.name ?? "") {
-                                        currentToolCalls.append(ChatToolCall(toolCallId: toolCallDelta.id ?? "", tool: tool, arguments: ""))
-                                    }
-                                }
-                                
-                                if let name = toolCallDelta.function?.name, let tool = ChatTool(rawValue: name) {
-                                    currentToolCalls[index].tool = tool
-                                }
-                                
-                                if let arguments = toolCallDelta.function?.arguments {
-                                    currentToolCalls[index].arguments += arguments
-                                }
-                            }
-                            
-                            if result.choices.first?.finishReason == .toolCalls {
-                                continuation.yield(.toolCalls(currentToolCalls))
-                            }
-                        } else if let content = result.choices.first?.delta.content, !content.isEmpty {
+                        if let content = result.choices.first?.delta.content, !content.isEmpty {
                             continuation.yield(.content(content))
                         } else if let usage = result.usage {
                             let totalTokens = TokenUsage(inputTokens: usage.promptTokens, outputTokens: usage.completionTokens)
@@ -135,9 +111,6 @@ struct OpenAIService: AIService {
                         }
                     }
                     
-                    if !currentToolCalls.isEmpty {
-                        continuation.yield(.toolCalls(currentToolCalls))
-                    }
                     
                     continuation.finish()
                 } catch {
@@ -155,17 +128,9 @@ struct OpenAIService: AIService {
         let result = try await service.chats(query: query)
         
         let content = result.choices.first?.message.content?.string
-        var toolCalls: [ChatToolCall]? = nil
-        
-        if let tools = result.choices.first?.message.toolCalls, !tools.isEmpty {
-            toolCalls = tools.map { tool in
-                ChatToolCall(toolCallId: tool.id, tool: ChatTool(rawValue: tool.function.name)!, arguments: tool.function.arguments)
-            }
-        }
         
         return NonStreamResponse(
             content: content,
-            toolCalls: toolCalls,
             inputTokens: result.usage?.promptTokens ?? 0,
             outputTokens: result.usage?.completionTokens ?? 0
         )

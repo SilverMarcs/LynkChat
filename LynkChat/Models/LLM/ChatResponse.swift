@@ -9,7 +9,6 @@ import Foundation
 
 enum StreamResponse {
     case content(String)
-    case toolCalls([ChatToolCall])
     case totalTokens(TokenUsage)
 }
 
@@ -20,7 +19,6 @@ struct TokenUsage {
 
 struct NonStreamResponse {
     let content: String?
-    let toolCalls: [ChatToolCall]?
     let inputTokens: Int
     let outputTokens: Int
 }

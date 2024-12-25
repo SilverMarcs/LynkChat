@@ -25,6 +25,10 @@ class AppConfig: ObservableObject {
     @AppStorage("fontSize") var fontSize: Double = 17
     #endif
     
+    @AppStorage("myApiKey") var myApiKey: String = ""
+    @AppStorage("myApiHost") var myApiHost: String = ""
+    @AppStorage("sendOwnKey") var sendOwnKey: Bool = true
+    
     // General
     @AppStorage("autogenTitle") var autogenTitle: Bool = true
     @AppStorage("enterToSend") var enterToSend: Bool = true

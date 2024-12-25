@@ -7,8 +7,6 @@
 
 import SwiftUI
 import OpenAI
-import GoogleGenerativeAI
-import SwiftAnthropic
 import SwiftData
 
 enum ChatTool: String, CaseIterable, Codable, Identifiable {
@@ -41,14 +39,6 @@ enum ChatTool: String, CaseIterable, Codable, Identifiable {
     
     var openai: ChatQuery.ChatCompletionToolParam {
         toolType.openai
-    }
-    
-    var google: Tool {
-        toolType.google
-    }
-    
-    var anthropic: MessageParameter.Tool {
-        toolType.anthropic
     }
     
     func process(arguments: String) async throws -> ToolData {

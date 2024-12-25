@@ -7,10 +7,6 @@
 
 import Foundation
 
-extension String {
-    static let apiHost = "http://localhost:3000/api"
-}
-
 struct APIService {
     static func refreshModels(provider: String) async -> [GenericModel] {
         guard let request = makeRequest(path: "/chat/models?provider=\(provider)") else {
@@ -40,20 +36,34 @@ struct APIService {
             provider: config.provider.type.rawValue,
             model: config.model.code,
             messages: conversations,
-            stream: config.stream
+            stream: config.stream,
+            baseUrl: config.provider.host,
+            key: config.provider.apiKey
         )
         
         request.httpBody = try JSONEncoder().encode(requestBody)
         
         let (data, _) = try await URLSession.shared.data(for: request)
-        let response = try JSONDecoder().decode(APIResponse.self, from: data)
         
-        return NonStreamResponse(
-            content: response.text,
-            toolCalls: nil,
-            inputTokens: response.usage.promptTokens,
-            outputTokens: response.usage.completionTokens
-        )
+        do {
+            let response = try JSONDecoder().decode(APIResponse.self, from: data)
+            return NonStreamResponse(
+                content: response.text,
+                inputTokens: response.usage.promptTokens,
+                outputTokens: response.usage.completionTokens
+            )
+        } catch {
+            // Try to decode as error response
+            if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
+                throw RuntimeError(errorResponse.error.details)
+            }
+            
+            // If error response decoding fails, print raw response and throw original error
+            if let rawResponse = String(data: data, encoding: .utf8) {
+                print("Raw API Response:", rawResponse)
+            }
+            throw error
+        }
     }
     
     static func streamResponse(from conversations: [Message], config: ChatConfig) -> AsyncThrowingStream<StreamResponse, Error> {
@@ -68,13 +78,32 @@ struct APIService {
                         provider: config.provider.type.rawValue,
                         model: config.model.code,
                         messages: conversations,
-                        stream: true
+                        stream: true,
+                        baseUrl: config.provider.host,
+                        key: config.provider.apiKey
                     )
                     
                     request.httpBody = try JSONEncoder().encode(requestBody)
                     
-                    let (result, _) = try await URLSession.shared.bytes(for: request)
+                    let (result, response) = try await URLSession.shared.bytes(for: request)
+                    
+                    // Check if we received an error response
+                    if let httpResponse = response as? HTTPURLResponse,
+                       !(200...299).contains(httpResponse.statusCode) {
+                        // Collect the error response data
+                        var errorData = Data()
+                        for try await byte in result {
+                            errorData.append(byte)
+                        }
                         
+                        // Try to decode the error response
+                        if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: errorData) {
+                            throw RuntimeError(errorResponse.error.details)
+                        }
+                        
+                        // If error response decoding fails, throw generic error
+                        throw RuntimeError("Server error: \(httpResponse.statusCode)")
+                    }
                     
                     for try await line in result.lines {
                         if line.isEmpty { continue }
@@ -97,6 +126,12 @@ struct APIService {
                                     continuation.yield(.totalTokens(tokenUsage))
                                 }
                                 
+                            case "error":
+                                // Handle streaming errors
+                                if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
+                                    throw RuntimeError(errorResponse.error.details)
+                                }
+                                
                             default:
                                 continue
                             }
@@ -115,13 +150,13 @@ struct APIService {
 extension APIService {
     // Helper for creating base URLRequest with common headers
     private static func makeRequest(path: String, method: String = "GET") -> URLRequest? {
-        guard let url = URL(string: "\(String.apiHost)\(path)") else {
+        guard let url = URL(string: "\(AppConfig.shared.myApiHost)\(path)") else {
             return nil
         }
         
         var request = URLRequest(url: url)
         request.httpMethod = method
-        request.setValue("12345678", forHTTPHeaderField: "x-api-key")
+        request.setValue(AppConfig.shared.myApiKey, forHTTPHeaderField: "x-api-key")
         
         if method == "POST" {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -131,55 +166,59 @@ extension APIService {
     }
     
     private static func convertMessagesToAPIFormat(_ messages: [Message]) -> [APIMessage] {
-           return messages.map { message in
-               var contentItems: [APIMessageContent] = []
-               
-               // Always add text content as first item if it exists
-               if !message.content.isEmpty {
+       return messages.map { message in
+           var contentItems: [APIMessageContent] = []
+           
+           // Always add text content as first item if it exists
+           if !message.content.isEmpty {
+               contentItems.append(APIMessageContent(
+                   type: "text",
+                   text: message.content,
+                   image: nil
+               ))
+           }
+           
+           // Add any data files
+           let processedItems = FileHelper.processDataFiles2(message.dataFiles)
+           for item in processedItems {
+               switch item {
+               case .text(let text):
                    contentItems.append(APIMessageContent(
                        type: "text",
-                       text: message.content,
+                       text: text,
                        image: nil
                    ))
+               case .image(_, let data):
+                   contentItems.append(APIMessageContent(
+                       type: "image",
+                       text: nil,
+                       image: data.base64EncodedString()
+                   ))
                }
-               
-               // Add any data files
-               let processedItems = FileHelper.processDataFiles2(message.dataFiles)
-               for item in processedItems {
-                   switch item {
-                   case .text(let text):
-                       contentItems.append(APIMessageContent(
-                           type: "text",
-                           text: text,
-                           image: nil
-                       ))
-                   case .image(_, let data):
-                       contentItems.append(APIMessageContent(
-                           type: "image",
-                           text: nil,
-                           image: data.base64EncodedString()
-                       ))
-                   }
-               }
-               
-               return APIMessage(
-                   role: message.role.rawValue,
-                   content: contentItems
-               )
            }
+           
+           return APIMessage(
+               role: message.role.rawValue,
+               content: contentItems
+           )
        }
+   }
        
     private static func makeChatRequestBody(
         provider: String,
         model: String,
         messages: [Message],
-        stream: Bool
+        stream: Bool,
+        baseUrl: String,
+        key: String
     ) -> APIRequest {
         return APIRequest(
             provider: provider.lowercased(),
             model: model,
             messages: convertMessagesToAPIFormat(messages),
-            stream: stream
+            stream: stream,
+            customBaseUrl: provider == "custom" ? baseUrl : nil,
+            customApiKey: AppConfig.shared.sendOwnKey ? key : nil
         )
    }
 }
@@ -217,6 +256,8 @@ private struct APIRequest: Encodable {
     let model: String
     let messages: [APIMessage]
     let stream: Bool
+    let customBaseUrl: String?
+    let customApiKey: String? // TODO: encrypt this
 }
 
 private struct UsageResponse: Decodable {
@@ -239,5 +280,15 @@ private struct StreamChunk: Decodable {
         let promptTokens: Int
         let completionTokens: Int
         let totalTokens: Int
+    }
+}
+
+private struct APIErrorResponse: Decodable {
+    let error: ErrorDetails
+    
+    struct ErrorDetails: Decodable {
+        let message: String
+        let type: String
+        let details: String
     }
 }

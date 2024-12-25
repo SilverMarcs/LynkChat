@@ -7,8 +7,6 @@
 
 import Foundation
 import OpenAI
-import GoogleGenerativeAI
-import SwiftAnthropic
 
 struct URLScrape: ToolProtocol {
     static let toolName = "urlScrape"
@@ -119,48 +117,18 @@ struct URLScrape: ToolProtocol {
                     name: toolName,
                     description: description,
                     parameters:
-                        .init(
-                            type: .object,
-                            properties: [
-                                "url_list":
-                                    .init(
-                                        type: .array,
-                                        description: "The array of URLs of the websites to scrape",
-                                        items: .init(type: .string)
-                                    )
-                            ]
-                        )
+                            .init(
+                                type: .object,
+                                properties: [
+                                    "url_list":
+                                            .init(
+                                                type: .array,
+                                                description: "The array of URLs of the websites to scrape",
+                                                items: .init(type: .string)
+                                            )
+                                ]
+                            )
                 )
-        )
-    }
-    
-    static var google: Tool {
-        Tool(functionDeclarations: [
-            FunctionDeclaration(
-                name: toolName,
-                description: description,
-                parameters: [
-                    "url_list": .init(
-                        type: .array,
-                        description: "The array of URLs of the websites to scrape",
-                        items: .init(type: .string)
-                    )
-                ],
-                requiredParameters: ["url_list"]
-            )
-        ])
-    }
-
-    static var anthropic: MessageParameter.Tool {
-        .init(
-            name: toolName,
-            description: description,
-            inputSchema: .init(
-                type: .object,
-                properties: [
-                    "url_list": .init(type: .array, description: "The array of URLs of the website(s) to scrape"),
-                ],
-                required: ["url_list"])
         )
     }
 }

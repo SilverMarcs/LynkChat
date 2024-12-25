@@ -7,9 +7,7 @@
 
 import Foundation
 import OpenAI
-import GoogleGenerativeAI
 import SwiftData
-import SwiftAnthropic
 
 struct TranscribeTool: ToolProtocol {
     static let toolName: String = "transcribe"
@@ -111,59 +109,24 @@ struct TranscribeTool: ToolProtocol {
                     name: toolName,
                     description: description,
                     parameters:
-                        .init(
-                            type: .object,
-                            properties: [
-                                "conversationID":
-                                        .init(
-                                            type: .string,
-                                            description: "The conversation ID"
-                                        ),
-                                "fileNames":
-                                    .init(
-                                        type: .array,
-                                        description: "The array of audio file names WITH extension to access",
-                                        items: .init(type: .string)
-                                    )
-                            ],
-                            required: ["fileNames", "conversationID"]
-                        )
+                            .init(
+                                type: .object,
+                                properties: [
+                                    "conversationID":
+                                            .init(
+                                                type: .string,
+                                                description: "The conversation ID"
+                                            ),
+                                    "fileNames":
+                                            .init(
+                                                type: .array,
+                                                description: "The array of audio file names WITH extension to access",
+                                                items: .init(type: .string)
+                                            )
+                                ],
+                                required: ["fileNames", "conversationID"]
+                            )
                 )
-        )
-    }
-    
-    static var google: Tool {
-        Tool(functionDeclarations: [
-            FunctionDeclaration(
-                name: toolName,
-                description: description,
-                parameters: [
-                    "conversationID": Schema(
-                        type: .string,
-                        description: "The conversation ID"
-                    ),
-                    "fileNames": Schema(
-                        type: .array,
-                        description: "The array of audio file names WITH extension to access",
-                        items: Schema(type: .string)
-                    )
-                ],
-                requiredParameters: ["conversationID", "fileNames"]
-            )
-        ])
-    }
-    
-    static var anthropic: MessageParameter.Tool {
-        .init(
-            name: toolName,
-            description: description,
-            inputSchema: .init(
-                type: .object,
-                properties: [
-                    "conversationID": .init(type: .string, description: "The conversation ID"),
-                    "fileNames": .init(type: .string, description: "The array of audio file names WITH extension to access")
-                ],
-                required: ["conversationID", "fileNames"])
         )
     }
 }

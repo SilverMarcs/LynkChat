@@ -7,8 +7,6 @@
 
 import Foundation
 import OpenAI
-import GoogleGenerativeAI
-import SwiftAnthropic
 
 enum MessageRole: String, Codable {
     case user
@@ -26,33 +24,6 @@ enum MessageRole: String, Codable {
             return .system
         case .tool:
             return .tool
-        }
-    }
-    
-    func toGoogleRole() -> String {
-        switch self {
-        case .user, .system, .tool:
-            return "user"
-        case .assistant:
-            return "model"
-        }
-    }
-    
-    func toClaudeRole() -> MessageParameter.Message.Role {
-        switch self {
-        case .user:
-            return .user
-        case .assistant, .system, .tool:
-            return .assistant
-        }
-    }
-    
-    func toVertexRole() -> String {
-        switch self {
-        case .user, .tool, .system:
-            return "user"
-        case .assistant:
-            return "assistant"
         }
     }
 }

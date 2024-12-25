@@ -7,8 +7,6 @@
 
 import Foundation
 import OpenAI
-import GoogleGenerativeAI
-import SwiftAnthropic
 
 struct GoogleSearch: ToolProtocol {
     static let toolName = "googleSearch"
@@ -124,34 +122,5 @@ struct GoogleSearch: ToolProtocol {
                                  )
                     )
               )
-    }
-
-    static var google: Tool {
-        Tool(functionDeclarations: [
-            FunctionDeclaration(
-                name: toolName,
-                description: description,
-                parameters: [
-                    "query": .init(
-                        type: .string,
-                        description: "The search query to search google with"
-                    )
-                ],
-                requiredParameters: ["query"]
-            )
-        ])
-    }
-    
-    static var anthropic: MessageParameter.Tool {
-        .init(
-            name: toolName,
-            description: description,
-            inputSchema: .init(
-                type: .object,
-                properties: [
-                    "query": .init(type: .string, description: "The search query to search google with"),
-                ],
-                required: ["query"])
-        )
     }
 }
