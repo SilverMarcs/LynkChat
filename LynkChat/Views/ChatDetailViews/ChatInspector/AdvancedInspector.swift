@@ -22,15 +22,6 @@ struct AdvancedInspector: View {
                 PresencePenaltySlider(penalty: $chat.config.presencePenalty, shortLabel: true)
             }
             
-            
-            if chat.config.provider.type == .anthropic {
-                Section("Prompt Caching") {
-                    Toggle(isOn: $chat.config.useCache) {
-                        Text("Use Cache for new messages")
-                    }
-                }
-            }
-            
 //            Section("Tools") {
 //                ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
 //            }

@@ -16,7 +16,6 @@ final class ChatConfig: Equatable, Identifiable, Hashable {
     var topP: Double? = ChatConfigDefaults.shared.topP
     var maxTokens: Int? = ChatConfigDefaults.shared.maxTokens
     var stream: Bool = ChatConfigDefaults.shared.stream
-    var useCache: Bool = ChatConfigDefaults.shared.useCache
     var systemPrompt: String
     var purpose: ChatConfigPurpose = ChatConfigPurpose.chat
     

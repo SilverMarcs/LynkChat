@@ -115,15 +115,6 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
 //        }
 //    }
     
-    var useCache: Bool {
-        get {
-            activeMessage.useCache
-        }
-        set {
-            activeMessage.useCache = newValue
-        }
-    }
-    
     // MARK: - Active Message Navigation
     var currentMessageIndex: Int {
         allMessages.firstIndex(of: activeMessage) ?? 0

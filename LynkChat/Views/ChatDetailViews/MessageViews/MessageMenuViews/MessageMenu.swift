@@ -24,10 +24,6 @@ struct MessageMenu: View {
         
         Section {
             CopyButton(content: message.content, dataFiles: message.dataFiles)
-            
-            if message.chat?.config.provider.type == .anthropic && message.role == .user {
-                CacheButton(useCache: $message.useCache)
-            }
         }
 
         Section {

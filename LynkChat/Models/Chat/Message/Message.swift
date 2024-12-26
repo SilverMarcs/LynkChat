@@ -27,7 +27,6 @@ final class Message: Equatable, Identifiable, Hashable {
     @Attribute(.ephemeral)
     var isReplying: Bool = false
     
-    var useCache: Bool = false
     var height: CGFloat = 0
     
     @Relationship(deleteRule: .cascade)

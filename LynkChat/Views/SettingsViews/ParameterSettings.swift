@@ -27,10 +27,6 @@ struct ParameterSettings: View {
             }
             
             Section("Advanced", isExpanded: $expandAdvanced) {
-                Toggle(isOn: $config.useCache) {
-                    Text("Prompt Caching")
-                }
-                
                 TopPSlider(topP: $config.topP)
                 FrequencyPenaltySlider(penalty: $config.frequencyPenalty)
                 PresencePenaltySlider(penalty: $config.presencePenalty)

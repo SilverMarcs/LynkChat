@@ -91,7 +91,6 @@
 		087F3F942CDE19EC001298B3 /* AboutWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087F3F932CDE19EC001298B3 /* AboutWindow.swift */; platformFilters = (macos, ); };
 		088475342CAE8E57006C04F0 /* AppIconMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088475332CAE8E57006C04F0 /* AppIconMenu.swift */; platformFilters = (ios, xros, ); };
 		08850D8B2CFE0A99004D944C /* PermissionsOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08850D8A2CFE0A99004D944C /* PermissionsOnboarding.swift */; platformFilters = (ios, xros, ); };
-		08850D932CFECC30004D944C /* CacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08850D922CFECC30004D944C /* CacheButton.swift */; };
 		0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0886050E2CF61E4200A9657C /* ShortcutSettings.swift */; platformFilters = (macos, ); };
 		088A09F32C55C7740055B567 /* TextSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088A09F22C55C7740055B567 /* TextSelectionView.swift */; };
 		088DA8F92CA752EF006C017E /* IOSWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088DA8F82CA752EF006C017E /* IOSWindow.swift */; platformFilters = (ios, xros, ); };
@@ -278,7 +277,6 @@
 		087F3F932CDE19EC001298B3 /* AboutWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutWindow.swift; sourceTree = "<group>"; };
 		088475332CAE8E57006C04F0 /* AppIconMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconMenu.swift; sourceTree = "<group>"; };
 		08850D8A2CFE0A99004D944C /* PermissionsOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsOnboarding.swift; sourceTree = "<group>"; };
-		08850D922CFECC30004D944C /* CacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheButton.swift; sourceTree = "<group>"; };
 		0886050E2CF61E4200A9657C /* ShortcutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutSettings.swift; sourceTree = "<group>"; };
 		088A09F22C55C7740055B567 /* TextSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSelectionView.swift; sourceTree = "<group>"; };
 		088DA8F82CA752EF006C017E /* IOSWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSWindow.swift; sourceTree = "<group>"; };
@@ -837,7 +835,6 @@
 				08CA42B72CF1F1530073BB01 /* EditButton.swift */,
 				08CA42B52CF1F13B0073BB01 /* ExpandButton.swift */,
 				08C800442C36C10A009581C5 /* MessageMenu.swift */,
-				08850D922CFECC30004D944C /* CacheButton.swift */,
 			);
 			path = MessageMenuViews;
 			sourceTree = "<group>";
@@ -1123,7 +1120,6 @@
 				089C7E142C405B01005E3BE9 /* QuickPanelSettings.swift in Sources */,
 				08A00FF02D19A580001D48CB /* InputModelPickers.swift in Sources */,
 				0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */,
-				08850D932CFECC30004D944C /* CacheButton.swift in Sources */,
 				081C1D942C3BD33F0078BB24 /* ParameterSettings.swift in Sources */,
 				08149A572C3E5E5B004485AC /* MessageRole.swift in Sources */,
 				0853611F2C4A38C9007DAB62 /* GenericSlider.swift in Sources */,
