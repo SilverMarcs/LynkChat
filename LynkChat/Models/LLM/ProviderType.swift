@@ -23,7 +23,9 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     case bedrock
     case ollama
     case lmstudio
-    case custom
+    case customOpenai
+    case customAnthropic
+    case customGoogle
 
     var id: ProviderType { self }
 
@@ -49,15 +51,17 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .google: "Google"
         case .ollama: "Ollama"
         case .lmstudio: "LMStudio"
-        case .custom: "Custom OpenAI"
+        case .customOpenai: "Custom OpenAI"
+        case .customAnthropic: "Custom Anthropic"
+        case .customGoogle: "Custom Google"
         }
     }
     
     var imageName: String {
         switch self {
-        case .openai: "openai.SFSymbol"
-        case .anthropic: "anthropic.SFSymbol"
-        case .google: "google.SFSymbol"
+        case .openai, .customOpenai: "openai.SFSymbol"
+        case .anthropic, .customAnthropic: "anthropic.SFSymbol"
+        case .google, .customGoogle: "google.SFSymbol"
         case .bedrock: "bedrock.SFSymbol"
         case .openrouter: "openrouter.SFSymbol"
         case .mistral: "mistral.SFSymbol"
@@ -67,8 +71,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .github: "github.SFSymbol"
         case .togetherai: "togetherai.SFSymbol"
         case .ollama: "ollama.SFSymbol"
-        case .custom: "openai.SFSymbol"
-        default: "brain.SFSymbol"
+        case .lmstudio: "brain.SFSymbol"
         }
     }
     
@@ -92,9 +95,9 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     
     var defaultHost: String {
         switch self {
-        case .openai: "api.openai.com/v1"
-        case .anthropic: "api.anthropic.com"
-        case .google: "generativelanguage.googleapis.com"
+        case .openai, .customOpenai: "api.openai.com/v1"
+        case .anthropic, .customAnthropic: "api.anthropic.com"
+        case .google, .customGoogle: "generativelanguage.googleapis.com"
         case .bedrock: "api.bedrock.com"
         case .github: "models.inference.ai.azure.com"
         case .perplexity: "api.perplexity.ai"
@@ -105,21 +108,24 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .togetherai: "api.together.xyz/v1"
         case .lmstudio: "localhost:1234/v1"
         case .ollama: "localhost:11434//c1"
-        case .custom: "api.openai.com/v1"
         }
     }
     
     func getService() -> any AIService.Type {
         switch self {
             // TODO: do v soon
-//        case .custom, .lmstudio, .ollama:
+//        case .customOpenai, .lmstudio, .ollama:
 //            CustomOpenAIService.self
+//        case .customGoogle:
+//            CustomGoogleService.self
+//        case .customAnthropic:
+//            CustomAnthropicService.self
         default:
             APIService.self
         }
     }
     
-    static var usesCustomOpenAI: [ProviderType] = [.custom, .lmstudio, .ollama]
+    static var customTypes: [ProviderType] = [.customOpenai, .lmstudio, .ollama, .customGoogle, .customAnthropic]
     
     var availableModelTypes: [ModelType] {
          switch self {
@@ -132,9 +138,9 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
 
     func getDefaultModels() -> [AIModel] {
         switch self {
-        case .openai: AIModel.getOpenaiModels()
-        case .anthropic: AIModel.getAnthropicModels()
-        case .google: AIModel.getGoogleModels()
+        case .openai, .customOpenai: AIModel.getOpenaiModels()
+        case .anthropic, .customAnthropic: AIModel.getAnthropicModels()
+        case .google, .customGoogle: AIModel.getGoogleModels()
         case .bedrock: AIModel.getBedrockModels() // TODO: change
         case .xai: AIModel.getXaiModels()
         case .openrouter: AIModel.getOpenrouterModels()
@@ -145,7 +151,6 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .togetherai: AIModel.getTogetherModels()
         case .lmstudio: AIModel.getLocalModels()
         case .ollama: AIModel.getLocalModels()
-        case .custom: AIModel.getOpenaiModels()
         }
     }
     
@@ -170,9 +175,9 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     
     var extraInfo: String {
         switch self {
-        case .lmstudio: "Download and setup LMStudio from [here](https://lmstudio.ai/download)"
-        case .ollama: "Download and setup Ollama from [here](https://ollama.com/download/mac)"
-        case .custom: "Include http:// or https:// in the front and /v1 at the end if applicable"
+        case .customOpenai, .lmstudio, .ollama: "Include http:// or https:// in the front and /v1 at the end if applicable"
+        case .customGoogle: "Get Google API key [here](https://aistudio.google.com/app/apikey)"
+        case .customAnthropic: "Get Anthropic API key [here](https://console.anthropic.com/settings/keys"
         default: "This API Service is bundled with a paid subcription. Create Custom OpenAI provider for using Own API Key with OpenAI compatible providers"
         }
     }
@@ -203,7 +208,7 @@ extension ProviderType {
             case .primary: return ProviderType.primaryProviders
             case .other: return ProviderType.otherProviders
             case .local: return ProviderType.localProviders
-            case .custom: return [.custom]
+            case .custom: return [.customOpenai, .customGoogle, .customAnthropic]
             }
         }
     }

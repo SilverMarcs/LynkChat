@@ -41,7 +41,7 @@ struct ProviderGeneral: View {
                 SectionFooterView(text: "Recommended to use cheaper models as lite model")
             }
 
-            if provider.type == .custom {
+            if ProviderType.customTypes.contains(provider.type) {
                 Section("Customisation") {
                     Picker("Scheme", selection: $provider.scheme) {
                         ForEach(HTTPScheme.allCases) { scheme in

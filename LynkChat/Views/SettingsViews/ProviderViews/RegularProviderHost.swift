@@ -44,7 +44,7 @@ struct RegularProviderHost: View {
     }
     
     var isHostDisabled: Bool {
-        !ProviderType.usesCustomOpenAI.contains(provider.type)
+        !ProviderType.customTypes.contains(provider.type)
     }    
 }
 
