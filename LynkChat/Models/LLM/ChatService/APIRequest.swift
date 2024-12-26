@@ -9,13 +9,13 @@ import Foundation
 
 // TODO: make init that must check whether able to send own api key or not.
 struct APIRequest: Encodable {
-    let provider: Provider
+    let provider: APIProvider
     let model: String
     let messages: [APIMessage]
     let system: String?
     let stream: Bool
     
-    init(provider: Provider, model: String, messages: [APIMessage], system: String?, stream: Bool) {
+    init(provider: APIProvider, model: String, messages: [APIMessage], system: String?, stream: Bool) {
         self.provider = provider
         self.model = model
         self.messages = messages
@@ -28,7 +28,7 @@ struct APIRequest: Encodable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         // Encode provider as provider.type.rawValue
-        try container.encode(provider.type.rawValue, forKey: .provider)
+        try container.encode(provider.name, forKey: .provider)
         
         // Encode other properties normally
         try container.encode(model, forKey: .model)
@@ -44,4 +44,10 @@ struct APIRequest: Encodable {
         case system
         case stream
     }
+}
+
+struct APIProvider: Encodable {
+    let name: String
+    let baseUrl: String
+    let apiKey: String
 }

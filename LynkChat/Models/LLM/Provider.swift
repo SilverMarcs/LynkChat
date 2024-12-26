@@ -55,7 +55,6 @@ class Provider: ProviderImageProvider {
         self.liteModel = liteModel
     }
     
-    
     static func factory(type: ProviderType) -> Provider {
         let allModels = type.getDefaultModels()
         
@@ -75,6 +74,10 @@ class Provider: ProviderImageProvider {
         )
         
         return provider
+    }
+    
+    func toApiProvidr() -> APIProvider {
+        return .init(name: type.rawValue, baseUrl: baseUrl, apiKey: apiKey)
     }
     
     var imageName: String {
@@ -101,7 +104,7 @@ extension Provider {
         )
         
         let request = APIRequest(
-            provider: self,
+            provider: self.toApiProvidr(),
             model: model.code,
             messages: [testMessage],
             system: nil,

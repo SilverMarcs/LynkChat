@@ -19,7 +19,7 @@ enum TitleGenerator {
     private static func generateTitle(from content: String, provider: Provider) async -> String? {
         do {
             let request = APIRequest(
-                provider: provider,
+                provider: provider.toApiProvidr(),
                 model: provider.liteModel.code,
                 messages: [APIMessage(
                     role: .user,

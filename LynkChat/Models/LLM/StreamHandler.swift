@@ -96,7 +96,7 @@ struct StreamHandler {
         let apiMessages = adjustedContext.map { $0.toAPIMessage() }
         
         return APIRequest(
-            provider: chat.config.provider,
+            provider: chat.config.provider.toApiProvidr(),
             model: chat.config.model.code,
             messages: apiMessages,
             system: chat.config.systemPrompt,

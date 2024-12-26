@@ -83,7 +83,7 @@ struct InputArea: View {
             }
         }
         .padding(4)
-        .roundedRectangleOverlay(radius: 15, style: .circular)
+        .roundedRectangleOverlay(radius: 14, style: .circular)
         .modifier(CommonInputStyling())
     }
         
