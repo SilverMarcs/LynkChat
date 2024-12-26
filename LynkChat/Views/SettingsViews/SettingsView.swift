@@ -56,6 +56,11 @@ struct SettingsView: View {
                 
                 Label("About", systemImage: "info.circle")
                     .tag(SettingsTab.about)
+                
+                #if DEBUG
+                Label("Debug", systemImage: "ladybug")
+                    .tag(SettingsTab.debug)
+                #endif
                          
             }
             #if !os(visionOS)
@@ -98,6 +103,8 @@ struct SettingsView: View {
                 #endif
                 case .about:
                     AboutSettings()
+                case .debug:
+                    DebugSettings()
                 default:
                     EmptyView()
                 }

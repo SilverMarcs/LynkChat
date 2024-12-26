@@ -142,7 +142,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .openai: "Get OpenAI API key [here](https://platform.openai.com/settings/organization/api-keys)"
         case .anthropic: "Get Anthropic API key [here](https://console.anthropic.com/settings/keys)"
         case .google: "Get Google API key [here](https://aistudio.google.com/app/apikey)"
-        case .bedrock: "Put Secrents in this format: ACCESS_KEY||SECRET_ACCESS_SECRET"
+        case .bedrock: "Only us-east-1 is supported. Put Secrents in this format: ACCESS_KEY||SECRET_ACCESS_SECRET"
         case .ollama: "Download and setup Ollama from [here](https://ollama.com/download/mac)"
         case .lmstudio: "Download and setup LMStudio from [here](https://lmstudio.ai/download)"
         case .xai: "Get xAI API key [here](https://console.x.ai) and click on key icon"

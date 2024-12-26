@@ -21,4 +21,7 @@ enum SettingsTab {
     case advanced
     case guides
     case about
+    #if DEBUG
+    case debug
+    #endif
 }

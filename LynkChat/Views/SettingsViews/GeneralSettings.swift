@@ -16,12 +16,6 @@ struct GeneralSettings: View {
 
     var body: some View {
         Form {
-            #if DEBUG
-            Toggle("Send Own Key", isOn: $config.sendOwnKey)
-            TextField("API Host", text: $config.myApiHost)
-            TextField("API Key", text: $config.myApiKey)
-            #endif
-            
             Section("Title") {
                 Toggle(isOn: $config.autogenTitle) {
                     Text("Autogen Title")

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		080A18792D12241C0081C6B1 /* RegularProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A18782D12241C0081C6B1 /* RegularProviderHost.swift */; };
-		080A187B2D1224300081C6B1 /* BedrockProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */; };
 		080A187D2D1402DA0081C6B1 /* InputArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187C2D1402DA0081C6B1 /* InputArea.swift */; platformFilters = (macos, ); };
 		080E0F752D18593200DCA9E3 /* CustomToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E0F742D18593200DCA9E3 /* CustomToolsView.swift */; };
 		080E0F782D18819500DCA9E3 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 080E0F772D18819500DCA9E3 /* HotKey */; };
@@ -33,6 +32,7 @@
 		0822A6C52CF09F31008DF4FC /* ExpandedInputEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */; };
 		082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 082355142CDBBB2B00388273 /* SwiftMarkdownView */; };
 		08256BF22D1D30D800C54BA1 /* ProviderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF12D1D30D800C54BA1 /* ProviderButton.swift */; };
+		08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF32D1D341300C54BA1 /* DebugSettings.swift */; };
 		0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828E5452D157AF900DED52B /* AutoHeightTextView.swift */; platformFilters = (macos, ); };
 		082A63322C551108003996B7 /* MarkdownBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63312C551108003996B7 /* MarkdownBackup.swift */; };
 		082A63382C55175E003996B7 /* MiscUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63372C55175E003996B7 /* MiscUtils.swift */; };
@@ -197,7 +197,6 @@
 
 /* Begin PBXFileReference section */
 		080A18782D12241C0081C6B1 /* RegularProviderHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularProviderHost.swift; sourceTree = "<group>"; };
-		080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedrockProviderHost.swift; sourceTree = "<group>"; };
 		080A187C2D1402DA0081C6B1 /* InputArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputArea.swift; sourceTree = "<group>"; };
 		080E0F742D18593200DCA9E3 /* CustomToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolsView.swift; sourceTree = "<group>"; };
 		080E70E72CDF1BC100A949C9 /* Tips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tips.swift; sourceTree = "<group>"; };
@@ -220,6 +219,7 @@
 		082255612CE22D3200AAD32B /* SecretInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretInputView.swift; sourceTree = "<group>"; };
 		0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedInputEditor.swift; sourceTree = "<group>"; };
 		08256BF12D1D30D800C54BA1 /* ProviderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderButton.swift; sourceTree = "<group>"; };
+		08256BF32D1D341300C54BA1 /* DebugSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSettings.swift; sourceTree = "<group>"; };
 		0828E5452D157AF900DED52B /* AutoHeightTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHeightTextView.swift; sourceTree = "<group>"; };
 		082A63312C551108003996B7 /* MarkdownBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownBackup.swift; sourceTree = "<group>"; };
 		082A63372C55175E003996B7 /* MiscUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscUtils.swift; sourceTree = "<group>"; };
@@ -546,7 +546,6 @@
 				082181592C382B9B00171BF3 /* ProviderGeneral.swift */,
 				082181692C39001B00171BF3 /* ProviderRow.swift */,
 				080A18782D12241C0081C6B1 /* RegularProviderHost.swift */,
-				080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */,
 			);
 			path = ProviderViews;
 			sourceTree = "<group>";
@@ -808,6 +807,7 @@
 				087F3F842CDDD99E001298B3 /* GuidesSettings.swift */,
 				0886050E2CF61E4200A9657C /* ShortcutSettings.swift */,
 				087F3F862CDDDC3C001298B3 /* AboutSettings.swift */,
+				08256BF32D1D341300C54BA1 /* DebugSettings.swift */,
 			);
 			path = SettingsViews;
 			sourceTree = "<group>";
@@ -970,7 +970,6 @@
 				08F815462C980ABF00B49355 /* StreamHandler.swift in Sources */,
 				08A1DDBB2CE0024A00DAF6F9 /* Source.swift in Sources */,
 				08A77CCC2C65AA820087D0F3 /* DatabaseService.swift in Sources */,
-				080A187B2D1224300081C6B1 /* BedrockProviderHost.swift in Sources */,
 				08F815242C97F59100B49355 /* PluginSettings.swift in Sources */,
 				08CA42B62CF1F13B0073BB01 /* ExpandButton.swift in Sources */,
 				08CA42BA2CF1F18D0073BB01 /* ForkButton.swift in Sources */,
@@ -1045,6 +1044,7 @@
 				085361132C4939C5007DAB62 /* GenerationView.swift in Sources */,
 				0898252B2CE9BB1700980468 /* OnboardingPage.swift in Sources */,
 				085276C02C98794C009184D2 /* ToolCallView.swift in Sources */,
+				08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */,
 				08C1ACE42C54BCA600B86D37 /* FrequencyPenaltySlider.swift in Sources */,
 				0893B2022C3955CC00D4D501 /* CustomSearchField.swift in Sources */,
 				08C5AD772CFB7FBF00F5FEA0 /* SelectedButtonStyle.swift in Sources */,
