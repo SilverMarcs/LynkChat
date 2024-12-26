@@ -32,7 +32,9 @@ enum TitleGenerator {
                 customApiKey: provider.apiKey
             )
             
-            let response = try await APIService.nonStreamingResponse(from: request)
+            var service = provider.type.getService()
+            
+            let response = try await service.nonStreamingResponse(from: request)
             let title = response.content ?? "Error generating title"
             
             return title.trimmingCharacters(in: .whitespacesAndNewlines)

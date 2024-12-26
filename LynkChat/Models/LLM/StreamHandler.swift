@@ -39,8 +39,9 @@ struct StreamHandler {
         let adjustedContext: [Message] = chat.adjustedContext.dropLast() // removing las user msg
         let apiMessages: [APIMessage] = adjustedContext.map { $0.toAPIMessage() }
         let apiRequest: APIRequest = .init(provider: config.provider.type.rawValue, model: config.model.code, messages: apiMessages, stream: true, customBaseUrl: config.provider.host, customApiKey: config.provider.apiKey)
+        var service = config.provider.type.getService()
         
-        for try await response in APIService.streamResponse(from: apiRequest) {
+        for try await response in service.streamResponse(from: apiRequest) {
             switch response {
             case .content(let content):
                 streamText += content
@@ -83,8 +84,9 @@ struct StreamHandler {
         let adjustedContext: [Message] = chat.adjustedContext.dropLast() // removing las user msg
         let apiMessages: [APIMessage] = adjustedContext.map { $0.toAPIMessage() }
         let apiRequest: APIRequest = .init(provider: config.provider.type.rawValue, model: config.model.code, messages: apiMessages, stream: false, customBaseUrl: config.provider.host, customApiKey: config.provider.apiKey)
+        var service = config.provider.type.getService()
         
-        let response = try await APIService.nonStreamingResponse(from: apiRequest)
+        let response = try await service.nonStreamingResponse(from: apiRequest)
         
         if let content = response.content {
             assistant.content = content

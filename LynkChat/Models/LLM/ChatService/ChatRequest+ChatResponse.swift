@@ -70,17 +70,11 @@ struct APIRequest: Encodable {
     let customApiKey: String?
     
     init(provider: String, model: String, messages: [APIMessage], stream: Bool, customBaseUrl: String?, customApiKey: String?) {
-        print(customApiKey)
         self.provider = provider
         self.model = model
         self.messages = messages
         self.stream = stream
-        
-        if provider == "custom" {
-            self.customBaseUrl = customBaseUrl
-        } else {
-            self.customBaseUrl = nil
-        }
+        self.customBaseUrl = customBaseUrl
         
         // TODO: see this
         if AppConfig.shared.sendOwnKey {

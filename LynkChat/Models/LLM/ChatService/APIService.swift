@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct APIService {
+struct APIService: AIService {
     static func testChatModel(provider: String, model: String, baseUrl: String?, apiKey: String?) async -> Bool {
         let testMessage = APIMessage(
             role: .user,
