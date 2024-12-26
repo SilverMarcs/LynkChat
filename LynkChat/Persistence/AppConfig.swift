@@ -26,7 +26,7 @@ class AppConfig: ObservableObject {
     #endif
     
     @AppStorage("myApiKey") var myApiKey: String = ""
-    @AppStorage("myApiHost") var myApiHost: String = ""
+    @AppStorage("myApiHost") var myApiHost: String = "https://llm-api-server.vercel.app/api"
     @AppStorage("sendOwnKey") var sendOwnKey: Bool = true
     
     // General
