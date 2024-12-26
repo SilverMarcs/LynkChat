@@ -35,7 +35,7 @@ enum TitleGenerator {
             var service = provider.type.getService()
             
             let response = try await service.nonStreamingResponse(from: request)
-            let title = response.content ?? "Error generating title"
+            let title = response.text.isEmpty ? "Error generating Title" : response.text
             
             return title.trimmingCharacters(in: .whitespacesAndNewlines)
         } catch {

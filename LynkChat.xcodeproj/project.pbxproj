@@ -76,7 +76,6 @@
 		0865E0962CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */; };
 		0868AC8B2D0B2C7900F8B8FE /* NativeMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */; };
 		0869A3EB2C958A4C009BF9F2 /* ChatConfigTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0869A3EA2C958A4C009BF9F2 /* ChatConfigTools.swift */; };
-		0869A3F22C95DBF9009BF9F2 /* ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0869A3F12C95DBF9009BF9F2 /* ChatResponse.swift */; };
 		086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */; };
 		086E620C2C39BC4500AB4110 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */; };
 		087906872CA6C73100E5DCAD /* ImageWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087906862CA6C73100E5DCAD /* ImageWindow.swift */; platformFilters = (macos, ); };
@@ -264,7 +263,6 @@
 		0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryBorderedButtonStyle.swift; sourceTree = "<group>"; };
 		0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMarkdownView.swift; sourceTree = "<group>"; };
 		0869A3EA2C958A4C009BF9F2 /* ChatConfigTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatConfigTools.swift; sourceTree = "<group>"; };
-		0869A3F12C95DBF9009BF9F2 /* ChatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponse.swift; sourceTree = "<group>"; };
 		086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryNavigationButtons.swift; sourceTree = "<group>"; };
 		086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessageView.swift; sourceTree = "<group>"; };
 		087906862CA6C73100E5DCAD /* ImageWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageWindow.swift; sourceTree = "<group>"; };
@@ -798,7 +796,6 @@
 				082F09BD2CB1974000B7860A /* AIModels */,
 				08F8152A2C97F5FA00B49355 /* ImageGenerator.swift */,
 				08C8004F2C36F667009581C5 /* Provider.swift */,
-				0869A3F12C95DBF9009BF9F2 /* ChatResponse.swift */,
 				08F815452C980ABF00B49355 /* StreamHandler.swift */,
 				08F369E22C3C278E002E4A35 /* ProviderType.swift */,
 			);
@@ -1122,7 +1119,6 @@
 				081C1D982C3BD8A50078BB24 /* GeneralSettings.swift in Sources */,
 				080A18792D12241C0081C6B1 /* RegularProviderHost.swift in Sources */,
 				086E620C2C39BC4500AB4110 /* ErrorMessageView.swift in Sources */,
-				0869A3F22C95DBF9009BF9F2 /* ChatResponse.swift in Sources */,
 				0834E77B2C71A42F007CB294 /* TypedData.swift in Sources */,
 				089C7E142C405B01005E3BE9 /* QuickPanelSettings.swift in Sources */,
 				08A00FF02D19A580001D48CB /* InputModelPickers.swift in Sources */,

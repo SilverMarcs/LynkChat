@@ -9,14 +9,17 @@ import Foundation
 
 struct APIResponse: Decodable {
     let text: String
-    let finishReason: String
-    let usage: Usage
-    
-    struct Usage: Decodable {
-        let promptTokens: Int
-        let completionTokens: Int
-        let totalTokens: Int
-    }
+    let usage: TokenUsage
+}
+
+enum StreamResponse {
+    case text(String)
+    case usage(TokenUsage)
+}
+
+struct TokenUsage: Codable {
+    let promptTokens: Int
+    let completionTokens: Int
 }
 
 struct APIMessageContent: Encodable {
@@ -24,7 +27,6 @@ struct APIMessageContent: Encodable {
     let text: String?
     let image: String?
 }
-
 
 // TODO: beautify this and also use enum
 struct APIMessage: Encodable {

@@ -25,7 +25,7 @@ struct APIService: AIService {
         
         do {
             let response = try await nonStreamingResponse(from: request)
-            return !response.content.isEmpty
+            return !response.text.isEmpty
         } catch {
             print("Test chat model failed: \(error)")
             return false
@@ -51,7 +51,7 @@ struct APIService: AIService {
         }
     }
     
-    static func nonStreamingResponse(from request: APIRequest) async throws -> NonStreamResponse {
+    static func nonStreamingResponse(from request: APIRequest) async throws -> APIResponse {
         guard var urlRequest = makeRequest(path: "/chat", method: "POST") else {
             throw URLError(.badURL)
         }
@@ -67,9 +67,9 @@ struct APIService: AIService {
         
         do {
             let response = try JSONDecoder().decode(APIResponse.self, from: data)
-            return NonStreamResponse(
-                content: response.text,
-                tokenUsage: .init(inputTokens: response.usage.promptTokens, outputTokens: response.usage.completionTokens)
+            return APIResponse(
+                text: response.text,
+                usage: .init(promptTokens: response.usage.promptTokens, completionTokens: response.usage.completionTokens)
             )
         } catch {
             // Try to decode as error response
@@ -120,16 +120,16 @@ struct APIService: AIService {
                             switch response.type {
                             case "text":
                                 if let content = response.content {
-                                    continuation.yield(.content(content))
+                                    continuation.yield(.text(content))
                                 }
                                 
                             case "finish":
                                 if let usage = response.usage {
                                     let tokenUsage = TokenUsage(
-                                        inputTokens: usage.promptTokens,
-                                        outputTokens: usage.completionTokens
+                                        promptTokens: usage.promptTokens,
+                                        completionTokens: usage.completionTokens
                                     )
-                                    continuation.yield(.tokenUsage(tokenUsage))
+                                    continuation.yield(.usage(tokenUsage))
                                 }
                                 
                             case "error":

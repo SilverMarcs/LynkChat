@@ -38,10 +38,10 @@ struct StreamHandler {
         
         for try await response in service.streamResponse(from: apiRequest) {
             switch response {
-            case .content(let content):
+            case .text(let content):
                 streamText += content
                 await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
-            case .tokenUsage(let tokens):
+            case .usage(let tokens):
                 totalTokens = calculateTotalTokens(tokens)
             }
         }
@@ -65,9 +65,9 @@ struct StreamHandler {
         
         let response = try await service.nonStreamingResponse(from: apiRequest)
         
-        assistant.content = response.content
+        assistant.content = response.text
         
-        let totalTokens = calculateTotalTokens(response.tokenUsage)
+        let totalTokens = calculateTotalTokens(response.usage)
         updateFinalState(totalTokens: totalTokens)
     }
     
@@ -107,6 +107,6 @@ struct StreamHandler {
     }
     
     private func calculateTotalTokens(_ tokens: TokenUsage) -> Int {
-        return tokens.inputTokens + tokens.outputTokens
+        return tokens.promptTokens + tokens.completionTokens
     }
 }
