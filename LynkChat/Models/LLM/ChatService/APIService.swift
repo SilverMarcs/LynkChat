@@ -10,12 +10,16 @@ import Foundation
 struct APIService {
     static func testChatModel(provider: Provider, model: AIModel) async -> Bool {
         let testMessage = Message(role: .user, content: String.testPrompt)
-        let config = ChatConfig(provider: provider, purpose: .chat)
+        let config = ChatConfig(provider: provider, purpose: .title)
         config.model = model
         
         do {
             let response = try await nonStreamingResponse(from: [testMessage], config: config)
-            return !response.content!.isEmpty
+            if let responseContent = response.content {
+                return !responseContent.isEmpty
+            } else {
+                return false
+            }
         } catch {
             print("Test chat model failed: \(error)")
             return false
@@ -59,6 +63,11 @@ struct APIService {
         
         let (data, _) = try await URLSession.shared.data(for: request)
         
+        if let rawResponseString = String(data: data, encoding: .utf8) {
+            print("Raw Response Data:")
+            print(rawResponseString)
+        }
+        
         do {
             let response = try JSONDecoder().decode(APIResponse.self, from: data)
             return NonStreamResponse(
@@ -72,10 +81,6 @@ struct APIService {
                 throw RuntimeError(errorResponse.error.details)
             }
             
-            // If error response decoding fails, print raw response and throw original error
-            if let rawResponse = String(data: data, encoding: .utf8) {
-                print("Raw API Response:", rawResponse)
-            }
             throw error
         }
     }
@@ -235,74 +240,4 @@ extension APIService {
             customApiKey: AppConfig.shared.sendOwnKey ? key : nil
         )
    }
-}
-
-struct APIModel: Codable {
-    let id: String
-    let name: String
-}
-
-private struct APIResponse: Decodable {
-    let text: String
-    let finishReason: String
-    let usage: Usage
-    
-    struct Usage: Decodable {
-        let promptTokens: Int
-        let completionTokens: Int
-        let totalTokens: Int
-    }
-}
-
-struct APIMessageContent: Encodable {
-    let type: String
-    let text: String?
-    let image: String?
-}
-
-struct APIMessage: Encodable {
-    let role: String
-    let content: [APIMessageContent]
-}
-
-private struct APIRequest: Encodable {
-    let provider: String
-    let model: String
-    let messages: [APIMessage]
-    let stream: Bool
-    let customBaseUrl: String?
-    let customApiKey: String? // TODO: encrypt this
-}
-
-private struct UsageResponse: Decodable {
-    let finishReason: String
-    let usage: Usage
-    
-    struct Usage: Decodable {
-        let promptTokens: Int
-        let completionTokens: Int
-    }
-}
-
-private struct StreamChunk: Decodable {
-    let type: String
-    let content: String?
-    let finishReason: String?
-    let usage: Usage?
-    
-    struct Usage: Decodable {
-        let promptTokens: Int
-        let completionTokens: Int
-        let totalTokens: Int
-    }
-}
-
-private struct APIErrorResponse: Decodable {
-    let error: ErrorDetails
-    
-    struct ErrorDetails: Decodable {
-        let message: String
-        let type: String
-        let details: String
-    }
 }

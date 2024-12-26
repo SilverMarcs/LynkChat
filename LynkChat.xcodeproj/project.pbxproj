@@ -33,6 +33,7 @@
 		082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 082355142CDBBB2B00388273 /* SwiftMarkdownView */; };
 		08256BF22D1D30D800C54BA1 /* ProviderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF12D1D30D800C54BA1 /* ProviderButton.swift */; };
 		08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF32D1D341300C54BA1 /* DebugSettings.swift */; };
+		08256BF72D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */; };
 		0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828E5452D157AF900DED52B /* AutoHeightTextView.swift */; platformFilters = (macos, ); };
 		082A63322C551108003996B7 /* MarkdownBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63312C551108003996B7 /* MarkdownBackup.swift */; };
 		082A63382C55175E003996B7 /* MiscUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63372C55175E003996B7 /* MiscUtils.swift */; };
@@ -220,6 +221,7 @@
 		0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedInputEditor.swift; sourceTree = "<group>"; };
 		08256BF12D1D30D800C54BA1 /* ProviderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderButton.swift; sourceTree = "<group>"; };
 		08256BF32D1D341300C54BA1 /* DebugSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSettings.swift; sourceTree = "<group>"; };
+		08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatRequest+ChatResponse.swift"; sourceTree = "<group>"; };
 		0828E5452D157AF900DED52B /* AutoHeightTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHeightTextView.swift; sourceTree = "<group>"; };
 		082A63312C551108003996B7 /* MarkdownBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownBackup.swift; sourceTree = "<group>"; };
 		082A63372C55175E003996B7 /* MiscUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscUtils.swift; sourceTree = "<group>"; };
@@ -435,6 +437,15 @@
 				089DB5152CA865F70013E5C3 /* MockedData.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		08256BF52D1D34F300C54BA1 /* ChatService */ = {
+			isa = PBXGroup;
+			children = (
+				08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */,
+				087B30932D1C39C200FB135A /* APIService.swift */,
+			);
+			path = ChatService;
 			sourceTree = "<group>";
 		};
 		082F09BD2CB1974000B7860A /* AIModels */ = {
@@ -780,8 +791,8 @@
 		08C8004E2C36F648009581C5 /* LLM */ = {
 			isa = PBXGroup;
 			children = (
+				08256BF52D1D34F300C54BA1 /* ChatService */,
 				082F09BD2CB1974000B7860A /* AIModels */,
-				087B30932D1C39C200FB135A /* APIService.swift */,
 				08F8152A2C97F5FA00B49355 /* ImageGenerator.swift */,
 				08C8004F2C36F667009581C5 /* Provider.swift */,
 				0869A3F12C95DBF9009BF9F2 /* ChatResponse.swift */,
@@ -950,6 +961,7 @@
 				082181602C3880F700171BF3 /* RoundedRectangleOverlay.swift in Sources */,
 				080E0F752D18593200DCA9E3 /* CustomToolsView.swift in Sources */,
 				08D913EC2CD9CAF7002E4E53 /* AIModel.swift in Sources */,
+				08256BF72D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift in Sources */,
 				08B8DE132C97F3550041A690 /* MDView.swift in Sources */,
 				087F3F922CDDF00C001298B3 /* SettingsVM.swift in Sources */,
 				08AAFB9A2C3D0017002C04E0 /* ListCard.swift in Sources */,
