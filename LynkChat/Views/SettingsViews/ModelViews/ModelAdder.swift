@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ModelAdder: View {
     @Environment(\.dismiss) private var dismiss
-    var provider: Provider
+    let onAdd: (String, String) -> Void // Closure that takes model code and name
     
     @State private var modelName: String = ""
     @State private var modelCode: String = ""
@@ -30,7 +30,7 @@ struct ModelAdder: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        addModel()
+                        onAdd(modelName, modelCode)
                         dismiss()
                     }
                     .disabled(modelName.isEmpty || modelCode.isEmpty)
@@ -38,9 +38,4 @@ struct ModelAdder: View {
             }
         }
     }
-    
-    private func addModel() {
-        provider.models.append(.init(code: modelCode, name: modelName))
-    }
 }
-

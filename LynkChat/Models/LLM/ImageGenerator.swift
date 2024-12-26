@@ -23,15 +23,16 @@ struct ImageGenerator {
             let url: String
         }
         
-        static func generateImages(config: ImageConfig) async throws -> [Data] {
+        static func generateImages(config: ImageRequest) async throws -> [Data] {
             // Construct URL from provider host
-            guard let url = URL(string: "https://\(config.provider.baseUrl)/images/generations") else {
+            print("Config: \(config.baseUrl)")
+            guard let url = URL(string: "https://\(config.baseUrl)/images/generations") else {
                 throw URLError(.badURL)
             }
             
             // Prepare request body
             let requestBody: [String: Any] = [
-                "model": config.model.code,
+                "model": config.modelCode,
                 "prompt": config.prompt,
                 "n": config.numImages,
                 "size": "1024x1024" // Using default size for now
@@ -41,7 +42,7 @@ struct ImageGenerator {
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.setValue("Bearer \(config.provider.apiKey)", forHTTPHeaderField: "Authorization")
+            request.setValue("Bearer \(config.apiKey)", forHTTPHeaderField: "Authorization")
             request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
             
             // Make request
@@ -67,4 +68,12 @@ struct ImageGenerator {
             
             return imageDataArray
         }
+}
+
+struct ImageRequest {
+    let prompt: String
+    let numImages: Int
+    let modelCode: String
+    let baseUrl: String
+    let apiKey: String
 }

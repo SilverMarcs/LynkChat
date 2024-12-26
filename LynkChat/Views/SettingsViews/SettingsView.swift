@@ -31,17 +31,17 @@ struct SettingsView: View {
                     .tag(SettingsTab.quickPanel)
                 #endif
                 
-                Label("Plugins", systemImage: "hammer")
-                    .tag(SettingsTab.tools)
-                
+//                Label("Plugins", systemImage: "hammer")
+//                    .tag(SettingsTab.tools)
+//                
                 Label("Parameters", systemImage: "slider.horizontal.3")
                     .tag(SettingsTab.parameters)
                 
-                Label("Image Gen", systemImage: "photo")
-                    .tag(SettingsTab.image)
-                
-                Label("Providers", systemImage: "cpu")
+                Label("Chat Service", systemImage: "cpu")
                     .tag(SettingsTab.providers)
+                
+                Label("Image Service", systemImage: "photo")
+                    .tag(SettingsTab.image)
                 
                 Label("Advanced", systemImage: "gearshape.2")
                     .tag(SettingsTab.advanced)

@@ -116,14 +116,15 @@ final class DatabaseService: NSObject {
             modelContext.insert(favouriteChat)
             
             // Image session
-            let imageChatConfig = ImageConfig(prompt: "", provider: openAI)
+            let imageModel = AIModel(code: "dall-e-3", name: "DALL-E-3")
+            let imageProvder = ImageProvider(name: "OpenAI", baseUrl: "api.openai.com/v1", model: imageModel)
+            let imageChatConfig = ImageConfig(provider: imageProvder)
             let imageSession = ImageSession(config: imageChatConfig)
             modelContext.insert(imageSession)
             
             let providerDefaults = ProviderDefaults(defaultProvider: openAI,
                                                     quickProvider: openAI,
-                                                    imageProvider: openAI,
-                                                    sttProvider: openAI)
+                                                    imageProvider: imageProvder)
             modelContext.insert(providerDefaults)
             
             return container

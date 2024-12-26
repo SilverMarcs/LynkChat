@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImageGenOnboarding: View {
-    @Bindable var provider: Provider
+    @Bindable var provider: ImageProvider
     @ObservedObject var imageConfig = ImageConfigDefaults.shared
     
     var body: some View {
@@ -19,8 +19,7 @@ struct ImageGenOnboarding: View {
             content: {
                 Form {
                     Section {
-                    #warning("fix this")
-                        ModelPicker(model: $provider.chatModel, models: provider.models, label: "Default Model")
+                        ModelPicker(model: $provider.model, models: provider.models, label: "Default Model")
                         
                         Toggle(isOn: $imageConfig.saveToPhotos) {
                             Text("Save to Photos Library")
@@ -38,7 +37,5 @@ struct ImageGenOnboarding: View {
 }
 
 #Preview {
-    let provider = Provider.openAIProvider
-    
-    ImageGenOnboarding(provider: provider)
+    ImageGenOnboarding(provider: .openAIProvider)
 }

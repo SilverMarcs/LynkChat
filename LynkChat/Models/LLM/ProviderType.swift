@@ -199,7 +199,8 @@ extension ProviderType {
             case .primary: return ProviderType.primaryProviders
             case .other: return ProviderType.otherProviders
             case .local: return ProviderType.localProviders
-            case .custom: return [.customOpenai, .customGoogle, .customAnthropic]
+//            case .custom: return [.customOpenai, .customGoogle, .customAnthropic]
+            case .custom: return [] // TODO: finish this
             }
         }
     }

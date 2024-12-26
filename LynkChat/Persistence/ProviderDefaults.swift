@@ -12,13 +12,13 @@ import SwiftData
 class ProviderDefaults {
     var defaultProvider: Provider
     var quickProvider: Provider
-    var imageProvider: Provider
-    var sttProvider: Provider
+    
+    var imageProvider: ImageProvider
 
-    init(defaultProvider: Provider, quickProvider: Provider, imageProvider: Provider, sttProvider: Provider) {
+    init(defaultProvider: Provider, quickProvider: Provider, imageProvider: ImageProvider) {
         self.defaultProvider = defaultProvider
         self.quickProvider = quickProvider
+        
         self.imageProvider = imageProvider
-        self.sttProvider = sttProvider
     }
 }

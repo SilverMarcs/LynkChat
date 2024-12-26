@@ -42,9 +42,9 @@ class Generation {
 
         generatingTask = Task {
             do {
-                let dataObjects = try await ImageGenerator.generateImages(
-                    config: config
-                )
+                let request = ImageRequest(prompt: config.prompt, numImages: config.numImages, modelCode: config.model.code, baseUrl: config.provider.baseUrl, apiKey: config.provider.apiKey)
+                
+                let dataObjects = try await ImageGenerator.generateImages(config: request)
                 
                 self.images = dataObjects
                 state = .success

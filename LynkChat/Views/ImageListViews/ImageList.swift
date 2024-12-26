@@ -13,8 +13,7 @@ struct ImageList: View {
     @Environment(ImageVM.self) var imageVM
     @Environment(\.modelContext) var modelContext
     
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
+    @Query var providers: [ImageProvider]
     
     @Query(sort: \ImageSession.date, order: .reverse, animation: .default)
     var sessions: [ImageSession]

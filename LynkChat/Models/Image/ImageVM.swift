@@ -34,14 +34,14 @@ import Foundation
     
     @discardableResult
     @MainActor
-    func createNewSession(provider: Provider? = nil) -> ImageSession? {
+    func createNewSession(provider: ImageProvider? = nil) -> ImageSession? {
         let modelContext = DatabaseService.shared.modelContext
         
         let config: ImageConfig
         
         if let providedProvider = provider {
             // Use the provided provider
-            config = ImageConfig(prompt: "", provider: providedProvider)
+            config = ImageConfig(provider: providedProvider)
         } else {
             // Use the default provider
             let fetchDefaults = FetchDescriptor<ProviderDefaults>()

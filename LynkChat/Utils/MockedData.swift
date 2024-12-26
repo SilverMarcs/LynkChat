@@ -19,8 +19,12 @@ extension Provider {
     ]
 }
 
+extension ImageProvider {
+    static var openAIProvider = ImageProvider(name: "OpenAI", baseUrl: "api.openai.com/v1", model: .dalle)
+}
+
 extension ProviderDefaults {
-    static var mockProviderDefaults = ProviderDefaults(defaultProvider: .openAIProvider, quickProvider: .openAIProvider, imageProvider: .openAIProvider, sttProvider: .openAIProvider)
+    static var mockProviderDefaults = ProviderDefaults(defaultProvider: .openAIProvider, quickProvider: .openAIProvider, imageProvider: .openAIProvider)
 }
 
 extension AIModel {
@@ -53,7 +57,7 @@ extension ChatConfig {
 }
 
 extension ImageConfig {
-    static var mockImageConfig = ImageConfig(prompt: "New York City", provider: .openAIProvider, model: .dalle)
+    static var mockImageConfig = ImageConfig(provider: .openAIProvider, model: .dalle)
 }
 
 extension Chat {

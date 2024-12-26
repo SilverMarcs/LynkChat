@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Provider {
+class Provider: ProviderImageProvider {
     var id: UUID = UUID()
     
     var name: String = ""
@@ -75,6 +75,10 @@ class Provider {
         )
         
         return provider
+    }
+    
+    var imageName: String {
+        self.type.imageName
     }
 }
 

@@ -14,37 +14,23 @@ class ImageConfig {
     var date: Date = Date()
     
     @Relationship(deleteRule: .nullify)
-    var provider: Provider
+    var provider: ImageProvider
     @Relationship(deleteRule: .nullify)
     var model: AIModel
     
-    var prompt: String
+    var prompt: String = "" // TODO: must take in init tbh
     var numImages: Int = ImageConfigDefaults.shared.numImages
 //    var size: ImagesQuery.Size = ImageConfigDefaults.shared.size
 //    var quality: ImagesQuery.Quality = ImageConfigDefaults.shared.quality
 //    var style: ImagesQuery.Style = ImageConfigDefaults.shared.style
     
-    init(prompt: String = "", provider: Provider) {
-        self.prompt = prompt
+    init(provider: ImageProvider) {
         self.provider = provider
-//        self.model = provider.imageModel
-        #warning("fix this")
-        self.model = .dalle
+        self.model = provider.model
     }
     
-    init(prompt: String = "", provider: Provider, model: AIModel) {
-        self.prompt = prompt
+    init(provider: ImageProvider, model: AIModel) {
         self.provider = provider
         self.model = model
-    }
-    
-    func copy(prompt: String) -> ImageConfig {
-        let copy = ImageConfig(provider: provider, model: model)
-        copy.prompt = prompt
-        copy.numImages = self.numImages
-//        copy.size = self.size
-//        copy.quality = self.quality
-//        copy.style = self.style
-        return copy
     }
 }

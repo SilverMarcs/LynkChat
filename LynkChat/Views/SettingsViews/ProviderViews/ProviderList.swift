@@ -67,15 +67,8 @@ struct ProviderList: View {
             print("Failed to fetch ChatConfigs")
             return
         }
-        
-        let fetchDescriptor2 = FetchDescriptor<ImageConfig>()
-        guard let allImageConfigs = try? modelContext.fetch(fetchDescriptor2) else {
-            print("Failed to fetch ImageConfigs")
-            return
-        }
-        
+
         let defaultProvider = providerDefaults.first!.defaultProvider
-        let defaultImageProvider = providerDefaults.first!.imageProvider
         
         for index in offsets {
             let providerToDelete = providers[index]

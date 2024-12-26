@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProviderImage: View {
-    var provider: Provider
+    var provider: ProviderImageProvider
     
     var radius: CGFloat = 9
     var frame: CGFloat = 25
@@ -21,13 +21,13 @@ struct ProviderImage: View {
                 .fill(Color(hex: provider.color).gradient)
                 .frame(width: frame, height: frame)
 
-            Image(provider.type.imageName)
-                .foregroundStyle(provider.type == .ollama ? .black : .white)
+            Image(provider.imageName)
+//                .foregroundStyle(provider.type == .ollama ? .black : .white)
                 .imageScale(scale)
         }
     }
 }
 
-#Preview {
-    ProviderImage(provider: .openAIProvider, scale: .small)
-}
+//#Preview {
+//    ProviderImage(provider: .openAIProvider, scale: .small)
+//}

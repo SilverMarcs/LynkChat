@@ -10,38 +10,26 @@ import SwiftData
 
 struct ImageInspector: View {
     @Bindable var session: ImageSession
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
+    @Query var providers: [ImageProvider]
     
     @Binding var showingInspector: Bool
-    
-    var filteredProviders: [Provider] {
-        #warning("fix this")
-        return providers.filter { !$0.models.isEmpty }
-    }
     
     var body: some View {
         NavigationStack {
             Form {
                 Section("Title") {
-                    HStack(spacing: 0) {
-                        TextField("Title", text: $session.title)
-                            .labelsHidden()
-                        
-                        Spacer()
-                        
-                        generateTitle
-                    }
+                    TextField("Title", text: $session.title)
+                        .labelsHidden()
                 }
                 
                 Section("Models") {
-#warning("fix this")
-                    ProviderPicker(provider: $session.config.provider,
-                                   providers: providers) { provider in
-                        session.config.model = provider.chatModel
+                    Picker("Provider", selection: $session.config.provider) {
+                        ForEach(providers) { provider in
+                            Text(provider.name.uppercased())
+                                .tag(provider)
+                        }
                     }
                     
-#warning("fix this")
                     ModelPicker(model: $session.config.model, models: session.config.provider.models, label: "Model")
                 }
                 
@@ -93,16 +81,6 @@ struct ImageInspector: View {
             .scrollDisabled(true)
             #endif
         }
-    }
-    
-    private var generateTitle: some View {
-        Button {
-            Task { await session.generateTitle(forced: true) }
-        } label: {
-            Image(systemName: "sparkles")
-        }
-        .buttonStyle(.plain)
-        .foregroundStyle(.mint.gradient)
     }
     
     private var deleteAllMessages: some View {

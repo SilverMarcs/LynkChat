@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-private struct RefreshModelRow: View {
+struct RefreshModelRow: View {
     let model: GenericModel
     let isSelected: Binding<Bool>
 

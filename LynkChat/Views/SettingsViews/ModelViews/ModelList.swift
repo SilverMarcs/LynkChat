@@ -46,7 +46,9 @@ struct ModelList: View {
             }
         }
         .sheet(isPresented: $showAdder) {
-            ModelAdder(provider: provider)
+            ModelAdder() { name, code in
+                provider.models.append(.init(code: code, name: name))
+            }
         }
         .sheet(isPresented: $showModelSelectionSheet) {
             ModelRefresher(provider: provider)
