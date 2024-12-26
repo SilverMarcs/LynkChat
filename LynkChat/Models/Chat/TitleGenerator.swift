@@ -23,7 +23,7 @@ enum TitleGenerator {
                 model: provider.liteModel.code,
                 messages: [APIMessage(
                     role: .user,
-                    text: String.testPrompt
+                    text: content
                 )],
                 system: "Generate Title based on user's instructions",
                 stream: false,

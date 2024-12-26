@@ -81,7 +81,7 @@ class QuickPanelWindow: NSPanel {
         self.contentMinSize = NSSize(width: contentRect.width, height: contentRect.height)
         self.contentMaxSize = NSSize(width: contentRect.width, height: 500)
         
-        qpHotkey.keyDownHandler = { [weak self] in
+        HotKeyManager.shared = HotKeyManager { [weak self] in
             self?.toggleVisibility()
         }
         

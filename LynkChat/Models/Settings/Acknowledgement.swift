@@ -18,7 +18,5 @@ struct Acknowledgement {
         Acknowledgement(name: "GoogleGenerativeAI", description: "The official Swift library for the Google Gemini API", url: "https://github.com/google-gemini/generative-ai-swift"),
         
         Acknowledgement(name: "markdown-webview", description: "A performant SwiftUI Markdown view", url: "https://github.com/tomdai/markdown-webview"),
-        
-        Acknowledgement(name: "HotKey", description: "Simple global shortcuts in macOS", url: "https://github.com/soffes/HotKey")
     ]
 }

@@ -8,11 +8,6 @@
 import SwiftUI
 import TipKit
 
-#if os(macOS)
-import HotKey 
-let qpHotkey = HotKey(key: .space, modifiers: [.option])
-#endif
-
 @main
 struct LynkChatApp: App {
     @State private var chatVM: ChatVM = ChatVM()

@@ -10,7 +10,6 @@
 		080A18792D12241C0081C6B1 /* RegularProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A18782D12241C0081C6B1 /* RegularProviderHost.swift */; };
 		080A187D2D1402DA0081C6B1 /* InputArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187C2D1402DA0081C6B1 /* InputArea.swift */; platformFilters = (macos, ); };
 		080E0F752D18593200DCA9E3 /* CustomToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E0F742D18593200DCA9E3 /* CustomToolsView.swift */; };
-		080E0F782D18819500DCA9E3 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 080E0F772D18819500DCA9E3 /* HotKey */; };
 		080E70E82CDF1BC100A949C9 /* Tips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70E72CDF1BC100A949C9 /* Tips.swift */; };
 		080E70EC2CDF380500A949C9 /* InspectorTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70EB2CDF380500A949C9 /* InspectorTab.swift */; };
 		080E70EE2CDF498F00A949C9 /* ChatStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70ED2CDF498F00A949C9 /* ChatStatus.swift */; };
@@ -35,6 +34,7 @@
 		08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF32D1D341300C54BA1 /* DebugSettings.swift */; };
 		08256BF72D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */; };
 		08256BF92D1D624A00C54BA1 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF82D1D624A00C54BA1 /* AIService.swift */; };
+		08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */; };
 		0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828E5452D157AF900DED52B /* AutoHeightTextView.swift */; platformFilters = (macos, ); };
 		082A63322C551108003996B7 /* MarkdownBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63312C551108003996B7 /* MarkdownBackup.swift */; };
 		082A63382C55175E003996B7 /* MiscUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63372C55175E003996B7 /* MiscUtils.swift */; };
@@ -222,6 +222,7 @@
 		08256BF32D1D341300C54BA1 /* DebugSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSettings.swift; sourceTree = "<group>"; };
 		08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatRequest+ChatResponse.swift"; sourceTree = "<group>"; };
 		08256BF82D1D624A00C54BA1 /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIService.swift; sourceTree = "<group>"; };
+		08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
 		0828E5452D157AF900DED52B /* AutoHeightTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHeightTextView.swift; sourceTree = "<group>"; };
 		082A63312C551108003996B7 /* MarkdownBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownBackup.swift; sourceTree = "<group>"; };
 		082A63372C55175E003996B7 /* MiscUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscUtils.swift; sourceTree = "<group>"; };
@@ -389,7 +390,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */,
-				080E0F782D18819500DCA9E3 /* HotKey in Frameworks */,
 				086346AB2CE78078006E5927 /* SwiftMarkdownView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -429,6 +429,7 @@
 		0821816B2C39011100171BF3 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */,
 				087BB6892CF707B500B50001 /* Scroller.swift */,
 				08C49FD72C502EC90085792F /* FileHelper.swift */,
 				082A63372C55175E003996B7 /* MiscUtils.swift */,
@@ -895,7 +896,6 @@
 			packageProductDependencies = (
 				082355142CDBBB2B00388273 /* SwiftMarkdownView */,
 				086346AA2CE78078006E5927 /* SwiftMarkdownView */,
-				080E0F772D18819500DCA9E3 /* HotKey */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -927,7 +927,6 @@
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
 				086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
-				080E0F762D18819500DCA9E3 /* XCRemoteSwiftPackageReference "HotKey" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -991,6 +990,7 @@
 				08850D8B2CFE0A99004D944C /* PermissionsOnboarding.swift in Sources */,
 				08C800452C36C10A009581C5 /* MessageMenu.swift in Sources */,
 				08AAFB9C2C3D01A6002C04E0 /* ChatListCards.swift in Sources */,
+				08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */,
 				084C74402C521A8A0015AE2F /* DismissButton.swift in Sources */,
 				087F3F8D2CDDEF5D001298B3 /* Shortcut.swift in Sources */,
 				08C800372C36B8CC009581C5 /* ChatListRow.swift in Sources */,
@@ -1380,14 +1380,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		080E0F762D18819500DCA9E3 /* XCRemoteSwiftPackageReference "HotKey" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/soffes/HotKey";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SilverMarcs/SwiftMarkdownView";
@@ -1399,11 +1391,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		080E0F772D18819500DCA9E3 /* HotKey */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 080E0F762D18819500DCA9E3 /* XCRemoteSwiftPackageReference "HotKey" */;
-			productName = HotKey;
-		};
 		082355142CDBBB2B00388273 /* SwiftMarkdownView */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SwiftMarkdownView;
