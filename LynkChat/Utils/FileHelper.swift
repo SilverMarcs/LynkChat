@@ -82,9 +82,9 @@ struct FileHelper {
             }
         }
     }
-    
-    enum ContentItem {
-        case text(String)
-        case image(String, Data)  // mimeType, data
-    }
+}
+
+enum ContentItem {
+    case text(String)
+    case image(String, Data)  // mimeType, data
 }

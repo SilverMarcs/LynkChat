@@ -57,3 +57,36 @@ final class Message: Equatable, Identifiable, Hashable {
         )
     }
 }
+
+extension Message {
+    func toAPIMessage() -> APIMessage {
+        var contentItems = [ContentItem]()
+        
+        // Process data files
+        let processedDataFiles = FileHelper.processDataFiles2(dataFiles)
+        
+        // Add processed text content from data files
+        let textContents = processedDataFiles.compactMap { item -> String? in
+            if case .text(let text) = item {
+                return text
+            }
+            return nil
+        }
+        
+        // Concatenate texts with the original message content
+        let combinedText = (textContents + [content]).joined(separator: "\n")
+        contentItems.append(.text(combinedText))
+        
+        // Add images from data files
+        let imageContents = processedDataFiles.filter { item in
+            if case .image = item {
+                return true
+            }
+            return false
+        }
+        
+        contentItems.append(contentsOf: imageContents)
+        
+        return APIMessage(role: role, contentItems: contentItems)
+    }
+}

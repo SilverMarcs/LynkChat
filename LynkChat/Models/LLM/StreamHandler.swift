@@ -32,10 +32,15 @@ struct StreamHandler {
         var streamText = ""
         var lastUIUpdateTime = Date()
         var totalTokens = 0
-        
 
-        // must do droplast since last is the empty assistant message
-        for try await response in APIService.streamResponse(from: chat.adjustedContext.dropLast(), config: chat.config) {
+        // TODO: unify into own func for both stream non stream
+        let config = chat.config
+        
+        let adjustedContext: [Message] = chat.adjustedContext.dropLast() // removing las user msg
+        let apiMessages: [APIMessage] = adjustedContext.map { $0.toAPIMessage() }
+        let apiRequest: APIRequest = .init(provider: config.provider.type.rawValue, model: config.model.code, messages: apiMessages, stream: true, customBaseUrl: config.provider.host, customApiKey: config.provider.apiKey)
+        
+        for try await response in APIService.streamResponse(from: apiRequest) {
             switch response {
             case .content(let content):
                 streamText += content
@@ -73,8 +78,13 @@ struct StreamHandler {
     @MainActor
     private func handleNonStream() async throws {
 //        let service = chat.config.provider.type.getService()
-        let adjustedContext: [Message] = chat.adjustedContext.dropLast()
-        let response = try await APIService.nonStreamingResponse(from: adjustedContext, config: chat.config)
+        let config = chat.config
+        
+        let adjustedContext: [Message] = chat.adjustedContext.dropLast() // removing las user msg
+        let apiMessages: [APIMessage] = adjustedContext.map { $0.toAPIMessage() }
+        let apiRequest: APIRequest = .init(provider: config.provider.type.rawValue, model: config.model.code, messages: apiMessages, stream: false, customBaseUrl: config.provider.host, customApiKey: config.provider.apiKey)
+        
+        let response = try await APIService.nonStreamingResponse(from: apiRequest)
         
         if let content = response.content {
             assistant.content = content

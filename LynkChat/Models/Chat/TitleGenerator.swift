@@ -17,12 +17,22 @@ enum TitleGenerator {
     
     // Generic method to generate title
     private static func generateTitle(from content: String, provider: Provider) async -> String? {
-        let user = Message(role: .user, content: content)
-        
-        let titleConfig = ChatConfig(provider: provider, purpose: .title)
-        
         do {
-            let response = try await APIService.nonStreamingResponse(from: [user], config: titleConfig)
+            let titleMessage = APIMessage(
+                role: .user,
+                text: String.testPrompt
+            )
+            
+            let request = APIRequest(
+                provider: provider.type.rawValue,
+                model: provider.liteModel.code,
+                messages: [titleMessage],
+                stream: false,
+                customBaseUrl: provider.host,
+                customApiKey: provider.apiKey
+            )
+            
+            let response = try await APIService.nonStreamingResponse(from: request)
             let title = response.content ?? "Error generating title"
             
             return title.trimmingCharacters(in: .whitespacesAndNewlines)

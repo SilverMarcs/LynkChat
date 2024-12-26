@@ -112,7 +112,7 @@ extension Provider {
     }
     
     func testModel(model: AIModel) async -> Bool {
-        let result = await APIService.testChatModel(provider: self, model: model)
+        let result = await APIService.testChatModel(provider: type.rawValue, model: model.code, baseUrl: host, apiKey: apiKey)
         return result
     }
 }

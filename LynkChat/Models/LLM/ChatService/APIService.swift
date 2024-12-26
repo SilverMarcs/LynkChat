@@ -8,18 +8,24 @@
 import Foundation
 
 struct APIService {
-    static func testChatModel(provider: Provider, model: AIModel) async -> Bool {
-        let testMessage = Message(role: .user, content: String.testPrompt)
-        let config = ChatConfig(provider: provider, purpose: .title)
-        config.model = model
+    static func testChatModel(provider: String, model: String, baseUrl: String?, apiKey: String?) async -> Bool {
+        let testMessage = APIMessage(
+            role: .user,
+            text: String.testPrompt
+        )
+        
+        let request = APIRequest(
+            provider: provider,
+            model: model,
+            messages: [testMessage],
+            stream: false,
+            customBaseUrl: baseUrl,
+            customApiKey: apiKey
+        )
         
         do {
-            let response = try await nonStreamingResponse(from: [testMessage], config: config)
-            if let responseContent = response.content {
-                return !responseContent.isEmpty
-            } else {
-                return false
-            }
+            let response = try await nonStreamingResponse(from: request)
+            return response.content != nil && !response.content!.isEmpty
         } catch {
             print("Test chat model failed: \(error)")
             return false
@@ -45,23 +51,14 @@ struct APIService {
         }
     }
     
-    static func nonStreamingResponse(from conversations: [Message], config: ChatConfig) async throws -> NonStreamResponse {
-        guard var request = makeRequest(path: "/chat", method: "POST") else {
+    static func nonStreamingResponse(from request: APIRequest) async throws -> NonStreamResponse {
+        guard var urlRequest = makeRequest(path: "/chat", method: "POST") else {
             throw URLError(.badURL)
         }
         
-        let requestBody = makeChatRequestBody(
-            provider: config.provider.type.rawValue,
-            model: config.model.code,
-            messages: conversations,
-            stream: config.stream,
-            baseUrl: config.provider.host,
-            key: config.provider.apiKey
-        )
+        urlRequest.httpBody = try JSONEncoder().encode(request)
         
-        request.httpBody = try JSONEncoder().encode(requestBody)
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
+        let (data, _) = try await URLSession.shared.data(for: urlRequest)
         
         if let rawResponseString = String(data: data, encoding: .utf8) {
             print("Raw Response Data:")
@@ -85,26 +82,17 @@ struct APIService {
         }
     }
     
-    static func streamResponse(from conversations: [Message], config: ChatConfig) -> AsyncThrowingStream<StreamResponse, Error> {
+    static func streamResponse(from request: APIRequest) -> AsyncThrowingStream<StreamResponse, Error> {
         return AsyncThrowingStream { continuation in
             Task {
                 do {
-                    guard var request = makeRequest(path: "/chat", method: "POST") else {
+                    guard var urlRequest = makeRequest(path: "/chat", method: "POST") else {
                         throw URLError(.badURL)
                     }
                     
-                    let requestBody = makeChatRequestBody(
-                        provider: config.provider.type.rawValue,
-                        model: config.model.code,
-                        messages: conversations,
-                        stream: true,
-                        baseUrl: config.provider.host,
-                        key: config.provider.apiKey
-                    )
+                    urlRequest.httpBody = try JSONEncoder().encode(request)
                     
-                    request.httpBody = try JSONEncoder().encode(requestBody)
-                    
-                    let (result, response) = try await URLSession.shared.bytes(for: request)
+                    let (result, response) = try await URLSession.shared.bytes(for: urlRequest)
                     
                     // Check if we received an error response
                     if let httpResponse = response as? HTTPURLResponse,
@@ -183,61 +171,4 @@ extension APIService {
         
         return request
     }
-    
-    private static func convertMessagesToAPIFormat(_ messages: [Message]) -> [APIMessage] {
-       return messages.map { message in
-           var contentItems: [APIMessageContent] = []
-           
-           // Always add text content as first item if it exists
-           if !message.content.isEmpty {
-               contentItems.append(APIMessageContent(
-                   type: "text",
-                   text: message.content,
-                   image: nil
-               ))
-           }
-           
-           // Add any data files
-           let processedItems = FileHelper.processDataFiles2(message.dataFiles)
-           for item in processedItems {
-               switch item {
-               case .text(let text):
-                   contentItems.append(APIMessageContent(
-                       type: "text",
-                       text: text,
-                       image: nil
-                   ))
-               case .image(_, let data):
-                   contentItems.append(APIMessageContent(
-                       type: "image",
-                       text: nil,
-                       image: data.base64EncodedString()
-                   ))
-               }
-           }
-           
-           return APIMessage(
-               role: message.role.rawValue,
-               content: contentItems
-           )
-       }
-   }
-       
-    private static func makeChatRequestBody(
-        provider: String,
-        model: String,
-        messages: [Message],
-        stream: Bool,
-        baseUrl: String,
-        key: String
-    ) -> APIRequest {
-        return APIRequest(
-            provider: provider.lowercased(),
-            model: model,
-            messages: convertMessagesToAPIFormat(messages),
-            stream: stream,
-            customBaseUrl: provider == "custom" ? baseUrl : nil,
-            customApiKey: AppConfig.shared.sendOwnKey ? key : nil
-        )
-   }
 }
