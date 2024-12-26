@@ -23,7 +23,7 @@ struct APIKeyOnboarding: View {
                     Section {
                         ProviderPicker(provider: $providerDefault.defaultProvider, providers: providers, label: "Default Provider")
                         
-                        TextField("API Key", text: $providerDefault.defaultProvider.apiKey)
+//                        TextField("API Key", text: $providerDefault.defaultProvider.apiKey)
                     } footer: {
                         SectionFooterView(text: providerDefault.defaultProvider.type.extraInfo)
                     }

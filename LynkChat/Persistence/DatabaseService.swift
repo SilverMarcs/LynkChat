@@ -117,7 +117,9 @@ final class DatabaseService: NSObject {
             
             // Image session
             let imageModel = AIModel(code: "dall-e-3", name: "DALL-E-3")
+            let imageModel2 = AIModel(code: "dall-e-2", name: "DALL-E-2")
             let imageProvder = ImageProvider(name: "OpenAI", baseUrl: "api.openai.com/v1", model: imageModel)
+            imageProvder.models.append(imageModel2)
             let imageChatConfig = ImageConfig(provider: imageProvder)
             let imageSession = ImageSession(config: imageChatConfig)
             modelContext.insert(imageSession)
