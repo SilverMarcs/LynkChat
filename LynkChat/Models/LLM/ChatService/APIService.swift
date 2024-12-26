@@ -18,6 +18,7 @@ struct APIService: AIService {
             provider: provider,
             model: model,
             messages: [testMessage],
+            system: nil,
             stream: false,
             customBaseUrl: baseUrl,
             customApiKey: apiKey

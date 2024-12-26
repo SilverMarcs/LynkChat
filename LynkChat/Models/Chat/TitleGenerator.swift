@@ -25,6 +25,7 @@ enum TitleGenerator {
                     role: .user,
                     text: String.testPrompt
                 )],
+                system: "Generate Title based on user's instructions",
                 stream: false,
                 customBaseUrl: provider.host,
                 customApiKey: provider.apiKey

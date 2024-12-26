@@ -99,6 +99,7 @@ struct StreamHandler {
             provider: chat.config.provider.type.rawValue,
             model: chat.config.model.code,
             messages: apiMessages,
+            system: chat.config.systemPrompt,
             stream: stream,
             customBaseUrl: chat.config.provider.host,
             customApiKey: chat.config.provider.apiKey

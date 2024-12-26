@@ -71,14 +71,16 @@ struct APIRequest: Encodable {
     let provider: String
     let model: String
     let messages: [APIMessage]
+    let system: String?
     let stream: Bool
     let customBaseUrl: String?
     let customApiKey: String?
     
-    init(provider: String, model: String, messages: [APIMessage], stream: Bool, customBaseUrl: String?, customApiKey: String?) {
+    init(provider: String, model: String, messages: [APIMessage], system: String?, stream: Bool, customBaseUrl: String?, customApiKey: String?) {
         self.provider = provider
         self.model = model
         self.messages = messages
+        self.system = system
         self.stream = stream
         self.customBaseUrl = nil
         self.customApiKey = nil
