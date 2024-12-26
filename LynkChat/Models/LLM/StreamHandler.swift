@@ -19,7 +19,6 @@ struct StreamHandler {
 
     @MainActor
     func handleRequest() async throws {
-//        chat.config.provider.host = chat.config.provider.host.trimmingCharacters(in: .whitespacesAndNewlines)
         if chat.config.stream {
             try await handleStream()
         } else {
@@ -94,7 +93,8 @@ struct StreamHandler {
     
     private func createAPIRequest(stream: Bool) -> APIRequest {
         let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
-        let apiMessages = adjustedContext.map { $0.toAPIMessage() }
+        var apiMessages = adjustedContext.map { $0.toAPIMessage() }
+        apiMessages.insert(.init(role: .system, text: chat.config.systemPrompt), at: 0)
         
         return APIRequest(
             provider: chat.config.provider.type.rawValue,
