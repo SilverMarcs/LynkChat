@@ -77,14 +77,8 @@ struct APIRequest: Encodable {
         self.model = model
         self.messages = messages
         self.stream = stream
-        self.customBaseUrl = customBaseUrl
-        
-        // TODO: see this
-        if AppConfig.shared.sendOwnKey {
-            self.customApiKey = customApiKey
-        } else {
-            self.customApiKey = nil
-        }
+        self.customBaseUrl = nil
+        self.customApiKey = nil
     }
 }
 

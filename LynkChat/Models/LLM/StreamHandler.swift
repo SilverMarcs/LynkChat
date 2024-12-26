@@ -93,8 +93,7 @@ struct StreamHandler {
     
     private func createAPIRequest(stream: Bool) -> APIRequest {
         let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
-        var apiMessages = adjustedContext.map { $0.toAPIMessage() }
-        apiMessages.insert(.init(role: .system, text: chat.config.systemPrompt), at: 0)
+        let apiMessages = adjustedContext.map { $0.toAPIMessage() }
         
         return APIRequest(
             provider: chat.config.provider.type.rawValue,

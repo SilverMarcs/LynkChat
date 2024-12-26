@@ -38,13 +38,14 @@ struct RegularProviderHost: View {
             }
         }
         
-        SecretInputView(label: provider.type == .github ? "Personal Access Token" : "API Key", secret: $provider.apiKey)
+        if !isHostDisabled {   
+            SecretInputView(label: provider.type == .github ? "Personal Access Token" : "API Key", secret: $provider.apiKey)
+        }
     }
     
     var isHostDisabled: Bool {
-        provider.type != .openai && provider.type != .custom && provider.type != .ollama && provider.type != .lmstudio
-    }
-    
+        !ProviderType.usesCustomOpenAI.contains(provider.type)
+    }    
 }
 
 #Preview {

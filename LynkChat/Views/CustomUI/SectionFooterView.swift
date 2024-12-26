@@ -16,6 +16,7 @@ struct SectionFooterView: View {
             Text(try! AttributedString(markdown: text))
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.leading)
             Spacer()
         }
         .padding(.leading, 5)

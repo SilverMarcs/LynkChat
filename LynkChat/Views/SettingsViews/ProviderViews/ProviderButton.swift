@@ -22,6 +22,7 @@ struct ProviderButton: View {
     private func addProvider(type: ProviderType) {
         let newProvider = Provider.factory(type: type)
         modelContext.insert(newProvider)
+        try? modelContext.save()
     }
 }
 

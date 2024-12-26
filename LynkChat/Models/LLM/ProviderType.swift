@@ -92,20 +92,20 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     
     var defaultHost: String {
         switch self {
-        case .openai: "api.openai.com"
+        case .openai: "api.openai.com/v1"
         case .anthropic: "api.anthropic.com"
         case .google: "generativelanguage.googleapis.com"
         case .bedrock: "api.bedrock.com"
-        case .ollama: "localhost:11434"
         case .github: "models.inference.ai.azure.com"
         case .perplexity: "api.perplexity.ai"
-        case .groq: "api.groq.com/openai"
-        case .xai: "api.x.ai"
-        case .openrouter: "openrouter.ai/api"
-        case .mistral: "api.mistral.ai"
-        case .togetherai: "api.together.xyz"
-        case .lmstudio: "localhost:1234"
-        case .custom: ""
+        case .groq: "api.groq.com/openai/v1"
+        case .xai: "api.x.ai/v1"
+        case .openrouter: "openrouter.ai/api/v1"
+        case .mistral: "api.mistral.ai/v1"
+        case .togetherai: "api.together.xyz/v1"
+        case .lmstudio: "localhost:1234/v1"
+        case .ollama: "localhost:11434//c1"
+        case .custom: "api.openai.com/v1"
         }
     }
     
@@ -118,6 +118,8 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
             APIService.self
         }
     }
+    
+    static var usesCustomOpenAI: [ProviderType] = [.custom, .lmstudio, .ollama]
     
     var availableModelTypes: [ModelType] {
          switch self {
@@ -147,22 +149,31 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         }
     }
     
+//    var extraInfo: String {
+//        switch self {
+//        case .openai: "Get OpenAI API key [here](https://platform.openai.com/settings/organization/api-keys)"
+//        case .anthropic: "Get Anthropic API key [here](https://console.anthropic.com/settings/keys)"
+//        case .google: "Get Google API key [here](https://aistudio.google.com/app/apikey)"
+//        case .bedrock: "Only us-east-1 is supported. Put Secrents in this format: ACCESS_KEY||SECRET_ACCESS_SECRET"
+//        case .ollama: "Download and setup Ollama from [here](https://ollama.com/download/mac)"
+//        case .lmstudio: "Download and setup LMStudio from [here](https://lmstudio.ai/download)"
+//        case .xai: "Get xAI API key [here](https://console.x.ai) and click on key icon"
+//        case .groq: "Get Groq API key [here](https://console.groq.com/keys)"
+//        case .openrouter: "Get OpenRouter API key [here](https://openrouter.ai/settings/keys)"
+//        case .mistral: "Get Mistral API key [here](https://console.mistral.ai/api-keys)"
+//        case .perplexity: "Get Perplexity API key [here](https://www.perplexity.ai/settings/api)"
+//        case .togetherai: "Get TogetherAI API key [here](https://api.together.ai/settings/api-keys)"
+//        case .github: "Get Github Personal Access Token key [here](https://github.com/settings/tokens)"
+//        case .custom: "Include http:// or https:// in the front and /v1 at the end if applicable"
+//        }
+//    }
+    
     var extraInfo: String {
         switch self {
-        case .openai: "Get OpenAI API key [here](https://platform.openai.com/settings/organization/api-keys)"
-        case .anthropic: "Get Anthropic API key [here](https://console.anthropic.com/settings/keys)"
-        case .google: "Get Google API key [here](https://aistudio.google.com/app/apikey)"
-        case .bedrock: "Only us-east-1 is supported. Put Secrents in this format: ACCESS_KEY||SECRET_ACCESS_SECRET"
-        case .ollama: "Download and setup Ollama from [here](https://ollama.com/download/mac)"
         case .lmstudio: "Download and setup LMStudio from [here](https://lmstudio.ai/download)"
-        case .xai: "Get xAI API key [here](https://console.x.ai) and click on key icon"
-        case .groq: "Get Groq API key [here](https://console.groq.com/keys)"
-        case .openrouter: "Get OpenRouter API key [here](https://openrouter.ai/settings/keys)"
-        case .mistral: "Get Mistral API key [here](https://console.mistral.ai/api-keys)"
-        case .perplexity: "Get Perplexity API key [here](https://www.perplexity.ai/settings/api)"
-        case .togetherai: "Get TogetherAI API key [here](https://api.together.ai/settings/api-keys)"
-        case .github: "Get Github Personal Access Token key [here](https://github.com/settings/tokens)"
+        case .ollama: "Download and setup Ollama from [here](https://ollama.com/download/mac)"
         case .custom: "Include http:// or https:// in the front and /v1 at the end if applicable"
+        default: "This API Service is bundled with a paid subcription. Create Custom OpenAI provider for using Own API Key with OpenAI compatible providers"
         }
     }
     

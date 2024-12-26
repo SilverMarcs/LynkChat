@@ -18,21 +18,19 @@ enum TitleGenerator {
     // Generic method to generate title
     private static func generateTitle(from content: String, provider: Provider) async -> String? {
         do {
-            let titleMessage = APIMessage(
-                role: .user,
-                text: String.testPrompt
-            )
-            
             let request = APIRequest(
                 provider: provider.type.rawValue,
                 model: provider.liteModel.code,
-                messages: [titleMessage],
+                messages: [APIMessage(
+                    role: .user,
+                    text: String.testPrompt
+                )],
                 stream: false,
                 customBaseUrl: provider.host,
                 customApiKey: provider.apiKey
             )
             
-            var service = provider.type.getService()
+            let service = provider.type.getService()
             
             let response = try await service.nonStreamingResponse(from: request)
             let title = response.text.isEmpty ? "Error generating Title" : response.text
