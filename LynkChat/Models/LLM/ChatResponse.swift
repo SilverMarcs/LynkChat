@@ -9,7 +9,7 @@ import Foundation
 
 enum StreamResponse {
     case content(String)
-    case totalTokens(TokenUsage)
+    case tokenUsage(TokenUsage)
 }
 
 struct TokenUsage {
@@ -18,7 +18,6 @@ struct TokenUsage {
 }
 
 struct NonStreamResponse {
-    let content: String?
-    let inputTokens: Int
-    let outputTokens: Int
+    let content: String
+    let tokenUsage: TokenUsage
 }

@@ -19,7 +19,7 @@ struct StreamHandler {
 
     @MainActor
     func handleRequest() async throws {
-        chat.config.provider.host = chat.config.provider.host.trimmingCharacters(in: .whitespacesAndNewlines)
+//        chat.config.provider.host = chat.config.provider.host.trimmingCharacters(in: .whitespacesAndNewlines)
         if chat.config.stream {
             try await handleStream()
         } else {
@@ -32,33 +32,50 @@ struct StreamHandler {
         var streamText = ""
         var lastUIUpdateTime = Date()
         var totalTokens = 0
-
-        // TODO: unify into own func for both stream non stream
-        let config = chat.config
         
-        let adjustedContext: [Message] = chat.adjustedContext.dropLast() // removing las user msg
-        let apiMessages: [APIMessage] = adjustedContext.map { $0.toAPIMessage() }
-        let apiRequest: APIRequest = .init(provider: config.provider.type.rawValue, model: config.model.code, messages: apiMessages, stream: true, customBaseUrl: config.provider.host, customApiKey: config.provider.apiKey)
-        var service = config.provider.type.getService()
+        let service = chat.config.provider.type.getService()
+        let apiRequest = createAPIRequest(stream: true)
         
         for try await response in service.streamResponse(from: apiRequest) {
             switch response {
             case .content(let content):
                 streamText += content
-                
-                let currentTime = Date()
-                if currentTime.timeIntervalSince(lastUIUpdateTime) >= Float.UIIpdateInterval {
-                    assistant.content = streamText
-//                    scrollDown()
-                    lastUIUpdateTime = currentTime
-                }
-            case .totalTokens(let tokens):
-                // TODO: collect statistics
-                totalTokens = tokens.inputTokens + tokens.outputTokens
+                await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
+            case .tokenUsage(let tokens):
+                totalTokens = calculateTotalTokens(tokens)
             }
         }
-
+        
         finaliseStream(streamText: streamText, totalTokens: totalTokens)
+    }
+    
+    @MainActor
+    private func updateUIIfNeeded(streamText: String, lastUpdateTime: inout Date) async {
+        let currentTime = Date()
+        if currentTime.timeIntervalSince(lastUpdateTime) >= Float.UIIpdateInterval {
+            assistant.content = streamText
+            lastUpdateTime = currentTime
+        }
+    }
+
+    @MainActor
+    private func handleNonStream() async throws {
+        let service = chat.config.provider.type.getService()
+        let apiRequest = createAPIRequest(stream: false)
+        
+        let response = try await service.nonStreamingResponse(from: apiRequest)
+        
+        assistant.content = response.content
+        
+        let totalTokens = calculateTotalTokens(response.tokenUsage)
+        updateFinalState(totalTokens: totalTokens)
+    }
+    
+    private func updateFinalState(totalTokens: Int) {
+        chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
+        assistant.isReplying = false
+        AppConfig.shared.hasUserScrolled = false
+        try? assistant.modelContext?.save()
     }
     
     private func finaliseStream(streamText: String = "", totalTokens: Int) {
@@ -66,7 +83,6 @@ struct StreamHandler {
             chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
             assistant.content = streamText
             assistant.isReplying = false
-//            scrollDown()
             try? assistant.modelContext?.save()
             #if os(macOS)
             AppConfig.shared.hasUserScrolled = false
@@ -75,33 +91,22 @@ struct StreamHandler {
             #endif
         }
     }
-
-    @MainActor
-    private func handleNonStream() async throws {
-//        let service = chat.config.provider.type.getService()
-        let config = chat.config
+    
+    private func createAPIRequest(stream: Bool) -> APIRequest {
+        let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
+        let apiMessages = adjustedContext.map { $0.toAPIMessage() }
         
-        let adjustedContext: [Message] = chat.adjustedContext.dropLast() // removing las user msg
-        let apiMessages: [APIMessage] = adjustedContext.map { $0.toAPIMessage() }
-        let apiRequest: APIRequest = .init(provider: config.provider.type.rawValue, model: config.model.code, messages: apiMessages, stream: false, customBaseUrl: config.provider.host, customApiKey: config.provider.apiKey)
-        var service = config.provider.type.getService()
-        
-        let response = try await service.nonStreamingResponse(from: apiRequest)
-        
-        if let content = response.content {
-            assistant.content = content
-        }
-        
-        let tokens = response.inputTokens + response.outputTokens
-        
-        chat.totalTokens = tokens > 0 ? tokens : chat.totalTokens
-        assistant.isReplying = false
-//        scrollDown()
-        AppConfig.shared.hasUserScrolled = false
-        try? assistant.modelContext?.save()
+        return APIRequest(
+            provider: chat.config.provider.type.rawValue,
+            model: chat.config.model.code,
+            messages: apiMessages,
+            stream: stream,
+            customBaseUrl: chat.config.provider.host,
+            customApiKey: chat.config.provider.apiKey
+        )
     }
-
-    private func scrollDown() {
-        chat.scrollDown()
+    
+    private func calculateTotalTokens(_ tokens: TokenUsage) -> Int {
+        return tokens.inputTokens + tokens.outputTokens
     }
 }

@@ -87,6 +87,7 @@ struct APIRequest: Encodable {
     // TODO: make init that must check whether able to send own api key or not. 
 }
 
+// TODO: see if can reuse tokenusage type/struct
 struct UsageResponse: Decodable {
     let finishReason: String
     let usage: Usage

@@ -25,7 +25,7 @@ struct APIService: AIService {
         
         do {
             let response = try await nonStreamingResponse(from: request)
-            return response.content != nil && !response.content!.isEmpty
+            return !response.content.isEmpty
         } catch {
             print("Test chat model failed: \(error)")
             return false
@@ -69,8 +69,7 @@ struct APIService: AIService {
             let response = try JSONDecoder().decode(APIResponse.self, from: data)
             return NonStreamResponse(
                 content: response.text,
-                inputTokens: response.usage.promptTokens,
-                outputTokens: response.usage.completionTokens
+                tokenUsage: .init(inputTokens: response.usage.promptTokens, outputTokens: response.usage.completionTokens)
             )
         } catch {
             // Try to decode as error response
@@ -130,7 +129,7 @@ struct APIService: AIService {
                                         inputTokens: usage.promptTokens,
                                         outputTokens: usage.completionTokens
                                     )
-                                    continuation.yield(.totalTokens(tokenUsage))
+                                    continuation.yield(.tokenUsage(tokenUsage))
                                 }
                                 
                             case "error":
