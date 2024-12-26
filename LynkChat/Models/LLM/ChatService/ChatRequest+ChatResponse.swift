@@ -22,44 +22,47 @@ struct TokenUsage: Codable {
     let completionTokens: Int
 }
 
-struct APIMessageContent: Encodable {
-    let type: String
-    let text: String?
-    let image: String?
+// TODO: beautify this and also use enum
+enum ContentItem: Encodable {
+    case text(String)
+    case image(mimeType: String, data: Data)
+    
+    private enum CodingKeys: String, CodingKey {
+        case type, text, image
+    }
+    
+    private enum ContentType: String, Encodable {
+        case text
+        case image
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        switch self {
+        case .text(let text):
+            try container.encode(ContentType.text, forKey: .type)
+            try container.encode(text, forKey: .text)
+        case .image(let mimeType, let data):
+            try container.encode(ContentType.image, forKey: .type)
+            try container.encode(mimeType, forKey: .image) // Optional: Include mimeType if needed
+            try container.encode(data.base64EncodedString(), forKey: .image)
+        }
+    }
 }
 
-// TODO: beautify this and also use enum
 struct APIMessage: Encodable {
     let role: MessageRole
-    let content: [APIMessageContent]
+    let content: [ContentItem]
+    
+    init(role: MessageRole, content: [ContentItem]) {
+        self.role = role
+        self.content = content
+    }
     
     init(role: MessageRole, text: String) {
         self.role = role
-        self.content = [APIMessageContent(type: "text", text: text, image: nil)]
-    }
-    
-    init(role: MessageRole, imageData: Data) {
-        self.role = role
-        self.content = [APIMessageContent(type: "image", text: nil, image: imageData.base64EncodedString())]
-    }
-    
-    init(role: MessageRole, text: String, images: [Data]) {
-        self.role = role
-        var contents = [APIMessageContent(type: "text", text: text, image: nil)]
-        contents.append(contentsOf: images.map { APIMessageContent(type: "image", text: nil, image: $0.base64EncodedString()) })
-        self.content = contents
-    }
-    
-    init(role: MessageRole, contentItems: [ContentItem]) {
-        self.role = role
-        self.content = contentItems.map { item in
-            switch item {
-            case .text(let text):
-                return APIMessageContent(type: "text", text: text, image: nil)
-            case .image(_, let imageData):
-                return APIMessageContent(type: "image", text: nil, image: imageData.base64EncodedString())
-            }
-        }
+        self.content = [.text(text)]
     }
 }
 

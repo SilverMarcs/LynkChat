@@ -63,7 +63,7 @@ struct FileHelper {
             if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
                 return .text(data.formattedTextContent)
             } else if data.fileType.conforms(to: .image) && role == .user {
-                return .image(data.mimeType, data.data)
+                return .image(mimeType: data.mimeType, data: data.data)
             } else {
                 let warning = "Notify the user if a file has been added but the assistant could not find a compatible plugin to read that file type."
                 return .text("Message ID: \(messageId)\nFile: \(data.fileName)\n\(warning)")
@@ -76,15 +76,15 @@ struct FileHelper {
             if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
                 return .text(data.formattedTextContent)
             } else if data.fileType.conforms(to: .image) {
-                return .image(data.mimeType, data.data)
+                return .image(mimeType: data.mimeType, data: data.data)
             } else {
                 return .text("Error")
             }
         }
     }
 }
-
-enum ContentItem {
-    case text(String)
-    case image(String, Data)  // mimeType, data
-}
+//
+//enum ContentItem {
+//    case text(String)
+//    case image(String, Data)  // mimeType, data
+//}

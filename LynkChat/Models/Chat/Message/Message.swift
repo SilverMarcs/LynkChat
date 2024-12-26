@@ -68,25 +68,34 @@ extension Message {
         // Add processed text content from data files
         let textContents = processedDataFiles.compactMap { item -> String? in
             if case .text(let text) = item {
-                return text
+                return text.isEmpty ? nil : text // Filter out empty strings
             }
             return nil
         }
         
         // Concatenate texts with the original message content
-        let combinedText = (textContents + [content]).joined(separator: "\n")
-        contentItems.append(.text(combinedText))
+        let combinedText = (textContents + [content])
+            .filter { !$0.isEmpty } // Filter out empty strings
+            .joined(separator: "\n")
         
-        // Add images from data files
-        let imageContents = processedDataFiles.filter { item in
-            if case .image = item {
-                return true
-            }
-            return false
+        // Only add text content if it's not empty
+        if !combinedText.isEmpty {
+            contentItems.append(.text(combinedText))
         }
         
-        contentItems.append(contentsOf: imageContents)
+        // Add images from data files
+        let imageItems = processedDataFiles.compactMap { item -> (mimeType: String, data: Data)? in
+            if case .image(let mimeType, let data) = item {
+                return (mimeType: mimeType, data: data)
+            }
+            return nil
+        }
         
-        return APIMessage(role: role, contentItems: contentItems)
+        // Add image items to contentItems
+        imageItems.forEach { imageItem in
+            contentItems.append(.image(mimeType: imageItem.mimeType, data: imageItem.data))
+        }
+        
+        return APIMessage(role: role, content: contentItems)
     }
 }
