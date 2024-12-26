@@ -31,9 +31,9 @@ struct AdvancedInspector: View {
                 }
             }
             
-            Section("Tools") {
-                ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-            }
+//            Section("Tools") {
+//                ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+//            }
             
             Button {
                 isExportingMarkdown = true

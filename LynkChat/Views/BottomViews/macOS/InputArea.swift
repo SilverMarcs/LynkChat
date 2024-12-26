@@ -126,11 +126,11 @@ struct InputArea: View {
 
     private var configInfo: some View {
         HStack(spacing: 4) {
-            CustomToolsView(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                .toggleStyle(.button)
-                .labelStyle(.iconOnly)
-                .buttonStyle(.borderless)
-                .padding(.trailing, 5)
+//            CustomToolsView(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+//                .toggleStyle(.button)
+//                .labelStyle(.iconOnly)
+//                .buttonStyle(.borderless)
+//                .padding(.trailing, 5)
             
             if isHovering {
                 InputModelPickers(chat: chat)

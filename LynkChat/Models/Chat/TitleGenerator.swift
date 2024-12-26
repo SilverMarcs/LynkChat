@@ -35,21 +35,22 @@ enum TitleGenerator {
     // Method to format conversations into a single string
     private static func formatMessages(_ messages: [Message]) -> String {
         return messages.map { message in
-            var toolResponse: String = ""
             
-            let toolCalls = message.toolCalls.map { toolCall in
-                "Called tool: \(toolCall.tool.rawValue)"
-            }.joined(separator: "\n")
+//            let toolCalls = message.toolCalls.map { toolCall in
+//                "Called tool: \(toolCall.tool.rawValue)"
+//            }.joined(separator: "\n")
             
             let dataFiles = message.dataFiles.map { dataFile in
                 "Data file: \(dataFile.fileName)"
             }.joined(separator: "\n")
             
-            if let response = message.toolResponse {
-                toolResponse = "Tool response: \(response)"
-            }
+//            if let response = message.toolResponse {
+//                toolResponse = "Tool response: \(response)"
+//            }
             
-            return "--- \(message.role.rawValue.capitalized) ---\n\(message.content)\n\(toolCalls)\n\(dataFiles)\n\(toolResponse)"
+//            return "--- \(message.role.rawValue.capitalized) ---\n\(message.content)\n\(toolCalls)\n\(dataFiles)\n\(toolResponse)"
+//        }.joined(separator: "\n\n")
+            return "--- \(message.role.rawValue.capitalized) ---\n\(message.content)\n\(dataFiles)\n"
         }.joined(separator: "\n\n")
     }
     

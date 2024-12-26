@@ -123,7 +123,7 @@ struct ChatDetail: View {
                 #endif
                 .listRowSeparator(.hidden)
                 
-                ErrorMessageView(message: $chat.errorMessage)
+                ErrorMessageView(chat: chat)
                 
                 if chat.status != .quick {
                     resizingColor

@@ -138,18 +138,18 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         }
     }
     
-    func getService() -> any AIService.Type {
-        switch self {
-//        case .anthropic:
-//            ClaudeService.self
-//        case .google:
-//            GoogleService.self
-//        case .bedrock:
-//            BedrockService.self
-        default:
-            OpenAIService.self
-        }
-    }
+//    func getService() -> any AIService.Type {
+//        switch self {
+////        case .anthropic:
+////            ClaudeService.self
+////        case .google:
+////            GoogleService.self
+////        case .bedrock:
+////            BedrockService.self
+//        default:
+//            OpenAIService.self
+//        }
+//    }
 
     var extraInfo: String {
         switch self {

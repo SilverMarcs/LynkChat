@@ -48,23 +48,23 @@ struct PluginSettings: View {
                     }
                 }
                 
-                Section("General Plugins") {
-                    ForEach(ChatTool.allCases, id: \.self) { tool in
-                        NavigationLink(value: tool) {
-                            Label(tool.displayName, systemImage: tool.icon)
-                        }
-                    }
-                }
+//                Section("General Plugins") {
+//                    ForEach(ChatTool.allCases, id: \.self) { tool in
+//                        NavigationLink(value: tool) {
+//                            Label(tool.displayName, systemImage: tool.icon)
+//                        }
+//                    }
+//                }
             }
-            .navigationDestination(for: ChatTool.self) { tool in
-                Form {
-                    tool.settings(providerDefaults: providerDefaults)
-                }
-                .navigationTitle("\(tool.displayName) Settings")
-                .toolbarTitleDisplayMode(.inline)
-                .formStyle(.grouped)
-                .scrollContentBackground(.visible)
-            }
+//            .navigationDestination(for: ChatTool.self) { tool in
+//                Form {
+//                    tool.settings(providerDefaults: providerDefaults)
+//                }
+//                .navigationTitle("\(tool.displayName) Settings")
+//                .toolbarTitleDisplayMode(.inline)
+//                .formStyle(.grouped)
+//                .scrollContentBackground(.visible)
+//            }
         }
         .formStyle(.grouped)
         .navigationTitle("Plugins")

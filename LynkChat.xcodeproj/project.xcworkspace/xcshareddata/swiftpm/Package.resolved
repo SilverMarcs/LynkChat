@@ -1,5 +1,5 @@
 {
-  "originHash" : "9fbe270431abf9789a98b907ec9d2c9a67e6bcf9d31bf1415663091eb37dee23",
+  "originHash" : "666756d197e182b3b7432a02f8260a691e23a3e642d7fca184e932d9906bc340",
   "pins" : [
     {
       "identity" : "hotkey",
@@ -8,15 +8,6 @@
       "state" : {
         "branch" : "main",
         "revision" : "4d02d80de143d69b7eeb5962729591a157a57ede"
-      }
-    },
-    {
-      "identity" : "openai",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SilverMarcs/OpenAI",
-      "state" : {
-        "branch" : "main",
-        "revision" : "d83f91da36e87991d4c61463cf721ea56b254ed5"
       }
     },
     {

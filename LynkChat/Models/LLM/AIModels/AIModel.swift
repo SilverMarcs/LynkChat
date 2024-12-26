@@ -157,4 +157,11 @@ extension AIModel {
             .init(code: "dummy-stt-model", name: "Dummy-STT", type: .stt),
         ]
     }
+    
+    static func getBedrockModels() -> [AIModel] {
+        return [
+            .init(code: "anthropic.claude-3-5-haiku-20241022-v1:0", name: "Claude-3.5H", type: .chat),
+            .init(code: "anthropic.claude-3-5-sonnet-20241022-v2:0", name: "Claude-3.5S", type: .chat),
+        ]
+    }
 }

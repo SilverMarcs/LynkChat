@@ -27,9 +27,6 @@ final class Message: Equatable, Identifiable, Hashable {
     @Attribute(.ephemeral)
     var isReplying: Bool = false
     
-    var toolCalls: [ChatToolCall] = []
-    var toolResponse: ToolResponse?
-    
     var useCache: Bool = false
     var height: CGFloat = 0
     
@@ -38,23 +35,14 @@ final class Message: Equatable, Identifiable, Hashable {
     
     // TODO: typed init functions for diff roles
     
-    init(role: MessageRole, content: String = "", provider: Provider? = nil, model: AIModel? = nil, dataFiles: [TypedData] = [], toolCalls: [ChatToolCall] = [], toolResponse: ToolResponse? = nil, isReplying: Bool = false, height: CGFloat = 0) {
+    init(role: MessageRole, content: String = "", provider: Provider? = nil, model: AIModel? = nil, dataFiles: [TypedData] = [], isReplying: Bool = false, height: CGFloat = 0) {
         self.role = role
         self.content = content
         self.provider = provider
         self.model = model
         self.dataFiles = dataFiles
-        self.toolCalls = toolCalls
-        self.toolResponse = toolResponse
         self.isReplying = isReplying
         self.height = height
-    }
-    
-    init(toolResponse: ToolResponse) {
-        self.role = .tool
-        self.content = ""
-        self.toolResponse = toolResponse
-        self.isReplying = true
     }
 
     func copy() -> Message {
@@ -64,8 +52,6 @@ final class Message: Equatable, Identifiable, Hashable {
             provider: provider,
             model: model,
             dataFiles: dataFiles,
-            toolCalls: toolCalls,
-            toolResponse: toolResponse,
             isReplying: isReplying,
             height: height
         )

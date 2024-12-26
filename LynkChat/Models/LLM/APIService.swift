@@ -8,6 +8,20 @@
 import Foundation
 
 struct APIService {
+    static func testChatModel(provider: Provider, model: AIModel) async -> Bool {
+        let testMessage = Message(role: .user, content: String.testPrompt)
+        let config = ChatConfig(provider: provider, purpose: .chat)
+        config.model = model
+        
+        do {
+            let response = try await nonStreamingResponse(from: [testMessage], config: config)
+            return !response.content!.isEmpty
+        } catch {
+            print("Test chat model failed: \(error)")
+            return false
+        }
+    }
+    
     static func refreshModels(provider: String) async -> [GenericModel] {
         guard let request = makeRequest(path: "/chat/models?provider=\(provider)") else {
             return []

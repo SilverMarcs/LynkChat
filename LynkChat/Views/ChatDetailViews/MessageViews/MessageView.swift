@@ -16,13 +16,14 @@ struct MessageView: View {
             case .user:
                 UserMessage(message: message)
             case .assistant:
-                if message.toolCalls.isEmpty {
-                    AssistantMessageAux(message: message)
-                } else {
-                    ToolCallView(message: message)
-                }
-            case .tool:
-                ToolResponseMessage(message: message)
+//                if message.toolCalls.isEmpty {
+//                    AssistantMessageAux(message: message)
+//                } else {
+//                    ToolCallView(message: message)
+//                }
+                AssistantMessageAux(message: message)
+//            case .tool:
+//                ToolResponseMessage(message: message)
             default:
                 Text("Unknown role")
             }

@@ -86,11 +86,11 @@ struct QuickPanelView: View {
 
                 ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels, label: "Model")
                 
-                Menu {
-                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                } label: {
-                    Label("Tools", systemImage: "hammer")
-                }
+//                Menu {
+//                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+//                } label: {
+//                    Label("Tools", systemImage: "hammer")
+//                }
                 
             } label: {
                 Image(systemName: "magnifyingglass")
@@ -136,9 +136,9 @@ struct QuickPanelView: View {
                     
                     Text(chat.config.model.name)
                     
-                    ForEach(chat.config.tools.enabledTools) { tool in
-                        Image(systemName: tool.icon)
-                    }
+//                    ForEach(chat.config.tools.enabledTools) { tool in
+//                        Image(systemName: tool.icon)
+//                    }
                 }
                 .font(.caption)
                 

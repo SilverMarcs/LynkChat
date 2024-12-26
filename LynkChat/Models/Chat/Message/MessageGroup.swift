@@ -97,23 +97,23 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
         }
     }
     
-    var toolCalls: [ChatToolCall] {
-        get {
-            activeMessage.toolCalls
-        }
-        set {
-            activeMessage.toolCalls = newValue
-        }
-    }
-    
-    var toolResponse: ToolResponse? {
-        get {
-            activeMessage.toolResponse
-        }
-        set {
-            activeMessage.toolResponse = newValue
-        }
-    }
+//    var toolCalls: [ChatToolCall] {
+//        get {
+//            activeMessage.toolCalls
+//        }
+//        set {
+//            activeMessage.toolCalls = newValue
+//        }
+//    }
+//    
+//    var toolResponse: ToolResponse? {
+//        get {
+//            activeMessage.toolResponse
+//        }
+//        set {
+//            activeMessage.toolResponse = newValue
+//        }
+//    }
     
     var useCache: Bool {
         get {

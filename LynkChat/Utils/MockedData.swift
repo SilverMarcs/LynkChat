@@ -38,22 +38,14 @@ extension AIModel {
 extension Message {
     static let mockAssistantMessage = Message(role: .assistant, content: String.codeBlock, isReplying: false)
     
-    static let mockAssistantTolCallMessage = Message(role: .assistant, toolCalls: [.init(toolCallId: "HEX", tool: .urlScrape, arguments: "url: https://www.google.com")])
-    
     static var mockUserMessage: Message {
         Message(role: .user, content: String.shortContent)
-    }
-    
-    static var mockToolMessage: Message {
-        Message(role: .tool, toolResponse: .init(toolCallId: "HEX", tool: .urlScrape, processedContent: "This is what I got"))
     }
 }
 
 extension MessageGroup {
     static var mockUserGroup = MessageGroup(message: .mockUserMessage)
     static var mockAssistantGroup = MessageGroup(message: .mockAssistantMessage)
-    static var mockToolGroup = MessageGroup(message: .mockToolMessage)
-    static var mockAssistantToolCallGroup = MessageGroup(message: .mockAssistantTolCallMessage)
 }
 
 extension ChatConfig {

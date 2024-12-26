@@ -25,9 +25,9 @@ final class ChatConfig: Equatable, Identifiable, Hashable {
     @Relationship(deleteRule: .nullify)
     var model: AIModel
     
-    var tools: ChatConfigTools
+//    var tools: ChatConfigTools
     
-    private init(provider: Provider, model: AIModel, temperature: Double?, frequencyPenalty: Double?, presencePenalty: Double?, topP: Double?, maxTokens: Int?, stream: Bool, systemPrompt: String, purpose: ChatConfigPurpose = .chat, tools: ChatConfigTools) {
+    private init(provider: Provider, model: AIModel, temperature: Double?, frequencyPenalty: Double?, presencePenalty: Double?, topP: Double?, maxTokens: Int?, stream: Bool, systemPrompt: String, purpose: ChatConfigPurpose = .chat) {
         self.provider = provider
         self.model = model
         self.temperature = temperature
@@ -38,7 +38,7 @@ final class ChatConfig: Equatable, Identifiable, Hashable {
         self.stream = stream
         self.systemPrompt = systemPrompt
         self.purpose = purpose
-        self.tools = tools
+//        self.tools = tools
     }
     
     init(provider: Provider, purpose: ChatConfigPurpose) {
@@ -48,21 +48,21 @@ final class ChatConfig: Equatable, Identifiable, Hashable {
             case .chat:
                 self.systemPrompt = ChatConfigDefaults.shared.systemPrompt
                 self.model = provider.chatModel
-                self.tools = ChatConfigTools()
+//                self.tools = ChatConfigTools()
             case .title:
                 self.systemPrompt = "Generate a title based on the content"
                 self.model = provider.liteModel
                 self.stream = false
-                self.tools = ChatConfigTools(isTitle: true)
+//                self.tools = ChatConfigTools(isTitle: true)
             case .quick:
                 self.systemPrompt = AppConfig.shared.quickSystemPrompt
                 self.model = provider.liteModel
-                self.tools = ChatConfigTools()
+//                self.tools = ChatConfigTools()
         }
     }
 
     func copy(purpose: ChatConfigPurpose) -> ChatConfig {
-        return ChatConfig(provider: self.provider, model: self.model, temperature: self.temperature, frequencyPenalty: self.frequencyPenalty, presencePenalty: self.presencePenalty, topP: self.topP, maxTokens: self.maxTokens, stream: self.stream, systemPrompt: self.systemPrompt, purpose: purpose, tools: self.tools)
+        return ChatConfig(provider: self.provider, model: self.model, temperature: self.temperature, frequencyPenalty: self.frequencyPenalty, presencePenalty: self.presencePenalty, topP: self.topP, maxTokens: self.maxTokens, stream: self.stream, systemPrompt: self.systemPrompt, purpose: purpose)
     }
 }
 
