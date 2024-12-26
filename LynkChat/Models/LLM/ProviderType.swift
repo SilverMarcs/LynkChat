@@ -58,8 +58,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .openai: "openai.SFSymbol"
         case .anthropic: "anthropic.SFSymbol"
         case .google: "google.SFSymbol"
-        case .bedrock: "storm.SFSymbol"
-//        case .bedrock: "bedrock.SFSymbol"
+        case .bedrock: "bedrock.SFSymbol"
         case .openrouter: "openrouter.SFSymbol"
         case .mistral: "mistral.SFSymbol"
         case .perplexity: "perplexity.SFSymbol"
@@ -78,7 +77,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .openai: "#00947A"
         case .anthropic: "#E6784B"
         case .google: "#E64335"
-        case .bedrock: "#EA5B0C"
+        case .bedrock: "#f46d25"
         case .openrouter: "#7a8799"
         case .mistral: "#EB5A29"
         case .perplexity: "#2F7999"
@@ -124,7 +123,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .openai: AIModel.getOpenaiModels()
         case .anthropic: AIModel.getAnthropicModels()
         case .google: AIModel.getGoogleModels()
-        case .bedrock: AIModel.getOpenaiModels() // TODO: change
+        case .bedrock: AIModel.getBedrockModels() // TODO: change
         case .xai: AIModel.getXaiModels()
         case .openrouter: AIModel.getOpenrouterModels()
         case .github: AIModel.getOpenaiModels()
@@ -138,25 +137,12 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         }
     }
     
-//    func getService() -> any AIService.Type {
-//        switch self {
-////        case .anthropic:
-////            ClaudeService.self
-////        case .google:
-////            GoogleService.self
-////        case .bedrock:
-////            BedrockService.self
-//        default:
-//            OpenAIService.self
-//        }
-//    }
-
     var extraInfo: String {
         switch self {
         case .openai: "Get OpenAI API key [here](https://platform.openai.com/settings/organization/api-keys)"
         case .anthropic: "Get Anthropic API key [here](https://console.anthropic.com/settings/keys)"
         case .google: "Get Google API key [here](https://aistudio.google.com/app/apikey)"
-        case .bedrock: "Check out Bedrock instructions in Guide Settings"
+        case .bedrock: "Put Secrents in this format: ACCESS_KEY||SECRET_ACCESS_SECRET"
         case .ollama: "Download and setup Ollama from [here](https://ollama.com/download/mac)"
         case .lmstudio: "Download and setup LMStudio from [here](https://lmstudio.ai/download)"
         case .xai: "Get xAI API key [here](https://console.x.ai) and click on key icon"
@@ -166,7 +152,40 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .perplexity: "Get Perplexity API key [here](https://www.perplexity.ai/settings/api)"
         case .togetherai: "Get TogetherAI API key [here](https://api.together.ai/settings/api-keys)"
         case .github: "Get Github Personal Access Token key [here](https://github.com/settings/tokens)"
-        case .custom: "Enter custom API key and host"
+        case .custom: "Include http:// or https:// in the front and /v1 at the end if applicable"
         }
     }
+    
+    static let primaryProviders: [ProviderType] = [
+        .openai, .google, .anthropic
+    ]
+    
+    static let otherProviders: [ProviderType] = [
+        .openrouter, .bedrock, .github, .groq,
+        .xai, .mistral, .perplexity, .togetherai
+    ]
+    
+    static let localProviders: [ProviderType] = [
+        .lmstudio, .ollama
+    ]
+}
+
+extension ProviderType {
+    enum Group: String {
+        case primary = "Primary Providers"
+        case other = "Other Providers"
+        case local = "Local Providers"
+        case custom = "Custom"
+        
+        var providers: [ProviderType] {
+            switch self {
+            case .primary: return ProviderType.primaryProviders
+            case .other: return ProviderType.otherProviders
+            case .local: return ProviderType.localProviders
+            case .custom: return [.custom]
+            }
+        }
+    }
+    
+    static let groups: [Group] = [.primary, .other, .local, .custom]
 }

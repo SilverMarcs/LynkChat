@@ -24,11 +24,7 @@ struct ProviderGeneral: View {
             }
             
             Section {
-                if provider.type == .bedrock {
-                    BedrockProviderHost(provider: provider)
-                } else {
-                    RegularProviderHost(provider: provider)
-                }
+                RegularProviderHost(provider: provider)
             } header: {
                 Text("Host Settings")
             } footer: {

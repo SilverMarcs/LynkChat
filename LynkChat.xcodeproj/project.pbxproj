@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0805DEED2C58CB0300A8354A /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0805DEEC2C58CB0300A8354A /* AIService.swift */; };
-		0805DEEF2C58CB1400A8354A /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0805DEEE2C58CB1400A8354A /* OpenAIService.swift */; };
-		0805DEF12C58CB2A00A8354A /* ClaudeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0805DEF02C58CB2A00A8354A /* ClaudeService.swift */; };
-		0805DEF32C58CB3D00A8354A /* GoogleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0805DEF22C58CB3D00A8354A /* GoogleService.swift */; };
-		080A186D2D11FE580081C6B1 /* BedrockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A186C2D11FE580081C6B1 /* BedrockService.swift */; };
 		080A18792D12241C0081C6B1 /* RegularProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A18782D12241C0081C6B1 /* RegularProviderHost.swift */; };
 		080A187B2D1224300081C6B1 /* BedrockProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */; };
 		080A187D2D1402DA0081C6B1 /* InputArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A187C2D1402DA0081C6B1 /* InputArea.swift */; platformFilters = (macos, ); };
@@ -37,6 +32,7 @@
 		082255622CE22D3200AAD32B /* SecretInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082255612CE22D3200AAD32B /* SecretInputView.swift */; };
 		0822A6C52CF09F31008DF4FC /* ExpandedInputEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */; };
 		082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 082355142CDBBB2B00388273 /* SwiftMarkdownView */; };
+		08256BF22D1D30D800C54BA1 /* ProviderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF12D1D30D800C54BA1 /* ProviderButton.swift */; };
 		0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828E5452D157AF900DED52B /* AutoHeightTextView.swift */; platformFilters = (macos, ); };
 		082A63322C551108003996B7 /* MarkdownBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63312C551108003996B7 /* MarkdownBackup.swift */; };
 		082A63382C55175E003996B7 /* MiscUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63372C55175E003996B7 /* MiscUtils.swift */; };
@@ -200,11 +196,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0805DEEC2C58CB0300A8354A /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIService.swift; sourceTree = "<group>"; };
-		0805DEEE2C58CB1400A8354A /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
-		0805DEF02C58CB2A00A8354A /* ClaudeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeService.swift; sourceTree = "<group>"; };
-		0805DEF22C58CB3D00A8354A /* GoogleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleService.swift; sourceTree = "<group>"; };
-		080A186C2D11FE580081C6B1 /* BedrockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedrockService.swift; sourceTree = "<group>"; };
 		080A18782D12241C0081C6B1 /* RegularProviderHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularProviderHost.swift; sourceTree = "<group>"; };
 		080A187A2D1224300081C6B1 /* BedrockProviderHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedrockProviderHost.swift; sourceTree = "<group>"; };
 		080A187C2D1402DA0081C6B1 /* InputArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputArea.swift; sourceTree = "<group>"; };
@@ -228,6 +219,7 @@
 		0821816E2C39082900171BF3 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		082255612CE22D3200AAD32B /* SecretInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretInputView.swift; sourceTree = "<group>"; };
 		0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedInputEditor.swift; sourceTree = "<group>"; };
+		08256BF12D1D30D800C54BA1 /* ProviderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderButton.swift; sourceTree = "<group>"; };
 		0828E5452D157AF900DED52B /* AutoHeightTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHeightTextView.swift; sourceTree = "<group>"; };
 		082A63312C551108003996B7 /* MarkdownBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownBackup.swift; sourceTree = "<group>"; };
 		082A63372C55175E003996B7 /* MiscUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscUtils.swift; sourceTree = "<group>"; };
@@ -405,18 +397,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0805DEEB2C58CAF900A8354A /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				0805DEEC2C58CB0300A8354A /* AIService.swift */,
-				0805DEEE2C58CB1400A8354A /* OpenAIService.swift */,
-				0805DEF22C58CB3D00A8354A /* GoogleService.swift */,
-				0805DEF02C58CB2A00A8354A /* ClaudeService.swift */,
-				080A186C2D11FE580081C6B1 /* BedrockService.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
 		080E70E62CDF1B9700A949C9 /* General */ = {
 			isa = PBXGroup;
 			children = (
@@ -560,6 +540,7 @@
 		08915D972C37C62C008ADE27 /* ProviderViews */ = {
 			isa = PBXGroup;
 			children = (
+				08256BF12D1D30D800C54BA1 /* ProviderButton.swift */,
 				08C800542C36F82B009581C5 /* ProviderList.swift */,
 				08915D982C37C648008ADE27 /* ProviderDetail.swift */,
 				082181592C382B9B00171BF3 /* ProviderGeneral.swift */,
@@ -801,7 +782,6 @@
 			isa = PBXGroup;
 			children = (
 				082F09BD2CB1974000B7860A /* AIModels */,
-				0805DEEB2C58CAF900A8354A /* Services */,
 				087B30932D1C39C200FB135A /* APIService.swift */,
 				08F8152A2C97F5FA00B49355 /* ImageGenerator.swift */,
 				08C8004F2C36F667009581C5 /* Provider.swift */,
@@ -982,7 +962,6 @@
 				0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */,
 				08B8DE232C97F4EA0041A690 /* ToolResponseMessage.swift in Sources */,
 				087906892CA6E22900E5DCAD /* ImageContentView.swift in Sources */,
-				0805DEEF2C58CB1400A8354A /* OpenAIService.swift in Sources */,
 				08915D992C37C648008ADE27 /* ProviderDetail.swift in Sources */,
 				08217FC02CE0EC5300D0D10D /* AdvancedSettings.swift in Sources */,
 				0821816A2C39001B00171BF3 /* ProviderRow.swift in Sources */,
@@ -1015,7 +994,6 @@
 				08CA42B82CF1F1530073BB01 /* EditButton.swift in Sources */,
 				08C800502C36F667009581C5 /* Provider.swift in Sources */,
 				085361092C4923E2007DAB62 /* ImageConfig.swift in Sources */,
-				080A186D2D11FE580081C6B1 /* BedrockService.swift in Sources */,
 				087F3F872CDDDC3C001298B3 /* AboutSettings.swift in Sources */,
 				0821816F2C39082900171BF3 /* MessageView.swift in Sources */,
 				088A09F32C55C7740055B567 /* TextSelectionView.swift in Sources */,
@@ -1065,7 +1043,6 @@
 				082B88172CD36CD80092C4D0 /* PlatformSpecificGroupBoxStyle.swift in Sources */,
 				087F3F852CDDD99E001298B3 /* GuidesSettings.swift in Sources */,
 				085361132C4939C5007DAB62 /* GenerationView.swift in Sources */,
-				0805DEF12C58CB2A00A8354A /* ClaudeService.swift in Sources */,
 				0898252B2CE9BB1700980468 /* OnboardingPage.swift in Sources */,
 				085276C02C98794C009184D2 /* ToolCallView.swift in Sources */,
 				08C1ACE42C54BCA600B86D37 /* FrequencyPenaltySlider.swift in Sources */,
@@ -1085,7 +1062,6 @@
 				082F09DB2CB2715A00B7860A /* Message.swift in Sources */,
 				085524E82C4ED61F00CBB827 /* ChatToolbar.swift in Sources */,
 				089825312CE9D96A00980468 /* ImageGenOnboarding.swift in Sources */,
-				0805DEED2C58CB0300A8354A /* AIService.swift in Sources */,
 				08436F2E2CDF07C2007A160F /* FocusedField.swift in Sources */,
 				08F8152B2C97F5FA00B49355 /* ImageGenerator.swift in Sources */,
 				080E70E82CDF1BC100A949C9 /* Tips.swift in Sources */,
@@ -1102,6 +1078,7 @@
 				089825272CE9B67700980468 /* WelcomeOnboarding.swift in Sources */,
 				0869A3EB2C958A4C009BF9F2 /* ChatConfigTools.swift in Sources */,
 				08B82C1D2C74EA9400DC0183 /* ImageViewer.swift in Sources */,
+				08256BF22D1D30D800C54BA1 /* ProviderButton.swift in Sources */,
 				085361052C491BF0007DAB62 /* ImageSession.swift in Sources */,
 				08F815342C97F64E00B49355 /* BasicInspector.swift in Sources */,
 				08A222832C2AB4FD00D76C8B /* LynkChatApp.swift in Sources */,
@@ -1109,7 +1086,6 @@
 				089C7E122C405904005E3BE9 /* QuickPanelView.swift in Sources */,
 				08C8003A2C36BA30009581C5 /* InputArea.swift in Sources */,
 				08B8DE212C97F3E10041A690 /* ChatConfigDefaults.swift in Sources */,
-				0805DEF32C58CB3D00A8354A /* GoogleService.swift in Sources */,
 				08F369E32C3C278E002E4A35 /* ProviderType.swift in Sources */,
 				08C800322C36AE1D009581C5 /* ChatList.swift in Sources */,
 				0891D5732C96796100BA428F /* ImageConfigDefaults.swift in Sources */,

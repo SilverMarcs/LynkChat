@@ -45,51 +45,18 @@ struct ProviderList: View {
     
     private var addButton: some View {
         Menu {
-            Section(header: Text("Primary Providers")) {
-                ForEach([ProviderType.openai, .google, .anthropic], id: \.self) { type in
-                    Button(action: { addProvider(type: type) }) {
-                        Label(type.name, image: type.imageName)
-                    }
-                    .labelStyle(.titleAndIcon)
+            ForEach(ProviderType.groups, id: \.rawValue) { group in
+                if group == .local {
+                    #if os(macOS)
+                    ProviderSection(group: group)
+                    #endif
+                } else {
+                    ProviderSection(group: group)
                 }
-            }
-            
-            Section(header: Text("Other Providers")) {
-                // TODO: bedrock
-                ForEach([ProviderType.bedrock, .openrouter, .github, .groq, .xai, .mistral, .perplexity, .togetherai], id: \.self) { type in
-                    Button(action: { addProvider(type: type) }) {
-                        Label(type.name, image: type.imageName)
-                    }
-                    .labelStyle(.titleAndIcon)
-                }
-            }
-            
-            #if os(macOS)
-            Section(header: Text("Local Providers")) {
-                ForEach([ProviderType.lmstudio, .ollama], id: \.self) { type in
-                    Button(action: { addProvider(type: type) }) {
-                        Label(type.name, image: type.imageName)
-                    }
-                    .labelStyle(.titleAndIcon)
-                }
-            }
-            #endif
-            
-            Section(header: Text("Custom")) {
-                Button(action: { addProvider(type: .custom) }) {
-                    Label(ProviderType.custom.name, image: ProviderType.custom.imageName)
-                }
-                .labelStyle(.titleAndIcon)
             }
         } label: {
             Label("Create Provider", systemImage: "plus")
         }
-
-    }
-
-    private func addProvider(type: ProviderType) {
-        let newProvider = Provider.factory(type: type)
-        modelContext.insert(newProvider)
     }
     
     private func deleteProviders(offsets: IndexSet) {
