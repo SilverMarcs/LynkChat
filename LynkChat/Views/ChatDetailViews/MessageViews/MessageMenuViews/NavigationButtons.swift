@@ -11,8 +11,8 @@ struct NavigationButtons: View {
     var message: MessageGroup
     
     var body: some View {
-        HStack {
-            if message.allMessages.count > 1 {
+        if message.allMessages.count > 1 {
+            HStack {
                 if message.allMessages.count >= 2 && message.role == .assistant {
                     Button {
                         message.toggleSplitView()
@@ -42,9 +42,9 @@ struct NavigationButtons: View {
                     .opacity(message.canGoToNext ? 1 : 0.5)
                 }
             }
+            .buttonStyle(.plain)
+            .labelStyle(.iconOnly)
+            .transaction { $0.animation = nil }
         }
-        .buttonStyle(.plain)
-        .labelStyle(.iconOnly)
-        .transaction { $0.animation = nil }
     }
 }

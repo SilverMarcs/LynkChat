@@ -86,9 +86,6 @@ final class Chat: Equatable, Identifiable, Hashable {
             
             do {
                 scrollDown()
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//                    self.scrollDown()
-//                }
                 
                 try await streamer.handleRequest()
             } catch {
@@ -192,26 +189,19 @@ final class Chat: Equatable, Identifiable, Hashable {
         resetScroll()
         streamingTask?.cancel()
         streamingTask = nil
-        
-        guard let last = currentThread.last else { return }
-        last.isReplying = false
-//        if last.activeMessage.content.isEmpty {
-//            deleteLastMessage()
-//        }
+        errorDeleteLast()
     }
     
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription
-        scrollDown()
-        resetScroll()
+//        scrollDown()
+//        resetScroll()
         stopStreaming()
         
         // TODO: only delete last mesasage and not entire group if group has other messages
-//        DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
-//            if let lastMessage = self.currentThread.last, lastMessage.content.isEmpty, lastMessage.role == .assistant {
-//                self.deleteLastMessage()
-//            }
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
+            self.errorDeleteLast()
+        }
     }
     
     func generateTitle(forced: Bool = false) async {
@@ -267,13 +257,24 @@ final class Chat: Equatable, Identifiable, Hashable {
         errorMessage = ""
     }
     
+    func errorDeleteLast() {
+        guard let last = self.currentThread.last else { return }
+        last.isReplying = false
+        if last.activeMessage.content.isEmpty {
+            if last.allMessages.count == 1 {
+                self.deleteLastMessage()
+            } else {
+                last.deleteAndSetPreviousActive()
+            }
+        }
+    }
+    
     func deleteAllMessages() {
         rootMessage = nil
         contextResetPoint = nil
         stopStreaming()
         errorMessage = ""
         totalTokens = 0
-        
     }
     
     func scrollDown() {

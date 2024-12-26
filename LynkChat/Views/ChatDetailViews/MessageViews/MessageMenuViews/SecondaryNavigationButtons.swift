@@ -11,8 +11,8 @@ struct SecondaryNavigationButtons: View {
     var group: MessageGroup
     
     var body: some View {
-        HStack {
-            if group.secondaryMessages.count > 1 {
+        if group.secondaryMessages.count > 1 {
+            HStack {
                 Button {
                     group.previousSecondaryMessage()
                 } label: {
@@ -31,10 +31,10 @@ struct SecondaryNavigationButtons: View {
                 .disabled(!group.canGoToNextSecondary)
                 .opacity(!group.canGoToNextSecondary ? 0.5 : 1)
             }
+            .buttonStyle(.plain)
+            .labelStyle(.iconOnly)
+            .transaction { $0.animation = nil }
         }
-        .buttonStyle(.plain)
-        .labelStyle(.iconOnly)
-        .transaction { $0.animation = nil }
     }
 }
 

@@ -58,7 +58,7 @@ struct AssistantMessage: View {
                     SecondaryNavigationButtons(group: group)
                     Spacer()
                 } else {
-                    if group.secondaryMessages.count > 1 {
+                    if group.allMessages.count > 1 {
                         NavigationButtons(message: group)
                         Spacer()
                     }

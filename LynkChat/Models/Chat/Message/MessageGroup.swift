@@ -97,24 +97,6 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
         }
     }
     
-//    var toolCalls: [ChatToolCall] {
-//        get {
-//            activeMessage.toolCalls
-//        }
-//        set {
-//            activeMessage.toolCalls = newValue
-//        }
-//    }
-//    
-//    var toolResponse: ToolResponse? {
-//        get {
-//            activeMessage.toolResponse
-//        }
-//        set {
-//            activeMessage.toolResponse = newValue
-//        }
-//    }
-    
     // MARK: - Active Message Navigation
     var currentMessageIndex: Int {
         allMessages.firstIndex(of: activeMessage) ?? 0
@@ -157,6 +139,12 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
         
         let nextIndex = min(index, allMessages.count - 1)
         activeMessage = allMessages[nextIndex]
+    }
+    
+    func deleteAndSetPreviousActive() {
+        let currentIndex = allMessages.firstIndex(of: activeMessage)!
+        activeMessage = allMessages[currentIndex - 1]
+        allUnorderedMessages.removeAll { $0 == allMessages[currentIndex] }
     }
     
     // MARK: - Secondary Message Navigation

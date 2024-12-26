@@ -41,20 +41,6 @@ struct TypedData: Codable, Identifiable, Hashable {
         PlatformImage(systemName: "doc.on.doc.fill")!
         #endif
     }
-
-//    var derivedFileType: AudioTranscriptionQuery.FileType? {
-//        switch fileType {
-//        case .mp3, .mpeg4Audio:
-//            return .mp3
-//        case .wav:
-//            return .wav
-//        case .mpeg4Movie:
-//            return .mp4
-//        default:
-//            // For any other types not explicitly handled
-//            return nil
-//        }
-//    }
 }
 
 extension UTType {
