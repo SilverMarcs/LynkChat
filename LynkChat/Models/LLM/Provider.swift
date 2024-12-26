@@ -11,10 +11,9 @@ import SwiftData
 @Model
 class Provider {
     var id: UUID = UUID()
-    var date: Date = Date()
     
     var name: String = ""
-    var host: String = ""
+    var baseUrl: String = ""
     @Attribute(.allowsCloudEncryption)
     var apiKey: String = ""
     
@@ -24,10 +23,6 @@ class Provider {
     var type: ProviderType
     var scheme: HTTPScheme
     
-    var chatModels: [AIModel] { models.filter { $0.type == .chat } }
-    var imageModels: [AIModel] { models.filter { $0.type == .image } }
-    var sttModels: [AIModel] { models.filter { $0.type == .stt } }
-    
     @Relationship(deleteRule: .cascade)
     var models: [AIModel]
     
@@ -35,17 +30,10 @@ class Provider {
     var chatModel: AIModel
     @Relationship(deleteRule: .nullify)
     var liteModel: AIModel
-    
-    @Relationship(deleteRule: .nullify)
-    var imageModel: AIModel
-    
-    @Relationship(deleteRule: .nullify)
-    var sttModel: AIModel
 
     public init(id: UUID = UUID(),
-                date: Date = Date(),
                 name: String,
-                host: String,
+                baseUrl: String,
                 apiKey: String,
                 type: ProviderType,
                 scheme: HTTPScheme,
@@ -53,13 +41,10 @@ class Provider {
                 isEnabled: Bool,
                 models: [AIModel] = [],
                 chatModel: AIModel,
-                liteModel: AIModel,
-                imageModel: AIModel,
-                sttModel: AIModel) {
+                liteModel: AIModel) {
         self.id = id
-        self.date = date
         self.name = name
-        self.host = host
+        self.baseUrl = baseUrl
         self.apiKey = apiKey
         self.type = type
         self.scheme = scheme
@@ -68,21 +53,17 @@ class Provider {
         self.models = models
         self.chatModel = chatModel
         self.liteModel = liteModel
-        self.imageModel = imageModel
-        self.sttModel = sttModel
     }
     
     
     static func factory(type: ProviderType) -> Provider {
         let allModels = type.getDefaultModels()
         
-        let chatModel = allModels.first { $0.type == .chat }
-        let imageModel = allModels.first { $0.type == .image }
-        let sttModel = allModels.first { $0.type == .stt }
+        let chatModel = allModels.first
         
         let provider = Provider(
             name: type.name,
-            host: type.defaultHost,
+            baseUrl: type.defaultHost,
             apiKey: "",
             type: type,
             scheme: type.scheme,
@@ -90,9 +71,7 @@ class Provider {
             isEnabled: true,
             models: allModels,
             chatModel: chatModel!,
-            liteModel: chatModel!,
-            imageModel: imageModel ?? AIModel.dalle,
-            sttModel: sttModel ?? AIModel.whisper
+            liteModel: chatModel!
         )
         
         return provider
@@ -101,18 +80,16 @@ class Provider {
 
 extension Provider {
     func refreshModels() async -> [GenericModel] {
-        let refreshedChatModels: [GenericModel] = await APIService.refreshModels(provider: self.type.rawValue.lowercased())
-        let newModels = refreshedChatModels.filter { model in
-            !chatModels.contains(where: { $0.code == model.code }) || !imageModels.contains(where: { $0.code == model.code }) || !sttModels.contains(where: { $0.code == model.code })
-        }
+        let service = type.getService()
+        let refreshedChatModels: [GenericModel] = await service.refreshModels(provider: self.type.rawValue)
         
-        return newModels.map { chatModel in
+        return refreshedChatModels.map { chatModel in
             GenericModel(code: chatModel.code, name: chatModel.name)
         }
     }
     
     func testModel(model: AIModel) async -> Bool {
-        let result = await APIService.testChatModel(provider: type.rawValue, model: model.code, baseUrl: host, apiKey: apiKey)
+        let result = await APIService.testChatModel(provider: type.rawValue, model: model.code, baseUrl: baseUrl, apiKey: apiKey)
         return result
     }
 }

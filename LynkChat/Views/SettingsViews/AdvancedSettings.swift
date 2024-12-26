@@ -118,12 +118,6 @@ struct AdvancedSettings: View {
                             if let liteModel = existingProvider.models.first(where: { $0.code == restoredProvider.liteModelCode }) {
                                 existingProvider.liteModel = liteModel
                             }
-                            if let imageModel = existingProvider.models.first(where: { $0.code == restoredProvider.imageModelCode }) {
-                                existingProvider.imageModel = imageModel
-                            }
-                            if let sttModel = existingProvider.models.first(where: { $0.code == restoredProvider.sttModelCode }) {
-                                existingProvider.sttModel = sttModel
-                            }
                             
                         } else {
                             modelContext.insert(restoredProvider.toProvider())

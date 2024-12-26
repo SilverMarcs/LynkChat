@@ -12,7 +12,6 @@ struct ModelList: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Bindable var provider: Provider
-    var type: ModelType
 
     @State private var showAdder = false
     @State private var showModelSelectionSheet = false
@@ -56,12 +55,12 @@ struct ModelList: View {
     
     @ViewBuilder
     var list: some View {
-        if provider.models.filter({ $0.type == type }).isEmpty {
+        if provider.models.isEmpty {
             Text("No models available")
         } else {
             List {
                 Section {
-                    ForEach(provider.models.filter { $0.type == type }, id: \.self) { model in
+                    ForEach(provider.models, id: \.self) { model in
                         ModelRow(provider: provider, model: model)
                             .opacity(model.isEnabled ? 1 : 0.5)
                             .swipeActions(edge: .leading) {
@@ -73,18 +72,10 @@ struct ModelList: View {
                             }
                     }
                     .onDelete { indexSet in
-                        // Create an array of the filtered models
-                        let filteredModels = provider.models.filter { $0.type == type }
-                        
-                        // For each index in the indexSet, find the model in the filtered list
-                        for index in indexSet {
-                            let modelToDelete = filteredModels[index]
-                            
-                            // Find the index of the model in the original list and remove it
-                            if let indexToDelete = provider.models.firstIndex(of: modelToDelete) {
-                                provider.models.remove(at: indexToDelete)
-                                modelContext.delete(modelToDelete)
-                            }
+                        let modelsToDelete = indexSet.map { provider.models[$0] }
+                        provider.models.remove(atOffsets: indexSet)
+                        for model in modelsToDelete {
+                            modelContext.delete(model)
                         }
                     }
                 } header: {
@@ -98,7 +89,6 @@ struct ModelList: View {
                         
                         Text("Actions")
                             .frame(maxWidth: .infinity, alignment: .trailing)
-                            .opacity(type == .chat ? 1 : 0)
                     }
                     .padding(.horizontal, 5)
                     #else

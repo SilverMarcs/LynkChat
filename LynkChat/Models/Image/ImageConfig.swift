@@ -27,7 +27,9 @@ class ImageConfig {
     init(prompt: String = "", provider: Provider) {
         self.prompt = prompt
         self.provider = provider
-        self.model = provider.imageModel
+//        self.model = provider.imageModel
+        #warning("fix this")
+        self.model = .dalle
     }
     
     init(prompt: String = "", provider: Provider, model: AIModel) {

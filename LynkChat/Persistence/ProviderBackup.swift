@@ -14,7 +14,7 @@ struct ProviderBackup: Codable {
     var id: UUID
     var date: Date
     var name: String
-    var host: String
+    var baseUrl: String
     var apiKey: String
     var type: ProviderType
     var schema: HTTPScheme
@@ -23,14 +23,11 @@ struct ProviderBackup: Codable {
     var models: [AIModelBackup]
     var chatModelCode: String
     var liteModelCode: String
-    var imageModelCode: String
-    var sttModelCode: String
     
     struct AIModelBackup: Codable, Hashable, Equatable {
         var id: UUID
         var code: String
         var name: String
-        var type: ModelType
         var isEnabled: Bool
     }
 }
@@ -40,7 +37,7 @@ extension ProviderBackup {
         self.id = UUID()
         self.date = Date()
         self.name = provider.name
-        self.host = provider.host
+        self.baseUrl = provider.baseUrl
         self.apiKey = provider.apiKey
         self.type = provider.type
         self.schema = provider.scheme
@@ -49,8 +46,6 @@ extension ProviderBackup {
         self.models = provider.models.map { AIModelBackup(from: $0) }
         self.chatModelCode = provider.chatModel.code
         self.liteModelCode = provider.liteModel.code
-        self.imageModelCode = provider.imageModel.code
-        self.sttModelCode = provider.sttModel.code
     }
 
     func toProvider() -> Provider {
@@ -58,9 +53,8 @@ extension ProviderBackup {
         
         return Provider(
             id: UUID(),
-            date: Date(),
             name: self.name,
-            host: self.host,
+            baseUrl: self.baseUrl,
             apiKey: self.apiKey,
             type: self.type,
             scheme: self.schema,
@@ -68,9 +62,7 @@ extension ProviderBackup {
             isEnabled: self.isEnabled,
             models: models,
             chatModel: models.first(where: { $0.code == self.chatModelCode }) ?? AIModel.gpt4,
-            liteModel: models.first(where: { $0.code == self.liteModelCode }) ?? AIModel.gpt4,
-            imageModel: models.first(where: { $0.code == self.imageModelCode }) ?? AIModel.dalle,
-            sttModel: models.first(where: { $0.code == self.sttModelCode }) ?? AIModel.whisper
+            liteModel: models.first(where: { $0.code == self.liteModelCode }) ?? AIModel.gpt4
         )
     }
 }
@@ -80,7 +72,6 @@ extension ProviderBackup.AIModelBackup {
         self.id = model.id
         self.code = model.code
         self.name = model.name
-        self.type = model.type
         self.isEnabled = model.isEnabled
     }
     
@@ -88,7 +79,6 @@ extension ProviderBackup.AIModelBackup {
         AIModel(
             code: self.code,
             name: self.name,
-            type: self.type,
             isEnabled: self.isEnabled
         )
     }

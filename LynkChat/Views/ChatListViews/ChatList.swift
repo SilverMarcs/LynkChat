@@ -145,7 +145,7 @@ struct ChatList: View {
             Menu {
                 ForEach(providers) { provider in
                     Menu {
-                        ForEach(provider.chatModels.filter { $0.isEnabled }) { model in
+                        ForEach(provider.models.filter { $0.isEnabled }) { model in
                             Button(model.name) {
                                 NewChatTip().invalidate(reason: .actionPerformed)
                                 Task {

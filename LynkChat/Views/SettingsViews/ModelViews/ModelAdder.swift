@@ -13,21 +13,15 @@ struct ModelAdder: View {
     
     @State private var modelName: String = ""
     @State private var modelCode: String = ""
-    @State private var selectedModelType: ModelType = .chat
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("Model Name", text: $modelName)
                 TextField("Model Code", text: $modelCode)
-                Picker("Model Type", selection: $selectedModelType) {
-                    ForEach(ModelType.allCases, id: \.self) { type in
-                        Text(type.rawValue.capitalized).tag(type)
-                    }
-                }
             }
             .formStyle(.grouped)
-            .navigationTitle("Add Model")
+            .navigationTitle("Add Chat Model")
             .toolbarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -46,6 +40,7 @@ struct ModelAdder: View {
     }
     
     private func addModel() {
-        provider.models.append(.init(code: modelCode, name: modelName, type: selectedModelType))
+        provider.models.append(.init(code: modelCode, name: modelName))
     }
 }
+

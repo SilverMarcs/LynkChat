@@ -53,6 +53,7 @@ struct GoogleCodeExecutionTip: Tip {
     }
 }
 
+// TODO: shwo this in provider default page
 struct ProviderRefreshTip: Tip {
     var title: Text {
         Text("Go into Models Section to refresh the provider's model list")

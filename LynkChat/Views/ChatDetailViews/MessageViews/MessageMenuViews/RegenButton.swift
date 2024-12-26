@@ -20,7 +20,7 @@ struct RegenButton: View {
             Menu {
                 ForEach(providers) { provider in
                     Menu {
-                        ForEach(provider.chatModels.filter { $0.isEnabled }) { model in
+                        ForEach(provider.models.filter { $0.isEnabled }) { model in
                             Button(model.name) {
                                 group.chat?.config.provider = provider
                                 group.chat?.config.model = model

@@ -27,7 +27,7 @@ enum TitleGenerator {
                 )],
                 system: "Generate Title based on user's instructions",
                 stream: false,
-                customBaseUrl: provider.host,
+                customBaseUrl: provider.baseUrl,
                 customApiKey: provider.apiKey
             )
             

@@ -9,11 +9,8 @@ import SwiftUI
 
 struct ModelRefresher: View {
     @Environment(\.dismiss) var dismiss
-
     @State private var refreshedModels: [GenericModel] = []
     @State private var isLoading = true
-    @State private var searchText: String = ""
-
     var provider: Provider
 
     var body: some View {
@@ -26,57 +23,17 @@ struct ModelRefresher: View {
                             await loadModels()
                         }
                 } else {
-                    #if os(macOS)
-                    Section {
-                        TextField("Search models", text: $searchText)
-                    }
-                    #endif
-                    
-                    if filteredModels.isEmpty && !searchText.isEmpty {
-                        ContentUnavailableView.search
+                    if refreshedModels.isEmpty {
+                        Text("No models found.")
                     } else {
                         List {
-                            ForEach(filteredModels) { model in
-                                if model.isExisting {
-                                    // UI for existing models
-                                    HStack {
-                                        Text(model.code)
-                                            .monospaced()
-                                        
-                                        Spacer()
-                                        
-                                        Image(systemName: model.selectedModelType.icon)
-                                    }
-                                    .padding(.vertical, 4)
-                                } else {
-                                    // UI for new models
-                                    HStack {
-                                        Toggle(isOn: $refreshedModels[refreshedModels.firstIndex(where: { $0.id == model.id })!].isSelected) {
-                                            VStack(alignment: .leading) {
-                                                Text(model.code)
-                                                    .monospaced()
-                                                Text(model.name)
-                                                    .font(.subheadline)
-                                                    .foregroundColor(.secondary)
-                                            }
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        Picker("Model Type", selection: $refreshedModels[refreshedModels.firstIndex(where: { $0.id == model.id })!].selectedModelType) {
-                                            ForEach(ModelType.allCases, id: \.self) { option in
-                                                Image(systemName: option.icon)
-                                                    .tag(option)
-                                            }
-                                        }
-                                        .onChange(of: model.selectedModelType) {
-                                            refreshedModels[refreshedModels.firstIndex(where: { $0.id == model.id })!].isSelected = true
-                                        }
-                                        .labelsHidden()
-                                        .pickerStyle(.segmented)
-                                        .fixedSize()
-                                    }
-                                }
+                            ForEach(refreshedModels) { model in
+                                RefreshModelRow(
+                                    model: model,
+                                    isSelected: model.isExisting
+                                        ? .constant(true)
+                                        : binding(for: model)
+                                )
                             }
                         }
                     }
@@ -98,44 +55,25 @@ struct ModelRefresher: View {
                     .disabled(refreshedModels.filter { $0.isSelected }.isEmpty)
                 }
             }
+            .navigationTitle("Refresh Models")
             #if os(macOS)
-            .padding(.top)
             .frame(width: 400, height: 450)
-            #else
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search models")
-            .apply {
-                if #available(iOS 18.0, *) {
-                    $0.searchPresentationToolbarBehavior(.avoidHidingContent)
-                } else {
-                    $0
-                }
-            }
-            .navigationTitle("Add Models")
             #endif
         }
     }
-
-    private var filteredModels: [GenericModel] {
-        if searchText.isEmpty {
-            return refreshedModels
-        } else {
-            return refreshedModels.filter { model in
-                model.name.localizedCaseInsensitiveContains(searchText) ||
-                model.code.localizedCaseInsensitiveContains(searchText)
-            }
-        }
-    }
+    
+    private func binding(for model: GenericModel) -> Binding<Bool> {
+          Binding(
+              get: { refreshedModels[refreshedModels.firstIndex(where: { $0.id == model.id })!].isSelected },
+              set: { refreshedModels[refreshedModels.firstIndex(where: { $0.id == model.id })!].isSelected = $0 }
+          )
+      }
 
     private func loadModels() async {
         let newModels = await provider.refreshModels()
         
         refreshedModels = newModels.map { model in
-            var genericModel = GenericModel(code: model.code, name: model.name)
-            if let existingModel = provider.models.first(where: { $0.code == model.code }) {
-                genericModel.isExisting = true
-                genericModel.selectedModelType = existingModel.type
-            }
-            return genericModel
+            return GenericModel(code: model.code, name: model.name, isExisting: provider.models.contains(where: { $0.code == model.code }))
         }
         
         // Sort to put existing models on top
@@ -148,7 +86,7 @@ struct ModelRefresher: View {
         let selectedModels = refreshedModels.filter { $0.isSelected && !$0.isExisting }
 
         for model in selectedModels {
-            provider.models.append(.init(code: model.code, name: model.name, type: model.selectedModelType))
+            provider.models.append(.init(code: model.code, name: model.name))
         }
 
         dismiss()

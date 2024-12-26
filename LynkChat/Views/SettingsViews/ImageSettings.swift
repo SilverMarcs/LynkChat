@@ -17,7 +17,8 @@ struct ImageSettings: View {
     @Bindable var providerDefaults: ProviderDefaults
     
     var filteredProviders: [Provider] {
-        providers.filter { !$0.imageModels.isEmpty }
+#warning("fix this")
+        return providers.filter { !$0.models.isEmpty }
     }
     
     var body: some View {
@@ -28,9 +29,10 @@ struct ImageSettings: View {
             }
             
             Section("Models") {
+                #warning("fix this")
                 ProviderPicker(provider: $providerDefaults.imageProvider, providers: filteredProviders)
                 
-                ModelPicker(model: $providerDefaults.imageProvider.imageModel, models: providerDefaults.imageProvider.imageModels, label: "Model")
+                ModelPicker(model: $providerDefaults.imageProvider.chatModel, models: providerDefaults.imageProvider.models, label: "Model")
             }
             
             Section(header: Text("Default Parameters")) {

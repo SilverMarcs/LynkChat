@@ -48,7 +48,7 @@ struct QuickPanelSettings: View {
                     }
                 }
                 
-                ModelPicker(model: $providerDefaults.quickProvider.liteModel, models: providerDefaults.quickProvider.chatModels, label: "Lite Model")
+                ModelPicker(model: $providerDefaults.quickProvider.liteModel, models: providerDefaults.quickProvider.models, label: "Lite Model")
             }
                 
             Section("System Prompt") {

@@ -87,11 +87,6 @@ struct ProviderList: View {
                     chatConfig.provider = defaultProvider
                     chatConfig.model = chatConfig.provider.chatModel
                 }
-                
-                for imageConfig in allImageConfigs where imageConfig.provider == providerToDelete {
-                    imageConfig.provider = defaultImageProvider
-                    imageConfig.model = imageConfig.provider.imageModel
-                }
             }
         }
         

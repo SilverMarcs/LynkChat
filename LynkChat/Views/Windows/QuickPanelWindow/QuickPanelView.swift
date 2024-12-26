@@ -84,7 +84,7 @@ struct QuickPanelView: View {
                     }
                 )
 
-                ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels, label: "Model")
+                ModelPicker(model: $chat.config.model, models: chat.config.provider.models, label: "Model")
                 
 //                Menu {
 //                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)

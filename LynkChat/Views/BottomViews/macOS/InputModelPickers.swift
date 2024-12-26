@@ -20,7 +20,7 @@ struct InputModelPickers: View {
                 chat.config.model = provider.chatModel
             }
             
-            ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels)
+            ModelPicker(model: $chat.config.model, models: chat.config.provider.models)
         }
         .buttonStyle(.borderless)
     }

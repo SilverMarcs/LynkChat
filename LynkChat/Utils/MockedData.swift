@@ -24,15 +24,15 @@ extension ProviderDefaults {
 }
 
 extension AIModel {
-    static var gpt4 = AIModel(code: "gpt", name: "GPT-4", type: .chat)
+    static var gpt4 = AIModel(code: "gpt", name: "GPT-4")
 }
 
 extension AIModel {
-    static var dalle = AIModel(code: "dall-e-3", name: "DALL-E-3", type: .image)
+    static var dalle = AIModel(code: "dall-e-3", name: "DALL-E-3")
 }
 
 extension AIModel {
-    static var whisper = AIModel(code: "whisper-1", name: "Whisper-1", type: .stt)
+    static var whisper = AIModel(code: "whisper-1", name: "Whisper-1")
 }
 
 extension Message {

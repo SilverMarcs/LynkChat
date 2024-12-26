@@ -10,7 +10,7 @@ import SwiftUI
 struct ProviderDetail: View {
     @Bindable var provider: Provider
     
-    @State private var selectedTab: ModelType? = nil
+    @State private var selectedTab: ProviderTab = .general
 
     var body: some View {
         content
@@ -26,20 +26,19 @@ struct ProviderDetail: View {
     
     @ViewBuilder
     var content: some View {
-        if selectedTab == nil {
+        switch selectedTab {
+        case .general:
             ProviderGeneral(provider: provider)
-        } else if let modelType = selectedTab {
-            ModelList(provider: provider, type: modelType)
+        case .models:
+            ModelList(provider: provider)
         }
     }
 
     private var picker: some View {
         Picker("Tabs", selection: $selectedTab) {
-            Label("General", systemImage: "info.circle")
-                .tag(ModelType?.none)
-            ForEach(provider.type.availableModelTypes, id: \.self) { modelType in
-                Label(modelType.name, systemImage: modelType.icon)
-                    .tag(modelType)
+           ForEach(ProviderTab.allCases) { type in
+               Label(type.rawValue, systemImage: type.iconName)
+                    .tag(type)
             }
         }
         #if os(macOS)
@@ -47,14 +46,24 @@ struct ProviderDetail: View {
         #else
         .labelStyle(.iconOnly)
         #endif
-        .onChange(of: selectedTab) {
-            if selectedTab == .chat {
-                ProviderRefreshTip().invalidate(reason: .actionPerformed)
-            }
-        }
-        .popoverTip(ProviderRefreshTip())
         .pickerStyle(.segmented)
         .fixedSize()
+    }
+}
+
+enum ProviderTab: String, CaseIterable, Identifiable {
+    var id: String { rawValue }
+
+    case general = "General"
+    case models = "Models"
+    
+    var iconName: String {
+        switch self {
+        case .general:
+            return "info.circle"
+        case .models:
+            return "quote.bubble"
+        }
     }
 }
 

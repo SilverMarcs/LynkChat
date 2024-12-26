@@ -19,7 +19,8 @@ struct ImageGenOnboarding: View {
             content: {
                 Form {
                     Section {
-                        ModelPicker(model: $provider.imageModel, models: provider.imageModels, label: "Default Model")
+                    #warning("fix this")
+                        ModelPicker(model: $provider.chatModel, models: provider.models, label: "Default Model")
                         
                         Toggle(isOn: $imageConfig.saveToPhotos) {
                             Text("Save to Photos Library")

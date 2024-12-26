@@ -101,7 +101,7 @@ struct StreamHandler {
             messages: apiMessages,
             system: chat.config.systemPrompt,
             stream: stream,
-            customBaseUrl: chat.config.provider.host,
+            customBaseUrl: chat.config.provider.baseUrl,
             customApiKey: chat.config.provider.apiKey
         )
     }

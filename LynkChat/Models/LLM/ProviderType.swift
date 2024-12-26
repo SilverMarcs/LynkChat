@@ -126,15 +126,6 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     }
     
     static var customTypes: [ProviderType] = [.customOpenai, .lmstudio, .ollama, .customGoogle, .customAnthropic]
-    
-    var availableModelTypes: [ModelType] {
-         switch self {
-         case .google, .anthropic:
-             return [.chat]
-         default:
-             return ModelType.allCases
-         }
-     }
 
     func getDefaultModels() -> [AIModel] {
         switch self {

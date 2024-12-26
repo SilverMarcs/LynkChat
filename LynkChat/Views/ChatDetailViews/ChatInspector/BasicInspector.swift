@@ -38,7 +38,7 @@ struct BasicInspector: View {
                     }
                 )
                 
-                ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels, label: "Model")
+                ModelPicker(model: $chat.config.model, models: chat.config.provider.models, label: "Model")
             }
             
             Section("Parameters") {

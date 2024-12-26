@@ -16,10 +16,10 @@ struct RegularProviderHost: View {
         HStack {
             if isHostDisabled {
                 LabeledContent("Host URL") {
-                    Text(provider.host)
+                    Text(provider.baseUrl)
                 }
             } else {
-                TextField("Host URL", text: $provider.host)
+                TextField("Host URL", text: $provider.baseUrl)
             }
             
             if !isHostDisabled {

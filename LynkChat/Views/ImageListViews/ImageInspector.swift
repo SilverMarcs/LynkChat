@@ -16,7 +16,8 @@ struct ImageInspector: View {
     @Binding var showingInspector: Bool
     
     var filteredProviders: [Provider] {
-        providers.filter { !$0.imageModels.isEmpty }
+        #warning("fix this")
+        return providers.filter { !$0.models.isEmpty }
     }
     
     var body: some View {
@@ -34,12 +35,14 @@ struct ImageInspector: View {
                 }
                 
                 Section("Models") {
+#warning("fix this")
                     ProviderPicker(provider: $session.config.provider,
                                    providers: providers) { provider in
-                        session.config.model = provider.imageModel
+                        session.config.model = provider.chatModel
                     }
                     
-                    ModelPicker(model: $session.config.model, models: session.config.provider.imageModels, label: "Model")
+#warning("fix this")
+                    ModelPicker(model: $session.config.model, models: session.config.provider.models, label: "Model")
                 }
                 
                 Section("Parameters") {

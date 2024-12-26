@@ -25,7 +25,7 @@ struct ImageGenerator {
         
         static func generateImages(config: ImageConfig) async throws -> [Data] {
             // Construct URL from provider host
-            guard let url = URL(string: "https://\(config.provider.host)/images/generations") else {
+            guard let url = URL(string: "https://\(config.provider.baseUrl)/images/generations") else {
                 throw URLError(.badURL)
             }
             

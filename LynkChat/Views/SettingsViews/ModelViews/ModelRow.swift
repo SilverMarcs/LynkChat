@@ -52,7 +52,6 @@ struct ModelRow: View {
                 }
             }
             .buttonStyle(.plain)
-            .opacity(model.type == .chat ? 1 : 0)
         }
         #if os(macOS)
         .padding(5)
