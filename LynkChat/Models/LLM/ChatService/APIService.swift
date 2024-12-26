@@ -8,31 +8,6 @@
 import Foundation
 
 struct APIService: AIService {
-    static func testChatModel(provider: String, model: String, baseUrl: String?, apiKey: String?) async -> Bool {
-        let testMessage = APIMessage(
-            role: .user,
-            text: String.testPrompt
-        )
-        
-        let request = APIRequest(
-            provider: provider,
-            model: model,
-            messages: [testMessage],
-            system: nil,
-            stream: false,
-            customBaseUrl: baseUrl,
-            customApiKey: apiKey
-        )
-        
-        do {
-            let response = try await nonStreamingResponse(from: request)
-            return !response.text.isEmpty
-        } catch {
-            print("Test chat model failed: \(error)")
-            return false
-        }
-    }
-    
     static func refreshModels(provider: String) async -> [GenericModel] {
         guard let request = makeRequest(path: "/chat/models?provider=\(provider)") else {
             return []
@@ -152,10 +127,7 @@ struct APIService: AIService {
             }
         }
     }
-}
-
-extension APIService {
-    // Helper for creating base URLRequest with common headers
+    
     private static func makeRequest(path: String, method: String = "GET") -> URLRequest? {
         guard let url = URL(string: "\(AppConfig.shared.myApiHost)\(path)") else {
             return nil

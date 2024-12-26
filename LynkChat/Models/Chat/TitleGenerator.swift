@@ -19,16 +19,14 @@ enum TitleGenerator {
     private static func generateTitle(from content: String, provider: Provider) async -> String? {
         do {
             let request = APIRequest(
-                provider: provider.type.rawValue,
+                provider: provider,
                 model: provider.liteModel.code,
                 messages: [APIMessage(
                     role: .user,
                     text: content
                 )],
                 system: "Generate Title based on user's instructions",
-                stream: false,
-                customBaseUrl: provider.baseUrl,
-                customApiKey: provider.apiKey
+                stream: false
             )
             
             let service = provider.type.getService()

@@ -76,6 +76,8 @@
 		085C15E92D1DD70C007245CD /* ImageProviders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15E82D1DD70C007245CD /* ImageProviders.swift */; };
 		085C15EB2D1DDF64007245CD /* ImageProviderDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15EA2D1DDF63007245CD /* ImageProviderDetail.swift */; };
 		085C15ED2D1DE45F007245CD /* ImageProviderAdder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15EC2D1DE45F007245CD /* ImageProviderAdder.swift */; };
+		085C15EF2D1DEE02007245CD /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15EE2D1DEE02007245CD /* OpenAIService.swift */; };
+		085C15F12D1DF0BC007245CD /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15F02D1DF0BC007245CD /* APIRequest.swift */; };
 		085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */; };
 		086346AB2CE78078006E5927 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 086346AA2CE78078006E5927 /* SwiftMarkdownView */; };
 		0865E0962CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */; };
@@ -270,6 +272,8 @@
 		085C15E82D1DD70C007245CD /* ImageProviders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProviders.swift; sourceTree = "<group>"; };
 		085C15EA2D1DDF63007245CD /* ImageProviderDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProviderDetail.swift; sourceTree = "<group>"; };
 		085C15EC2D1DE45F007245CD /* ImageProviderAdder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProviderAdder.swift; sourceTree = "<group>"; };
+		085C15EE2D1DEE02007245CD /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
+		085C15F02D1DF0BC007245CD /* APIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 		085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerStepper.swift; sourceTree = "<group>"; };
 		0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryBorderedButtonStyle.swift; sourceTree = "<group>"; };
 		0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMarkdownView.swift; sourceTree = "<group>"; };
@@ -453,7 +457,9 @@
 		08256BF52D1D34F300C54BA1 /* ChatService */ = {
 			isa = PBXGroup;
 			children = (
+				085C15F02D1DF0BC007245CD /* APIRequest.swift */,
 				08256BF82D1D624A00C54BA1 /* AIService.swift */,
+				085C15EE2D1DEE02007245CD /* OpenAIService.swift */,
 				08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */,
 				087B30932D1C39C200FB135A /* APIService.swift */,
 			);
@@ -1136,12 +1142,14 @@
 				0821815A2C382B9B00171BF3 /* ProviderGeneral.swift in Sources */,
 				0898252D2CE9C0C100980468 /* ReadyPageView.swift in Sources */,
 				08A313492C4AD0DC00C3E578 /* CommonModifiers.swift in Sources */,
+				085C15EF2D1DEE02007245CD /* OpenAIService.swift in Sources */,
 				08A222C42C2AC6B300D76C8B /* ChatDetail.swift in Sources */,
 				08C800472C36C4ED009581C5 /* UserMessage.swift in Sources */,
 				080E70EC2CDF380500A949C9 /* InspectorTab.swift in Sources */,
 				089825292CE9BA2900980468 /* QuickPanelOnboarding.swift in Sources */,
 				08B8DE1F2C97F3D10041A690 /* AppConfig.swift in Sources */,
 				0844C2752CA3E6E100F0A325 /* EmptyChat.swift in Sources */,
+				085C15F12D1DF0BC007245CD /* APIRequest.swift in Sources */,
 				082A63382C55175E003996B7 /* MiscUtils.swift in Sources */,
 				085361232C4A390D007DAB62 /* ProviderPicker.swift in Sources */,
 				085361252C4A5ECC007DAB62 /* MaxTokensPicker.swift in Sources */,

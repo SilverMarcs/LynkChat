@@ -93,7 +93,27 @@ extension Provider {
     }
     
     func testModel(model: AIModel) async -> Bool {
-        let result = await APIService.testChatModel(provider: type.rawValue, model: model.code, baseUrl: baseUrl, apiKey: apiKey)
-        return result
+        let service = type.getService()
+        
+        let testMessage = APIMessage(
+            role: .user,
+            text: String.testPrompt
+        )
+        
+        let request = APIRequest(
+            provider: self,
+            model: model.code,
+            messages: [testMessage],
+            system: nil,
+            stream: false
+        )
+        
+        do {
+            let response = try await service.nonStreamingResponse(from: request)
+            return !response.text.isEmpty
+        } catch {
+            print("Test chat model failed: \(error)")
+            return false
+        }
     }
 }
