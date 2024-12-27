@@ -12,8 +12,6 @@ struct DebugSettings: View {
     
     var body: some View {
         Form {
-            Toggle("Send Own Key", isOn: $config.sendOwnKey)
-            TextField("API Host", text: $config.myApiHost)
             TextField("API Key", text: $config.myApiKey)
         }
         .formStyle(.grouped)

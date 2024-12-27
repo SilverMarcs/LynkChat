@@ -9,7 +9,7 @@ import Foundation
 
 struct APIService: AIService {
     static func refreshModels(provider: APIProvider) async -> [GenericModel] {
-        guard let request = makeRequest(path: "/chat/models?provider=\(provider.name)") else {
+        guard let request = makeRequest(path: "/chat/models/\(provider.name)") else {
             return []
         }
         
@@ -129,7 +129,7 @@ struct APIService: AIService {
     }
     
     private static func makeRequest(path: String, method: String = "GET") -> URLRequest? {
-        guard let url = URL(string: "\(AppConfig.shared.myApiHost)\(path)") else {
+        guard let url = URL(string: "\(String.apiHost)\(path)") else {
             return nil
         }
         
@@ -143,4 +143,12 @@ struct APIService: AIService {
         
         return request
     }
+}
+
+extension String {
+    #if DEBUG
+    static let apiHost = "http://localhost:3000/api"
+    #else
+    static let apiHost = "https://llm-api-server.vercel.app/api"
+    #endif
 }
