@@ -13,7 +13,7 @@ struct ImageList: View {
     @Environment(ImageVM.self) var imageVM
     @Environment(\.modelContext) var modelContext
     
-    @Query var providers: [ImageProvider]
+    @Query var imageProviders: [ImageProvider]
     
     @Query(sort: \ImageSession.date, order: .reverse, animation: .default)
     var sessions: [ImageSession]
@@ -52,7 +52,7 @@ struct ImageList: View {
         
         ToolbarItem(placement: .automatic) {
             Menu {
-                ForEach(providers) { provider in
+                ForEach(imageProviders) { provider in
                     Button(provider.name) {
                         imageVM.createNewSession(provider: provider)
                     }

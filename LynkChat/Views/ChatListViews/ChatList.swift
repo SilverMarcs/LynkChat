@@ -144,13 +144,22 @@ struct ChatList: View {
         ToolbarItem {
             Menu {
                 ForEach(providers) { provider in
-                    Button {
+                    Menu {
+                        ForEach(provider.models) { model in
+                            Button(model.name) {
+                                NewChatTip().invalidate(reason: .actionPerformed)
+                                Task {
+                                    await chatVM.createNewChat(provider: provider, model: model)
+                                }
+                            }
+                        }
+                    } label: {
+                        Label(provider.name, image: provider.type.imageName)
+                    } primaryAction: {
                         NewChatTip().invalidate(reason: .actionPerformed)
                         Task {
                             await chatVM.createNewChat(provider: provider)
                         }
-                    } label: {
-                        Label(provider.name, image: provider.type.imageName)
                     }
                 }
             } label: {

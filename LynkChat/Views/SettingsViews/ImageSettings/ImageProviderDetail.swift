@@ -21,22 +21,27 @@ struct ImageProviderDetail: View {
             }
             
             Section {
-                List($provider.models, id: \.self) {$model in
-                    #if os(macOS)
-                    HStack {
-                        TextField("Name", text: $model.name)
-                        TextField("Code", text: $model.code)
-                            .monospaced()
+                List {
+                    ForEach($provider.models, id: \.self) { $model in
+#if os(macOS)
+                        HStack {
+                            TextField("Name", text: $model.name)
+                            TextField("Code", text: $model.code)
+                                .monospaced()
+                        }
+                        .padding(5)
+                        .labelsHidden()
+#else
+                        VStack(alignment: .leading) {
+                            TextField("Name", text: $model.name)
+                            TextField("Code", text: $model.code)
+                                .monospaced()
+                        }
+#endif
                     }
-                    .padding(5)
-                    .labelsHidden()
-                    #else
-                    VStack(alignment: .leading) {
-                        TextField("Name", text: $model.name)
-                        TextField("Code", text: $model.code)
-                            .monospaced()
+                    .onDelete { indexSet in
+                        provider.models.remove(atOffsets: indexSet)
                     }
-                    #endif
                 }
                 .sheet(isPresented: $showModelAdder) {
                     ModelAdder() { name, code in
