@@ -13,7 +13,8 @@ struct ImageGeneral: View {
     
     @Query var providers: [ImageProvider]
 
-    @Bindable var providerDefaults: ProviderDefaults
+    // TODO: Implement
+//    @Bindable var providerDefaults: ProviderDefaults
     
     var body: some View {
         Toggle(isOn: $imageConfig.saveToPhotos) {
@@ -22,14 +23,14 @@ struct ImageGeneral: View {
         }
         
         Section("Models") {
-            Picker("Provider", selection: $providerDefaults.imageProvider) {
-                ForEach(providers) { provider in
-                    Text(provider.name.uppercased())
-                        .tag(provider)
-                }
-            }
-            
-            ModelPicker(model: $providerDefaults.imageProvider.model, models: providerDefaults.imageProvider.models, label: "Model")
+//            Picker("Provider", selection: $providerDefaults.imageProvider) {
+//                ForEach(providers) { provider in
+//                    Text(provider.name.uppercased())
+//                        .tag(provider)
+//                }
+//            }
+//            
+//            ModelPicker(model: $providerDefaults.imageProvider.model, models: providerDefaults.imageProvider.models, label: "Model")
         }
         
         Section("Default Parameters") {
@@ -67,5 +68,5 @@ struct ImageGeneral: View {
 }
 
 #Preview {
-    ImageGeneral(providerDefaults: .mockProviderDefaults)
+    ImageGeneral()
 }

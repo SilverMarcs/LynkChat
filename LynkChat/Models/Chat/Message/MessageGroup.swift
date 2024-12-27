@@ -38,8 +38,8 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     func addMessage(_ message: Message) {
-        message.provider = chat?.config.provider
-        message.model = chat?.config.model
+        #warning("find a way to make this not have optional chat reference")
+        message.model = chat?.config.model ?? ModelConfig.shared.defaultModel
         
         if message.role == .assistant {
             message.isReplying = true
@@ -53,11 +53,7 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     // MARK: - computed message properties
-    var provider: Provider? {
-        activeMessage.provider
-    }
-    
-    var model: AIModel? {
+    var model: LynkModel {
         activeMessage.model
     }
     

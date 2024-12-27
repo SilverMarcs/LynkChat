@@ -12,8 +12,6 @@ struct SettingsView: View {
     @Environment(SettingsVM.self) private var settingsVM
     
     @State private var columnVisibility = NavigationSplitViewVisibility.automatic
-
-    @Query var providerDefaults: [ProviderDefaults]
     
     var body: some View {
         @Bindable var settingsVM = settingsVM
@@ -37,14 +35,8 @@ struct SettingsView: View {
                 Label("Parameters", systemImage: "slider.horizontal.3")
                     .tag(SettingsTab.parameters)
                 
-                Label("Chat Service", systemImage: "cpu")
-                    .tag(SettingsTab.providers)
-                
                 Label("Image Service", systemImage: "photo")
                     .tag(SettingsTab.image)
-                
-                Label("Advanced", systemImage: "gearshape.2")
-                    .tag(SettingsTab.advanced)
                 
                 Label("Guides", systemImage: "book")
                     .tag(SettingsTab.guides)
@@ -83,18 +75,14 @@ struct SettingsView: View {
                     AppearanceSettings()
                 #if os(macOS)
                 case .quickPanel:
-                    QuickPanelSettings(providerDefaults: providerDefaults.first!)
+                    QuickPanelSettings()
                 #endif
                 case .tools:
-                    PluginSettings(providerDefaults: providerDefaults.first!)
+                    PluginSettings()
                 case .parameters:
                     ParameterSettings()
                 case .image:
-                    ImageSettings(providerDefaults: providerDefaults.first!)
-                case .providers:
-                    ProviderList()
-                case .advanced:
-                    AdvancedSettings()
+                    ImageSettings()
                 case .guides:
                     GuidesSettings()
                 #if os(macOS)
@@ -126,5 +114,4 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .modelContainer(for: ProviderDefaults.self, inMemory: true)
 }

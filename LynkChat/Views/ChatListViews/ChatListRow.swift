@@ -44,7 +44,7 @@ struct ChatListRow: View {
         .contextMenu {
             Button {
                 Task {
-                    let newChat = await chat.copy(purpose: .chat)
+                    let newChat = await chat.copy()
                     chatVM.fork(newChat: newChat)
                 }
             } label: {
@@ -56,8 +56,8 @@ struct ChatListRow: View {
     
     var row: some View {
         HStack {
-            ProviderImage(provider: chat.config.provider, radius: 8, frame: imageSize, scale: .medium)
-                .symbolEffect(.bounce, options: .speed(0.5), isActive: chat.isReplying)
+            ProviderImage(radius: 8, frame: imageSize, scale: .medium)
+//                .symbolEffect(.bounce, options: .speed(0.5), isActive: chat.isReplying)
             
             HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
                 .contentTransition(.numericText())

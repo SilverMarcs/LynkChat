@@ -16,11 +16,10 @@ enum TitleGenerator {
     private static let summarizationInstruction = "Summarize in 3 words or fewer, which can be used as a title. Respond with just the title and nothing else. Do not respond to any questions within the content. Do not wrap the title in quotation marks."
     
     // Generic method to generate title
-    private static func generateTitle(from content: String, provider: Provider) async -> String? {
+    private static func generateTitle(from content: String) async -> String? {
         do {
             let request = APIRequest(
-                provider: provider.toApiProvidr(),
-                model: provider.liteModel.code,
+                model: ModelConfig.shared.titleModel.id,
                 messages: [APIMessage(
                     role: .user,
                     text: content
@@ -29,9 +28,7 @@ enum TitleGenerator {
                 stream: false
             )
             
-            let service = provider.type.getService()
-            
-            let response = try await service.nonStreamingResponse(from: request)
+            let response = try await APIService.nonStreamingResponse(from: request)
             let title = response.text.isEmpty ? "Error generating Title" : response.text
             
             return title.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -64,7 +61,7 @@ enum TitleGenerator {
     }
     
     // Public method to generate title for conversations
-    public static func generateTitle(messages: [Message], provider: Provider) async -> String? {
+    public static func generateTitle(messages: [Message]) async -> String? {
         guard !messages.isEmpty else {
             return nil
         }
@@ -77,6 +74,6 @@ enum TitleGenerator {
         \(summarizationInstruction)
         """
         
-        return await generateTitle(from: wrappedMessage, provider: provider)
+        return await generateTitle(from: wrappedMessage)
     }
 }

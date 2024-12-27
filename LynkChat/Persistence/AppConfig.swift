@@ -16,6 +16,8 @@ class AppConfig: ObservableObject {
     
     @Published var showCamera = false
     
+    @AppStorage("finishedInitialSetup") var finishedInitialSetup = false
+    
     // Appearance
     @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .webview
     @AppStorage("codeBlockTheme") var codeBlockTheme: CodeTheme = .atomOne
@@ -47,10 +49,4 @@ class AppConfig: ObservableObject {
         fontSize = 17
         #endif
     }
-}
-
-enum SidebarIconSize: String, Codable, CaseIterable {
-    case system
-    case medium
-    case large
 }

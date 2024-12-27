@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ProviderImage: View {
-    var provider: ProviderImageProvider
+    // TODO: simplify this
+//    var provider: ProviderImageProvider
     
     var radius: CGFloat = 9
     var frame: CGFloat = 25
@@ -18,10 +19,12 @@ struct ProviderImage: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: radius)
-                .fill(Color(hex: provider.color).gradient)
+//                .fill(Color(hex: provider.color).gradient)
+                .fill(Color(hex: "#5755C5").gradient)
                 .frame(width: frame, height: frame)
 
-            Image(provider.imageName)
+//            Image(provider.imageName)
+            Image("storm.SFSymbol")
 //                .foregroundStyle(provider.type == .ollama ? .black : .white)
                 .imageScale(scale)
         }

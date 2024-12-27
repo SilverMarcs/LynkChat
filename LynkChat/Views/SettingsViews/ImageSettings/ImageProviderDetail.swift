@@ -44,9 +44,10 @@ struct ImageProviderDetail: View {
                     }
                 }
                 .sheet(isPresented: $showModelAdder) {
-                    ModelAdder() { name, code in
-                        provider.models.append(.init(code: code, name: name))
-                    }
+                    // TODO: add
+//                    ModelAdder() { name, code in
+//                        provider.models.append(.init(code: code, name: name))
+//                    }
                 }
             } header: {
                 HStack {
@@ -71,7 +72,7 @@ struct ImageProviderDetail: View {
     
     private var header: some View {
         HStack {
-            ProviderImage(provider: provider, frame: 33, scale: .large)
+            ProviderImage(frame: 33, scale: .large)
             
             Group {
             #if os(macOS)

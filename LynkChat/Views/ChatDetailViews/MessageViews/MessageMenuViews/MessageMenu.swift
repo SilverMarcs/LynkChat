@@ -33,7 +33,7 @@ struct MessageMenu: View {
             }
             #endif
             
-            ForkButton(copyChat: { await message.chat?.copy(from: message.activeMessage, purpose: .chat) })
+            ForkButton(copyChat: { await message.chat?.copy(from: message.activeMessage) })
         }
         
         Section {

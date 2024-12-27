@@ -20,13 +20,10 @@ final class DatabaseService: NSObject {
         print(URL.applicationSupportDirectory.path(percentEncoded: false))
         let schema = Schema([
             Chat.self,
-            ChatConfig.self,
             Message.self,
             MessageGroup.self,
-            Provider.self,
             Generation.self,
             ImageConfig.self,
-            ProviderDefaults.self,
         ])
         
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -41,12 +38,7 @@ final class DatabaseService: NSObject {
             fetchQuickChats.fetchLimit = 1
             if let quickChat = try? modelContext.fetch(fetchQuickChats).first {
                 quickChat.deleteAllMessages()
-                var defaults = FetchDescriptor<ProviderDefaults>()
-                defaults.fetchLimit = 1
-                if let providerDefaults = try modelContext.fetch(defaults).first {
-                    quickChat.config.provider = providerDefaults.quickProvider
-                    quickChat.config.model = providerDefaults.quickProvider.liteModel
-                }
+                quickChat.config.model = ModelConfig.shared.quickModel
             }
             
             // fetch chats with temporary status
@@ -58,58 +50,36 @@ final class DatabaseService: NSObject {
                     modelContext.delete(chat)
                 }
             }
-            
-            var fetchProviders = FetchDescriptor<Provider>()
-            fetchProviders.fetchLimit = 1
-            
-            // Check if providers already exist
-            if try modelContext.fetch(fetchProviders).count > 0 {
+
+            if AppConfig.shared.finishedInitialSetup {
                 return container // Return the container if setup is already done
             }
             
-            #if os(macOS)
-//            KeyboardShortcuts.setShortcut(.init(.space, modifiers: .option), for: .togglePanel)
-//            qpHotkey.keyDownHandler = {
-//              print("Pressed at \(Date())")
-//            }
-            #endif
-            
-            // Adding default providers
-            let openAI = Provider.factory(type: .openai)
-            let anthropic = Provider.factory(type: .anthropic)
-            let google = Provider.factory(type: .google)
-            
-            modelContext.insert(openAI)
-            modelContext.insert(anthropic)
-            modelContext.insert(google)
-            
             // Quick chat
-            let config = ChatConfig(provider: openAI, purpose: .quick)
-            let chat = Chat(config: config)
+            let chat = Chat()
+            chat.config.systemPrompt = AppConfig.shared.quickSystemPrompt // TOOD: see
             chat.status = .quick
             chat.statusId = ChatStatus.quick.id
             chat.title = "(↯) Quick Chat"
             modelContext.insert(chat)
             
             // Demo chat with no messages
-            let normalChatConfig = ChatConfig(provider: openAI, purpose: .chat)
-            let normalChat = Chat(config: normalChatConfig)
+            let normalChat = Chat()
             normalChat.totalTokens = 181
             modelContext.insert(normalChat)
 
             // Archived chat
-            let normalChatConfig3 = ChatConfig(provider: openAI, purpose: .chat)
-            let archivedChat = Chat(config: normalChatConfig3)
+            let archivedChat = Chat()
             archivedChat.status = .archived
             archivedChat.statusId = ChatStatus.archived.id
             archivedChat.title = "Archived Chat"
             modelContext.insert(archivedChat)
             
             // Demo favourite chat with some messages
-            let normalChatConfig2 = ChatConfig(provider: openAI, purpose: .chat)
-            let favouriteChat = Chat(config: normalChatConfig2)
+            let favouriteChat = Chat()
             favouriteChat.status = .starred
             favouriteChat.statusId = ChatStatus.starred.id
+            // TODO: add this
 //            favouriteChat.addMessage(.mockUserMessage)
 //            favouriteChat.messages.append(.mockAssistantGroup)
             favouriteChat.title = "Favourite Chat"
@@ -124,10 +94,7 @@ final class DatabaseService: NSObject {
             let imageSession = ImageSession(config: imageChatConfig)
             modelContext.insert(imageSession)
             
-            let providerDefaults = ProviderDefaults(defaultProvider: openAI,
-                                                    quickProvider: openAI,
-                                                    imageProvider: imageProvder)
-            modelContext.insert(providerDefaults)
+            AppConfig.shared.finishedInitialSetup = true
             
             return container
         } catch {
@@ -137,11 +104,5 @@ final class DatabaseService: NSObject {
     
     var modelContext: ModelContext {
         container.mainContext
-    }
-    
-    func getDefaultProvider() -> Provider {
-        let fetchDefaults = FetchDescriptor<ProviderDefaults>()
-        let defaults = try! modelContext.fetch(fetchDefaults)
-        return defaults.first!.defaultProvider
     }
 }

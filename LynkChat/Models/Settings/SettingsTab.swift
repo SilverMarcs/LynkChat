@@ -18,7 +18,6 @@ enum SettingsTab {
     case parameters
     case image
     case providers
-    case advanced
     case guides
     case about
     case debug

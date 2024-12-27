@@ -10,6 +10,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 enum ProviderType: String, Codable, CaseIterable, Identifiable {
+    case lynkchat
     case openai
     case openrouter
     case groq
@@ -39,6 +40,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     
     var name: String {
         switch self {
+        case .lynkchat: "LynkChat"
         case .openai: "OpenAI"
         case .openrouter: "OpenRouter"
         case .anthropic: "Anthropic"
@@ -61,6 +63,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     
     var imageName: String {
         switch self {
+        case .lynkchat: "storm.SFSymbol"
         case .openai, .customOpenai: "openai.SFSymbol"
         case .anthropic, .customAnthropic: "anthropic.SFSymbol"
         case .google, .customGoogle: "google.SFSymbol"
@@ -80,6 +83,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     
     var defaultColor: String {
         switch self {
+        case .lynkchat: "#6765D5"
         case .openai: "#00947A"
         case .anthropic: "#E6784B"
         case .google: "#E64335"
@@ -100,6 +104,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     // TODO: for subscription models, show sub button wth credist remaining instead of base url
     var defaultHost: String {
         switch self {
+        case .lynkchat: "lynkchat.com"
         case .openai, .customOpenai: "api.openai.com/v1"
         case .anthropic, .customAnthropic: "api.anthropic.com"
         case .google, .customGoogle: "generativelanguage.googleapis.com"
@@ -117,19 +122,22 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         }
     }
     
-    func getService() -> any AIService.Type {
-        switch self {
-            // TODO: do v soon
-        case .customOpenai, .lmstudio, .ollama:
-            OpenAIService.self
-        case .customGoogle:
-            OpenAIService.self
-//        case .customAnthropic:
-//            CustomAnthropicService.self
-        default:
-            APIService.self
-        }
-    }
+//    func getService() -> any AIService.Type {
+////        switch self {
+////            // TODO: do v soon
+////        case .lynkchat:
+////            APIService.self
+////        case .customOpenai, .lmstudio, .ollama:
+////            OpenAIService.self
+////        case .customGoogle:
+////            OpenAIService.self
+//////        case .customAnthropic:
+//////            CustomAnthropicService.self
+////        default:
+////            OpenAIService.self
+////        }
+//        APIService.self
+//    }
     
     static var usesCustomOpenAI: [ProviderType] = [.customOpenai, .lmstudio, .ollama, .customGoogle, .customAnthropic]
     static var usesCustomGoogleOrAnthropic: [ProviderType] = [.customGoogle, .customAnthropic]
@@ -139,6 +147,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
 
     func getDefaultModels() -> [AIModel] {
         switch self {
+        case .lynkchat: AIModel.getLynkChatModels()
         case .openai, .customOpenai: AIModel.getOpenaiModels()
         case .anthropic, .customAnthropic: AIModel.getAnthropicModels()
         case .google, .customGoogle: AIModel.getGoogleModels()

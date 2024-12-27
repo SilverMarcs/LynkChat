@@ -16,8 +16,6 @@ struct OnboardingView: View {
     @State private var currentPage = OnboardingPage.welcome
     @State private var navigationDirection = NavigationDirection.forward
     
-    @Query var providerDefaults: [ProviderDefaults]
-    
     var body: some View {
         ZStack(alignment: .topLeading) {
             VStack {
@@ -52,18 +50,20 @@ struct OnboardingView: View {
             case .welcome:
                 WelcomeOnboarding()
             case .apiKey:
-                APIKeyOnboarding(providerDefault: providerDefaults.first!)
+                APIKeyOnboarding()
             case .plugins:
                 PluginsOnboarding()
             #if os(macOS)
             case .quickPanel:
-                QuickPanelOnboarding(provider: providerDefaults.first!.quickProvider)
+                QuickPanelOnboarding()
             #else
             case .permissions:
                 PermissionsOnboarding()
             #endif
             case .imageGen:
-                ImageGenOnboarding(provider: providerDefaults.first!.imageProvider)
+                Text("Coming soon")
+            #warning("add image gen onboarding")
+                EmptyView()
             case .ready:
                 ReadyPageView()
             }

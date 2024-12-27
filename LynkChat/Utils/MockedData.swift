@@ -7,25 +7,11 @@
 
 import Foundation
 
-extension Provider {
-    static var openAIProvider = Provider.factory(type: .openai)
-    static var googleProvider = Provider.factory(type: .google)
-    static var anthropicProvider = Provider.factory(type: .anthropic)
-    
-    static var mockProviders = [
-        openAIProvider,
-        googleProvider,
-        anthropicProvider,
-    ]
-}
 
 extension ImageProvider {
     static var openAIProvider = ImageProvider(name: "OpenAI", baseUrl: "api.openai.com/v1", model: .dalle)
 }
 
-extension ProviderDefaults {
-    static var mockProviderDefaults = ProviderDefaults(defaultProvider: .openAIProvider, quickProvider: .openAIProvider, imageProvider: .openAIProvider)
-}
 
 extension AIModel {
     static var gpt4 = AIModel(code: "gpt", name: "GPT-4")
@@ -40,10 +26,10 @@ extension AIModel {
 }
 
 extension Message {
-    static let mockAssistantMessage = Message(role: .assistant, content: String.codeBlock, isReplying: false)
+    static let mockAssistantMessage = Message(role: .assistant, content: String.codeBlock, model: .claude3_5haiku, isReplying: false)
     
     static var mockUserMessage: Message {
-        Message(role: .user, content: String.shortContent)
+        Message(role: .user, content: String.shortContent, model: .claude3_5haiku)
     }
 }
 
@@ -52,16 +38,12 @@ extension MessageGroup {
     static var mockAssistantGroup = MessageGroup(message: .mockAssistantMessage)
 }
 
-extension ChatConfig {
-    static var mockChatConfig = ChatConfig(provider: .openAIProvider, purpose: .chat)
-}
-
 extension ImageConfig {
     static var mockImageConfig = ImageConfig(provider: .openAIProvider, model: .dalle)
 }
 
 extension Chat {
-    static var mockChat = Chat(config: .mockChatConfig)
+    static var mockChat = Chat()
 }
 
 extension ImageSession {

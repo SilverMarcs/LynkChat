@@ -14,7 +14,6 @@ struct ImageSettings: View {
     @State private var selectedTab: ImageTab = .general
     @State private var showProviderAdder = false
     
-    @Bindable var providerDefaults: ProviderDefaults
     @Query var providers: [ImageProvider]
     
     var body: some View {
@@ -25,14 +24,14 @@ struct ImageSettings: View {
             }
             
             Section("Models") {
-                Picker("Provider", selection: $providerDefaults.imageProvider) {
-                    ForEach(providers) { provider in
-                        Text(provider.name.uppercased())
-                            .tag(provider)
-                    }
-                }
-                
-                ModelPicker(model: $providerDefaults.imageProvider.model, models: providerDefaults.imageProvider.models, label: "Model")
+//                Picker("Provider", selection: $providerDefaults.imageProvider) {
+//                    ForEach(providers) { provider in
+//                        Text(provider.name.uppercased())
+//                            .tag(provider)
+//                    }
+//                }
+//                
+//                ModelPicker(model: $providerDefaults.imageProvider.model, models: providerDefaults.imageProvider.models, label: "Model")
             }
             
             Section("Default Parameters") {
@@ -95,5 +94,5 @@ enum ImageTab: String, CaseIterable, Identifiable {
 }
 
 #Preview {
-    ImageSettings(providerDefaults: .mockProviderDefaults)
+    ImageSettings()
 }

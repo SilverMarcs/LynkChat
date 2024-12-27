@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct QuickPanelOnboarding: View {
-    @Bindable var provider: Provider
+    @ObservedObject var modelConfig: ModelConfig = .shared
     
     var body: some View {
         GenericOnboardingView(
@@ -26,7 +26,14 @@ struct QuickPanelOnboarding: View {
 
                     }
                     
-                    ModelPicker(model: $provider.liteModel, models: provider.models, label: "Quick Panel Model")
+//                    ModelPicker(model: $provider.liteModel, models: provider.models, label: "Quick Panel Model")
+                    
+                    Picker("Model", selection: $modelConfig.quickModel) {
+                        ForEach(LynkModel.allCases) { model in
+                            Text(model.rawValue)
+                                .tag(model)
+                        }
+                    }
                 }
             },
             footerText: "Access from anywhere in the OS"
@@ -36,7 +43,7 @@ struct QuickPanelOnboarding: View {
 
 
  #Preview {
-     QuickPanelOnboarding(provider: .openAIProvider)
+     QuickPanelOnboarding()
          .frame(width: 500, height: 500)
  }
 #endif

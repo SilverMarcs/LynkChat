@@ -30,7 +30,8 @@ struct ImageInspector: View {
                         }
                     }
                     
-                    ModelPicker(model: $session.config.model, models: session.config.provider.models, label: "Model")
+                    // TODO: do thisap
+//                    ModelPicker(model: $session.config.model, models: session.config.provider.models, label: "Model")
                 }
                 
                 Section("Parameters") {

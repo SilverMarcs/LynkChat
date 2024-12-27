@@ -9,7 +9,6 @@ import SwiftUI
 
 struct PluginSettings: View {
     @ObservedObject var config = ToolConfigDefaults.shared
-    var providerDefaults: ProviderDefaults
     
     var body: some View {
         NavigationStack {
@@ -73,5 +72,5 @@ struct PluginSettings: View {
 }
 
 #Preview {
-    PluginSettings(providerDefaults: .mockProviderDefaults)
+    PluginSettings()
 }

@@ -17,10 +17,7 @@ struct QuickPanelView: View {
     var toggleVisibility: () -> Void
 
     @FocusState private var isFocused: Bool
-
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             textfieldView
@@ -76,15 +73,12 @@ struct QuickPanelView: View {
     var textfieldView: some View {
         HStack(spacing: 12) {
             Menu {
-                ProviderPicker(
-                    provider: $chat.config.provider,
-                    providers: providers,
-                    onChange: { newProvider in
-                        chat.config.model = newProvider.liteModel
+                Picker("Model", selection: $chat.config.model) {
+                    ForEach(LynkModel.allCases) { model in
+                        Text(model.rawValue)
+                            .tag(model)
                     }
-                )
-
-                ModelPicker(model: $chat.config.model, models: chat.config.provider.models, label: "Model")
+                }
                 
 //                Menu {
 //                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
@@ -132,8 +126,6 @@ struct QuickPanelView: View {
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
                 
                 Group {
-                    Text(chat.config.provider.name.uppercased())
-                    
                     Text(chat.config.model.name)
                     
 //                    ForEach(chat.config.tools.enabledTools) { tool in
@@ -166,16 +158,7 @@ struct QuickPanelView: View {
         
         chat.deleteAllMessages()
         chat.inputManager.dataFiles.removeAll()
-        let oldConfig = chat.config
-        oldConfig.systemPrompt = ChatConfigDefaults.shared.systemPrompt
-
-        let fetchDefaults = FetchDescriptor<ProviderDefaults>()
-        let defaults = try! modelContext.fetch(fetchDefaults)
-        
-        let quickProvider = defaults.first!.quickProvider
-        chat.config = .init(provider: quickProvider, purpose: .quick)
-        
-        modelContext.delete(oldConfig)
+        chat.config.model = ModelConfig.shared.quickModel
     }
     
     private func addToDB() {
@@ -183,7 +166,7 @@ struct QuickPanelView: View {
         NSApp.keyWindow?.makeKeyAndOrderFront(nil)
         
         Task {
-            let newChat = await chat.copy(purpose: .chat)
+            let newChat = await chat.copy()
             chatVM.fork(newChat: newChat)
             resetChat()
             

@@ -21,7 +21,7 @@ struct AssistantMessage: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AssistantLabel(message: message)
+            AssistantLabel(model: message.model)
                 .transaction { $0.animation = nil }
                 .padding(.leading, labelPadding)
             

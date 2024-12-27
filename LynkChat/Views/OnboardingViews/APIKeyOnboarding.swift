@@ -9,23 +9,22 @@ import SwiftUI
 import SwiftData
 
 struct APIKeyOnboarding: View {
-    @Bindable var providerDefault: ProviderDefaults
+    @ObservedObject var modelConfig: ModelConfig = .shared
     
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
     var body: some View {
         GenericOnboardingView(
             icon: "cpu.fill",
-            iconColor: Color(hex: providerDefault.defaultProvider.color),
+            iconColor: Color(hex: modelConfig.defaultModel.color),
             title: "Enter your API Key",
             content: {
                 Form {
                     Section {
-                        ProviderPicker(provider: $providerDefault.defaultProvider, providers: providers, label: "Default Provider")
-                        
-//                        TextField("API Key", text: $providerDefault.defaultProvider.apiKey)
-                    } footer: {
-                        SectionFooterView(text: providerDefault.defaultProvider.type.extraInfo)
+                        Picker("Model", selection: $modelConfig.defaultModel) {
+                            ForEach(LynkModel.allCases) { model in
+                                Text(model.rawValue)
+                                    .tag(model)
+                            }
+                        }
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))
@@ -38,6 +37,6 @@ struct APIKeyOnboarding: View {
 }
 
 #Preview {
-    APIKeyOnboarding(providerDefault: .mockProviderDefaults)
+    APIKeyOnboarding()
         .frame(width: 500, height: 500)
 }

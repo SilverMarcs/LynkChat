@@ -10,11 +10,8 @@ import SwiftData
 
 struct QuickPanelSettings: View {
     @Environment(\.modelContext) var modelContext
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
     @ObservedObject var config = AppConfig.shared
-
-    @Bindable var providerDefaults: ProviderDefaults
+    @ObservedObject var modelConfig = ModelConfig.shared
     
     var body: some View {
         Form {
@@ -27,28 +24,12 @@ struct QuickPanelSettings: View {
                     Text("Access from anywhere in the OS")
                 }
             }
-            
-            Section("LLM") {
-                ProviderPicker(provider: $providerDefaults.quickProvider, providers: providers) { provider in
-                    let statusId = ChatStatus.quick.id
-                    
-                    var descriptor = FetchDescriptor<Chat>(
-                        predicate: #Predicate { $0.statusId == statusId }
-                    )
-                    
-                    descriptor.fetchLimit = 1
-                    
-                    do {
-                        let quickSessions = try modelContext.fetch(descriptor)
-                        let chat = quickSessions.first
-                        chat?.config.provider = provider
-                        chat?.config.model = provider.liteModel
-                    } catch {
-                        print("Error fetching quick session: \(error)")
-                    }
-                }
                 
-                ModelPicker(model: $providerDefaults.quickProvider.liteModel, models: providerDefaults.quickProvider.models, label: "Lite Model")
+            Picker("Model", selection: $modelConfig.quickModel) {
+                ForEach(LynkModel.allCases) { model in
+                    Text(model.rawValue)
+                        .tag(model)
+                }
             }
                 
             Section("System Prompt") {
@@ -64,5 +45,5 @@ struct QuickPanelSettings: View {
 }
 
 #Preview {
-    QuickPanelSettings(providerDefaults: .mockProviderDefaults)
+    QuickPanelSettings()
 }

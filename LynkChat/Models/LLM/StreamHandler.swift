@@ -32,7 +32,8 @@ struct StreamHandler {
         var lastUIUpdateTime = Date()
         var totalTokens = 0
         
-        let service = chat.config.provider.type.getService()
+//        let service = chat.config.provider.type.getService()
+        let service = APIService.self
         let apiRequest = createAPIRequest(stream: true)
         
         for try await response in service.streamResponse(from: apiRequest) {
@@ -59,7 +60,8 @@ struct StreamHandler {
 
     @MainActor
     private func handleNonStream() async throws {
-        let service = chat.config.provider.type.getService()
+//        let service = chat.config.provider.type.getService()
+        let service = APIService.self
         let apiRequest = createAPIRequest(stream: false)
         
         let response = try await service.nonStreamingResponse(from: apiRequest)
@@ -96,8 +98,7 @@ struct StreamHandler {
         let apiMessages = adjustedContext.map { $0.toAPIMessage() }
         
         return APIRequest(
-            provider: chat.config.provider.toApiProvidr(),
-            model: chat.config.model.code,
+            model: chat.config.model.id,
             messages: apiMessages,
             system: chat.config.systemPrompt,
             stream: stream

@@ -13,10 +13,7 @@ final class Message: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
     var date: Date = Date()
     
-    @Relationship(deleteRule: .nullify)
-    var provider: Provider?
-    @Relationship(deleteRule: .nullify)
-    var model: AIModel?
+    var model: LynkModel
     
     var content: String
 
@@ -34,25 +31,22 @@ final class Message: Equatable, Identifiable, Hashable {
     
     // TODO: typed init functions for diff roles
     
-    init(role: MessageRole, content: String = "", provider: Provider? = nil, model: AIModel? = nil, dataFiles: [TypedData] = [], isReplying: Bool = false, height: CGFloat = 0) {
+    // TOOD: maybe shud pass heigjt
+    init(role: MessageRole, content: String = "", model: LynkModel, dataFiles: [TypedData] = [], isReplying: Bool = false) {
         self.role = role
         self.content = content
-        self.provider = provider
         self.model = model
         self.dataFiles = dataFiles
         self.isReplying = isReplying
-        self.height = height
     }
 
     func copy() -> Message {
         return Message(
             role: role,
             content: content,
-            provider: provider,
             model: model,
             dataFiles: dataFiles,
-            isReplying: isReplying,
-            height: height
+            isReplying: isReplying
         )
     }
 }

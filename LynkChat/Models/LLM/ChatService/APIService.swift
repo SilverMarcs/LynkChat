@@ -7,26 +7,7 @@
 
 import Foundation
 
-struct APIService: AIService {
-    static func refreshModels(provider: APIProvider) async -> [GenericModel] {
-        guard let request = makeRequest(path: "/chat/models/\(provider.name)") else {
-            return []
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let models = try JSONDecoder().decode([APIModel].self, from: data)
-            
-            return models
-                .map { GenericModel(code: $0.id, name: $0.name ?? $0.id.capitalized) }
-                .sorted { $0.name < $1.name }
-            
-        } catch {
-            print("Error fetching models: \(error)")
-            return []
-        }
-    }
-    
+struct APIService {
     static func nonStreamingResponse(from request: APIRequest) async throws -> APIResponse {
         guard var urlRequest = makeRequest(path: "/chat", method: "POST") else {
             throw URLError(.badURL)

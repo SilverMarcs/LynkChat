@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AssistantLabel: View {
     @Environment(\.colorScheme) var colorScheme
-    var message: Message
+    var model: LynkModel
     
     var body: some View {
         #if os(macOS)
@@ -27,17 +27,17 @@ struct AssistantLabel: View {
     }
     
     var image: some View {
-        Image(message.provider?.type.imageName ?? "brain.SFSymbol")
+        Image(model.imageName)
             .imageScale(.large)
-            .foregroundStyle(Color(hex: message.provider?.color ?? "#00947A").gradient)
+            .foregroundStyle(Color(hex: model.color).gradient)
     }
     
     var text: some View {
-        Text(message.model?.name ?? "Assistant")
+        Text(model.name)
             .font(.subheadline)
             .bold()
             .foregroundStyle(.secondary)
-            .foregroundStyle(Color(hex: message.provider?.color ?? "#00947A"))
+            .foregroundStyle(Color(hex: model.color))
             .brightness(colorScheme == .dark ? 1.1 : -0.5)
     }
 }

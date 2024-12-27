@@ -25,6 +25,16 @@ class AIModel: Hashable, Identifiable {
 }
 
 extension AIModel {
+    static func getLynkChatModels() -> [AIModel] {
+        return [
+            .init(code: "claude-3.5-sonnet", name: "Claude-3.5S"),
+            .init(code: "claude-3.5-haiku", name: "Claude-3.5H"),
+        ]
+    }
+}
+
+// TODO: reduce models from here
+extension AIModel {
     static func getOpenaiModels() -> [AIModel] {
         return [
             .init(code: "gpt-4o-mini", name: "GPT-4om"),

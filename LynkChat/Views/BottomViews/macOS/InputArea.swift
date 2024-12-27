@@ -19,7 +19,6 @@ struct InputArea: View {
 
     @State private var isExpanded = false
     @State private var showExpandButton = false
-    @State private var isHovering = false
     
     @FocusState var isFocused: FocusedField?
     
@@ -56,12 +55,7 @@ struct InputArea: View {
             HStack {
                 ChatInputMenu(chat: chat)
                 
-                if horizontalSizeClass != .compact {
-                    configInfo
-                        .onHover { hovering in
-                            isHovering = hovering
-                        }
-                }
+                configInfo
                 
                 Spacer()
                 
@@ -132,24 +126,15 @@ struct InputArea: View {
 //                .buttonStyle(.borderless)
 //                .padding(.trailing, 5)
             
-            if isHovering {
-                InputModelPickers(chat: chat)
-                    .labelsHidden()
-                    .opacity(0.65)
-                
-            } else {
-                HStack(spacing: 6) {
-                    Text(chat.config.provider.name)
-                        .padding(.leading, 3)
-                        .padding(.trailing, 15)
-                        .textCase(.uppercase)
-                        .foregroundStyle(.secondary)
-                    
-                    Text(chat.config.model.name)
-                        .padding(.leading, 3)
-                        .foregroundStyle(.secondary)
+            Picker("Model", selection: $chat.config.model) {
+                ForEach(LynkModel.allCases) { model in
+                    Text(model.name)
+                        .tag(model)
                 }
             }
+            .buttonStyle(.borderless)
+            .labelsHidden()
+            .opacity(0.65)
         }
     }
     

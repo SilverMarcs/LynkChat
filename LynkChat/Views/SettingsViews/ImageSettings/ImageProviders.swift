@@ -18,7 +18,7 @@ struct ImageProviders: View {
                     ImageProviderDetail(provider: provider)
                 } label: {
                     HStack {
-                        ProviderImage(provider: provider, radius: 7, frame: 22, scale: .medium)
+                        ProviderImage(radius: 7, frame: 22, scale: .medium)
                         Text(provider.name)
                         Spacer()
                         #if os(macOS)

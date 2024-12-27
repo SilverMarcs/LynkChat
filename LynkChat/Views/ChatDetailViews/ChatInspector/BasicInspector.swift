@@ -15,10 +15,7 @@ struct BasicInspector: View {
     
     @State var isGeneratingTtile: Bool = false
     @State var showingDeleteConfirmation: Bool = false
-    
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
-    
+
     var body: some View {
         Form {
             Section("Title") {
@@ -29,16 +26,22 @@ struct BasicInspector: View {
                 }
             }
             
-            Section("Models") {
-                ProviderPicker(
-                    provider: $chat.config.provider,
-                    providers: providers,
-                    onChange: { newProvider in
-                        chat.config.model = newProvider.chatModel
-                    }
-                )
+            Section("Model") {
+//                ProviderPicker(
+//                    provider: $chat.config.provider,
+//                    providers: providers,
+//                    onChange: { newProvider in
+//                        chat.config.model = newProvider.chatModel
+//                    }
+//                )
                 
-                ModelPicker(model: $chat.config.model, models: chat.config.provider.models, label: "Model")
+//                ModelPicker(model: $chat.config.model, models: chat.config.provider.models, label: "Model")
+                Picker("Model", selection: $chat.config.model) {
+                    ForEach(LynkModel.allCases) { model in
+                        Text(model.rawValue)
+                            .tag(model)
+                    }
+                }
             }
             
             Section("Parameters") {
