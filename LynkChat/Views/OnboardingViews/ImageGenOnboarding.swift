@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ImageGenOnboarding: View {
-    @Bindable var provider: ImageProvider
-    @ObservedObject var imageConfig = ImageConfigDefaults.shared
+    @ObservedObject var imageConfig = ImageModelConfig.shared
     
     var body: some View {
         GenericOnboardingView(
@@ -37,5 +36,5 @@ struct ImageGenOnboarding: View {
 }
 
 #Preview {
-    ImageGenOnboarding(provider: .openAIProvider)
+    ImageGenOnboarding()
 }

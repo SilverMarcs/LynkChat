@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AssistantLabel: View {
     @Environment(\.colorScheme) var colorScheme
-    var model: LynkModel
+    var model: ChatModel
     
     var body: some View {
         #if os(macOS)

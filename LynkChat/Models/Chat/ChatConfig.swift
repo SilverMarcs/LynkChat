@@ -17,5 +17,5 @@ struct ChatConfig: Identifiable, Codable {
     var maxTokens: Int? = ChatConfigDefaults.shared.maxTokens
     var stream: Bool = ChatConfigDefaults.shared.stream
     var systemPrompt: String = ChatConfigDefaults.shared.systemPrompt
-    var model: LynkModel = ModelConfig.shared.defaultModel
+    var model: ChatModel = ModelConfig.shared.defaultModel
 }

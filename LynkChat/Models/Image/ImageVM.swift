@@ -31,33 +31,4 @@ import Foundation
             last.deleteSelf()
         }
     }
-    
-    @discardableResult
-    @MainActor
-    func createNewSession(provider: ImageProvider? = nil) -> ImageSession? {
-        let modelContext = DatabaseService.shared.modelContext
-        
-        let config: ImageConfig = .mockImageConfig
-        #warning("Implement provider selection")
-        
-//        if let providedProvider = provider {
-//            // Use the provided provider
-//            config = ImageConfig(provider: providedProvider)
-//        } else {
-//            // Use the default provider
-//            let fetchDefaults = FetchDescriptor<ProviderDefaults>()
-//            let defaults = try! modelContext.fetch(fetchDefaults)
-//            
-//            let defaultProvider = defaults.first!.imageProvider
-//            
-//            config = ImageConfig(provider: defaultProvider)
-//        }
-        
-        let newItem = ImageSession(config: config)
-        modelContext.insert(newItem)
-        
-        self.selections = [newItem]
-        
-        return newItem
-    }
 }

@@ -38,47 +38,20 @@ import SwiftUI
         #endif
     }
     
-//    @MainActor
-//    @discardableResult
-//    func createNewChat(provider: Provider? = nil, model: AIModel? = nil) async -> Chat {
-//        let modelContext = DatabaseService.shared.modelContext
-//        
-//        let provider = provider ?? DatabaseService.shared.getDefaultProvider()
-//        let config = OldChatConfig(provider: provider, purpose: .chat)
-//        
-//        if let model = model {
-//            config.model = model
-//        }
-//        
-//        let newChat = Chat(config: config)
-//        modelContext.insert(newChat)
-//        
-//        searchText = ""
-//        searchTokens = []
-//        selections = [newChat]
-//        
-//        return newChat
-//    }
+    @MainActor
+    func createNewChat() {
+        let newChat = Chat()
+        DatabaseService.shared.modelContext.insert(newChat)
+        self.selections = [newChat]
+    }
     
-//    @MainActor
-//    @discardableResult
-//    func createTemporaryChat() async -> Chat {
-//        let modelContext = DatabaseService.shared.modelContext
-//        
-//        let provider = DatabaseService.shared.getDefaultProvider()
-//        let config = OldChatConfig(provider: provider, purpose: .chat)
-//        
-//        let newChat = Chat(config: config)
-//        newChat.statusId = ChatStatus.temporary.id
-//        
-//        modelContext.insert(newChat)
-//        
-//        searchText = ""
-//        searchTokens = []
-//        selections = [newChat]
-//        
-//        return newChat
-//    }
+    @MainActor
+    func createTemporaryChat() {
+        let chat = Chat()
+        chat.status = .temporary
+        DatabaseService.shared.modelContext.insert(chat)
+        self.selections = [chat]
+    }
     
     // MARK: - Navigation
     func goToNextChat(chats: [Chat]) {

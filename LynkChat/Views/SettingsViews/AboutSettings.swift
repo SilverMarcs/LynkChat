@@ -39,7 +39,7 @@ struct AboutSettings: View {
                 LabeledContent{
                     Link("Company Website", destination: URL(string: "https://LynkSphere.com")!)
                 } label: {
-                    Text("\(Image(systemName: "link")) Site")
+                    Text("\(Image(systemName: "link")) Visit")
                 }
                 
                 LabeledContent {

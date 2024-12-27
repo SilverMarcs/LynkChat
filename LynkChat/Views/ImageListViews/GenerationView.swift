@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GenerationView: View {
-    @ObservedObject var imageConfig = ImageConfigDefaults.shared
+    @ObservedObject var imageConfig = ImageModelConfig.shared
     var generation: Generation
     private let spacing: CGFloat = 10
     private let size: CGFloat = 300

@@ -10,7 +10,6 @@ import SwiftData
 
 struct ImageInspector: View {
     @Bindable var session: ImageSession
-    @Query var providers: [ImageProvider]
     
     @Binding var showingInspector: Bool
     
@@ -23,8 +22,8 @@ struct ImageInspector: View {
                 }
                 
                 Section("Models") {
-                    Picker("Provider", selection: $session.config.provider) {
-                        ForEach(providers) { provider in
+                    Picker("Model", selection: $session.config.model) {
+                        ForEach(ImageModel.allCases) { provider in
                             Text(provider.name.uppercased())
                                 .tag(provider)
                         }

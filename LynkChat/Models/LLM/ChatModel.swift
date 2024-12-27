@@ -1,5 +1,5 @@
 //
-//  LynkModel.swift
+//  ChatModel.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 27/12/2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum LynkModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable {
+enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable {
     case claude3_5sonnet
     case claude3_5haiku
     case gpt4o

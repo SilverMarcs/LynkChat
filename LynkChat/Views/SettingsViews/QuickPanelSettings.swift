@@ -26,7 +26,7 @@ struct QuickPanelSettings: View {
             }
                 
             Picker("Model", selection: $modelConfig.quickModel) {
-                ForEach(LynkModel.allCases) { model in
+                ForEach(ChatModel.allCases) { model in
                     Text(model.rawValue)
                         .tag(model)
                 }

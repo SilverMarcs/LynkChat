@@ -29,7 +29,7 @@ struct QuickPanelOnboarding: View {
 //                    ModelPicker(model: $provider.liteModel, models: provider.models, label: "Quick Panel Model")
                     
                     Picker("Model", selection: $modelConfig.quickModel) {
-                        ForEach(LynkModel.allCases) { model in
+                        ForEach(ChatModel.allCases) { model in
                             Text(model.rawValue)
                                 .tag(model)
                         }

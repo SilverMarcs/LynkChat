@@ -12,9 +12,7 @@ struct ImageList: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(ImageVM.self) var imageVM
     @Environment(\.modelContext) var modelContext
-    
-    @Query var imageProviders: [ImageProvider]
-    
+
     @Query(sort: \ImageSession.date, order: .reverse, animation: .default)
     var sessions: [ImageSession]
     
@@ -51,19 +49,14 @@ struct ImageList: View {
         ToolbarItem { Spacer() }
         
         ToolbarItem(placement: .automatic) {
-            Menu {
-                ForEach(imageProviders) { provider in
-                    Button(provider.name) {
-                        imageVM.createNewSession(provider: provider)
-                    }
-                    .keyboardShortcut(.none)
-                }
+            Button {
+                let imageSession = ImageSession()
+                modelContext.insert(imageSession)
+                imageVM.selections = [imageSession]
             } label: {
                 Label("Add Item", systemImage: "square.and.pencil")
-            } primaryAction: {
-                imageVM.createNewSession()
             }
-            .menuIndicator(.hidden)
+            .keyboardShortcut(.none)
         }
     }
     

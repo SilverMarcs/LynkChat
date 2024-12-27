@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImageViewer: View {
-    @ObservedObject var imageConfig = ImageConfigDefaults.shared
+    @ObservedObject var imageConfig = ImageModelConfig.shared
     
     let typedData: TypedData
     

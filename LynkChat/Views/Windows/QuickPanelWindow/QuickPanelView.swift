@@ -74,7 +74,7 @@ struct QuickPanelView: View {
         HStack(spacing: 12) {
             Menu {
                 Picker("Model", selection: $chat.config.model) {
-                    ForEach(LynkModel.allCases) { model in
+                    ForEach(ChatModel.allCases) { model in
                         Text(model.rawValue)
                             .tag(model)
                     }

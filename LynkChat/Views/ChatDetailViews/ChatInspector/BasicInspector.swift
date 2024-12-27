@@ -37,7 +37,7 @@ struct BasicInspector: View {
                 
 //                ModelPicker(model: $chat.config.model, models: chat.config.provider.models, label: "Model")
                 Picker("Model", selection: $chat.config.model) {
-                    ForEach(LynkModel.allCases) { model in
+                    ForEach(ChatModel.allCases) { model in
                         Text(model.rawValue)
                             .tag(model)
                     }

@@ -127,7 +127,7 @@ struct InputArea: View {
 //                .padding(.trailing, 5)
             
             Picker("Model", selection: $chat.config.model) {
-                ForEach(LynkModel.allCases) { model in
+                ForEach(ChatModel.allCases) { model in
                     Text(model.name)
                         .tag(model)
                 }

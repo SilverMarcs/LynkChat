@@ -20,7 +20,7 @@ struct APIKeyOnboarding: View {
                 Form {
                     Section {
                         Picker("Model", selection: $modelConfig.defaultModel) {
-                            ForEach(LynkModel.allCases) { model in
+                            ForEach(ChatModel.allCases) { model in
                                 Text(model.rawValue)
                                     .tag(model)
                             }

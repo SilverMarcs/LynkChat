@@ -5,6 +5,7 @@
 //  Created by Zabir Raihan on 08/07/2024.
 //
 
+// TODO: delete this file
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
@@ -145,26 +146,6 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     static var customTypes: [ProviderType] = usesCustomOpenAI + usesCustomGoogleOrAnthropic
     
 
-    func getDefaultModels() -> [AIModel] {
-        switch self {
-        case .lynkchat: AIModel.getLynkChatModels()
-        case .openai, .customOpenai: AIModel.getOpenaiModels()
-        case .anthropic, .customAnthropic: AIModel.getAnthropicModels()
-        case .google, .customGoogle: AIModel.getGoogleModels()
-        case .bedrock: AIModel.getBedrockModels() // TODO: change
-        case .deepseek: AIModel.getDeepseekModels()
-        case .xai: AIModel.getXaiModels()
-        case .openrouter: AIModel.getOpenrouterModels()
-        case .github: AIModel.getOpenaiModels()
-        case .groq: AIModel.getGroqModels()
-        case .mistral: AIModel.getMistralModels()
-        case .perplexity: AIModel.getPerplexityModels()
-        case .togetherai: AIModel.getTogetherModels()
-        case .lmstudio: AIModel.getLocalModels()
-        case .ollama: AIModel.getLocalModels()
-        }
-    }
-    
 //    var extraInfo: String {
 //        switch self {
 //        case .openai: "Get OpenAI API key [here](https://platform.openai.com/settings/organization/api-keys)"

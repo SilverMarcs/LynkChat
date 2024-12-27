@@ -53,7 +53,7 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     // MARK: - computed message properties
-    var model: LynkModel {
+    var model: ChatModel {
         activeMessage.model
     }
     

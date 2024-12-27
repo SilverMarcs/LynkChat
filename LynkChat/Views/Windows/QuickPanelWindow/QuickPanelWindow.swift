@@ -46,8 +46,21 @@ class QuickPanelWindow: NSPanel {
         )
         descriptor.fetchLimit = 1
         
-        let quickChat = try! modelContext.fetch(descriptor)
-        let chat = quickChat.first!
+        let quickChats = try! modelContext.fetch(descriptor)
+        
+        var chat: Chat
+        if let available = quickChats.first {
+            chat = available
+            chat.deleteAllMessages()
+            chat.config.model = ModelConfig.shared.quickModel
+        } else {
+            let newChat = Chat()
+            newChat.statusId = statusId
+            newChat.status = ChatStatus.quick
+            newChat.config.systemPrompt = AppConfig.shared.quickSystemPrompt
+            chat = newChat
+        }
+        
         
         let hostingView = NSHostingView(rootView: QuickPanelView(
             chat: chat,

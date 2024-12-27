@@ -23,7 +23,6 @@ final class DatabaseService: NSObject {
             Message.self,
             MessageGroup.self,
             Generation.self,
-            ImageConfig.self,
         ])
         
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -32,16 +31,8 @@ final class DatabaseService: NSObject {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             let modelContext = container.mainContext
             
-            var fetchQuickChats = FetchDescriptor<Chat>()
-            let quickId = ChatStatus.quick.id
-            fetchQuickChats.predicate = #Predicate { $0.statusId == quickId }
-            fetchQuickChats.fetchLimit = 1
-            if let quickChat = try? modelContext.fetch(fetchQuickChats).first {
-                quickChat.deleteAllMessages()
-                quickChat.config.model = ModelConfig.shared.quickModel
-            }
-            
             // fetch chats with temporary status
+            // TODO: perhaps do this when changing selection
             var fetchTempChats = FetchDescriptor<Chat>()
             let tempId = ChatStatus.temporary.id
             fetchTempChats.predicate = #Predicate { $0.statusId == tempId }
@@ -85,14 +76,8 @@ final class DatabaseService: NSObject {
             favouriteChat.title = "Favourite Chat"
             modelContext.insert(favouriteChat)
             
-            // Image session
-            let imageModel = AIModel(code: "dall-e-3", name: "DALL-E-3")
-            let imageModel2 = AIModel(code: "dall-e-2", name: "DALL-E-2")
-            let imageProvder = ImageProvider(name: "OpenAI", baseUrl: "api.openai.com/v1", model: imageModel)
-            imageProvder.models.append(imageModel2)
-            let imageChatConfig = ImageConfig(provider: imageProvder)
-            let imageSession = ImageSession(config: imageChatConfig)
-            modelContext.insert(imageSession)
+            // Image session,
+            modelContext.insert(ImageSession())
             
             AppConfig.shared.finishedInitialSetup = true
             

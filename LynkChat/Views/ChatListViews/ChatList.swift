@@ -141,43 +141,10 @@ struct ChatList: View {
         
         ToolbarItem {
             Button {
-                let chat = Chat()
-                modelContext.insert(Chat())
-                chatVM.selections = [chat]
+                chatVM.createNewChat()
             } label: {
                 Label("Long Tap", systemImage: "square.and.pencil")
             }
-            
-            // TODO: LynkModel.allCases
-//            Menu {
-//                ForEach(providers) { provider in
-//                    Menu {
-//                        ForEach(provider.models) { model in
-//                            Button(model.name) {
-//                                NewChatTip().invalidate(reason: .actionPerformed)
-//                                Task {
-//                                    await chatVM.createNewChat(provider: provider, model: model)
-//                                }
-//                            }
-//                        }
-//                    } label: {
-//                        Label(provider.name, image: provider.type.imageName)
-//                    } primaryAction: {
-//                        NewChatTip().invalidate(reason: .actionPerformed)
-//                        Task {
-//                            await chatVM.createNewChat(provider: provider)
-//                        }
-//                    }
-//                }
-//            } label: {
-//                Label("Long Tap", systemImage: "square.and.pencil")
-//            } primaryAction: {
-//                Task {
-//                    await chatVM.createNewChat()
-//                }
-//            }
-//            .menuIndicator(.hidden)
-//            .popoverTip(NewChatTip())
         }
     }
     

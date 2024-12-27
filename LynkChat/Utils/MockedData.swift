@@ -7,24 +7,6 @@
 
 import Foundation
 
-
-extension ImageProvider {
-    static var openAIProvider = ImageProvider(name: "OpenAI", baseUrl: "api.openai.com/v1", model: .dalle)
-}
-
-
-extension AIModel {
-    static var gpt4 = AIModel(code: "gpt", name: "GPT-4")
-}
-
-extension AIModel {
-    static var dalle = AIModel(code: "dall-e-3", name: "DALL-E-3")
-}
-
-extension AIModel {
-    static var whisper = AIModel(code: "whisper-1", name: "Whisper-1")
-}
-
 extension Message {
     static let mockAssistantMessage = Message(role: .assistant, content: String.codeBlock, model: .claude3_5haiku, isReplying: false)
     
@@ -39,7 +21,7 @@ extension MessageGroup {
 }
 
 extension ImageConfig {
-    static var mockImageConfig = ImageConfig(provider: .openAIProvider, model: .dalle)
+    static var mockImageConfig = ImageConfig()
 }
 
 extension Chat {
@@ -47,7 +29,7 @@ extension Chat {
 }
 
 extension ImageSession {
-    static var mockImageSession = ImageSession(config: .mockImageConfig)
+    static var mockImageSession = ImageSession()
 }
 
 extension Generation {

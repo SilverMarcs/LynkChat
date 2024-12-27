@@ -21,14 +21,12 @@ class ImageSession {
     var imageGenerations = [Generation]()
     
     @Relationship(deleteRule: .cascade)
-    var config: ImageConfig
+    var config: ImageConfig = ImageConfig()
     
     @Transient
     var proxy: ScrollViewProxy?
 
-    init(config: ImageConfig) {
-        self.config = config
-    }
+    init() { }
     
     @MainActor
     func send() async {        

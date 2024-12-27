@@ -13,7 +13,7 @@ final class Message: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
     var date: Date = Date()
     
-    var model: LynkModel
+    var model: ChatModel
     
     var content: String
 
@@ -32,7 +32,7 @@ final class Message: Equatable, Identifiable, Hashable {
     // TODO: typed init functions for diff roles
     
     // TOOD: maybe shud pass heigjt
-    init(role: MessageRole, content: String = "", model: LynkModel, dataFiles: [TypedData] = [], isReplying: Bool = false) {
+    init(role: MessageRole, content: String = "", model: ChatModel, dataFiles: [TypedData] = [], isReplying: Bool = false) {
         self.role = role
         self.content = content
         self.model = model

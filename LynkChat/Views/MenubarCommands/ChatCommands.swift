@@ -17,14 +17,12 @@ struct ChatCommands: Commands {
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
             Button("New Chat") {
-                modelContext.insert(Chat())
+                chatVM.createNewChat()
             }
             .keyboardShortcut("n")
             
             Button("Temporary Chat") {
-                let chat = Chat()
-                chat.status = .temporary
-                modelContext.insert(chat)
+                chatVM.createTemporaryChat()
             }
             .keyboardShortcut("n", modifiers: [.command, .shift])
         }
