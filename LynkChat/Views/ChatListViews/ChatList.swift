@@ -141,7 +141,9 @@ struct ChatList: View {
         
         ToolbarItem {
             Button {
+                let chat = Chat()
                 modelContext.insert(Chat())
+                chatVM.selections = [chat]
             } label: {
                 Label("Long Tap", systemImage: "square.and.pencil")
             }
