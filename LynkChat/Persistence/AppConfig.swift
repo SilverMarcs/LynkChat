@@ -39,9 +39,6 @@ class AppConfig: ObservableObject {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
     @AppStorage("hasUsedChatStatusFilter") var hasUsedChatStatusFilter = false
     
-    // Quick
-    @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses extremeley concise."
-    
     func resetFontSize() {
         #if os(macOS)
         fontSize = 13

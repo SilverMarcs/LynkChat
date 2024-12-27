@@ -46,18 +46,6 @@ final class DatabaseService: NSObject {
                 return container // Return the container if setup is already done
             }
             
-            // Quick chat
-            let chat = Chat()
-            chat.config.systemPrompt = AppConfig.shared.quickSystemPrompt // TOOD: see
-            chat.status = .quick
-            chat.statusId = ChatStatus.quick.id
-            chat.title = "(↯) Quick Chat"
-            modelContext.insert(chat)
-            
-            // Demo chat with no messages
-            let normalChat = Chat()
-            normalChat.totalTokens = 181
-            modelContext.insert(normalChat)
 
             // Archived chat
             let archivedChat = Chat()

@@ -11,10 +11,7 @@ import SwiftData
 struct ChatConfig: Identifiable, Codable {
     var id = UUID()
     var temperature: Double? = ChatConfigDefaults.shared.temperature
-    var frequencyPenalty: Double? = ChatConfigDefaults.shared.frequencyPenalty
-    var presencePenalty: Double? = ChatConfigDefaults.shared.presencePenalty
-    var topP: Double? = ChatConfigDefaults.shared.topP
-    var maxTokens: Int? = ChatConfigDefaults.shared.maxTokens
+    var maxTokens: MaxTokens = ChatConfigDefaults.shared.maxTokens
     var stream: Bool = ChatConfigDefaults.shared.stream
     var systemPrompt: String = ChatConfigDefaults.shared.systemPrompt
     var model: ChatModel = ModelConfig.shared.defaultModel

@@ -57,7 +57,7 @@ class QuickPanelWindow: NSPanel {
             let newChat = Chat()
             newChat.statusId = statusId
             newChat.status = ChatStatus.quick
-            newChat.config.systemPrompt = AppConfig.shared.quickSystemPrompt
+            newChat.config.systemPrompt = ChatConfigDefaults.shared.quickSystemPrompt
             chat = newChat
         }
         

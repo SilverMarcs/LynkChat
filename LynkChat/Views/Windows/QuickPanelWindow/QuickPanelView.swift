@@ -182,8 +182,6 @@ struct QuickPanelView: View {
             return
         }
         
-        chat.config.systemPrompt = AppConfig.shared.quickSystemPrompt
-        
         Task {
             await chat.sendInput()
         }

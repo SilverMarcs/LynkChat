@@ -15,6 +15,8 @@ struct BasicInspector: View {
     
     @State var isGeneratingTtile: Bool = false
     @State var showingDeleteConfirmation: Bool = false
+    @State private var isExportingJSON = false
+    @State private var isExportingMarkdown = false
 
     var body: some View {
         Form {
@@ -27,18 +29,9 @@ struct BasicInspector: View {
             }
             
             Section("Model") {
-//                ProviderPicker(
-//                    provider: $chat.config.provider,
-//                    providers: providers,
-//                    onChange: { newProvider in
-//                        chat.config.model = newProvider.chatModel
-//                    }
-//                )
-                
-//                ModelPicker(model: $chat.config.model, models: chat.config.provider.models, label: "Model")
                 Picker("Model", selection: $chat.config.model) {
                     ForEach(ChatModel.allCases) { model in
-                        Text(model.rawValue)
+                        Text(model.name)
                             .tag(model)
                     }
                 }
@@ -49,6 +42,12 @@ struct BasicInspector: View {
                     Text("Stream")
                 }
                 
+                Picker("Max Tokens", selection: $chat.config.maxTokens) {
+                    ForEach(MaxTokens.allCases, id: \.self) { option in
+                        Text(option.description).tag(option)
+                    }
+                }
+                
                 TemperatureSlider(temperature: $chat.config.temperature, shortLabel: true)
             }
             
@@ -57,10 +56,9 @@ struct BasicInspector: View {
             }
             
             Section {
-                resetContext
+                exportButton
                 deleteAllMessages
             }
-
         }
         .formStyle(.grouped)
     }
@@ -97,28 +95,6 @@ struct BasicInspector: View {
         .foregroundStyle(.mint.gradient)
     }
     
-    private var resetContext: some View {
-        Button(action: {}) {
-            Button {
-                guard !chat.isReplying, let lastMessage = chat.currentThread.last else { return }
-                chat.resetContext(at: lastMessage)
-                dismiss()
-            } label: {
-                Text("Reset Context At Last Message")
-                    .frame(maxWidth: .infinity)
-            }
-            .foregroundStyle(.orange)
-            #if os(macOS)
-            .buttonStyle(ClickHighlightButton())
-            #else
-            .buttonStyle(.bordered)
-            #endif
-        }
-        .buttonStyle(.plain)
-        .listRowBackground(EmptyView())
-        .listRowInsets(EdgeInsets())
-    }
-    
     private var deleteAllMessages: some View {
         Button(action: {}) {
             Button(role: .destructive) {
@@ -144,7 +120,32 @@ struct BasicInspector: View {
                 chat.deleteAllMessages()
                 dismiss()
             }
+            
             Button("Cancel", role: .cancel) {}
+        }
+    }
+    
+    private var exportButton: some View {
+        Button {
+            isExportingMarkdown = true
+        } label: {
+            Label("Export Markdown", systemImage: "richtext.page")
+                .labelStyle(.titleOnly)
+        }
+        .buttonStyle(ClickHighlightButton())
+        .foregroundStyle(.accent)
+        .fileExporter(
+            isPresented: $isExportingMarkdown,
+            document: MarkdownBackup(chat: chat),
+            contentType: .plainText,
+            defaultFilename: "\(chat.title).md"
+        ) { result in
+            switch result {
+            case .success(let url):
+                print("Markdown saved to \(url)")
+            case .failure(let error):
+                print("Error saving markdown: \(error)")
+            }
         }
     }
 }

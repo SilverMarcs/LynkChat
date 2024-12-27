@@ -9,10 +9,10 @@ import SwiftUI
 
 struct NativeMarkdownView: View {
     @ObservedObject private var config = AppConfig.shared
-    var attributed: AttributedString
+    var attributed: NSAttributedString
 
     var body: some View {
-        Text(attributed)
+        Text(AttributedString(attributed)) // Convert NSAttributedString to AttributedString for SwiftUI Text
     }
     
     init(text: String, highlightText: String) {
@@ -22,8 +22,8 @@ struct NativeMarkdownView: View {
         }
     }
 
-    private static func parseMarkdown(_ text: String) -> AttributedString {
-        var attributed = AttributedString()
+    private static func parseMarkdown(_ text: String) -> NSAttributedString {
+        let attributedString = NSMutableAttributedString()
         
         let scanner = Scanner(string: text)
         scanner.charactersToBeSkipped = nil
@@ -37,41 +37,62 @@ struct NativeMarkdownView: View {
                 
                 if let codeContent = scanner.scanUpToString("```") {
                     if scanner.scanString("```") != nil {
-//                        if codeContent.last == "\n" {
-//                            codeContent.removeLast()
-//                        }
-                        var codeAttribute = AttributedString(codeContent)
-                        codeAttribute.font = .monospacedSystemFont(ofSize: baseSize - 1, weight: .regular)
-                        attributed.append(codeAttribute)
+                        let codeAttribute = NSAttributedString(
+                            string: codeContent,
+                            attributes: [
+                                .font: PlatformFont.monospacedSystemFont(ofSize: baseSize - 1, weight: .regular)
+                            ]
+                        )
+                        attributedString.append(codeAttribute)
                     } else {
-                        var fallback = AttributedString("```\(codeContent)")
-                        fallback.font = .systemFont(ofSize: baseSize)
-                        attributed.append(fallback)
+                        let fallback = NSAttributedString(
+                            string: "```\(codeContent)",
+                            attributes: [
+                                .font: PlatformFont.systemFont(ofSize: baseSize)
+                            ]
+                        )
+                        attributedString.append(fallback)
                     }
                 }
             } else if scanner.scanString("`") != nil {
                 if let codeContent = scanner.scanUpToString("`") {
                     if scanner.scanString("`") != nil {
-                        var inlineCode = AttributedString(codeContent)
-                        inlineCode.font = .monospacedSystemFont(ofSize: baseSize - 1, weight: .regular)
-                        inlineCode.backgroundColor = .secondarySystemFill
-                        attributed.append(inlineCode)
+                        let inlineCode = NSAttributedString(
+                            string: codeContent,
+                            attributes: [
+                                .font: PlatformFont.monospacedSystemFont(ofSize: baseSize - 1, weight: .regular),
+                                .backgroundColor: PlatformColor.secondarySystemFill
+                            ]
+                        )
+                        attributedString.append(inlineCode)
                     } else {
-                        var fallback = AttributedString("`\(codeContent)")
-                        fallback.font = .systemFont(ofSize: baseSize)
-                        attributed.append(fallback)
+                        let fallback = NSAttributedString(
+                            string: "`\(codeContent)",
+                            attributes: [
+                                .font: PlatformFont.systemFont(ofSize: baseSize)
+                            ]
+                        )
+                        attributedString.append(fallback)
                     }
                 }
             } else if scanner.scanString("**") != nil {
                 if let boldContent = scanner.scanUpToString("**") {
                     if scanner.scanString("**") != nil {
-                        var bold = AttributedString(boldContent)
-                        bold.font = .boldSystemFont(ofSize: baseSize)
-                        attributed.append(bold)
+                        let bold = NSAttributedString(
+                            string: boldContent,
+                            attributes: [
+                                .font: PlatformFont.boldSystemFont(ofSize: baseSize)
+                            ]
+                        )
+                        attributedString.append(bold)
                     } else {
-                        var fallback = AttributedString("**\(boldContent)")
-                        fallback.font = .systemFont(ofSize: baseSize)
-                        attributed.append(fallback)
+                        let fallback = NSAttributedString(
+                            string: "**\(boldContent)",
+                            attributes: [
+                                .font: PlatformFont.systemFont(ofSize: baseSize)
+                            ]
+                        )
+                        attributedString.append(fallback)
                     }
                 }
             } else if scanner.scanString("#") != nil {
@@ -82,47 +103,77 @@ struct NativeMarkdownView: View {
                 let _ = scanner.scanCharacters(from: .whitespaces)
                 if let headingContent = scanner.scanUpToCharacters(from: .newlines) {
                     let headingSize: CGFloat = baseSize * (2.0 - (0.3 * CGFloat(headingLevel - 1)))
-                    var heading = AttributedString(headingContent)
-                    heading.font = .systemFont(ofSize: headingSize, weight: .bold)
-                    attributed.append(heading)
+                    let heading = NSAttributedString(
+                        string: headingContent,
+                        attributes: [
+                            .font: PlatformFont.systemFont(ofSize: headingSize, weight: .bold)
+                        ]
+                    )
+                    attributedString.append(heading)
                 }
             } else {
                 if let textContent = scanner.scanUpToCharacters(from: CharacterSet(charactersIn: "`*#")) {
-                    var text = AttributedString(textContent)
-                    text.font = .systemFont(ofSize: baseSize)
-                    attributed.append(text)
+                    let text = NSAttributedString(
+                        string: textContent,
+                        attributes: [
+                            .font: PlatformFont.systemFont(ofSize: baseSize)
+                        ]
+                    )
+                    attributedString.append(text)
                 } else if let char = scanner.scanCharacter() {
-                    var text = AttributedString(String(char))
-                    text.font = .systemFont(ofSize: baseSize)
-                    attributed.append(text)
+                    let text = NSAttributedString(
+                        string: String(char),
+                        attributes: [
+                            .font: PlatformFont.systemFont(ofSize: baseSize)
+                        ]
+                    )
+                    attributedString.append(text)
                 }
             }
         }
 
-        return attributed
+        return attributedString
     }
 
-    private static func applyHighlighting(to attributedString: AttributedString, highlightText: String) -> AttributedString {
+    private static func applyHighlighting(to attributedString: NSAttributedString, highlightText: String) -> NSAttributedString {
         guard !highlightText.isEmpty else { return attributedString }
         
-        var attributed = attributedString
+        let mutableAttributedString = NSMutableAttributedString(attributedString: attributedString)
         let lowercasedHighlight = highlightText.lowercased()
+        let fullRange = NSRange(location: 0, length: mutableAttributedString.length)
         
-        var searchRange = attributed.startIndex..<attributed.endIndex
+        let string = mutableAttributedString.string as NSString
+        var searchRange = fullRange
         
-        while let foundRange = attributed[searchRange].range(of: lowercasedHighlight, options: .caseInsensitive) {
-            // Apply highlighting to the found range
-            attributed[foundRange].backgroundColor = .yellow
-            attributed[foundRange].foregroundColor = .black
+        while true {
+            let range = string.range(
+                of: lowercasedHighlight,
+                options: .caseInsensitive,
+                range: searchRange
+            )
             
-            // Update the search range to start after the current foundRange
-            if foundRange.upperBound >= searchRange.upperBound {
+            if range.location == NSNotFound {
                 break
             }
-            searchRange = foundRange.upperBound..<searchRange.upperBound
+            
+            // Apply highlighting to the found range
+            mutableAttributedString.addAttributes([
+                .backgroundColor: PlatformColor.yellow,
+                .foregroundColor: PlatformColor.black
+            ], range: range)
+            
+            // Update search range
+            searchRange = NSRange(
+                location: range.location + range.length,
+                length: fullRange.length - (range.location + range.length)
+            )
+            
+            if searchRange.location >= fullRange.length {
+                break
+            }
         }
         
-        return attributed
+        return mutableAttributedString
     }
 }
 

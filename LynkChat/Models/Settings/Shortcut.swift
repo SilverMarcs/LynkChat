@@ -20,25 +20,23 @@ struct Shortcut: Identifiable {
         
     static let chatInteractionShortcuts = [
         Shortcut(key: "⌘ + Return", action: "Send Prompt"),
+        Shortcut(key: "⌘ + V", action: "Paste File from Clipboard"),
         Shortcut(key: "⌘ + L", action: "Focus Inputbox"),
         Shortcut(key: "⌘ + R", action: "Regenerate Last Response"),
         Shortcut(key: "⌘ + E", action: "Edit Last Prompt"),
         Shortcut(key: "⌘ + K", action: "Rest Context"),
         Shortcut(key: "⌘ + D", action: "Delete Last Prompt/Response"),
-        
-        Shortcut(key: "⌘ Shift + .", action: "Switch to Next Model"),
-        Shortcut(key: "⌘ Shift + ,", action: "Switch to Previous Model"),
     
-    ]
-        
-    static let appSettingsShortcuts = [
-        Shortcut(key: "⌘ + .", action: "Open Chat Config Menu"),
-        Shortcut(key: "⌘ + ,", action: "Open App Settings"),
     ]
         
     static let fontSizeShortcuts = [
         Shortcut(key: "⌘  + +", action: "Increase Font Size"),
         Shortcut(key: "⌘  + -", action: "Decrease Font Size"),
         Shortcut(key: "⌘  + O", action: "Reset Font Size"),
+    ]
+    
+    static let appSettingsShortcuts = [
+        Shortcut(key: "⌘ + .", action: "Open Chat Config Menu"),
+        Shortcut(key: "⌘ + ,", action: "Open App Settings"),
     ]
 }

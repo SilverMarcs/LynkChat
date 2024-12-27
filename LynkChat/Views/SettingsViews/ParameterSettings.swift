@@ -18,18 +18,38 @@ struct ParameterSettings: View {
                     Text("Stream")
                 }
                 
-                TemperatureSlider(temperature: $config.temperature)
-                MaxTokensPicker(value: $config.maxTokens)
+                Slider(
+                    value: Binding(
+                        get: { Double(config.temperature) },
+                        set: { config.temperature = Double($0) }
+                    ),
+                    in: 0...2,
+                    step: 0.1,
+                    label: { Text("Temperature") },
+                    minimumValueLabel: {
+                        Text("")
+                            .frame(width: 0)
+                    },
+                    maximumValueLabel: {
+                        Text(String(format: "%.1f", config.temperature))
+                        #if os(macOS)
+                            .frame(width: 17)
+                        #else
+                            .frame(width: 25)
+                        #endif
+                    }
+                )
+                
+               Picker("Max Tokens", selection: $config.maxTokens) {
+                    ForEach(MaxTokens.allCases, id: \.self) { option in
+                        Text(option.description)
+                            .tag(option)
+                    }
+                }
             }
 
             Section("System Prompt") {
                 sysPrompt
-            }
-            
-            Section("Advanced", isExpanded: $expandAdvanced) {
-                TopPSlider(topP: $config.topP)
-                FrequencyPenaltySlider(penalty: $config.frequencyPenalty)
-                PresencePenaltySlider(penalty: $config.presencePenalty)
             }
         }
         .navigationTitle("Parameters")

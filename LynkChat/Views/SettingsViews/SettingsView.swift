@@ -38,9 +38,6 @@ struct SettingsView: View {
                 Label("Image Service", systemImage: "photo")
                     .tag(SettingsTab.image)
                 
-                Label("Guides", systemImage: "book")
-                    .tag(SettingsTab.guides)
-                
                 #if os(macOS)
                 Label("Shortcuts", systemImage: "command")
                     .tag(SettingsTab.shortcuts)
@@ -83,8 +80,6 @@ struct SettingsView: View {
                     ParameterSettings()
                 case .image:
                     ImageSettings()
-                case .guides:
-                    GuidesSettings()
                 #if os(macOS)
                 case .shortcuts:
                     ShortcutSettings()

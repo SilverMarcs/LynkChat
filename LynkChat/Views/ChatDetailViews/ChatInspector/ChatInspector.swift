@@ -17,73 +17,30 @@ struct ChatInspector: View {
     var body: some View {
         #if os(macOS)
         macos
-            .frame(height: 660)
+            .frame(width: 400, height: 616)
         #else
         ios
         #endif
     }
     
     var macos: some View {
-        commonParts
-            .safeAreaInset(edge: .top, spacing: 0) {
-                HStack {
-                    DismissButton()
-                        .opacity(0)
-                    
-                    Spacer()
-                    
-                    picker
-                    
-                    Spacer()
-                    
-                    DismissButton()
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 10)
-                .background(.bar)
+        BasicInspector(chat: chat)
+            .overlay(alignment: .topTrailing) {
+                DismissButton()
+                    .padding(10)
             }
+
     }
     
     var ios: some View {
         NavigationStack {
-            commonParts
+            BasicInspector(chat: chat)
                 .toolbarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        picker
-                    }
-                    
                     ToolbarItem(placement: .confirmationAction) {
                         DismissButton()
                     }
                 }
-        }
-    }
-    
-    @ViewBuilder
-    var commonParts: some View {
-        switch selectedTab {
-        case .basic:
-            BasicInspector(chat: chat)
-        case .advanced:
-            AdvancedInspector(chat: chat)
-        }
-    }
-    
-    var picker: some View {
-        Picker("Tab", selection: $selectedTab) {
-            ForEach(InspectorTab.allCases, id: \.self) { tab in
-                Text(tab.rawValue)
-            }
-        }
-        .fixedSize()
-        .pickerStyle(.segmented)
-        .labelsHidden()
-        .popoverTip(ChatInspectorToolsTip())
-        .onChange(of: selectedTab) {
-            if selectedTab == .advanced {
-                ChatInspectorToolsTip().invalidate(reason: .actionPerformed)
-            }
         }
     }
 }

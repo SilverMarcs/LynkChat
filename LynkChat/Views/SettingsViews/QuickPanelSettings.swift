@@ -10,15 +10,15 @@ import SwiftData
 
 struct QuickPanelSettings: View {
     @Environment(\.modelContext) var modelContext
-    @ObservedObject var config = AppConfig.shared
+    @ObservedObject var config = ChatConfigDefaults.shared
     @ObservedObject var modelConfig = ModelConfig.shared
     
     var body: some View {
         Form {
             Section("Launch") {
                 LabeledContent {
-//                    KeyboardShortcuts.Recorder(for: .togglePanel)
                     Text("⌥ + Space")
+                        .monospaced()
                 } label: {
                     Text("Global shortcut")
                     Text("Access from anywhere in the OS")
@@ -27,7 +27,7 @@ struct QuickPanelSettings: View {
                 
             Picker("Model", selection: $modelConfig.quickModel) {
                 ForEach(ChatModel.allCases) { model in
-                    Text(model.rawValue)
+                    Text(model.name)
                         .tag(model)
                 }
             }
