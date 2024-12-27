@@ -151,4 +151,11 @@ extension AIModel {
             .init(code: "us.anthropic.claude-3-5-sonnet-20241022-v2:0", name: "Claude-3.5S"),
         ]
     }
+    
+    static func getDeepseekModels() -> [AIModel] {
+        return [
+            .init(code: "deepseek-chat", name: "Deepseek-Chat"),
+            .init(code: "deepseek-coder", name: "Deepseek-Coder"),
+        ]
+    }
 }

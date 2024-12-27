@@ -21,6 +21,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     case anthropic
     case google
     case bedrock
+    case deepseek
     case ollama
     case lmstudio
     case customOpenai
@@ -40,14 +41,15 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .openai: "OpenAI"
         case .openrouter: "OpenRouter"
+        case .anthropic: "Anthropic"
         case .bedrock: "Bedrock"
+        case .deepseek: "DeepSeek"
         case .groq: "Groq"
         case .xai: "xAI"
         case .mistral: "MistralAI"
         case .perplexity: "PerplexityAI"
         case .togetherai: "TogetherAI"
         case .github: "Github"
-        case .anthropic: "Anthropic"
         case .google: "Google"
         case .ollama: "Ollama"
         case .lmstudio: "LMStudio"
@@ -63,6 +65,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .anthropic, .customAnthropic: "anthropic.SFSymbol"
         case .google, .customGoogle: "google.SFSymbol"
         case .bedrock: "bedrock.SFSymbol"
+        case .deepseek: "deepseek.SFSymbol"
         case .openrouter: "openrouter.SFSymbol"
         case .mistral: "mistral.SFSymbol"
         case .perplexity: "perplexity.SFSymbol"
@@ -80,6 +83,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .openai: "#00947A"
         case .anthropic: "#E6784B"
         case .google: "#E64335"
+        case .deepseek: "#4F65E9"
         case .bedrock: "#f46d25"
         case .openrouter: "#7a8799"
         case .mistral: "#EB5A29"
@@ -93,12 +97,14 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         }
     }
     
+    // TODO: for subscription models, show sub button wth credist remaining instead of base url
     var defaultHost: String {
         switch self {
         case .openai, .customOpenai: "api.openai.com/v1"
         case .anthropic, .customAnthropic: "api.anthropic.com"
         case .google, .customGoogle: "generativelanguage.googleapis.com"
         case .bedrock: "api.bedrock.com"
+        case .deepseek: "api.deepseek.com/v1"
         case .github: "models.inference.ai.azure.com"
         case .perplexity: "api.perplexity.ai"
         case .groq: "api.groq.com/openai/v1"
@@ -137,6 +143,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .anthropic, .customAnthropic: AIModel.getAnthropicModels()
         case .google, .customGoogle: AIModel.getGoogleModels()
         case .bedrock: AIModel.getBedrockModels() // TODO: change
+        case .deepseek: AIModel.getDeepseekModels()
         case .xai: AIModel.getXaiModels()
         case .openrouter: AIModel.getOpenrouterModels()
         case .github: AIModel.getOpenaiModels()
@@ -182,7 +189,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     ]
     
     static let otherProviders: [ProviderType] = [
-        .openrouter, .bedrock, .github, .groq,
+        .openrouter, .bedrock, .deepseek, .github, .groq,
         .xai, .mistral, .perplexity, .togetherai
     ]
     
