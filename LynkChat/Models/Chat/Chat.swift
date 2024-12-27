@@ -193,14 +193,9 @@ final class Chat: Equatable, Identifiable, Hashable {
     }
     
     private func handleError(_ error: Error) {
-        errorMessage = error.localizedDescription
-//        scrollDown()
-//        resetScroll()
-        stopStreaming()
-        
-        // TODO: only delete last mesasage and not entire group if group has other messages
+        errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
         DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
-            self.errorDeleteLast()
+            self.stopStreaming()
         }
     }
     
@@ -253,8 +248,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         Scroller.scrollToBottom()
-
-        errorMessage = ""
     }
     
     func errorDeleteLast() {

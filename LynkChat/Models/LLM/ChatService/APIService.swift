@@ -8,8 +8,8 @@
 import Foundation
 
 struct APIService: AIService {
-    static func refreshModels(provider: String) async -> [GenericModel] {
-        guard let request = makeRequest(path: "/chat/models?provider=\(provider)") else {
+    static func refreshModels(provider: APIProvider) async -> [GenericModel] {
+        guard let request = makeRequest(path: "/chat/models?provider=\(provider.name)") else {
             return []
         }
         
@@ -18,7 +18,7 @@ struct APIService: AIService {
             let models = try JSONDecoder().decode([APIModel].self, from: data)
             
             return models
-                .map { GenericModel(code: $0.id, name: $0.name) }
+                .map { GenericModel(code: $0.id, name: $0.name ?? $0.id.capitalized) }
                 .sorted { $0.name < $1.name }
             
         } catch {

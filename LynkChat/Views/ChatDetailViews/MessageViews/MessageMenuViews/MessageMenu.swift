@@ -40,7 +40,10 @@ struct MessageMenu: View {
             ResetContextButton(resetContext: { message.chat?.resetContext(at: message) })
             
             if message.chat?.currentThread.last == message {
-                DeleteButton(deleteLastMessage: { message.chat?.deleteLastMessage() })
+                DeleteButton(deleteLastMessage: {
+                    message.chat?.deleteLastMessage()
+                    message.chat?.errorMessage = ""
+                })
             }
         }
     }

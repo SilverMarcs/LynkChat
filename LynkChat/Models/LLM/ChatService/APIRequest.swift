@@ -50,4 +50,5 @@ struct APIProvider: Encodable {
     let name: String
     let baseUrl: String
     let apiKey: String
+    let scheme: HTTPScheme
 }

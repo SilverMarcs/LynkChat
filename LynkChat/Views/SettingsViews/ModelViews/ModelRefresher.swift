@@ -55,9 +55,10 @@ struct ModelRefresher: View {
                     .disabled(refreshedModels.filter { $0.isSelected }.isEmpty)
                 }
             }
-            .navigationTitle("Refresh Models")
             #if os(macOS)
             .frame(width: 400, height: 450)
+            #else
+            .navigationTitle("Refresh Models")
             #endif
         }
     }

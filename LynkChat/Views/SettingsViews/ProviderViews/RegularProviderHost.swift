@@ -31,21 +31,25 @@ struct RegularProviderHost: View {
                 }
                 .buttonStyle(.plain)
                 .popover(isPresented: $showPopover) {
-                    Text("Omit https:// and /v1/ from the URL.\nCorrect input example: api.openai.com")
+                    Text("Omit https:// but include /v1/ from the URL.\nCorrect input example: api.openai.com/v1")
                         .padding()
                         .presentationCompactAdaptation(.popover)
                 }
             }
         }
         
-        if !isHostDisabled {   
-            SecretInputView(label: provider.type == .github ? "Personal Access Token" : "API Key", secret: $provider.apiKey)
+        if !isApiKeyDisabled {   
+            SecretInputView(label: "API Key", secret: $provider.apiKey)
         }
     }
     
     var isHostDisabled: Bool {
+        !ProviderType.usesCustomOpenAI.contains(provider.type) || provider.type == .customGoogle || provider.type == .customAnthropic
+    }
+    
+    var isApiKeyDisabled: Bool {
         !ProviderType.customTypes.contains(provider.type)
-    }    
+    }
 }
 
 #Preview {

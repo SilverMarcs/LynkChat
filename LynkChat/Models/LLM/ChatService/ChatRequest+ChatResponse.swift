@@ -93,5 +93,5 @@ struct APIErrorResponse: Decodable {
 
 struct APIModel: Codable {
     let id: String
-    let name: String
+    let name: String?
 }

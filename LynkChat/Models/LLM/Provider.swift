@@ -77,7 +77,7 @@ class Provider: ProviderImageProvider {
     }
     
     func toApiProvidr() -> APIProvider {
-        return .init(name: type.rawValue, baseUrl: baseUrl, apiKey: apiKey)
+        return .init(name: type.rawValue, baseUrl: baseUrl, apiKey: apiKey, scheme: scheme)
     }
     
     var imageName: String {
@@ -88,7 +88,7 @@ class Provider: ProviderImageProvider {
 extension Provider {
     func refreshModels() async -> [GenericModel] {
         let service = type.getService()
-        let refreshedChatModels: [GenericModel] = await service.refreshModels(provider: self.type.rawValue)
+        let refreshedChatModels: [GenericModel] = await service.refreshModels(provider: self.toApiProvidr())
         
         return refreshedChatModels.map { chatModel in
             GenericModel(code: chatModel.code, name: chatModel.name)

@@ -114,10 +114,10 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
     func getService() -> any AIService.Type {
         switch self {
             // TODO: do v soon
-//        case .customOpenai, .lmstudio, .ollama:
-//            CustomOpenAIService.self
-//        case .customGoogle:
-//            CustomGoogleService.self
+        case .customOpenai, .lmstudio, .ollama:
+            OpenAIService.self
+        case .customGoogle:
+            OpenAIService.self
 //        case .customAnthropic:
 //            CustomAnthropicService.self
         default:
@@ -125,7 +125,11 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         }
     }
     
-    static var customTypes: [ProviderType] = [.customOpenai, .lmstudio, .ollama, .customGoogle, .customAnthropic]
+    static var usesCustomOpenAI: [ProviderType] = [.customOpenai, .lmstudio, .ollama, .customGoogle, .customAnthropic]
+    static var usesCustomGoogleOrAnthropic: [ProviderType] = [.customGoogle, .customAnthropic]
+    // add both lists
+    static var customTypes: [ProviderType] = usesCustomOpenAI + usesCustomGoogleOrAnthropic
+    
 
     func getDefaultModels() -> [AIModel] {
         switch self {
@@ -169,7 +173,7 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
         case .customOpenai, .lmstudio, .ollama: "Include http:// or https:// in the front and /v1 at the end if applicable"
         case .customGoogle: "Get Google API key [here](https://aistudio.google.com/app/apikey)"
         case .customAnthropic: "Get Anthropic API key [here](https://console.anthropic.com/settings/keys"
-        default: "This API Service is bundled with a paid subcription. Create Custom OpenAI provider for using Own API Key with OpenAI compatible providers"
+        default: "This API Service is bundled with a paid subcription. Create Custom providers for using own API Keys"
         }
     }
     
@@ -199,8 +203,7 @@ extension ProviderType {
             case .primary: return ProviderType.primaryProviders
             case .other: return ProviderType.otherProviders
             case .local: return ProviderType.localProviders
-//            case .custom: return [.customOpenai, .customGoogle, .customAnthropic]
-            case .custom: return [] // TODO: finish this
+            case .custom: return [.customOpenai, .customGoogle, .customAnthropic]
             }
         }
     }

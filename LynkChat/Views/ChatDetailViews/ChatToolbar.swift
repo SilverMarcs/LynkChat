@@ -80,6 +80,7 @@ struct ChatToolbar: ToolbarContent {
                 
                 Button("Delete Last Message", role: .destructive) {
                     chat.deleteLastMessage()
+                    chat.errorMessage = ""
                 }
                 .keyboardShortcut(.delete)
             }
