@@ -13,7 +13,6 @@
 		080E70EE2CDF498F00A949C9 /* ChatStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70ED2CDF498F00A949C9 /* ChatStatus.swift */; };
 		0810F5892CEAFB5C002D4ACF /* ContextResetDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0810F5882CEAFB5C002D4ACF /* ContextResetDivider.swift */; };
 		081297522CF5C3FF00440D19 /* AssistantMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081297512CF5C3FF00440D19 /* AssistantMessage.swift */; };
-		08149A572C3E5E5B004485AC /* MessageRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08149A562C3E5E5B004485AC /* MessageRole.swift */; };
 		0819479E2C48DCDB0061227B /* ImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0819479D2C48DCDB0061227B /* ImageList.swift */; };
 		081C1D942C3BD33F0078BB24 /* ParameterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081C1D932C3BD33F0078BB24 /* ParameterSettings.swift */; };
 		081C1D982C3BD8A50078BB24 /* GeneralSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081C1D972C3BD8A50078BB24 /* GeneralSettings.swift */; };
@@ -24,8 +23,9 @@
 		082255622CE22D3200AAD32B /* SecretInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082255612CE22D3200AAD32B /* SecretInputView.swift */; };
 		0822A6C52CF09F31008DF4FC /* ExpandedInputEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */; };
 		08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF32D1D341300C54BA1 /* DebugSettings.swift */; };
-		08256BF72D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */; };
+		08256BF72D1D34FA00C54BA1 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF62D1D34FA00C54BA1 /* APIResponse.swift */; };
 		08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */; platformFilters = (macos, ); };
+		082880802D1FEF8A00D3A4B0 /* APIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828807F2D1FEF8A00D3A4B0 /* APIMessage.swift */; };
 		0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828E5452D157AF900DED52B /* AutoHeightTextView.swift */; platformFilters = (macos, ); };
 		082A63322C551108003996B7 /* MarkdownBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63312C551108003996B7 /* MarkdownBackup.swift */; };
 		082A63382C55175E003996B7 /* MiscUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63372C55175E003996B7 /* MiscUtils.swift */; };
@@ -195,7 +195,6 @@
 		080E70ED2CDF498F00A949C9 /* ChatStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatStatus.swift; sourceTree = "<group>"; };
 		0810F5882CEAFB5C002D4ACF /* ContextResetDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextResetDivider.swift; sourceTree = "<group>"; };
 		081297512CF5C3FF00440D19 /* AssistantMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantMessage.swift; sourceTree = "<group>"; };
-		08149A562C3E5E5B004485AC /* MessageRole.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRole.swift; sourceTree = "<group>"; };
 		0819479D2C48DCDB0061227B /* ImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageList.swift; sourceTree = "<group>"; };
 		081C1D932C3BD33F0078BB24 /* ParameterSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterSettings.swift; sourceTree = "<group>"; };
 		081C1D972C3BD8A50078BB24 /* GeneralSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettings.swift; sourceTree = "<group>"; };
@@ -206,8 +205,9 @@
 		082255612CE22D3200AAD32B /* SecretInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretInputView.swift; sourceTree = "<group>"; };
 		0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedInputEditor.swift; sourceTree = "<group>"; };
 		08256BF32D1D341300C54BA1 /* DebugSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSettings.swift; sourceTree = "<group>"; };
-		08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatRequest+ChatResponse.swift"; sourceTree = "<group>"; };
+		08256BF62D1D34FA00C54BA1 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
 		08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
+		0828807F2D1FEF8A00D3A4B0 /* APIMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIMessage.swift; sourceTree = "<group>"; };
 		0828E5452D157AF900DED52B /* AutoHeightTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHeightTextView.swift; sourceTree = "<group>"; };
 		082A63312C551108003996B7 /* MarkdownBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownBackup.swift; sourceTree = "<group>"; };
 		082A63372C55175E003996B7 /* MiscUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscUtils.swift; sourceTree = "<group>"; };
@@ -423,10 +423,11 @@
 		08256BF52D1D34F300C54BA1 /* ChatService */ = {
 			isa = PBXGroup;
 			children = (
-				084C24432D1F34AD00AC431F /* MaxTokens.swift */,
+				0828807F2D1FEF8A00D3A4B0 /* APIMessage.swift */,
 				085C15F02D1DF0BC007245CD /* APIRequest.swift */,
+				08256BF62D1D34FA00C54BA1 /* APIResponse.swift */,
+				084C24432D1F34AD00AC431F /* MaxTokens.swift */,
 				085C15EE2D1DEE02007245CD /* OpenAIService.swift */,
-				08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */,
 				087B30932D1C39C200FB135A /* APIService.swift */,
 			);
 			path = ChatService;
@@ -651,7 +652,6 @@
 			children = (
 				082F09DA2CB2715A00B7860A /* Message.swift */,
 				08CA42B22CF0F4430073BB01 /* MessageGroup.swift */,
-				08149A562C3E5E5B004485AC /* MessageRole.swift */,
 				0834E77A2C71A42F007CB294 /* TypedData.swift */,
 			);
 			path = Message;
@@ -953,7 +953,7 @@
 				089825332CE9ECF000980468 /* PluginsOnboarding.swift in Sources */,
 				082181602C3880F700171BF3 /* RoundedRectangleOverlay.swift in Sources */,
 				080E0F752D18593200DCA9E3 /* CustomToolsView.swift in Sources */,
-				08256BF72D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift in Sources */,
+				08256BF72D1D34FA00C54BA1 /* APIResponse.swift in Sources */,
 				08B8DE132C97F3550041A690 /* MDView.swift in Sources */,
 				087F3F922CDDF00C001298B3 /* SettingsVM.swift in Sources */,
 				08AAFB9A2C3D0017002C04E0 /* ListCard.swift in Sources */,
@@ -989,6 +989,7 @@
 				08C800372C36B8CC009581C5 /* ChatListRow.swift in Sources */,
 				089DB5182CA8EC140013E5C3 /* ImageViewerData.swift in Sources */,
 				08B5D7B82C77A64000D1F100 /* ChatWindow.swift in Sources */,
+				082880802D1FEF8A00D3A4B0 /* APIMessage.swift in Sources */,
 				085361072C492282007DAB62 /* Generation.swift in Sources */,
 				08CA42C62CF1F3FE0073BB01 /* NavigationButtons.swift in Sources */,
 				084C24772D1FEAFD00AC431F /* SwiftMarkdownView.swift in Sources */,
@@ -1105,7 +1106,6 @@
 				08A00FF02D19A580001D48CB /* InputModelPickers.swift in Sources */,
 				0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */,
 				081C1D942C3BD33F0078BB24 /* ParameterSettings.swift in Sources */,
-				08149A572C3E5E5B004485AC /* MessageRole.swift in Sources */,
 				0853611F2C4A38C9007DAB62 /* GenericSlider.swift in Sources */,
 				0891D5822C968B3A00BA428F /* ToolConfigDefaults.swift in Sources */,
 				086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */,

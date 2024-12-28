@@ -48,44 +48,25 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     // MARK: - computed message properties
+    // TODO: dont really need all these props since we can just use the activeMessage directly and we shudnt expose all these props
     var model: ChatModel {
         activeMessage.model
     }
     
     var content: String {
-        get {
-            activeMessage.content
-        }
-        set {
-            activeMessage.content = newValue
-        }
+        activeMessage.content
     }
 
     var dataFiles: [TypedData] {
-        get {
-            activeMessage.dataFiles
-        }
-        set {
-            activeMessage.dataFiles = newValue
-        }
+        activeMessage.dataFiles
     }
     
     var role: MessageRole {
-        get {
-            activeMessage.role
-        }
-        set {
-            activeMessage.role = newValue
-        }
+        activeMessage.role
     }
     
     var isReplying: Bool {
-        get {
-            activeMessage.isReplying
-        }
-        set {
-            activeMessage.isReplying = newValue
-        }
+        activeMessage.isReplying
     }
     
     // MARK: - Active Message Navigation

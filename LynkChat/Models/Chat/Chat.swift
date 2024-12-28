@@ -55,7 +55,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     var streamingTask: Task<Void, Error>?
     @Transient
     var isReplying: Bool {
-        currentThread.last?.isReplying ?? false
+        currentThread.last?.activeMessage.isReplying ?? false
     }
 
     @Transient
@@ -244,7 +244,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     func errorDeleteLast() {
         guard let last = self.currentThread.last else { return }
-        last.isReplying = false
+        last.activeMessage.isReplying = false
         if last.activeMessage.content.isEmpty {
             if last.allMessages.count == 1 {
                 self.deleteLastMessage()

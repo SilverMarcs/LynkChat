@@ -8,6 +8,13 @@
 import Foundation
 import SwiftData
 
+enum MessageRole: String, Codable {
+    case user
+    case assistant
+    case system
+    case tool
+}
+
 @Model
 final class Message: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
