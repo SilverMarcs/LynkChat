@@ -14,7 +14,7 @@ struct ChatServiceSettings: View {
         Group {
             switch selectedTab {
             case .models:
-                ChatModelList()
+                ChatModelTable()
             case .parameters:
                 ParameterSettings()
             }

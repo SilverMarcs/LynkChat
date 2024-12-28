@@ -1,5 +1,5 @@
 //
-//  ChatModelList.swift
+//  ChatModelTable.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 28/12/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ChatModelList: View {
+struct ChatModelTable: View {
     @StateObject private var modelConfig = ModelConfig.shared
     @State private var selection: ChatModel.ID?
     
@@ -27,5 +27,5 @@ struct ChatModelList: View {
 }
 
 #Preview {
-    ChatModelList()
+    ChatModelTable()
 }

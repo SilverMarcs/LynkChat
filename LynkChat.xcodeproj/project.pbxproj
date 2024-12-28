@@ -48,7 +48,7 @@
 		084C24422D1F215100AC431F /* ImageParametersSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24412D1F215100AC431F /* ImageParametersSettings.swift */; };
 		084C24442D1F34AD00AC431F /* MaxTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24432D1F34AD00AC431F /* MaxTokens.swift */; };
 		084C24462D1F3D6800AC431F /* HelpWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24452D1F3D6800AC431F /* HelpWindow.swift */; };
-		084C24482D1FBA0800AC431F /* ChatModelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24472D1FBA0800AC431F /* ChatModelList.swift */; };
+		084C24482D1FBA0800AC431F /* ChatModelTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24472D1FBA0800AC431F /* ChatModelTable.swift */; };
 		084C244B2D1FBAC800AC431F /* ModelImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244A2D1FBAC800AC431F /* ModelImageProvider.swift */; };
 		084C244D2D1FBB9500AC431F /* ModelImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244C2D1FBB9500AC431F /* ModelImage.swift */; };
 		084C244F2D1FBBE000AC431F /* ChatServiceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */; };
@@ -233,7 +233,7 @@
 		084C24412D1F215100AC431F /* ImageParametersSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageParametersSettings.swift; sourceTree = "<group>"; };
 		084C24432D1F34AD00AC431F /* MaxTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaxTokens.swift; sourceTree = "<group>"; };
 		084C24452D1F3D6800AC431F /* HelpWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpWindow.swift; sourceTree = "<group>"; };
-		084C24472D1FBA0800AC431F /* ChatModelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelList.swift; sourceTree = "<group>"; };
+		084C24472D1FBA0800AC431F /* ChatModelTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelTable.swift; sourceTree = "<group>"; };
 		084C244A2D1FBAC800AC431F /* ModelImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImageProvider.swift; sourceTree = "<group>"; };
 		084C244C2D1FBB9500AC431F /* ModelImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImage.swift; sourceTree = "<group>"; };
 		084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatServiceSettings.swift; sourceTree = "<group>"; };
@@ -452,7 +452,7 @@
 		084C24492D1FBA0C00AC431F /* ChatService */ = {
 			isa = PBXGroup;
 			children = (
-				084C24472D1FBA0800AC431F /* ChatModelList.swift */,
+				084C24472D1FBA0800AC431F /* ChatModelTable.swift */,
 				081C1D932C3BD33F0078BB24 /* ParameterSettings.swift */,
 				084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */,
 				08F815232C97F59100B49355 /* PluginSettings.swift */,
@@ -1124,7 +1124,7 @@
 				0834E7792C719C00007CB294 /* DataFileView.swift in Sources */,
 				089825232CE8F75400980468 /* OnboardingView.swift in Sources */,
 				081297522CF5C3FF00440D19 /* AssistantMessage.swift in Sources */,
-				084C24482D1FBA0800AC431F /* ChatModelList.swift in Sources */,
+				084C24482D1FBA0800AC431F /* ChatModelTable.swift in Sources */,
 				08A00FEE2D19A416001D48CB /* InputEditor.swift in Sources */,
 				08C800432C36C045009581C5 /* ChatVM.swift in Sources */,
 				082A63322C551108003996B7 /* MarkdownBackup.swift in Sources */,
