@@ -154,14 +154,20 @@ extension InputManager {
 // MARK: - Pasting
 #if os(macOS)
 extension InputManager {
-    private static let supportedImageTypes: Set<UTType> = [.png, .tiff, .jpeg]
-
     func handlePaste(pasteboardItem: NSPasteboardItem) {
         Task {
             do {
                 if let fileURLData = pasteboardItem.data(forType: .fileURL),
                    let fileURL = URL(dataRepresentation: fileURLData, relativeTo: nil) {
-                    try await processFile(at: fileURL)
+                    
+                    // Get the UTType of the file
+                    let fileType = try fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier
+                    if let fileUTType = fileType.flatMap({ UTType($0) }) {
+                        if fileUTType.conforms(to: .text) || fileUTType.conforms(to: .pdf) {
+                            try await processFile(at: fileURL)
+                        }
+                    }
+                    
                 } else if let imageData = pasteboardItem.data(forType: .png) ?? pasteboardItem.data(forType: .tiff) {
                     try await processData(imageData, fileType: .png, fileName: "Pasted_Image_\(UUID().uuidString).png")
                 }

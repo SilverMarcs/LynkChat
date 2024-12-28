@@ -30,7 +30,7 @@ struct ChatDetail: View {
             .toolbar {
                 ChatToolbar(chat: chat)
             }
-            .onDrop(of: [.item], isTargeted: nil) { providers in
+            .onDrop(of: [.text, .pdf, .image], isTargeted: nil) { providers in
                 chat.inputManager.handleDrop(providers)
             }
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)

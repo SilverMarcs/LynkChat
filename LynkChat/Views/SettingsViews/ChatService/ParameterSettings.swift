@@ -9,10 +9,20 @@ import SwiftUI
 
 struct ParameterSettings: View {
     @ObservedObject var config = ChatConfigDefaults.shared
+    @ObservedObject var modelConfig = ModelConfig.shared
     @State var expandAdvanced: Bool = true
 
     var body: some View {
         Form {
+            Section("Model") {
+                Picker("Model", selection: $modelConfig.defaultModel) {
+                    ForEach(ChatModel.allCases, id: \.self) { model in
+                        Text(model.name)
+                            .tag(model)
+                    }
+                }
+            }
+            
             Section("Basic") {
                 Toggle(isOn: $config.stream) {
                     Text("Stream")
