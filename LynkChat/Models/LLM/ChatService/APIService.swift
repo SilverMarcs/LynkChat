@@ -72,9 +72,9 @@ struct APIService {
                         if line.isEmpty { continue }
                         
                         if let data = line.data(using: .utf8),
-                           let response = try? JSONDecoder().decode(StreamChunk.self, from: data) {
+                           let response = try? JSONDecoder().decode(ResponseType.self, from: data) {
                             
-                            switch response.type {
+                            switch response {
                             case .text(let content):
                                 continuation.yield(.text(content: content))
                                 
