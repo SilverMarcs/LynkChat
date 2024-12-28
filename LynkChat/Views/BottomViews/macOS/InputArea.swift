@@ -126,12 +126,9 @@ struct InputArea: View {
 //                .buttonStyle(.borderless)
 //                .padding(.trailing, 5)
             
-            Picker("Model", selection: $chat.config.model) {
-                ForEach(ChatModel.allCases) { model in
-                    Text(model.name)
-                        .tag(model)
-                }
-            }
+            // In your view
+            ModelPicker(selectedModel: $chat.config.model)
+            
             .buttonStyle(.borderless)
             .labelsHidden()
             .opacity(0.65)

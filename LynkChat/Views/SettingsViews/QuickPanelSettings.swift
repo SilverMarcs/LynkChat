@@ -25,12 +25,7 @@ struct QuickPanelSettings: View {
                 }
             }
                 
-            Picker("Model", selection: $modelConfig.quickModel) {
-                ForEach(ChatModel.allCases) { model in
-                    Text(model.name)
-                        .tag(model)
-                }
-            }
+            ModelPicker(selectedModel: $modelConfig.quickModel)
                 
             Section("System Prompt") {
                 TextEditor(text: $config.quickSystemPrompt)

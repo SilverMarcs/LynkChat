@@ -29,12 +29,7 @@ struct BasicInspector: View {
             }
             
             Section("Model") {
-                Picker("Model", selection: $chat.config.model) {
-                    ForEach(ChatModel.allCases) { model in
-                        Text(model.name)
-                            .tag(model)
-                    }
-                }
+                ModelPicker(selectedModel: $chat.config.model)
             }
             
             Section("Parameters") {

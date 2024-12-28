@@ -15,12 +15,7 @@ struct ParameterSettings: View {
     var body: some View {
         Form {
             Section("Model") {
-                Picker("Model", selection: $modelConfig.defaultModel) {
-                    ForEach(ChatModel.allCases, id: \.self) { model in
-                        Text(model.name)
-                            .tag(model)
-                    }
-                }
+                ModelPicker(selectedModel: $modelConfig.defaultModel)
             }
             
             Section("Basic") {

@@ -50,6 +50,8 @@
 		084C244B2D1FBAC800AC431F /* ModelImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244A2D1FBAC800AC431F /* ModelImageProvider.swift */; };
 		084C244D2D1FBB9500AC431F /* ModelImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244C2D1FBB9500AC431F /* ModelImage.swift */; };
 		084C244F2D1FBBE000AC431F /* ChatServiceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */; };
+		084C24512D1FD9D000AC431F /* ModelGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24502D1FD9D000AC431F /* ModelGroup.swift */; };
+		084C24532D1FDA1F00AC431F /* ModelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24522D1FDA1F00AC431F /* ModelPicker.swift */; };
 		084C74402C521A8A0015AE2F /* DismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C743F2C521A8A0015AE2F /* DismissButton.swift */; };
 		085276C02C98794C009184D2 /* ToolCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085276BF2C98794C009184D2 /* ToolCallView.swift */; };
 		085361052C491BF0007DAB62 /* ImageSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085361042C491BF0007DAB62 /* ImageSession.swift */; };
@@ -216,6 +218,8 @@
 		084C244A2D1FBAC800AC431F /* ModelImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImageProvider.swift; sourceTree = "<group>"; };
 		084C244C2D1FBB9500AC431F /* ModelImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImage.swift; sourceTree = "<group>"; };
 		084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatServiceSettings.swift; sourceTree = "<group>"; };
+		084C24502D1FD9D000AC431F /* ModelGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelGroup.swift; sourceTree = "<group>"; };
+		084C24522D1FDA1F00AC431F /* ModelPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPicker.swift; sourceTree = "<group>"; };
 		084C743F2C521A8A0015AE2F /* DismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissButton.swift; sourceTree = "<group>"; };
 		085276BF2C98794C009184D2 /* ToolCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCallView.swift; sourceTree = "<group>"; };
 		085361042C491BF0007DAB62 /* ImageSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSession.swift; sourceTree = "<group>"; };
@@ -591,6 +595,7 @@
 		08A222C22C2AC6A800D76C8B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				084C24522D1FDA1F00AC431F /* ModelPicker.swift */,
 				089825212CE8F69600980468 /* OnboardingViews */,
 				085524E02C4ED29400CBB827 /* MenubarCommands */,
 				08C800512C36F79E009581C5 /* SettingsViews */,
@@ -717,6 +722,7 @@
 				08C8004F2C36F667009581C5 /* Provider.swift */,
 				08F815452C980ABF00B49355 /* StreamHandler.swift */,
 				08F369E22C3C278E002E4A35 /* ProviderType.swift */,
+				084C24502D1FD9D000AC431F /* ModelGroup.swift */,
 				084C24392D1EEBDD00AC431F /* ChatModel.swift */,
 				084C243D2D1F1CEB00AC431F /* ImageModel.swift */,
 				084C244A2D1FBAC800AC431F /* ModelImageProvider.swift */,
@@ -966,6 +972,7 @@
 				085361112C4938C4007DAB62 /* ImageDetail.swift in Sources */,
 				08C800492C36C521009581C5 /* AssistantMessageAux.swift in Sources */,
 				08B82C1F2C74EAFD00DC0183 /* FileViewer.swift in Sources */,
+				084C24532D1FDA1F00AC431F /* ModelPicker.swift in Sources */,
 				08CA42C22CF1F3E70073BB01 /* DeleteButton.swift in Sources */,
 				08CD009B2CBA20E900A96425 /* PasteHandler.swift in Sources */,
 				085524E22C4ED2A400CBB827 /* MenuCommands.swift in Sources */,
@@ -1006,6 +1013,7 @@
 				084C244F2D1FBBE000AC431F /* ChatServiceSettings.swift in Sources */,
 				085C15EF2D1DEE02007245CD /* OpenAIService.swift in Sources */,
 				08A222C42C2AC6B300D76C8B /* ChatDetail.swift in Sources */,
+				084C24512D1FD9D000AC431F /* ModelGroup.swift in Sources */,
 				08C800472C36C4ED009581C5 /* UserMessage.swift in Sources */,
 				089825292CE9BA2900980468 /* QuickPanelOnboarding.swift in Sources */,
 				08B8DE1F2C97F3D10041A690 /* AppConfig.swift in Sources */,

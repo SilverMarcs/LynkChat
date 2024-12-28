@@ -19,12 +19,7 @@ struct APIKeyOnboarding: View {
             content: {
                 Form {
                     Section {
-                        Picker("Model", selection: $modelConfig.defaultModel) {
-                            ForEach(ChatModel.allCases) { model in
-                                Text(model.name)
-                                    .tag(model)
-                            }
-                        }
+                        ModelPicker(selectedModel: $modelConfig.defaultModel)
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))

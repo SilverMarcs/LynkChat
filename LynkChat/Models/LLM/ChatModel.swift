@@ -51,4 +51,18 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         default: false
         }
     }
+    
+    var group: ModelGroup {
+        switch self {
+        case .claude3_5sonnet, .claude3_5haiku:
+            return .anthropic
+        case .gpt4o, .gpt4omini:
+            return .openAI
+        }
+    }
+    
+    static func groupedModels() -> [ModelGroup: [ChatModel]] {
+        Dictionary(grouping: ChatModel.allCases) { $0.group }
+    }
 }
+

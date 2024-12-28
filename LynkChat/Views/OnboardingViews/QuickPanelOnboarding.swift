@@ -24,12 +24,7 @@ struct QuickPanelOnboarding: View {
                         Text("Global shortcut")
                     }
                     
-                    Picker("Model", selection: $modelConfig.quickModel) {
-                        ForEach(ChatModel.allCases) { model in
-                            Text(model.name)
-                                .tag(model)
-                        }
-                    }
+                    ModelPicker(selectedModel: $modelConfig.quickModel)
                 }
             },
             footerText: "Access from anywhere in the OS"
