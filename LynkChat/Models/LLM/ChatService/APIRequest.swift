@@ -11,13 +11,8 @@ import Foundation
 struct APIRequest: Encodable {
     let model: String
     let messages: [APIMessage]
+    let temperature: Double
+    let maxTokens: Int
     let system: String?
     let stream: Bool
-    
-    init(model: String, messages: [APIMessage], system: String?, stream: Bool) {
-        self.model = model
-        self.messages = messages
-        self.system = system
-        self.stream = stream
-    }
 }

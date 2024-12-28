@@ -127,11 +127,15 @@ struct ChatList: View {
         
         ToolbarItem {
             Menu {
-                ForEach(ChatModel.allCases, id: \.self) { model in
-                    Button {
-                        chatVM.createNewChat(model: model)
-                    } label: {
-                        Label(model.name, image: model.imageName)
+                ForEach(Array(ChatModel.groupedModels().keys), id: \.self) { group in
+                    Section(header: Text(group.displayName)) {
+                        ForEach(ChatModel.groupedModels()[group] ?? []) { model in
+                            Button {
+                                chatVM.createNewChat(model: model)
+                            } label: {
+                                Label(model.name, image: model.imageName)
+                            }
+                        }
                     }
                 }
             } label: {

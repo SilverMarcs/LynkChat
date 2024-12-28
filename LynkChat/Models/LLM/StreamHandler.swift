@@ -100,6 +100,8 @@ struct StreamHandler {
         return APIRequest(
             model: chat.config.model.id,
             messages: apiMessages,
+            temperature: chat.config.temperature,
+            maxTokens: chat.config.maxTokens.rawValue,
             system: chat.config.systemPrompt,
             stream: stream
         )

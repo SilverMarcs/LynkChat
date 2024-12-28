@@ -41,6 +41,8 @@ enum TitleGenerator {
                     role: .user,
                     text: wrappedMessage
                 )],
+                temperature: 0.0,
+                maxTokens: 10,
                 system: "Generate Title based on user's instructions",
                 stream: false
             )
