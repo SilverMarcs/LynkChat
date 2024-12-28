@@ -28,7 +28,7 @@ struct PluginsOnboarding: View {
                     #endif
                 }
             },
-            footerText: "Disable plugins if LLMs behave unexpectedly"
+            footerText: "Enable plugins to give your AI assistant more capabilities"
         )
     }
 }

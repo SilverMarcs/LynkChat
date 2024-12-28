@@ -211,6 +211,7 @@ final class Chat: Equatable, Identifiable, Hashable {
             contextResetPoint = nil
         } else {
             contextResetPoint = message
+            totalTokens = 0
         }
         
         if let lastMessage = currentThread.last, lastMessage == message {

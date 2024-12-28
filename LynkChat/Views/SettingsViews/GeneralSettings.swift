@@ -19,7 +19,7 @@ struct GeneralSettings: View {
             Section("Title") {
                 Toggle(isOn: $config.autogenTitle) {
                     Text("Autogen Title")
-                    Text("Uses Lite Model in provider general settings")
+                    Text("Uses Claude 3.5 Haiku")
                 }
             }
             

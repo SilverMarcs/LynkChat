@@ -18,7 +18,12 @@ struct ImageGenOnboarding: View {
             content: {
                 Form {
                     Section {
-//                        ModelPicker(model: $provider.model, models: provider.models, label: "Default Model")
+                        Picker("Model", selection: $imageConfig.defaultModel) {
+                            ForEach(ImageModel.allCases) { model in
+                                Text(model.name)
+                                    .tag(model)
+                            }
+                        }
                         
                         Toggle(isOn: $imageConfig.saveToPhotos) {
                             Text("Save to Photos Library")

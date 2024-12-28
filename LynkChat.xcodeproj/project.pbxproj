@@ -26,7 +26,7 @@
 		082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 082355142CDBBB2B00388273 /* SwiftMarkdownView */; };
 		08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF32D1D341300C54BA1 /* DebugSettings.swift */; };
 		08256BF72D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */; };
-		08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */; };
+		08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */; platformFilters = (macos, ); };
 		0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828E5452D157AF900DED52B /* AutoHeightTextView.swift */; platformFilters = (macos, ); };
 		082A63322C551108003996B7 /* MarkdownBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63312C551108003996B7 /* MarkdownBackup.swift */; };
 		082A63382C55175E003996B7 /* MiscUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63372C55175E003996B7 /* MiscUtils.swift */; };
@@ -90,7 +90,7 @@
 		089825232CE8F75400980468 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825222CE8F75400980468 /* OnboardingView.swift */; };
 		089825252CE9B62900980468 /* APIKeyOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825242CE9B62900980468 /* APIKeyOnboarding.swift */; };
 		089825272CE9B67700980468 /* WelcomeOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825262CE9B67700980468 /* WelcomeOnboarding.swift */; };
-		089825292CE9BA2900980468 /* QuickPanelOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825282CE9BA2900980468 /* QuickPanelOnboarding.swift */; };
+		089825292CE9BA2900980468 /* QuickPanelOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825282CE9BA2900980468 /* QuickPanelOnboarding.swift */; platformFilters = (macos, ); };
 		0898252B2CE9BB1700980468 /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0898252A2CE9BB1700980468 /* OnboardingPage.swift */; };
 		0898252D2CE9C0C100980468 /* ReadyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0898252C2CE9C0C100980468 /* ReadyPageView.swift */; };
 		0898252F2CE9C0F200980468 /* PageDots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0898252E2CE9C0F200980468 /* PageDots.swift */; };

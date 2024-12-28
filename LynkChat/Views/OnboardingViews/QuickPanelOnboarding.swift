@@ -5,7 +5,6 @@
 //  Created by Zabir Raihan on 17/11/2024.
 //
 
-#if os(macOS)
 import SwiftUI
 
 struct QuickPanelOnboarding: View {
@@ -19,18 +18,15 @@ struct QuickPanelOnboarding: View {
             content: {
                 Form {
                     LabeledContent {
-//                        KeyboardShortcuts.Recorder(for: .togglePanel)
                         Text("⌥ + Space")
+                            .monospaced()
                     } label: {
                         Text("Global shortcut")
-
                     }
-                    
-//                    ModelPicker(model: $provider.liteModel, models: provider.models, label: "Quick Panel Model")
                     
                     Picker("Model", selection: $modelConfig.quickModel) {
                         ForEach(ChatModel.allCases) { model in
-                            Text(model.rawValue)
+                            Text(model.name)
                                 .tag(model)
                         }
                     }
@@ -46,4 +42,3 @@ struct QuickPanelOnboarding: View {
      QuickPanelOnboarding()
          .frame(width: 500, height: 500)
  }
-#endif

@@ -15,13 +15,13 @@ struct APIKeyOnboarding: View {
         GenericOnboardingView(
             icon: "cpu.fill",
             iconColor: Color(hex: modelConfig.defaultModel.color),
-            title: "Enter your API Key",
+            title: "Select default model",
             content: {
                 Form {
                     Section {
                         Picker("Model", selection: $modelConfig.defaultModel) {
                             ForEach(ChatModel.allCases) { model in
-                                Text(model.rawValue)
+                                Text(model.name)
                                     .tag(model)
                             }
                         }
@@ -31,7 +31,7 @@ struct APIKeyOnboarding: View {
                     #endif
                 }
             },
-            footerText: "Configure other providers in Settings."
+            footerText: "Configure other models in Settings."
         )
     }
 }

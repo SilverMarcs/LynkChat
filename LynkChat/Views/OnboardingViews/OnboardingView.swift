@@ -61,9 +61,7 @@ struct OnboardingView: View {
                 PermissionsOnboarding()
             #endif
             case .imageGen:
-                Text("Coming soon")
-            #warning("add image gen onboarding")
-                EmptyView()
+                ImageGenOnboarding()
             case .ready:
                 ReadyPageView()
             }
