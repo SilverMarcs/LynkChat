@@ -32,8 +32,8 @@ struct SettingsView: View {
 //                Label("Plugins", systemImage: "hammer")
 //                    .tag(SettingsTab.tools)
 //                
-                Label("Parameters", systemImage: "slider.horizontal.3")
-                    .tag(SettingsTab.parameters)
+                Label("Chat Service", systemImage: "quote.bubble")
+                    .tag(SettingsTab.chat)
                 
                 Label("Image Service", systemImage: "photo")
                     .tag(SettingsTab.image)
@@ -76,8 +76,8 @@ struct SettingsView: View {
                 #endif
                 case .tools:
                     PluginSettings()
-                case .parameters:
-                    ParameterSettings()
+                case .chat:
+                    ChatServiceSettings()
                 case .image:
                     ImageSettings()
                 #if os(macOS)

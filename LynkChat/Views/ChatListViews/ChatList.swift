@@ -126,11 +126,20 @@ struct ChatList: View {
         #endif
         
         ToolbarItem {
-            Button {
-                chatVM.createNewChat()
+            Menu {
+                ForEach(ChatModel.allCases, id: \.self) { model in
+                    Button {
+                        chatVM.createNewChat(model: model)
+                    } label: {
+                        Label(model.name, image: model.imageName)
+                    }
+                }
             } label: {
                 Label("New Chat", systemImage: "square.and.pencil")
+            } primaryAction: {
+                chatVM.createNewChat()
             }
+            .menuIndicator(.hidden)
         }
     }
     

@@ -15,7 +15,7 @@ enum SettingsTab {
     case shortcuts
     #endif
     case tools
-    case parameters
+    case chat
     case image
     case providers
     case guides

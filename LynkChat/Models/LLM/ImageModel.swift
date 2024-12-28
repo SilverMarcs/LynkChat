@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable {
+enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
     case flux_schnell
     case dall_e_2
     case dall_e_3

@@ -39,8 +39,13 @@ import SwiftUI
     }
     
     @MainActor
-    func createNewChat() {
+    func createNewChat(model: ChatModel? = nil) {
         let newChat = Chat()
+        
+        if let model = model {
+            newChat.config.model = model
+        }
+        
         DatabaseService.shared.modelContext.insert(newChat)
         self.selections = [newChat]
     }

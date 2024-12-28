@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable {
+enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
     case claude3_5sonnet
     case claude3_5haiku
     case gpt4o
