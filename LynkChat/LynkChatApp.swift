@@ -11,7 +11,6 @@ import TipKit
 @main
 struct LynkChatApp: App {
     @State private var chatVM: ChatVM = ChatVM()
-    @State private var imageVM: ImageVM = ImageVM()
     @State private var settingsVM: SettingsVM = SettingsVM()
     
     #if !os(macOS)
@@ -28,7 +27,6 @@ struct LynkChatApp: App {
         }
         .commands { MenuCommands() }
         .environment(chatVM)
-        .environment(imageVM)
         .environment(settingsVM)
         .modelContainer(DatabaseService.shared.container)
     }

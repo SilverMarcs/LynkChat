@@ -9,15 +9,15 @@ import SwiftUI
 import SwiftData
 
 struct ImageRow: View {
+    @Environment(\.imageSearchText) var imageSearchText
     @Environment(\.modelContext) var modelContext
     @Bindable var session: ImageSession
-    @Environment(ImageVM.self) private var imageVM
     
     var body: some View {
         HStack {
             ProviderImage(radius: 8, frame: 23, scale: .medium)
             
-            HighlightableTextView(session.title, highlightedText: imageVM.searchText)
+            HighlightableTextView(session.title, highlightedText: imageSearchText)
                 .lineLimit(1)
                 .font(.headline)
                 .fontWeight(.regular)
@@ -31,21 +31,6 @@ struct ImageRow: View {
                 .fontWidth(.compressed)
         }
         .padding(3)
-        .swipeActions(edge: .trailing) {
-            swipeActionsTrailing
-        }
-    }
-    
-    var swipeActionsTrailing: some View {
-        Button(role: .destructive) {
-            if imageVM.selections.contains(session) {
-                imageVM.selections.remove(session)
-            }
-            
-            modelContext.delete(session)
-        } label: {
-            Label("Delete", systemImage: "trash")
-        }
     }
 }
 

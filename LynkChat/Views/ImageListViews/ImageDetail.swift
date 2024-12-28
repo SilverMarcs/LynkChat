@@ -10,7 +10,6 @@ import SwiftData
 
 struct ImageDetail: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(ImageVM.self) var imageVM
     @Bindable var session: ImageSession
     @State private var showingInspector: Bool = false
     

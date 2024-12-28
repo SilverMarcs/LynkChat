@@ -198,6 +198,7 @@ extension EnvironmentValues {
     @Entry var isReplying = false
     @Entry var searchText = ""
     @Entry var chat: Chat = .mockChat // TODO: must make sure this is not used
+    @Entry var imageSearchText: String = "" // TODO: must make sure this is not used
 }
 
 // MARK: - Window Aliases

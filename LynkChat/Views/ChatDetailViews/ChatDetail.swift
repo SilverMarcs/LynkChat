@@ -112,7 +112,7 @@ struct ChatDetail: View {
             List {
                 ForEach(messagesToShow, id: \.self) { group in
                     MessageView(group: group)
-                        .environment(chat)
+                        .environment(\.chat, chat)
                         .onAppear {
                             if group == messagesToShow.first {
                                 loadMoreMessages()

@@ -40,11 +40,6 @@ extension ChatVM {
     static var mockChatVM = ChatVM()
 }
 
-extension ImageVM {
-    static var mockImageVM = ImageVM()
-}
-
-
 extension String {
     static let markdownContent = """
     Certainly! In Python, you can sort data using the built-in `sort()` method for lists or the `sorted()` function. Below are examples of both methods along with explanations.
