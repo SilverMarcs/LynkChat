@@ -81,8 +81,10 @@ struct SettingsView: View {
                 #endif
                 case .about:
                     AboutSettings()
+                #if DEBUG
                 case .debug:
                     DebugSettings()
+                #endif
                 default:
                     EmptyView()
                 }
