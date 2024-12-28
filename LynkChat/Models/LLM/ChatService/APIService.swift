@@ -75,28 +75,14 @@ struct APIService {
                            let response = try? JSONDecoder().decode(StreamChunk.self, from: data) {
                             
                             switch response.type {
-                            case "text":
-                                if let content = response.content {
-                                    continuation.yield(.text(content))
-                                }
+                            case .text(let content):
+                                continuation.yield(.text(content))
                                 
-                            case "finish":
-                                if let usage = response.usage {
-                                    let tokenUsage = TokenUsage(
-                                        promptTokens: usage.promptTokens,
-                                        completionTokens: usage.completionTokens
-                                    )
-                                    continuation.yield(.usage(tokenUsage))
-                                }
+                            case .finish(let usage):
+                                continuation.yield(.usage(usage))
                                 
-                            case "error":
-                                // Handle streaming errors
-                                if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
-                                    throw RuntimeError(errorResponse.error.details)
-                                }
-                                
-                            default:
-                                continue
+                            case .error(let message):
+                                throw RuntimeError(message)
                             }
                         }
                     }
