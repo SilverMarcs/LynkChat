@@ -32,10 +32,15 @@ func isIPadOS() -> Bool {
 #if os(macOS)
 typealias PlatformColor = NSColor
 typealias PlatformFont = NSFont
+typealias PlatformView = NSView
+typealias PlatformViewRepresentable = NSViewRepresentable
 #else
 typealias PlatformColor = UIColor
 typealias PlatformFont = UIFont
+typealias PlatformView = UIView
+typealias PlatformViewRepresentable = UIViewRepresentable
 #endif
+
 // MARK: - Numbers
 
 extension Float {

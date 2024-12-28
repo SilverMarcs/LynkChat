@@ -13,14 +13,13 @@ class AppConfig: ObservableObject {
     
     var proxy: ScrollViewProxy?
     @Published var hasUserScrolled = false
-    
     @Published var showCamera = false
     
     @AppStorage("finishedInitialSetup") var finishedInitialSetup = false
     
     // Appearance
     @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .webview
-    @AppStorage("codeBlockTheme") var codeBlockTheme: CodeTheme = .atomOne
+    @AppStorage("codeBlockTheme") var codeBlockTheme: CodeBlockTheme = .atom
     #if os(macOS)
     @AppStorage("fontSize") var fontSize: Double = 13
     #else

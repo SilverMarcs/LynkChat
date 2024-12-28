@@ -23,7 +23,6 @@
 		0821816F2C39082900171BF3 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0821816E2C39082900171BF3 /* MessageView.swift */; };
 		082255622CE22D3200AAD32B /* SecretInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082255612CE22D3200AAD32B /* SecretInputView.swift */; };
 		0822A6C52CF09F31008DF4FC /* ExpandedInputEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */; };
-		082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 082355142CDBBB2B00388273 /* SwiftMarkdownView */; };
 		08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF32D1D341300C54BA1 /* DebugSettings.swift */; };
 		08256BF72D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF62D1D34FA00C54BA1 /* ChatRequest+ChatResponse.swift */; };
 		08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */; platformFilters = (macos, ); };
@@ -52,6 +51,22 @@
 		084C244F2D1FBBE000AC431F /* ChatServiceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */; };
 		084C24512D1FD9D000AC431F /* ModelGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24502D1FD9D000AC431F /* ModelGroup.swift */; };
 		084C24532D1FDA1F00AC431F /* ModelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24522D1FDA1F00AC431F /* ModelPicker.swift */; };
+		084C24662D1FEA6C00AC431F /* default-macOS.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C24592D1FEA6C00AC431F /* default-macOS.css */; };
+		084C24672D1FEA6C00AC431F /* a11y.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C245D2D1FEA6C00AC431F /* a11y.css */; };
+		084C24682D1FEA6C00AC431F /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = 084C245B2D1FEA6C00AC431F /* template.html */; };
+		084C24692D1FEA6C00AC431F /* default-iOS.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C24582D1FEA6C00AC431F /* default-iOS.css */; };
+		084C246A2D1FEA6C00AC431F /* panda.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C24602D1FEA6C00AC431F /* panda.css */; };
+		084C246B2D1FEA6C00AC431F /* paraiso.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C24612D1FEA6C00AC431F /* paraiso.css */; };
+		084C246C2D1FEA6C00AC431F /* stackoverflow.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C24622D1FEA6C00AC431F /* stackoverflow.css */; };
+		084C246D2D1FEA6C00AC431F /* github.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C245F2D1FEA6C00AC431F /* github.css */; };
+		084C246E2D1FEA6C00AC431F /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 084C245A2D1FEA6C00AC431F /* script.js */; };
+		084C246F2D1FEA6C00AC431F /* tokyo.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C24632D1FEA6C00AC431F /* tokyo.css */; };
+		084C24702D1FEA6C00AC431F /* atom.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C245E2D1FEA6C00AC431F /* atom.css */; };
+		084C24722D1FEAE000AC431F /* CodeBlockTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24712D1FEAE000AC431F /* CodeBlockTheme.swift */; };
+		084C24772D1FEAFD00AC431F /* SwiftMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24762D1FEAFD00AC431F /* SwiftMarkdownView.swift */; };
+		084C24782D1FEAFD00AC431F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24732D1FEAFD00AC431F /* Coordinator.swift */; };
+		084C24792D1FEAFD00AC431F /* CustomWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24742D1FEAFD00AC431F /* CustomWebView.swift */; };
+		084C247A2D1FEAFD00AC431F /* ResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24752D1FEAFD00AC431F /* ResourceLoader.swift */; };
 		084C74402C521A8A0015AE2F /* DismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C743F2C521A8A0015AE2F /* DismissButton.swift */; };
 		085276C02C98794C009184D2 /* ToolCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085276BF2C98794C009184D2 /* ToolCallView.swift */; };
 		085361052C491BF0007DAB62 /* ImageSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085361042C491BF0007DAB62 /* ImageSession.swift */; };
@@ -68,7 +83,6 @@
 		085C15EF2D1DEE02007245CD /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15EE2D1DEE02007245CD /* OpenAIService.swift */; };
 		085C15F12D1DF0BC007245CD /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15F02D1DF0BC007245CD /* APIRequest.swift */; };
 		085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */; };
-		086346AB2CE78078006E5927 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 086346AA2CE78078006E5927 /* SwiftMarkdownView */; };
 		0865E0962CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */; };
 		0868AC8B2D0B2C7900F8B8FE /* NativeMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */; };
 		086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */; };
@@ -122,7 +136,6 @@
 		08A77CC52C65A0B70087D0F3 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A77CC42C65A0B70087D0F3 /* AppearanceSettings.swift */; };
 		08A77CC92C65A3AD0087D0F3 /* SectionFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A77CC82C65A3AD0087D0F3 /* SectionFooterView.swift */; };
 		08A77CCC2C65AA820087D0F3 /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A77CCB2C65AA820087D0F3 /* DatabaseService.swift */; };
-		08A9E8CF2CF63EFF008AB187 /* CodeTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A9E8CE2CF63EFF008AB187 /* CodeTheme.swift */; };
 		08AAFB9A2C3D0017002C04E0 /* ListCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AAFB992C3D0017002C04E0 /* ListCard.swift */; };
 		08AAFB9C2C3D01A6002C04E0 /* ChatListCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AAFB9B2C3D01A6002C04E0 /* ChatListCards.swift */; };
 		08AC26112CF4F71500750269 /* ChatInputMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AC26102CF4F71500750269 /* ChatInputMenu.swift */; };
@@ -220,6 +233,22 @@
 		084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatServiceSettings.swift; sourceTree = "<group>"; };
 		084C24502D1FD9D000AC431F /* ModelGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelGroup.swift; sourceTree = "<group>"; };
 		084C24522D1FDA1F00AC431F /* ModelPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPicker.swift; sourceTree = "<group>"; };
+		084C24582D1FEA6C00AC431F /* default-iOS.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "default-iOS.css"; sourceTree = "<group>"; };
+		084C24592D1FEA6C00AC431F /* default-macOS.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "default-macOS.css"; sourceTree = "<group>"; };
+		084C245A2D1FEA6C00AC431F /* script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
+		084C245B2D1FEA6C00AC431F /* template.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = template.html; sourceTree = "<group>"; };
+		084C245D2D1FEA6C00AC431F /* a11y.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = a11y.css; sourceTree = "<group>"; };
+		084C245E2D1FEA6C00AC431F /* atom.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = atom.css; sourceTree = "<group>"; };
+		084C245F2D1FEA6C00AC431F /* github.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = github.css; sourceTree = "<group>"; };
+		084C24602D1FEA6C00AC431F /* panda.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = panda.css; sourceTree = "<group>"; };
+		084C24612D1FEA6C00AC431F /* paraiso.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = paraiso.css; sourceTree = "<group>"; };
+		084C24622D1FEA6C00AC431F /* stackoverflow.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = stackoverflow.css; sourceTree = "<group>"; };
+		084C24632D1FEA6C00AC431F /* tokyo.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = tokyo.css; sourceTree = "<group>"; };
+		084C24712D1FEAE000AC431F /* CodeBlockTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBlockTheme.swift; sourceTree = "<group>"; };
+		084C24732D1FEAFD00AC431F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		084C24742D1FEAFD00AC431F /* CustomWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebView.swift; sourceTree = "<group>"; };
+		084C24752D1FEAFD00AC431F /* ResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceLoader.swift; sourceTree = "<group>"; };
+		084C24762D1FEAFD00AC431F /* SwiftMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMarkdownView.swift; sourceTree = "<group>"; };
 		084C743F2C521A8A0015AE2F /* DismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissButton.swift; sourceTree = "<group>"; };
 		085276BF2C98794C009184D2 /* ToolCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCallView.swift; sourceTree = "<group>"; };
 		085361042C491BF0007DAB62 /* ImageSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSession.swift; sourceTree = "<group>"; };
@@ -291,7 +320,6 @@
 		08A77CC42C65A0B70087D0F3 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		08A77CC82C65A3AD0087D0F3 /* SectionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionFooterView.swift; sourceTree = "<group>"; };
 		08A77CCB2C65AA820087D0F3 /* DatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseService.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		08A9E8CE2CF63EFF008AB187 /* CodeTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTheme.swift; sourceTree = "<group>"; };
 		08AAFB992C3D0017002C04E0 /* ListCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCard.swift; sourceTree = "<group>"; };
 		08AAFB9B2C3D01A6002C04E0 /* ChatListCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCards.swift; sourceTree = "<group>"; };
 		08AC26102CF4F71500750269 /* ChatInputMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputMenu.swift; sourceTree = "<group>"; };
@@ -349,8 +377,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				082355152CDBBB2B00388273 /* SwiftMarkdownView in Frameworks */,
-				086346AB2CE78078006E5927 /* SwiftMarkdownView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +443,45 @@
 			path = ChatService;
 			sourceTree = "<group>";
 		};
+		084C24542D1FE9C000AC431F /* MarkdownWebView */ = {
+			isa = PBXGroup;
+			children = (
+				084C245C2D1FEA6C00AC431F /* Defaults */,
+				084C24642D1FEA6C00AC431F /* Themes */,
+				084C24732D1FEAFD00AC431F /* Coordinator.swift */,
+				084C24742D1FEAFD00AC431F /* CustomWebView.swift */,
+				084C24752D1FEAFD00AC431F /* ResourceLoader.swift */,
+				084C24762D1FEAFD00AC431F /* SwiftMarkdownView.swift */,
+				084C24712D1FEAE000AC431F /* CodeBlockTheme.swift */,
+			);
+			path = MarkdownWebView;
+			sourceTree = "<group>";
+		};
+		084C245C2D1FEA6C00AC431F /* Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				084C24582D1FEA6C00AC431F /* default-iOS.css */,
+				084C24592D1FEA6C00AC431F /* default-macOS.css */,
+				084C245A2D1FEA6C00AC431F /* script.js */,
+				084C245B2D1FEA6C00AC431F /* template.html */,
+			);
+			path = Defaults;
+			sourceTree = "<group>";
+		};
+		084C24642D1FEA6C00AC431F /* Themes */ = {
+			isa = PBXGroup;
+			children = (
+				084C245D2D1FEA6C00AC431F /* a11y.css */,
+				084C245E2D1FEA6C00AC431F /* atom.css */,
+				084C245F2D1FEA6C00AC431F /* github.css */,
+				084C24602D1FEA6C00AC431F /* panda.css */,
+				084C24612D1FEA6C00AC431F /* paraiso.css */,
+				084C24622D1FEA6C00AC431F /* stackoverflow.css */,
+				084C24632D1FEA6C00AC431F /* tokyo.css */,
+			);
+			path = Themes;
+			sourceTree = "<group>";
+		};
 		085361032C491BE5007DAB62 /* Image */ = {
 			isa = PBXGroup;
 			children = (
@@ -461,7 +526,6 @@
 		087F3F892CDDEF28001298B3 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				08A9E8CE2CF63EFF008AB187 /* CodeTheme.swift */,
 				0898253A2CEA31A300980468 /* MarkdownProvider.swift */,
 				08436F212CDE9182007A160F /* Acknowledgement.swift */,
 				087F3F912CDDF00C001298B3 /* SettingsVM.swift */,
@@ -474,7 +538,6 @@
 		08915D922C373332008ADE27 /* CustomUI */ = {
 			isa = PBXGroup;
 			children = (
-				08AC26142CF5553D00750269 /* Markdown */,
 				08AAFB912C3C88CA002C04E0 /* Buttons */,
 				0828E5452D157AF900DED52B /* AutoHeightTextView.swift */,
 				08B4F45F2CE3B87A004B3618 /* FullScreenBackgroundStyle.swift */,
@@ -485,6 +548,8 @@
 				0893B2012C3955CC00D4D501 /* CustomSearchField.swift */,
 				085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */,
 				082B88162CD36CD80092C4D0 /* PlatformSpecificGroupBoxStyle.swift */,
+				08CF5B882C68980B0079D5EE /* HighlightableTextView.swift */,
+				084C24522D1FDA1F00AC431F /* ModelPicker.swift */,
 			);
 			path = CustomUI;
 			sourceTree = "<group>";
@@ -595,7 +660,6 @@
 		08A222C22C2AC6A800D76C8B /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				084C24522D1FDA1F00AC431F /* ModelPicker.swift */,
 				089825212CE8F69600980468 /* OnboardingViews */,
 				085524E02C4ED29400CBB827 /* MenubarCommands */,
 				08C800512C36F79E009581C5 /* SettingsViews */,
@@ -607,6 +671,7 @@
 				0819479F2C48DCE50061227B /* ImageListViews */,
 				08915D922C373332008ADE27 /* CustomUI */,
 				08F3CA022C705B1600A800F9 /* Windows */,
+				08AC26142CF5553D00750269 /* Markdown */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -642,9 +707,9 @@
 		08AC26142CF5553D00750269 /* Markdown */ = {
 			isa = PBXGroup;
 			children = (
+				084C24542D1FE9C000AC431F /* MarkdownWebView */,
 				0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */,
 				08B8DE122C97F3550041A690 /* MDView.swift */,
-				08CF5B882C68980B0079D5EE /* HighlightableTextView.swift */,
 			);
 			path = Markdown;
 			sourceTree = "<group>";
@@ -818,8 +883,6 @@
 			);
 			name = LynkChat;
 			packageProductDependencies = (
-				082355142CDBBB2B00388273 /* SwiftMarkdownView */,
-				086346AA2CE78078006E5927 /* SwiftMarkdownView */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -850,7 +913,6 @@
 			);
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
-				086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -867,6 +929,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				08A222892C2AB4FE00D76C8B /* Assets.xcassets in Resources */,
+				084C24662D1FEA6C00AC431F /* default-macOS.css in Resources */,
+				084C24672D1FEA6C00AC431F /* a11y.css in Resources */,
+				084C24682D1FEA6C00AC431F /* template.html in Resources */,
+				084C24692D1FEA6C00AC431F /* default-iOS.css in Resources */,
+				084C246A2D1FEA6C00AC431F /* panda.css in Resources */,
+				084C246B2D1FEA6C00AC431F /* paraiso.css in Resources */,
+				084C246C2D1FEA6C00AC431F /* stackoverflow.css in Resources */,
+				084C246D2D1FEA6C00AC431F /* github.css in Resources */,
+				084C246E2D1FEA6C00AC431F /* script.js in Resources */,
+				084C246F2D1FEA6C00AC431F /* tokyo.css in Resources */,
+				084C24702D1FEA6C00AC431F /* atom.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -902,6 +975,7 @@
 				08CA42B62CF1F13B0073BB01 /* ExpandButton.swift in Sources */,
 				08CA42BA2CF1F18D0073BB01 /* ForkButton.swift in Sources */,
 				08CA42BE2CF1F3C00073BB01 /* SelectTextButton.swift in Sources */,
+				084C24722D1FEAE000AC431F /* CodeBlockTheme.swift in Sources */,
 				084C244D2D1FBB9500AC431F /* ModelImage.swift in Sources */,
 				0893B2062C39810900D4D501 /* ChatConfig.swift in Sources */,
 				0898252F2CE9C0F200980468 /* PageDots.swift in Sources */,
@@ -917,6 +991,10 @@
 				08B5D7B82C77A64000D1F100 /* ChatWindow.swift in Sources */,
 				085361072C492282007DAB62 /* Generation.swift in Sources */,
 				08CA42C62CF1F3FE0073BB01 /* NavigationButtons.swift in Sources */,
+				084C24772D1FEAFD00AC431F /* SwiftMarkdownView.swift in Sources */,
+				084C24782D1FEAFD00AC431F /* Coordinator.swift in Sources */,
+				084C24792D1FEAFD00AC431F /* CustomWebView.swift in Sources */,
+				084C247A2D1FEAFD00AC431F /* ResourceLoader.swift in Sources */,
 				08CA42B82CF1F1530073BB01 /* EditButton.swift in Sources */,
 				08C800502C36F667009581C5 /* Provider.swift in Sources */,
 				085361092C4923E2007DAB62 /* ImageConfig.swift in Sources */,
@@ -1000,7 +1078,6 @@
 				085361052C491BF0007DAB62 /* ImageSession.swift in Sources */,
 				08F815342C97F64E00B49355 /* BasicInspector.swift in Sources */,
 				08A222832C2AB4FD00D76C8B /* LynkChatApp.swift in Sources */,
-				08A9E8CF2CF63EFF008AB187 /* CodeTheme.swift in Sources */,
 				089C7E122C405904005E3BE9 /* QuickPanelView.swift in Sources */,
 				08C8003A2C36BA30009581C5 /* InputArea.swift in Sources */,
 				08B8DE212C97F3E10041A690 /* ChatConfigDefaults.swift in Sources */,
@@ -1282,29 +1359,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SilverMarcs/SwiftMarkdownView";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		082355142CDBBB2B00388273 /* SwiftMarkdownView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SwiftMarkdownView;
-		};
-		086346AA2CE78078006E5927 /* SwiftMarkdownView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 086346A92CE78078006E5927 /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */;
-			productName = SwiftMarkdownView;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 08A222772C2AB4FD00D76C8B /* Project object */;
 }

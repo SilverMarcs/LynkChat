@@ -48,8 +48,8 @@ struct AppearanceSettings: View {
                 
                 if config.markdownProvider == .webview {
                     Picker(selection: $config.codeBlockTheme) {
-                        ForEach(CodeTheme.allCases, id: \.self) { theme in
-                            Text(theme.rawValue)
+                        ForEach(CodeBlockTheme.allCases, id: \.self) { theme in
+                            Text(theme.name)
                                 .tag(theme)
                         }
                     } label: {

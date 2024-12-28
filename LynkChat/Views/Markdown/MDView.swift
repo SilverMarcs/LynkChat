@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import SwiftMarkdownView
-//import MarkdownView
 
 struct MDView: View {
     @Environment(\.searchText) private var searchText
@@ -48,7 +46,7 @@ struct MDView: View {
                 fontSize: CGFloat(config.fontSize),
                 highlightString: searchText,
                 baseURL: "LynkChat Web Content",
-                codeBlockTheme: config.codeBlockTheme.toCodeBlockTheme()
+                codeBlockTheme: config.codeBlockTheme
             )
         }
     }
