@@ -12,6 +12,8 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     case claude3_5haiku
     case gpt4o
     case gpt4omini
+    case gemini2Flash
+    case deepseek
     
     var id: String {
         switch self {
@@ -19,6 +21,8 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .claude3_5haiku: "us.anthropic.claude-3-5-haiku-20241022-v1:0"
         case .gpt4o: "gpt-4o"
         case .gpt4omini: "gpt-4o-mini"
+        case .gemini2Flash: "gemini-2.0-flash-exp"
+        case .deepseek: "deepseek-chat"
         }
     }
     
@@ -28,33 +32,39 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .claude3_5haiku: "Claude-3.5H"
         case .gpt4o: "GPT-4o"
         case .gpt4omini: "GPT-4om"
+        case .gemini2Flash: "Gemini-2F"
+        case .deepseek: "DeepSeek-3"
         }
     }
-    
+
     var imageName: String {
         switch self {
             case .claude3_5sonnet, .claude3_5haiku: "anthropic.SFSymbol"
             case .gpt4o, .gpt4omini: "openai.SFSymbol"
+            case .gemini2Flash: "google.SFSymbol"
+            case .deepseek: "deepseek.SFSymbol"
         }
     }
-    
+
     var color: String {
         switch self {
         case .claude3_5sonnet, .claude3_5haiku: "#E6784B"
         case .gpt4o, .gpt4omini: "#00947A"
+        case .gemini2Flash: "#4285F4"
+        case .deepseek: "#2D3142"
         }
     }
-    
-    var isEnabled: Bool {
-        ModelConfig.shared.isEnabled(self)
-    }
-    
+
     var group: ModelGroup {
         switch self {
         case .claude3_5sonnet, .claude3_5haiku:
             return .anthropic
         case .gpt4o, .gpt4omini:
             return .openAI
+        case .gemini2Flash:
+            return .google
+        case .deepseek:
+            return .deepseek
         }
     }
     

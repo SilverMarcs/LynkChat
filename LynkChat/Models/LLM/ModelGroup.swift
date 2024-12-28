@@ -10,6 +10,8 @@ import Foundation
 enum ModelGroup: String, Identifiable {
     case anthropic
     case openAI
+    case google
+    case deepseek
     
     var id: String { self.rawValue }
     
@@ -17,6 +19,8 @@ enum ModelGroup: String, Identifiable {
         switch self {
         case .anthropic: "Anthropic"
         case .openAI: "OpenAI"
+        case .google: "Google"
+        case .deepseek: "Deepseek"
         }
     }
 }
