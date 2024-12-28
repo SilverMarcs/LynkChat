@@ -20,9 +20,10 @@ struct ModelPicker: View {
         Picker("Model", selection: $selectedModel) {
             ForEach(Array(enabledModels.keys), id: \.self) { group in
                 if let models = enabledModels[group], !models.isEmpty {
-                    Section(header: Text(group.displayName)) {
+                    Section {
                         ForEach(models) { model in
-                            Text(model.name)
+                            Label(model.name, image: model.imageName)
+                                .labelStyle(.titleAndIcon)
                                 .tag(model)
                         }
                     }
