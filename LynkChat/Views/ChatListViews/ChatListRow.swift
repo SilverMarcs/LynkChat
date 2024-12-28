@@ -56,7 +56,7 @@ struct ChatListRow: View {
     
     var row: some View {
         HStack {
-            ProviderImage(radius: 8, frame: imageSize, scale: .medium)
+            ListRowImage(model: chat.config.model)
 //                .symbolEffect(.bounce, options: .speed(0.5), isActive: chat.isReplying)
             
             HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
@@ -78,14 +78,6 @@ struct ChatListRow: View {
         }
         .padding(padding)
 //        defaultMinListRowHeight()
-    }
-    
-    var imageSize: CGFloat {
-        #if os(macOS)
-        return 23
-        #else
-        return 26
-        #endif
     }
     
     var font: Font {

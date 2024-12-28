@@ -39,10 +39,10 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
 
     var imageName: String {
         switch self {
-            case .claude3_5sonnet, .claude3_5haiku: "anthropic.SFSymbol"
-            case .gpt4o, .gpt4omini: "openai.SFSymbol"
-            case .gemini2Flash: "google.SFSymbol"
-            case .deepseek: "deepseek.SFSymbol"
+            case .claude3_5sonnet, .claude3_5haiku: "claude.symbols"
+            case .gpt4o, .gpt4omini: "openai.symbols"
+            case .gemini2Flash: "gemini.symbols"
+            case .deepseek: "deepseek.symbols"
         }
     }
 
@@ -67,6 +67,10 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
             return .deepseek
         }
     }
+    
+//    var supportsImage: Bool {
+//    var supportsPlugin: Bool {
+//    var costPerMillionTokens: Double {
     
     static func groupedModels() -> [ModelGroup: [ChatModel]] {
         Dictionary(grouping: ChatModel.allCases) { $0.group }

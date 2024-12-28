@@ -15,7 +15,7 @@ struct ImageRow: View {
     
     var body: some View {
         HStack {
-            ProviderImage(radius: 8, frame: 23, scale: .medium)
+            ListRowImage(model: session.config.model)
             
             HighlightableTextView(session.title, highlightedText: imageSearchText)
                 .lineLimit(1)
