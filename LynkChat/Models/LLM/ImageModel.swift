@@ -30,8 +30,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
 
     var imageName: String {
         switch self {
-            case .flux_schnell: "together.SFSymbol"
-            case .dall_e_2, .dall_e_3: "openai.SFSymbol"
+            case .flux_schnell: "flux.symbols"
+            case .dall_e_2, .dall_e_3: "openai.symbols"
         }
     }
 
