@@ -17,11 +17,11 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     
     var id: String {
         switch self {
-        case .claude3_5sonnet: "us.anthropic.claude-3-5-sonnet-20241022-v2:0"
-        case .claude3_5haiku: "us.anthropic.claude-3-5-haiku-20241022-v1:0"
+        case .claude3_5sonnet: "claude-3-5-sonnet"
+        case .claude3_5haiku: "claude-3-5-haiku"
         case .gpt4o: "gpt-4o"
         case .gpt4omini: "gpt-4o-mini"
-        case .gemini2Flash: "gemini-2.0-flash-exp"
+        case .gemini2Flash: "gemini-2-flash"
         case .deepseek: "deepseek-chat"
         }
     }
