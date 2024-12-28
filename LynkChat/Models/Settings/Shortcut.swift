@@ -17,10 +17,10 @@ struct Shortcut: Identifiable {
         Shortcut(key: "⌘ + Return", action: "Send Prompt"),
         Shortcut(key: "⌘ + V", action: "Paste File from Clipboard"),
         Shortcut(key: "⌘ + L", action: "Focus Inputbox"),
-        Shortcut(key: "⌘ + R", action: "Regenerate Last Response"),
+        Shortcut(key: "⌘ + R", action: "Regenerate Last Message"),
         Shortcut(key: "⌘ + E", action: "Edit Last Prompt"),
         Shortcut(key: "⌘ + K", action: "Rest Context"),
-        Shortcut(key: "⌘ + D", action: "Delete Last Prompt/Response"),
+        Shortcut(key: "⌘ + D", action: "Delete Last Message"),
     ]
         
     static let fontSizeShortcuts = [

@@ -11,8 +11,8 @@ struct ModelImage: View {
     // TODO: simplify this
     var model: ModelImageProvider
     
-    var radius: CGFloat = 7
-    var frame: CGFloat = 22
+    var radius: CGFloat = 5
+    var frame: CGFloat = 15
     
     
     var body: some View {
@@ -22,7 +22,11 @@ struct ModelImage: View {
                 .frame(width: frame, height: frame)
 
             Image(model.imageName)
-                .imageScale(.medium)
+                .imageScale(.small)
         }
     }
+}
+
+#Preview {
+    ModelImage(model: ChatModel.gpt4o)
 }

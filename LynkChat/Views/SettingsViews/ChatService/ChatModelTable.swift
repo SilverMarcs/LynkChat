@@ -14,11 +14,21 @@ struct ChatModelTable: View {
     var body: some View {
         Form {
             Table(ChatModel.allCases, selection: $selection) {
-                TableColumn("Model", value: \.name)
-                TableColumn("Enabled") { model in
-                    Toggle("", isOn: modelConfig.binding(for: model))
+                TableColumn("On") { model in
+                    Toggle("Show", isOn: modelConfig.binding(for: model))
                         .labelsHidden()
                 }
+                .width(30)
+                .alignment(.center)
+                
+                TableColumn("Model") { model in
+                    HStack {
+                        ModelImage(model: model)
+                        Text(model.name)
+                    }
+                }
+                
+
             }
         }
         .formStyle(.grouped)

@@ -24,3 +24,4 @@ struct ImageModelList: View {
         .toolbarTitleDisplayMode(.inline)
     }
 }
+

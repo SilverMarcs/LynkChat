@@ -50,8 +50,8 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         switch self {
         case .claude3_5sonnet, .claude3_5haiku: "#E6784B"
         case .gpt4o, .gpt4omini: "#00947A"
-        case .gemini2Flash: "#4285F4"
-        case .deepseek: "#2D3142"
+        case .gemini2Flash: "#E64335"
+        case .deepseek: "#4F65E9"
         }
     }
 
