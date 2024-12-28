@@ -12,13 +12,8 @@ struct Shortcut: Identifiable {
     let key: String
     let action: String
     
-    static let chatNavigationShortcuts = [
-        Shortcut(key: "⌘ + N", action: "New Chat"),
-        Shortcut(key: "⌘ + ]", action: "Next Chat"),
-        Shortcut(key: "⌘ + [", action: "Previous Chat"),
-    ]
-        
     static let chatInteractionShortcuts = [
+        Shortcut(key: "⌘ + N", action: "New Chat"),
         Shortcut(key: "⌘ + Return", action: "Send Prompt"),
         Shortcut(key: "⌘ + V", action: "Paste File from Clipboard"),
         Shortcut(key: "⌘ + L", action: "Focus Inputbox"),
@@ -26,7 +21,6 @@ struct Shortcut: Identifiable {
         Shortcut(key: "⌘ + E", action: "Edit Last Prompt"),
         Shortcut(key: "⌘ + K", action: "Rest Context"),
         Shortcut(key: "⌘ + D", action: "Delete Last Prompt/Response"),
-    
     ]
         
     static let fontSizeShortcuts = [

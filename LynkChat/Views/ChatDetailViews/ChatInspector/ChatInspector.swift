@@ -11,9 +11,7 @@ import TipKit
 struct ChatInspector: View {
     @Environment(\.dismiss) var dismiss
     var chat: Chat
-    
-    @State private var selectedTab: InspectorTab = .basic
-    
+
     var body: some View {
         #if os(macOS)
         macos

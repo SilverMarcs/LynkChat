@@ -16,12 +16,6 @@ struct ShortcutSettings: View {
             } label: {
                 Text("Quick Panel Shortcut")
             }
-            
-            Section("Chat Navigation") {
-                ForEach(Shortcut.chatNavigationShortcuts, id: \.id) { shortcut in
-                    ShortcutRow(shortcut: shortcut)
-                }
-            }
 
             Section("Chat Interaction") {
                 ForEach(Shortcut.chatInteractionShortcuts, id: \.id) { shortcut in

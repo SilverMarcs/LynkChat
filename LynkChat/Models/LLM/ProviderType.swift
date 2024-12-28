@@ -32,12 +32,12 @@ enum ProviderType: String, Codable, CaseIterable, Identifiable {
 
     var id: ProviderType { self }
 
-    var scheme: HTTPScheme {
-        switch self {
-        case .ollama, .lmstudio: .http
-        default: .https
-        }
-    }
+//    var scheme: HTTPScheme {
+//        switch self {
+//        case .ollama, .lmstudio: .http
+//        default: .https
+//        }
+//    }
     
     var name: String {
         switch self {

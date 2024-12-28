@@ -21,10 +21,3 @@ struct APIRequest: Encodable {
         self.stream = stream
     }
 }
-
-struct APIProvider: Encodable {
-    let name: String
-    let baseUrl: String
-    let apiKey: String
-    let scheme: HTTPScheme
-}

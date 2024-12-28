@@ -12,6 +12,6 @@ struct ImageWindow: Scene {
         Window("Images", id: WindowID.images) {
             ImageContentView()
         }
-        .defaultSize(.init(width: 1200, height: 900))
+        .defaultSize(.init(width: 1100, height: 800))
     }
 }

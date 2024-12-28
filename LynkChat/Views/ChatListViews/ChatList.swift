@@ -23,7 +23,7 @@ struct ChatList: View {
         @Bindable var chatVM = chatVM
 
         List(selection: $chatVM.selections) {
-            ChatListCards(source: .chatlist, chatCount: String(chats.count), imageSessionsCount: "↗")
+            ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
             
             TipView(SwipeActionTip())
                 .tipCornerRadius(8)
@@ -108,20 +108,6 @@ struct ChatList: View {
         
         #if os(macOS)
         ToolbarItem(placement: .keyboard) {
-            Button(action: { chatVM.goToPreviousChat(chats: chats) }) {
-                Image(systemName: "chevron.left")
-            }
-            .keyboardShortcut("[", modifiers: [.command, .shift])
-        }
-        
-        ToolbarItem(placement: .keyboard) {
-            Button(action: { chatVM.goToNextChat(chats: chats) }) {
-                Image(systemName: "chevron.right")
-            }
-            .keyboardShortcut("]", modifiers: [.command, .shift])
-        }
-
-        ToolbarItem(placement: .keyboard) {
             Button(action: {
                 // Get the indices of the selected chats
                 let indices = chatVM.selections.compactMap { chat in
@@ -143,7 +129,7 @@ struct ChatList: View {
             Button {
                 chatVM.createNewChat()
             } label: {
-                Label("Long Tap", systemImage: "square.and.pencil")
+                Label("New Chat", systemImage: "square.and.pencil")
             }
         }
     }
