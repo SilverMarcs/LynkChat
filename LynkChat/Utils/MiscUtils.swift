@@ -197,6 +197,7 @@ extension View {
 extension EnvironmentValues {
     @Entry var isReplying = false
     @Entry var searchText = ""
+    @Entry var chat: Chat = .mockChat // TODO: must make sure this is not used
 }
 
 // MARK: - Window Aliases

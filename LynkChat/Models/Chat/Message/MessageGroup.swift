@@ -13,8 +13,6 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     var id: UUID = UUID()
     var date: Date = Date()
     
-    var chat: Chat?
-    
     @Relationship(deleteRule: .cascade)
     var rootMessage: Message?
     
@@ -38,9 +36,6 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     func addMessage(_ message: Message) {
-        #warning("find a way to make this not have optional chat reference")
-        message.model = chat?.config.model ?? ModelConfig.shared.defaultModel
-        
         if message.role == .assistant {
             message.isReplying = true
         }
@@ -121,7 +116,7 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     private func scrollToActiveMessage() {
-        guard let chat = chat, chat.currentThread.last == self else { return }
+        // TODO: add the aboev check etxernally
         let anchor: UnitPoint = role == .assistant ? .bottom : .top
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             Scroller.scroll(to: anchor, of: self)

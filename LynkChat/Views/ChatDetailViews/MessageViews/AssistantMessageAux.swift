@@ -8,29 +8,29 @@
 import SwiftUI
 
 struct AssistantMessageAux: View {
-    var message: MessageGroup
+    var group: MessageGroup
     
     var body: some View {
         #if os(macOS)
-        if message.isSplitView {
+        if group.isSplitView {
             HStack {
-                AssistantMessage(message: message.activeMessage, group: message)
+                AssistantMessage(message: group.activeMessage, group: group)
                 
                 Divider()
                     
-                AssistantMessage(message: message.secondaryMessages[message.secondaryMessageIndex],
-                                        group: message, showMenu: false)
+                AssistantMessage(message: group.secondaryMessages[group.secondaryMessageIndex],
+                                        group: group, showMenu: false)
             }
         } else {
-            AssistantMessage(message: message.activeMessage, group: message)
+            AssistantMessage(message: group.activeMessage, group: group)
         }
         #else
-        AssistantMessage(message: message.activeMessage, group: message)
+        AssistantMessage(message: group.activeMessage, group: group)
         #endif
     }
 }
 
 #Preview {
-    AssistantMessageAux(message: .mockAssistantGroup)
+    AssistantMessageAux(group: .mockAssistantGroup)
         .frame(width: 500, height: 300)
 }

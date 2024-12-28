@@ -110,7 +110,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         let newAssistantMessage = Message(role: .assistant, model: config.model, isReplying: true)
         let newAssistantGroup = MessageGroup(message: newAssistantMessage)
-        newAssistantGroup.chat = self
         
         newUserMessage.next = newAssistantGroup
          
@@ -131,7 +130,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         } else {
             let userMessage = Message(role: .user, content: inputManager.prompt, model: config.model, dataFiles: inputManager.dataFiles)
             let userGroup = MessageGroup(message: userMessage)
-            userGroup.chat = self
             
             if rootMessage == nil {
                 rootMessage = userGroup
@@ -142,7 +140,6 @@ final class Chat: Equatable, Identifiable, Hashable {
             
             let assistantMessage = Message(role: .assistant, model: config.model, isReplying: true)
             let assistantGroup = MessageGroup(message: assistantMessage)
-            assistantGroup.chat = self
             userGroup.activeMessage.next = assistantGroup
              
             await processRequest(message: assistantMessage)
@@ -175,7 +172,6 @@ final class Chat: Equatable, Identifiable, Hashable {
             } else {
                 let assistantMessage = Message(role: .assistant, model: config.model, isReplying: true)
                 let assistantGroup = MessageGroup(message: assistantMessage)
-                assistantGroup.chat = self
                 message.activeMessage.next = assistantGroup
                 
                 await processRequest(message: assistantMessage)
@@ -237,13 +233,10 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         if currentThread.count == 1 {
-            let temp = rootMessage
             rootMessage = nil
-            temp?.chat = nil
         } else {
             let secondToLastGroup = currentThread[currentThread.count - 2]
             secondToLastGroup.activeMessage.next = nil
-            lastGroup.chat = nil
         }
         
         Scroller.scrollToBottom()
@@ -308,7 +301,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         var previousGroup: MessageGroup?
         for group in threadToCopy {
             let copiedGroup = group.copy()
-            copiedGroup.chat = newChat
             
             if let previousGroup = previousGroup {
                 previousGroup.activeMessage.next = copiedGroup

@@ -24,7 +24,7 @@ final class Message: Equatable, Identifiable, Hashable {
     @Attribute(.ephemeral)
     var isReplying: Bool = false
     
-    var height: CGFloat = 0
+    var height: CGFloat
     
     @Relationship(deleteRule: .cascade)
     var next: MessageGroup?
@@ -32,12 +32,13 @@ final class Message: Equatable, Identifiable, Hashable {
     // TODO: typed init functions for diff roles
     
     // TOOD: maybe shud pass heigjt
-    init(role: MessageRole, content: String = "", model: ChatModel, dataFiles: [TypedData] = [], isReplying: Bool = false) {
+    init(role: MessageRole, content: String = "", model: ChatModel, dataFiles: [TypedData] = [], isReplying: Bool = false, height: CGFloat = 0) {
         self.role = role
         self.content = content
         self.model = model
         self.dataFiles = dataFiles
         self.isReplying = isReplying
+        self.height = height
     }
 
     func copy() -> Message {
@@ -46,7 +47,8 @@ final class Message: Equatable, Identifiable, Hashable {
             content: content,
             model: model,
             dataFiles: dataFiles,
-            isReplying: isReplying
+            isReplying: isReplying,
+            height: height
         )
     }
 }

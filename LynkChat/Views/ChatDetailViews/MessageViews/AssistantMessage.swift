@@ -11,7 +11,6 @@ struct AssistantMessage: View {
     @Environment(ChatVM.self) var chatVM
     
     @ObservedObject var config = AppConfig.shared
-    
     var message: Message
     var group: MessageGroup
     var showMenu: Bool = true
@@ -73,7 +72,7 @@ struct AssistantMessage: View {
             TextSelectionView(content: message.content)
         }
         .contextMenu {
-            MessageMenu(message: group) {
+            MessageMenu(group: group) {
                 showingTextSelection.toggle()
             }
         }

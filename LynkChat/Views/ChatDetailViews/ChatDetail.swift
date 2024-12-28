@@ -110,10 +110,11 @@ struct ChatDetail: View {
             EmptyChat(chat: chat)
         } else {
             List {
-                ForEach(messagesToShow, id: \.self) { message in
-                    MessageView(message: message)
+                ForEach(messagesToShow, id: \.self) { group in
+                    MessageView(group: group)
+                        .environment(chat)
                         .onAppear {
-                            if message == messagesToShow.first {
+                            if group == messagesToShow.first {
                                 loadMoreMessages()
                             }
                         }

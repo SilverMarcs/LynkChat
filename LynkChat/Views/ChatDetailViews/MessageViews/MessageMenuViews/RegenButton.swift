@@ -9,12 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct RegenButton: View {
-    var group: MessageGroup
+    var regen: () async -> Void
     
     var body: some View {
         Button {
             Task {
-                await group.chat?.regenerate(message: group)
+                await regen()
             }
         } label: {
             Label("Regenerate", systemImage: "arrow.2.circlepath")

@@ -12,17 +12,35 @@ struct MessageGroupList: View {
     @Environment(ChatVM.self) var chatVM
     
     @Query var messageGroups: [MessageGroup]
+    @Query var chats: [Chat]
     
     var searchText: String
     @State private var selectedGroupID: MessageGroup.ID?
     
-    var body: some View {
-        let groupedMessageGroups = Dictionary(grouping: messageGroups.filter { $0.chat != nil }) { $0.chat! }
+    private var matchedGroupsByChat: [Chat: [MessageGroup]] {
+        guard !searchText.isEmpty else { return [:] }
         
-        return List {
-            ForEach(groupedMessageGroups.keys.sorted(by: { $0.date > $1.date }), id: \.self) { chat in
+        var result: [Chat: [MessageGroup]] = [:]
+        
+        for chat in chats {
+            // Filter message groups from chat.currentThread that match the search text
+            let matchingGroups = chat.currentThread.filter { group in
+                group.activeMessage.content.localizedStandardContains(searchText)
+            }
+            
+            if !matchingGroups.isEmpty {
+                result[chat] = matchingGroups
+            }
+        }
+        
+        return result
+    }
+    
+    var body: some View {
+        List {
+            ForEach(matchedGroupsByChat.keys.sorted(by: { $0.date > $1.date }), id: \.self) { chat in
                 Section {
-                    ForEach(groupedMessageGroups[chat]?.sorted(by: { $0.date < $1.date }) ?? []) { group in
+                    ForEach(matchedGroupsByChat[chat]?.sorted(by: { $0.date < $1.date }) ?? []) { group in
                         Button {
                             let delay = chatVM.activeChat == chat ? 0 : 0.2
                             
@@ -40,7 +58,6 @@ struct MessageGroupList: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .opacity(0.8)
                                 .contentShape(Rectangle())
-                            
                         }
                         .padding(.horizontal, -4)
                         .buttonStyle(SelectedButtonStyle(isSelected: Binding(
@@ -60,10 +77,6 @@ struct MessageGroupList: View {
     
     init(searchText: String) {
         self.searchText = searchText
-        let predicate = #Predicate<MessageGroup> { group in
-            group.chat != nil && group.activeMessage.content.localizedStandardContains(searchText)
-        }
-        _messageGroups = Query(filter: predicate)
     }
     
     private func getContextAroundMatch(content: String, searchText: String) -> String {

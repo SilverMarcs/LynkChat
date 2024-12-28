@@ -8,22 +8,25 @@
 import SwiftUI
 
 struct MessageMenu: View {
-    @Bindable var message: MessageGroup
+    @Environment(\.chat) var chat
+    @Bindable var group: MessageGroup
     var toggleTextSelection: (() -> Void)? = nil
 
     var body: some View {
         Section {
-            if !message.isSplitView {
-                 RegenButton(group: message)
+            if !group.isSplitView {
+                RegenButton {
+                    await chat.regenerate(message: group)
+                }
             }
             
-            if message.role == .user {
-                EditButton(setupEditing: { message.chat?.inputManager.setupEditing(message: message) })
+            if group.role == .user {
+                EditButton(setupEditing: { chat.inputManager.setupEditing(message: group) })
             }
         }
         
         Section {
-            CopyButton(content: message.content, dataFiles: message.dataFiles)
+            CopyButton(content: group.content, dataFiles: group.dataFiles)
         }
 
         Section {
@@ -33,16 +36,16 @@ struct MessageMenu: View {
             }
             #endif
             
-            ForkButton(copyChat: { await message.chat?.copy(from: message.activeMessage) })
+            ForkButton(copyChat: { await chat.copy(from: group.activeMessage) })
         }
         
         Section {
-            ResetContextButton(resetContext: { message.chat?.resetContext(at: message) })
+            ResetContextButton(resetContext: { chat.resetContext(at: group) })
             
-            if message.chat?.currentThread.last == message {
+            if chat.currentThread.last == group {
                 DeleteButton(deleteLastMessage: {
-                    message.chat?.deleteLastMessage()
-                    message.chat?.errorMessage = ""
+                    chat.deleteLastMessage()
+                    chat.errorMessage = ""
                 })
             }
         }
@@ -51,8 +54,8 @@ struct MessageMenu: View {
 
 #Preview {
     VStack {
-        MessageMenu(message: .mockUserGroup)
-        MessageMenu(message: .mockAssistantGroup)
+        MessageMenu(group: .mockUserGroup)
+        MessageMenu(group: .mockAssistantGroup)
     }
     .frame(width: 500)
     .padding()

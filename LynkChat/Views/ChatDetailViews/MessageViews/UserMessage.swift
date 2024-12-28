@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct UserMessage: View {
+    @Environment(\.chat) var chat
     @Environment(\.colorScheme) var colorScheme
     @Environment(ChatVM.self) private var chatVM
+    
     @ObservedObject var config = AppConfig.shared
     
-    var message: MessageGroup
+    var group: MessageGroup
 
     @State var isExpanded: Bool = false
     @State var showingTextSelection = false
@@ -20,8 +22,8 @@ struct UserMessage: View {
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
-            if !message.dataFiles.isEmpty {
-                DataFilesView(dataFiles: message.dataFiles)
+            if !group.dataFiles.isEmpty {
+                DataFilesView(dataFiles: group.dataFiles)
             }
             
             GroupBox {
@@ -48,7 +50,7 @@ struct UserMessage: View {
                         Button {
                             isExpanded.toggle()
                             if !isExpanded {
-                                Scroller.scroll(to: .top, of: message)
+                                Scroller.scroll(to: .top, of: group)
                             }
                         } label: {
                             Text(isExpanded ? "Less" : "More")
@@ -63,7 +65,7 @@ struct UserMessage: View {
             }
             .transaction { $0.animation = nil }
             .groupBoxStyle(PlatformGroupBoxStyle())
-            .if(message.chat?.inputManager.editingMessage == self.message.activeMessage) {
+            .if(chat.inputManager.editingMessage == self.group.activeMessage) {
                 $0.background(
                     RoundedRectangle(cornerRadius: 5)
                         .fill(Color.accentColor.opacity(0.2))
@@ -71,18 +73,18 @@ struct UserMessage: View {
             }
             
             #if os(macOS)
-            if message.allMessages.count > 1 {
-                NavigationButtons(message: message)
+            if group.allMessages.count > 1 {
+                NavigationButtons(message: group)
             }
             #endif
         }
         .padding(.leading, leadingPadding)
         .frame(maxWidth: .infinity, alignment: .trailing)
         .sheet(isPresented: $showingTextSelection) {
-            TextSelectionView(content: message.content)
+            TextSelectionView(content: group.content)
         }
         .contextMenu {
-            MessageMenu(message: message) {
+            MessageMenu(group: group) {
                 showingTextSelection.toggle()
             }
         }
@@ -99,18 +101,18 @@ struct UserMessage: View {
     private var displayedText: String {
         let maxCharacters = 400
         if isExpanded || !chatVM.searchText.isEmpty {
-            return message.content
+            return group.content
         } else {
-            return String(message.content.prefix(maxCharacters))
+            return String(group.content.prefix(maxCharacters))
         }
     }
 
     private var shouldShowMoreButton: Bool {
-        message.content.count > 400 && chatVM.searchText.isEmpty
+        group.content.count > 400 && chatVM.searchText.isEmpty
     }
 }
 
 #Preview {
-    UserMessage(message: .mockUserGroup)
+    UserMessage(group: .mockUserGroup)
         .frame(width: 500, height: 300)
 }

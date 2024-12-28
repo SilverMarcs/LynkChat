@@ -23,6 +23,7 @@ struct NavigationButtons: View {
                 
                 if !message.isSplitView {
                     Button {
+                        // TODO: go inside and chekc the condition and do that here
                         message.goToPreviousMessage()
                     } label: {
                         Label("Previous", systemImage: "chevron.left")
