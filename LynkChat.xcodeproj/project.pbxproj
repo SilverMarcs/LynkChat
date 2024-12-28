@@ -51,7 +51,6 @@
 		084C244D2D1FBB9500AC431F /* ModelImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244C2D1FBB9500AC431F /* ModelImage.swift */; };
 		084C244F2D1FBBE000AC431F /* ChatServiceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */; };
 		084C74402C521A8A0015AE2F /* DismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C743F2C521A8A0015AE2F /* DismissButton.swift */; };
-		0850374B2CF4D0AA00810CBC /* InputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0850374A2CF4D0AA00810CBC /* InputState.swift */; };
 		085276C02C98794C009184D2 /* ToolCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085276BF2C98794C009184D2 /* ToolCallView.swift */; };
 		085361052C491BF0007DAB62 /* ImageSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085361042C491BF0007DAB62 /* ImageSession.swift */; };
 		085361072C492282007DAB62 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085361062C49225E007DAB62 /* Generation.swift */; };
@@ -70,7 +69,6 @@
 		086346AB2CE78078006E5927 /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 086346AA2CE78078006E5927 /* SwiftMarkdownView */; };
 		0865E0962CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */; };
 		0868AC8B2D0B2C7900F8B8FE /* NativeMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */; };
-		0869A3EB2C958A4C009BF9F2 /* ChatConfigTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0869A3EA2C958A4C009BF9F2 /* ChatConfigTools.swift */; };
 		086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */; };
 		086E620C2C39BC4500AB4110 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */; };
 		087906872CA6C73100E5DCAD /* ImageWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087906862CA6C73100E5DCAD /* ImageWindow.swift */; platformFilters = (macos, ); };
@@ -219,7 +217,6 @@
 		084C244C2D1FBB9500AC431F /* ModelImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImage.swift; sourceTree = "<group>"; };
 		084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatServiceSettings.swift; sourceTree = "<group>"; };
 		084C743F2C521A8A0015AE2F /* DismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissButton.swift; sourceTree = "<group>"; };
-		0850374A2CF4D0AA00810CBC /* InputState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputState.swift; sourceTree = "<group>"; };
 		085276BF2C98794C009184D2 /* ToolCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCallView.swift; sourceTree = "<group>"; };
 		085361042C491BF0007DAB62 /* ImageSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSession.swift; sourceTree = "<group>"; };
 		085361062C49225E007DAB62 /* Generation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generation.swift; sourceTree = "<group>"; };
@@ -237,7 +234,6 @@
 		085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerStepper.swift; sourceTree = "<group>"; };
 		0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryBorderedButtonStyle.swift; sourceTree = "<group>"; };
 		0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMarkdownView.swift; sourceTree = "<group>"; };
-		0869A3EA2C958A4C009BF9F2 /* ChatConfigTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatConfigTools.swift; sourceTree = "<group>"; };
 		086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryNavigationButtons.swift; sourceTree = "<group>"; };
 		086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessageView.swift; sourceTree = "<group>"; };
 		087906862CA6C73100E5DCAD /* ImageWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageWindow.swift; sourceTree = "<group>"; };
@@ -572,9 +568,7 @@
 				08A222BF2C2ABE4300D76C8B /* Message */,
 				08A222862C2AB4FD00D76C8B /* Chat.swift */,
 				0893B2052C39810900D4D501 /* ChatConfig.swift */,
-				0869A3EA2C958A4C009BF9F2 /* ChatConfigTools.swift */,
 				08A222BD2C2ABDAF00D76C8B /* InputManager.swift */,
-				0850374A2CF4D0AA00810CBC /* InputState.swift */,
 				08C800422C36C045009581C5 /* ChatVM.swift */,
 				085645432C3F98DF00ED84DA /* TitleGenerator.swift */,
 				080E70ED2CDF498F00A949C9 /* ChatStatus.swift */,
@@ -995,7 +989,6 @@
 				08CF5B892C68980B0079D5EE /* HighlightableTextView.swift in Sources */,
 				089825272CE9B67700980468 /* WelcomeOnboarding.swift in Sources */,
 				084C24462D1F3D6800AC431F /* HelpWindow.swift in Sources */,
-				0869A3EB2C958A4C009BF9F2 /* ChatConfigTools.swift in Sources */,
 				08B82C1D2C74EA9400DC0183 /* ImageViewer.swift in Sources */,
 				085361052C491BF0007DAB62 /* ImageSession.swift in Sources */,
 				08F815342C97F64E00B49355 /* BasicInspector.swift in Sources */,
@@ -1031,7 +1024,6 @@
 				0853611F2C4A38C9007DAB62 /* GenericSlider.swift in Sources */,
 				0891D5822C968B3A00BA428F /* ToolConfigDefaults.swift in Sources */,
 				086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */,
-				0850374B2CF4D0AA00810CBC /* InputState.swift in Sources */,
 				0834E7792C719C00007CB294 /* DataFileView.swift in Sources */,
 				089825232CE8F75400980468 /* OnboardingView.swift in Sources */,
 				081297522CF5C3FF00440D19 /* AssistantMessage.swift in Sources */,

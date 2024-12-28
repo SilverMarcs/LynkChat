@@ -47,15 +47,15 @@ import SwiftUI
         }
         
         DatabaseService.shared.modelContext.insert(newChat)
-        self.selections = [newChat]
+        self.activeChat = newChat
     }
     
     @MainActor
     func createTemporaryChat() {
-        let chat = Chat()
-        chat.status = .temporary
-        DatabaseService.shared.modelContext.insert(chat)
-        self.selections = [chat]
+        let newChat = Chat()
+        newChat.status = .temporary
+        DatabaseService.shared.modelContext.insert(newChat)
+        self.activeChat = newChat
     }
     
     // MARK: - Search

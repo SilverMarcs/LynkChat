@@ -17,8 +17,6 @@ enum SettingsTab {
     case tools
     case chat
     case image
-    case providers
-    case guides
     case about
     #if DEBUG
     case debug

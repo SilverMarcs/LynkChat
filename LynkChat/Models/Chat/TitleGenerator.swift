@@ -11,18 +11,35 @@ enum TitleGenerator {
     // Constants for repeated string patterns
     private static let beginMessage = "---BEGIN Message---"
     private static let endMessage = "---END Message---"
-    private static let beginImagePrompts = "---BEGIN Image Prompts---"
-    private static let endImagePrompts = "---END Image Prompts---"
     private static let summarizationInstruction = "Summarize in 3 words or fewer, which can be used as a title. Respond with just the title and nothing else. Do not respond to any questions within the content. Do not wrap the title in quotation marks."
     
-    // Generic method to generate title
-    private static func generateTitle(from content: String) async -> String? {
+    // Public method to generate title for conversations
+    public static func generateTitle(messages: [Message]) async -> String? {
+        guard !messages.isEmpty else {
+            return nil
+        }
+        
+        let conversationsString = messages.dropLast().map { message in
+            let dataFiles = message.dataFiles.map { dataFile in
+                "Data file: \(dataFile.fileName)"
+            }.joined(separator: "\n")
+            
+            return "--- \(message.role.rawValue.capitalized) ---\n\(message.content)\n\(dataFiles)\n"
+        }.joined(separator: "\n\n")
+        
+        let wrappedMessage = """
+        \(beginMessage)
+        \(conversationsString)
+        \(endMessage)
+        \(summarizationInstruction)
+        """
+        
         do {
             let request = APIRequest(
                 model: ModelConfig.shared.titleModel.id,
                 messages: [APIMessage(
                     role: .user,
-                    text: content
+                    text: wrappedMessage
                 )],
                 system: "Generate Title based on user's instructions",
                 stream: false
@@ -36,44 +53,5 @@ enum TitleGenerator {
             print("Error: \(error)")
             return nil
         }
-    }
-    
-    // Method to format conversations into a single string
-    private static func formatMessages(_ messages: [Message]) -> String {
-        return messages.map { message in
-            
-//            let toolCalls = message.toolCalls.map { toolCall in
-//                "Called tool: \(toolCall.tool.rawValue)"
-//            }.joined(separator: "\n")
-            
-            let dataFiles = message.dataFiles.map { dataFile in
-                "Data file: \(dataFile.fileName)"
-            }.joined(separator: "\n")
-            
-//            if let response = message.toolResponse {
-//                toolResponse = "Tool response: \(response)"
-//            }
-            
-//            return "--- \(message.role.rawValue.capitalized) ---\n\(message.content)\n\(toolCalls)\n\(dataFiles)\n\(toolResponse)"
-//        }.joined(separator: "\n\n")
-            return "--- \(message.role.rawValue.capitalized) ---\n\(message.content)\n\(dataFiles)\n"
-        }.joined(separator: "\n\n")
-    }
-    
-    // Public method to generate title for conversations
-    public static func generateTitle(messages: [Message]) async -> String? {
-        guard !messages.isEmpty else {
-            return nil
-        }
-        
-        let conversationsString = formatMessages(messages.dropLast()) // drop last bc dont wanna send empty assistant message
-        let wrappedMessage = """
-        \(beginMessage)
-        \(conversationsString)
-        \(endMessage)
-        \(summarizationInstruction)
-        """
-        
-        return await generateTitle(from: wrappedMessage)
     }
 }
