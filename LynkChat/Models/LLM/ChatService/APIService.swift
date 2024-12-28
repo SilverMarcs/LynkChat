@@ -38,7 +38,7 @@ struct APIService {
         }
     }
     
-    static func streamResponse(from request: APIRequest) -> AsyncThrowingStream<StreamResponse, Error> {
+    static func streamResponse(from request: APIRequest) -> AsyncThrowingStream<ResponseType, Error> {
         return AsyncThrowingStream { continuation in
             Task {
                 do {
@@ -76,10 +76,10 @@ struct APIService {
                             
                             switch response.type {
                             case .text(let content):
-                                continuation.yield(.text(content))
+                                continuation.yield(.text(content: content))
                                 
                             case .finish(let usage):
-                                continuation.yield(.usage(usage))
+                                continuation.yield(.finish(usage: usage))
                                 
                             case .error(let message):
                                 throw RuntimeError(message)

@@ -41,8 +41,10 @@ struct StreamHandler {
             case .text(let content):
                 streamText += content
                 await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
-            case .usage(let tokens):
+            case .finish(let tokens):
                 totalTokens = calculateTotalTokens(tokens)
+            case .error(let message):
+                throw RuntimeError(message)
             }
         }
         

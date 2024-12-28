@@ -27,11 +27,6 @@ struct APIResponse: Decodable {
     let usage: TokenUsage
 }
 
-enum StreamResponse {
-    case text(String)
-    case usage(TokenUsage)
-}
-
 enum ResponseType {
     case text(content: String)
     case finish(usage: TokenUsage)
