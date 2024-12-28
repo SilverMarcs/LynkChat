@@ -46,10 +46,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     }
     
     var isEnabled: Bool {
-        switch self {
-        case .claude3_5sonnet: ModelConfig.shared.enable_claude3_5sonnet
-        default: false
-        }
+        ModelConfig.shared.isEnabled(self)
     }
     
     var group: ModelGroup {
@@ -63,6 +60,12 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     
     static func groupedModels() -> [ModelGroup: [ChatModel]] {
         Dictionary(grouping: ChatModel.allCases) { $0.group }
+    }
+    
+    static func groupedEnabledModels() -> [ModelGroup: [ChatModel]] {
+        Dictionary(
+            grouping: ChatModel.allCases.filter { ModelConfig.shared.isEnabled($0) }
+        ) { $0.group }
     }
 }
 

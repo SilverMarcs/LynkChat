@@ -8,15 +8,23 @@
 import SwiftUI
 
 struct ModelPicker: View {
+    @StateObject private var modelConfig = ModelConfig.shared
     @Binding var selectedModel: ChatModel
+    
+    var enabledModels: [ModelGroup: [ChatModel]] {
+        let filtered = ChatModel.allCases.filter { modelConfig.isEnabled($0) }
+        return Dictionary(grouping: filtered) { $0.group }
+    }
     
     var body: some View {
         Picker("Model", selection: $selectedModel) {
-            ForEach(Array(ChatModel.groupedModels().keys), id: \.self) { group in
-                Section(header: Text(group.displayName)) {
-                    ForEach(ChatModel.groupedModels()[group] ?? []) { model in
-                        Text(model.name)
-                            .tag(model)
+            ForEach(Array(enabledModels.keys), id: \.self) { group in
+                if let models = enabledModels[group], !models.isEmpty {
+                    Section(header: Text(group.displayName)) {
+                        ForEach(models) { model in
+                            Text(model.name)
+                                .tag(model)
+                        }
                     }
                 }
             }

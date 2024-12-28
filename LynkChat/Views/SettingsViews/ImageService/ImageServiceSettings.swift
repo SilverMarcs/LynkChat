@@ -1,5 +1,5 @@
 //
-//  ChatServiceSettings.swift
+//  ImageServiceSettings.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 28/12/2024.
@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct ChatServiceSettings: View {
+struct ImageServiceSettings: View {
     @State private var selectedTab: ServiceTab = .models
     
     var body: some View {
         Group {
             switch selectedTab {
             case .models:
-                ChatModelList()
+                ImageModelList()
             case .parameters:
-                ParameterSettings()
+                ImageParametersSettings()
             }
         }
         .toolbar {
@@ -36,9 +36,8 @@ struct ChatServiceSettings: View {
         }
         .pickerStyle(.segmented)
     }
-
 }
 
 #Preview {
-    ChatServiceSettings()
+    ImageServiceSettings()
 }

@@ -16,4 +16,45 @@ class ModelConfig: ObservableObject {
     @AppStorage("titleModel") var titleModel: ChatModel = .claude3_5haiku
     
     @AppStorage("enable_claude3_5sonnet") var enable_claude3_5sonnet: Bool = true
+    @AppStorage("enable_claude3_5haiku") var enable_claude3_5haiku: Bool = false
+    @AppStorage("enable_gpt4o") var enable_gpt4o: Bool = false
+    @AppStorage("enable_gpt4omini") var enable_gpt4omini: Bool = false
+
+    func binding(for model: ChatModel) -> Binding<Bool> {
+       switch model {
+       case .claude3_5sonnet:
+           return Binding(
+               get: { self.enable_claude3_5sonnet },
+               set: { self.enable_claude3_5sonnet = $0 }
+           )
+       case .claude3_5haiku:
+           return Binding(
+               get: { self.enable_claude3_5haiku },
+               set: { self.enable_claude3_5haiku = $0 }
+           )
+       case .gpt4o:
+           return Binding(
+               get: { self.enable_gpt4o },
+               set: { self.enable_gpt4o = $0 }
+           )
+       case .gpt4omini:
+           return Binding(
+               get: { self.enable_gpt4omini },
+               set: { self.enable_gpt4omini = $0 }
+           )
+       }
+    }
+
+    func isEnabled(_ model: ChatModel) -> Bool {
+       switch model {
+       case .claude3_5sonnet: return enable_claude3_5sonnet
+       case .claude3_5haiku: return enable_claude3_5haiku
+       case .gpt4o: return enable_gpt4o
+       case .gpt4omini: return enable_gpt4omini
+       }
+    }
+
+    var enabledModels: [ChatModel] {
+       ChatModel.allCases.filter { isEnabled($0) }
+    }
 }

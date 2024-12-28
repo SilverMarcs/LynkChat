@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct ChatModelList: View {
+    @StateObject private var modelConfig = ModelConfig.shared
+    @State private var selection: ChatModel.ID?
+    
     var body: some View {
         Form {
-            ForEach(ChatModel.allCases) { model in
-                // TODO: Table here
-                HStack {
-                    ModelImage(model: model)
-                        
-                    Text(model.name)
-                    
-                    Spacer()
+            Table(ChatModel.allCases, selection: $selection) {
+                TableColumn("Model", value: \.name)
+                TableColumn("Enabled") { model in
+                    Toggle("", isOn: modelConfig.binding(for: model))
+                        .labelsHidden()
                 }
             }
         }

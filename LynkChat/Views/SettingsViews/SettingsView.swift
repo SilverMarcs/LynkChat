@@ -28,10 +28,7 @@ struct SettingsView: View {
                 Label("Quick Panel", systemImage: "bolt.fill")
                     .tag(SettingsTab.quickPanel)
                 #endif
-                
-//                Label("Plugins", systemImage: "hammer")
-//                    .tag(SettingsTab.tools)
-//                
+                   
                 Label("Chat Service", systemImage: "quote.bubble")
                     .tag(SettingsTab.chat)
                 
@@ -74,12 +71,10 @@ struct SettingsView: View {
                 case .quickPanel:
                     QuickPanelSettings()
                 #endif
-                case .tools:
-                    PluginSettings()
                 case .chat:
                     ChatServiceSettings()
                 case .image:
-                    ImageSettings()
+                    ImageServiceSettings()
                 #if os(macOS)
                 case .shortcuts:
                     ShortcutSettings()

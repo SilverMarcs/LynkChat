@@ -127,9 +127,9 @@ struct ChatList: View {
         
         ToolbarItem {
             Menu {
-                ForEach(Array(ChatModel.groupedModels().keys), id: \.self) { group in
+                ForEach(Array(ChatModel.groupedEnabledModels().keys), id: \.self) { group in
                     Section(header: Text(group.displayName)) {
-                        ForEach(ChatModel.groupedModels()[group] ?? []) { model in
+                        ForEach(ChatModel.groupedEnabledModels()[group] ?? []) { model in
                             Button {
                                 chatVM.createNewChat(model: model)
                             } label: {

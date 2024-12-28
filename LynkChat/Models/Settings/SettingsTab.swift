@@ -14,7 +14,6 @@ enum SettingsTab {
     case quickPanel
     case shortcuts
     #endif
-    case tools
     case chat
     case image
     case about

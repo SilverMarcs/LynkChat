@@ -1,21 +1,13 @@
 //
-//  ImageSettings.swift
+//  ImageParametersSettings.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 27/12/2024.
 //
 
-
-//
-//  ImageSettings.swift
-//  LynkChat
-//
-//  Created by Zabir Raihan on 15/09/2024.
-//
-
 import SwiftUI
 
-struct ImageSettings: View {
+struct ImageParametersSettings: View {
     @ObservedObject var imageConfig = ImageModelConfig.shared
     var body: some View {
         Form {
@@ -72,5 +64,5 @@ struct ImageSettings: View {
 }
 
 #Preview {
-    ImageSettings()
+    ImageParametersSettings()
 }
