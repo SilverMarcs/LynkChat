@@ -13,11 +13,13 @@ struct ToolsBarView: View {
     
     var body: some View {
         toolButton(
-            tool: .webSearch, // Using webSearch as the display tool
+            tool: .webSearch,
             isEnabled: config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks)
         ) {
-            config.toggleTool(.webSearch)
-            config.toggleTool(.scrapeLinks)
+            withAnimation(.spring(duration: 0.3)) {
+                config.toggleTool(.webSearch)
+                config.toggleTool(.scrapeLinks)
+            }
         }
         .opacity((config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? 0.85 : 0.8))
         .padding(.leading, (config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? -4 : 0))
@@ -26,7 +28,9 @@ struct ToolsBarView: View {
             tool: .imageGeneration,
             isEnabled: config.isToolEnabled(.imageGeneration)
         ) {
-            config.toggleTool(.imageGeneration)
+            withAnimation(.spring(duration: 0.3)) {
+                config.toggleTool(.imageGeneration)
+            }
         }
         .opacity(config.isToolEnabled(.imageGeneration) ? 0.6 : 0.7)
     }
