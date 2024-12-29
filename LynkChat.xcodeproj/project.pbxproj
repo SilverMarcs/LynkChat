@@ -175,7 +175,7 @@
 		08CA42C62CF1F3FE0073BB01 /* NavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CA42C52CF1F3FE0073BB01 /* NavigationButtons.swift */; };
 		08CD009B2CBA20E900A96425 /* PasteHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD009A2CBA20E900A96425 /* PasteHandler.swift */; };
 		08CF5B892C68980B0079D5EE /* HighlightableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CF5B882C68980B0079D5EE /* HighlightableTextView.swift */; };
-		08D22A772D20A148007F9F4A /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A762D20A148007F9F4A /* Plugin.swift */; };
+		08D22A772D20A148007F9F4A /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A762D20A148007F9F4A /* Tool.swift */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08E7209A2CE7D46D0014888B /* SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E720992CE7D46D0014888B /* SearchToken.swift */; };
 		08F0EF1E2C6C2DFD00900ED0 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */; };
@@ -363,7 +363,7 @@
 		08CA42C52CF1F3FE0073BB01 /* NavigationButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButtons.swift; sourceTree = "<group>"; };
 		08CD009A2CBA20E900A96425 /* PasteHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteHandler.swift; sourceTree = "<group>"; };
 		08CF5B882C68980B0079D5EE /* HighlightableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightableTextView.swift; sourceTree = "<group>"; };
-		08D22A762D20A148007F9F4A /* Plugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		08D22A762D20A148007F9F4A /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
 		08D571672CF7CCAD002EC931 /* MessageGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupList.swift; sourceTree = "<group>"; };
 		08E720992CE7D46D0014888B /* SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToken.swift; sourceTree = "<group>"; };
 		08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
@@ -672,7 +672,7 @@
 				082F09DA2CB2715A00B7860A /* Message.swift */,
 				08CA42B22CF0F4430073BB01 /* MessageGroup.swift */,
 				0834E77A2C71A42F007CB294 /* TypedData.swift */,
-				08D22A762D20A148007F9F4A /* Plugin.swift */,
+				08D22A762D20A148007F9F4A /* Tool.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -1088,7 +1088,7 @@
 				08CF5B892C68980B0079D5EE /* HighlightableTextView.swift in Sources */,
 				089825272CE9B67700980468 /* WelcomeOnboarding.swift in Sources */,
 				084C24462D1F3D6800AC431F /* HelpWindow.swift in Sources */,
-				08D22A772D20A148007F9F4A /* Plugin.swift in Sources */,
+				08D22A772D20A148007F9F4A /* Tool.swift in Sources */,
 				082880852D1FF16500D3A4B0 /* ServiceTab.swift in Sources */,
 				08B82C1D2C74EA9400DC0183 /* ImageViewer.swift in Sources */,
 				085361052C491BF0007DAB62 /* ImageSession.swift in Sources */,

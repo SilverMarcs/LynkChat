@@ -18,7 +18,7 @@ struct GeneralSettings: View {
         Form {
             Section("Title") {
                 Toggle(isOn: $config.autogenTitle) {
-                    Text("Autogen Title")
+                    Text("Autogenerate Title")
                     Text("Uses Claude 3.5 Haiku")
                 }
             }

@@ -21,12 +21,11 @@ final class Message: Equatable, Identifiable, Hashable {
     var date: Date = Date()
     
     var model: ChatModel
-    
+    var role: MessageRole
     var content: String
 
     @Relationship(deleteRule: .cascade)
     var dataFiles: [TypedData] = []
-    var role: MessageRole
     
     @Attribute(.ephemeral)
     var isReplying: Bool = false
@@ -36,14 +35,22 @@ final class Message: Equatable, Identifiable, Hashable {
     @Relationship(deleteRule: .cascade)
     var next: MessageGroup?
     
+    var toolCalls: [ToolCall]? = []
+    
     // TODO: typed init functions for diff roles
     
-    // TOOD: maybe shud pass heigjt
-    init(role: MessageRole, content: String = "", model: ChatModel, dataFiles: [TypedData] = [], isReplying: Bool = false, height: CGFloat = 0) {
+    init(role: MessageRole,
+         content: String = "",
+         model: ChatModel,
+         dataFiles: [TypedData] = [],
+         toolCalls: [ToolCall]? = [],
+         isReplying: Bool = false,
+         height: CGFloat = 0) {
         self.role = role
         self.content = content
         self.model = model
         self.dataFiles = dataFiles
+        self.toolCalls = toolCalls
         self.isReplying = isReplying
         self.height = height
     }
@@ -54,6 +61,7 @@ final class Message: Equatable, Identifiable, Hashable {
             content: content,
             model: model,
             dataFiles: dataFiles,
+            toolCalls: toolCalls,
             isReplying: isReplying,
             height: height
         )

@@ -17,9 +17,10 @@ struct APIService {
         
         let (data, _) = try await URLSession.shared.data(for: urlRequest)
         
-        if let rawResponseString = String(data: data, encoding: .utf8) {
-            print("Raw Response Data:")
-            print(rawResponseString)
+        if AppConfig.shared.printDebgLogs {
+            if let rawResponseString = String(data: data, encoding: .utf8) {
+                print(rawResponseString)
+            }
         }
         
         do {
@@ -71,6 +72,10 @@ struct APIService {
                     for try await line in result.lines {
                         if line.isEmpty { continue }
                         
+                        if AppConfig.shared.printDebgLogs {
+                            print(line)
+                        }
+                        
                         if let data = line.data(using: .utf8),
                            let response = try? JSONDecoder().decode(ResponseType.self, from: data) {
                             
@@ -79,6 +84,7 @@ struct APIService {
                                 continuation.yield(.text(content: content))
                                 
                             case .tool(let tool):
+                                print("Tool: \(tool)")
                                 continuation.yield(.tool(tool: tool))
                                 
                             case .finish(let usage):
@@ -86,7 +92,6 @@ struct APIService {
                                 
                             case .error(let message):
                                 throw RuntimeError(message)
-                                
                             }
                         }
                     }

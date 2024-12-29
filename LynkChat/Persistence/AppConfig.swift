@@ -27,6 +27,7 @@ class AppConfig: ObservableObject {
     #endif
     
     @AppStorage("myApiKey") var myApiKey: String = ""
+    @AppStorage("printDebgLogs") var printDebgLogs = false
     
     // General
     @AppStorage("autogenTitle") var autogenTitle: Bool = true

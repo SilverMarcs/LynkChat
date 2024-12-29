@@ -13,6 +13,7 @@ struct DebugSettings: View {
     var body: some View {
         Form {
             TextField("API Key", text: $config.myApiKey)
+            
             LabeledContent {
                 Button("Reset First Launch") {
                     config.finishedInitialSetup = false
@@ -20,6 +21,8 @@ struct DebugSettings: View {
             } label: {
                 Text(String(config.finishedInitialSetup))
             }
+            
+            Toggle("Print debug ines", isOn: $config.printDebgLogs)
         }
         .formStyle(.grouped)
         .navigationTitle("Debug")

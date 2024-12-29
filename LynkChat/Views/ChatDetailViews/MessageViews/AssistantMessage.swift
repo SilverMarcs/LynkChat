@@ -24,6 +24,12 @@ struct AssistantMessage: View {
                 .transaction { $0.animation = nil }
                 .padding(.leading, labelPadding)
             
+            if let toolCalls = message.toolCalls {
+                ForEach(toolCalls) { toolCall in
+                    ToolCallView(toolCall: toolCall)
+                }
+            }
+            
             MDView(content: message.content, calculatedHeight: $height)
                 .environment(\.searchText, chatVM.searchText)
                 .environment(\.isReplying, message.isReplying)

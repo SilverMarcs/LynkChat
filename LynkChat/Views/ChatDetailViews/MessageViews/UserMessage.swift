@@ -65,12 +65,10 @@ struct UserMessage: View {
             }
             .transaction { $0.animation = nil }
             .groupBoxStyle(PlatformGroupBoxStyle())
-            .if(chat.inputManager.editingMessage == self.group.activeMessage) {
-                $0.background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(Color.accentColor.opacity(0.2))
-                )
-            }
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(chat.inputManager.editingMessage == self.group.activeMessage ? Color.accentColor.opacity(0.2) : .clear)
+            )
             
             #if os(macOS)
             if group.allMessages.count > 1 {

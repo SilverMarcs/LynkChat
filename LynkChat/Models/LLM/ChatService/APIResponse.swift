@@ -8,9 +8,13 @@
 import Foundation
 
 // MARK: - Subtypes
-struct ToolResponse: Codable {
-    let toolName: Plugin
+struct ToolCall: Codable, Identifiable {
+    let tool: Tool
     let args: String
+    
+    var id: String {
+        return tool.rawValue
+    }
 }
 
 struct TokenUsage: Codable {
@@ -23,13 +27,13 @@ enum ResponseType: Decodable {
     case text(content: String)
     case finish(usage: TokenUsage)
     case error(message: String)
-    case tool(tool: ToolResponse)
+    case tool(tool: ToolCall)
 
     enum CodingKeys: String, CodingKey {
         case type
         case content
         case usage
-        case toolName
+        case tool
         case args
     }
     
@@ -42,8 +46,9 @@ enum ResponseType: Decodable {
             let content = try container.decode(String.self, forKey: .content)
             self = .text(content: content)
         case "tool":
-            let tool = try container.decode(ToolResponse.self, forKey: .toolName)
-            self = .tool(tool: ToolResponse(toolName: tool.toolName, args: tool.args))
+            let toolName = try container.decode(Tool.self, forKey: .tool)
+            let args = try container.decode(String.self, forKey: .args)
+            self = .tool(tool: ToolCall(tool: toolName, args: args))
         case "finish":
             let usage = try container.decode(TokenUsage.self, forKey: .usage)
             self = .finish(usage: usage)

@@ -41,7 +41,7 @@ struct StreamHandler {
                 streamText += content
                 await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
             case .tool(let tool):
-                print(tool.toolName, tool.args)
+                assistant.toolCalls?.append(tool)
             case .finish(let tokens):
                 totalTokens = calculateTotalTokens(tokens)
             case .error(let message):
