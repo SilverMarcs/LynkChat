@@ -10,4 +10,5 @@ import Foundation
 protocol ModelImageProvider {
     var color: String { get }
     var imageName: String { get }
+    var name: String { get }
 }

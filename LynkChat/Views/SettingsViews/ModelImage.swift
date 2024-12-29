@@ -11,7 +11,7 @@ struct ModelImage: View {
     // TODO: simplify this
     var model: ModelImageProvider
     
-    var radius: CGFloat = 5
+    var radius: CGFloat = 4.5
     var frame: CGFloat = 15
     
     

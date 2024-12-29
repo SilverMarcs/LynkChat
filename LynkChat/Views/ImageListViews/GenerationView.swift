@@ -40,14 +40,15 @@ struct GenerationView: View {
             
             
             VStack(alignment: .leading) {
-                Text(generation.config.model.name)
-                    .font(.caption)
-                    .padding(.leading, 5)
-                    .foregroundStyle(LinearGradient(
-                        colors: [.purple, .pink],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    ))
+//                Text(generation.config.model.name)
+//                    .font(.caption)
+//                    .padding(.leading, 5)
+//                    .foregroundStyle(LinearGradient(
+//                        colors: [.purple, .pink],
+//                        startPoint: .leading,
+//                        endPoint: .trailing
+//                    ))
+                AssistantLabel(model: generation.config.model)
                 
                 if generation.state == .error {
                     Text(generation.errorMessage)

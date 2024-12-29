@@ -14,7 +14,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
 
     var id: String {
         switch self {
-        case .flux_schnell: "black-forest-labs/FLUX.1-schnell"
+        case .flux_schnell: "flux-schnell"
         case .dall_e_2: "dall-e-2"
         case .dall_e_3: "dall-e-3"
         }
@@ -22,7 +22,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
 
     var name: String {
         switch self {
-        case .flux_schnell: "Flux-1 Schnell"
+        case .flux_schnell: "Flux Schnell"
         case .dall_e_2: "DALL-E 2"
         case .dall_e_3: "DALL-E 3"
         }
@@ -37,7 +37,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
 
     var color: String {
         switch self {
-        case .flux_schnell: "#E6784B"
+        case .flux_schnell: "#6431e2"
         case .dall_e_2, .dall_e_3: "#00947A"
         }
     }
