@@ -190,6 +190,7 @@
 		08D22A982D21CEE3007F9F4A /* ImageServiceTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A972D21CEE3007F9F4A /* ImageServiceTab.swift */; };
 		08D22A9B2D21D94F007F9F4A /* ToolImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */; };
 		08D22A9D2D21DD12007F9F4A /* ToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9C2D21DD12007F9F4A /* ToolButton.swift */; };
+		08D22A9F2D21E358007F9F4A /* ToolResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9E2D21E358007F9F4A /* ToolResultView.swift */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08E7209A2CE7D46D0014888B /* SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E720992CE7D46D0014888B /* SearchToken.swift */; };
 		08F0EF1E2C6C2DFD00900ED0 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */; };
@@ -392,6 +393,7 @@
 		08D22A972D21CEE3007F9F4A /* ImageServiceTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageServiceTab.swift; sourceTree = "<group>"; };
 		08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolImageView.swift; sourceTree = "<group>"; };
 		08D22A9C2D21DD12007F9F4A /* ToolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolButton.swift; sourceTree = "<group>"; };
+		08D22A9E2D21E358007F9F4A /* ToolResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResultView.swift; sourceTree = "<group>"; };
 		08D571672CF7CCAD002EC931 /* MessageGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupList.swift; sourceTree = "<group>"; };
 		08E720992CE7D46D0014888B /* SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToken.swift; sourceTree = "<group>"; };
 		08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
@@ -901,6 +903,7 @@
 		08D22A992D21D938007F9F4A /* ToolViews */ = {
 			isa = PBXGroup;
 			children = (
+				08D22A9E2D21E358007F9F4A /* ToolResultView.swift */,
 				085276BF2C98794C009184D2 /* ChatToolView.swift */,
 				08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */,
 				08D22A9C2D21DD12007F9F4A /* ToolButton.swift */,
@@ -1051,6 +1054,7 @@
 				0898252F2CE9C0F200980468 /* PageDots.swift in Sources */,
 				08F815362C97F65500B49355 /* ChatInspector.swift in Sources */,
 				08D22A8C2D212D7B007F9F4A /* String++.swift in Sources */,
+				08D22A9F2D21E358007F9F4A /* ToolResultView.swift in Sources */,
 				08850D8B2CFE0A99004D944C /* PermissionsOnboarding.swift in Sources */,
 				08C800452C36C10A009581C5 /* MessageMenu.swift in Sources */,
 				08AAFB9C2C3D01A6002C04E0 /* ChatListCards.swift in Sources */,

@@ -19,10 +19,8 @@ struct ChatToolView: View {
         }
         
         ForEach(tools) { chatTool in
-            if let result = chatTool.result {
-                chatTool.tool.resultView(result)
-                    .transaction { $0.animation = nil }
-            }
+            ToolResultView(chatTool: chatTool)
+                .transaction { $0.animation = nil }
         }
     }
 }

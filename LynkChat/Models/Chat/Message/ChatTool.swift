@@ -16,9 +16,4 @@ struct ChatTool: Identifiable, Codable {
     var id: String {
         toolCallId
     }
-    
-    // mutating func to change the result
-    mutating func setResult(_ newResult: String) {
-        self.result = newResult
-    }
 }

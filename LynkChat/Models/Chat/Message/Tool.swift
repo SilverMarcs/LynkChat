@@ -44,17 +44,6 @@ enum Tool: String, CaseIterable, Codable {
     }
     
     // TODO: Implement this
-    @ViewBuilder
-    func resultView(_ result: String) -> some View {
-        switch self {
-        case .imageGeneration:
-            ToolImageView(urlStr: result)
-        default:
-            Text("Result: \(result)")
-        }
-    }
-    
-    // TODO: Implement this
     func argsView(_ args: String) -> some View {
         Text("Args: \(args)")
     }
