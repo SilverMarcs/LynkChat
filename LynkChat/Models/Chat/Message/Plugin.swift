@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Plugin: String, CaseIterable {
+enum Plugin: String, CaseIterable, Codable {
     case scrapeUrls
     case imageGeneration
 }

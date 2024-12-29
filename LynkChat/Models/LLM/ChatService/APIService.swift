@@ -78,11 +78,15 @@ struct APIService {
                             case .text(let content):
                                 continuation.yield(.text(content: content))
                                 
+                            case .tool(let tool):
+                                continuation.yield(.tool(tool: tool))
+                                
                             case .finish(let usage):
                                 continuation.yield(.finish(usage: usage))
                                 
                             case .error(let message):
                                 throw RuntimeError(message)
+                                
                             }
                         }
                     }

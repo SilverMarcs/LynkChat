@@ -32,7 +32,6 @@ struct StreamHandler {
         var lastUIUpdateTime = Date()
         var totalTokens = 0
         
-//        let service = chat.config.provider.type.getService()
         let service = APIService.self
         let apiRequest = createAPIRequest(stream: true)
         
@@ -41,6 +40,8 @@ struct StreamHandler {
             case .text(let content):
                 streamText += content
                 await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
+            case .tool(let tool):
+                print(tool.toolName, tool.args)
             case .finish(let tokens):
                 totalTokens = calculateTotalTokens(tokens)
             case .error(let message):
