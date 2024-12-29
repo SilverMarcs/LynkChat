@@ -25,11 +25,7 @@ struct AssistantMessage: View {
                 .padding(.leading, labelPadding)
             
             if let tools = message.tools {
-                HStack {   
-                    ForEach(tools) { tool in
-                        ChatToolView(chatTool: tool)
-                    }
-                }
+                ChatToolView(tools: tools)
             }
             
             MDView(content: message.content, calculatedHeight: $height)

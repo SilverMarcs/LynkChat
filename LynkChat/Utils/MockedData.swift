@@ -17,6 +17,8 @@ extension Message {
 
 extension ChatTool {
     static let mockTool = ChatTool(toolCallId: "toolUse", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: "This is the result of the tool url scraping of page")
+    
+    static let mockImageTool = ChatTool(toolCallId: "imageTool", tool: .imageGeneration, args: "{url : https://www.google.com}", result: "https://picsum.photos/200")
 }
 
 extension MessageGroup {

@@ -17,7 +17,7 @@ struct ActionButton: View {
                 .font(.title).fontWeight(.semibold)
         }
         .foregroundStyle((isStop ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (isStop ? .red : .blue))
-        .opacity(0.8)
+        .opacity(0.85)
         .buttonStyle(.plain)
         .contentTransition(.symbolEffect(.replace, options: .speed(2)))
         .keyboardShortcut(isStop ? "d" : .return)

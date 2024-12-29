@@ -25,8 +25,7 @@ struct MessageView: View {
                 AssistantMessageAux(group: group)
 //            case .tool:
 //                ToolResponseMessage(message: message)
-            default:
-                Text("Unknown role")
+
             }
             
             if chat.contextResetPoint == group {

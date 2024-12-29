@@ -149,7 +149,6 @@
 		08B8DE132C97F3550041A690 /* MDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B8DE122C97F3550041A690 /* MDView.swift */; };
 		08B8DE1F2C97F3D10041A690 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B8DE1E2C97F3D10041A690 /* AppConfig.swift */; };
 		08B8DE212C97F3E10041A690 /* ChatConfigDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B8DE202C97F3E10041A690 /* ChatConfigDefaults.swift */; };
-		08B8DE232C97F4EA0041A690 /* ToolResponseMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B8DE222C97F4EA0041A690 /* ToolResponseMessage.swift */; };
 		08C1ACE02C54BC8A00B86D37 /* TemperatureSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C1ACDF2C54BC8A00B86D37 /* TemperatureSlider.swift */; };
 		08C49FD82C502EC90085792F /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C49FD72C502EC90085792F /* FileHelper.swift */; };
 		08C5AD752CFB792200F5FEA0 /* CustomCopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C5AD742CFB792200F5FEA0 /* CustomCopyButton.swift */; };
@@ -189,6 +188,8 @@
 		08D22A902D212DA9007F9F4A /* ModelContext++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A8F2D212DA9007F9F4A /* ModelContext++.swift */; };
 		08D22A942D21AFFD007F9F4A /* ChatTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A932D21AFFD007F9F4A /* ChatTool.swift */; };
 		08D22A982D21CEE3007F9F4A /* ImageServiceTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A972D21CEE3007F9F4A /* ImageServiceTab.swift */; };
+		08D22A9B2D21D94F007F9F4A /* ToolImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */; };
+		08D22A9D2D21DD12007F9F4A /* ToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9C2D21DD12007F9F4A /* ToolButton.swift */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08E7209A2CE7D46D0014888B /* SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E720992CE7D46D0014888B /* SearchToken.swift */; };
 		08F0EF1E2C6C2DFD00900ED0 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */; };
@@ -350,7 +351,6 @@
 		08B8DE122C97F3550041A690 /* MDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDView.swift; sourceTree = "<group>"; };
 		08B8DE1E2C97F3D10041A690 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		08B8DE202C97F3E10041A690 /* ChatConfigDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatConfigDefaults.swift; sourceTree = "<group>"; };
-		08B8DE222C97F4EA0041A690 /* ToolResponseMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResponseMessage.swift; sourceTree = "<group>"; };
 		08C1ACDF2C54BC8A00B86D37 /* TemperatureSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureSlider.swift; sourceTree = "<group>"; };
 		08C49FD72C502EC90085792F /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		08C5AD742CFB792200F5FEA0 /* CustomCopyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCopyButton.swift; sourceTree = "<group>"; };
@@ -390,6 +390,8 @@
 		08D22A8F2D212DA9007F9F4A /* ModelContext++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext++.swift"; sourceTree = "<group>"; };
 		08D22A932D21AFFD007F9F4A /* ChatTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTool.swift; sourceTree = "<group>"; };
 		08D22A972D21CEE3007F9F4A /* ImageServiceTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageServiceTab.swift; sourceTree = "<group>"; };
+		08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolImageView.swift; sourceTree = "<group>"; };
+		08D22A9C2D21DD12007F9F4A /* ToolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolButton.swift; sourceTree = "<group>"; };
 		08D571672CF7CCAD002EC931 /* MessageGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupList.swift; sourceTree = "<group>"; };
 		08E720992CE7D46D0014888B /* SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToken.swift; sourceTree = "<group>"; };
 		08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
@@ -819,6 +821,7 @@
 		08C800402C36BF54009581C5 /* MessageViews */ = {
 			isa = PBXGroup;
 			children = (
+				08D22A992D21D938007F9F4A /* ToolViews */,
 				08CA42B42CF1F12E0073BB01 /* MessageMenuViews */,
 				088A09F22C55C7740055B567 /* TextSelectionView.swift */,
 				0821816E2C39082900171BF3 /* MessageView.swift */,
@@ -826,8 +829,6 @@
 				08C800482C36C521009581C5 /* AssistantMessageAux.swift */,
 				081297512CF5C3FF00440D19 /* AssistantMessage.swift */,
 				081CB4E42CFC9A320033E6A3 /* AssistantLabel.swift */,
-				085276BF2C98794C009184D2 /* ChatToolView.swift */,
-				08B8DE222C97F4EA0041A690 /* ToolResponseMessage.swift */,
 			);
 			path = MessageViews;
 			sourceTree = "<group>";
@@ -895,6 +896,16 @@
 				08D22A8F2D212DA9007F9F4A /* ModelContext++.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		08D22A992D21D938007F9F4A /* ToolViews */ = {
+			isa = PBXGroup;
+			children = (
+				085276BF2C98794C009184D2 /* ChatToolView.swift */,
+				08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */,
+				08D22A9C2D21DD12007F9F4A /* ToolButton.swift */,
+			);
+			path = ToolViews;
 			sourceTree = "<group>";
 		};
 		08F3CA022C705B1600A800F9 /* Windows */ = {
@@ -1024,7 +1035,6 @@
 				0810F5892CEAFB5C002D4ACF /* ContextResetDivider.swift in Sources */,
 				0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */,
 				084C244B2D1FBAC800AC431F /* ModelImageProvider.swift in Sources */,
-				08B8DE232C97F4EA0041A690 /* ToolResponseMessage.swift in Sources */,
 				087906892CA6E22900E5DCAD /* ImageContentView.swift in Sources */,
 				089DB5162CA865F70013E5C3 /* MockedData.swift in Sources */,
 				085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */,
@@ -1175,6 +1185,7 @@
 				086E620C2C39BC4500AB4110 /* ErrorMessageView.swift in Sources */,
 				0834E77B2C71A42F007CB294 /* TypedData.swift in Sources */,
 				089C7E142C405B01005E3BE9 /* QuickPanelSettings.swift in Sources */,
+				08D22A9D2D21DD12007F9F4A /* ToolButton.swift in Sources */,
 				08D22A862D212C46007F9F4A /* PlatformAlias.swift in Sources */,
 				08A00FF02D19A580001D48CB /* InputModelPickers.swift in Sources */,
 				0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */,
@@ -1188,6 +1199,7 @@
 				08D22A882D212C7C007F9F4A /* WindowID.swift in Sources */,
 				089825232CE8F75400980468 /* OnboardingView.swift in Sources */,
 				081297522CF5C3FF00440D19 /* AssistantMessage.swift in Sources */,
+				08D22A9B2D21D94F007F9F4A /* ToolImageView.swift in Sources */,
 				084C24482D1FBA0800AC431F /* ChatModelTable.swift in Sources */,
 				08A00FEE2D19A416001D48CB /* InputEditor.swift in Sources */,
 				08C800432C36C045009581C5 /* ChatVM.swift in Sources */,
