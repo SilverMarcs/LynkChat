@@ -21,17 +21,25 @@ enum Tool: String, CaseIterable, Codable {
         }
     }
     
+    var shortTitle: String {
+        switch self {
+        case .webSearch: "Web"
+        case .scrapeLinks: "URL"
+        case .imageGeneration: "Image"
+        }
+    }
+    
     var iconName: String {
         switch self {
         case .webSearch, .scrapeLinks: "network"
-        case .imageGeneration: "photo"
+        case .imageGeneration: "photo.on.rectangle"
         }
     }
     
     var color: Color {
         switch self {
-        case .webSearch, .scrapeLinks: .blue
-        case .imageGeneration: .indigo
+        case .webSearch, .scrapeLinks: .accent
+        case .imageGeneration: .mint
         }
     }
 }

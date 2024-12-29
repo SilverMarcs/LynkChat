@@ -12,18 +12,22 @@ struct ToolsBarView: View {
     @Binding var config: ChatConfig
     
     var body: some View {
-        HStack(spacing: 8) {
-            ForEach(Tool.allCases, id: \.self) { tool in
-                toolButton(
-                    tool: tool,
-                    isEnabled: config.isToolEnabled(tool)
-                ) {
-                    config.toggleTool(tool)
-                }
-            }
+        toolButton(
+            tool: .webSearch, // Using webSearch as the display tool
+            isEnabled: config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks)
+        ) {
+            config.toggleTool(.webSearch)
+            config.toggleTool(.scrapeLinks)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
+        .opacity((config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? 0.85 : 0.8))
+        
+        toolButton(
+            tool: .imageGeneration,
+            isEnabled: config.isToolEnabled(.imageGeneration)
+        ) {
+            config.toggleTool(.imageGeneration)
+        }
+        .opacity(config.isToolEnabled(.imageGeneration) ? 0.6 : 0.7)
     }
     
     @ViewBuilder
@@ -33,38 +37,45 @@ struct ToolsBarView: View {
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            HStack {
-                Image(systemName: tool.iconName)
-                    .imageScale(.medium)
-                
-                if isEnabled {
-                    Text(tool.title)
-                        .font(.subheadline)
+            Label(tool.shortTitle, systemImage: tool.iconName)
+                .imageScale(isEnabled ? .medium : .large)
+                .padding(.horizontal, isEnabled ? 7 : 2)
+                .padding(.vertical, isEnabled ? 3 : 0)
+                .foregroundStyle(isEnabled ? tool.color : .secondary)
+                .background {
+                    if isEnabled {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(tool.color.opacity(0.10))
+                    }
+                }
+                .contentShape(Rectangle())
+                .apply {
+                    if isEnabled {
+                        $0.labelStyle(.titleAndIcon)
+                            .background {
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .stroke(tool.color.opacity(0.3), lineWidth: 1)
+                            }
+                    } else {
+                        $0.labelStyle(.iconOnly)
+                    }
                 }
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-//            .border(.red)
-            .foregroundStyle(isEnabled ? tool.color : Color.secondary)
-            .background {
-                if isEnabled {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(tool.color.opacity(0.15))
-                }
+            .buttonStyle(.plain)
+            .padding(.horizontal, isEnabled ? 1 : 5)
+        
+        var imageSize: CGFloat {
+            if isEnabled {
+                return 14
+            } else {
+                return 17
             }
-            .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
-        .animation(.spring(duration: 0.3), value: isEnabled)
     }
 }
 
-// Preview
 #Preview {
-//    @Previewable @State var config = ChatConfig()
-    
-//    ToolsBarView(config: $config)
-//        .padding()
     InputArea(chat: Chat())
         .environment(ChatVM())
+        .frame(height: 94)
 }
