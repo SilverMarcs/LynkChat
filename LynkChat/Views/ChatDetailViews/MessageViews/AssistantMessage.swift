@@ -24,9 +24,9 @@ struct AssistantMessage: View {
                 .transaction { $0.animation = nil }
                 .padding(.leading, labelPadding)
             
-            if let toolCalls = message.toolCalls {
-                ForEach(toolCalls) { toolCall in
-                    ToolCallView(toolCall: toolCall)
+            if let tools = message.tools {
+                ForEach(tools) { tool in
+                    ToolCallView(chatTool: tool)
                 }
             }
             

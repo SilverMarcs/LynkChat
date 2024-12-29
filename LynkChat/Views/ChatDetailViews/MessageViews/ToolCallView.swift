@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ToolCallView: View {
-    var toolCall: ToolCall
+    var chatTool: ChatTool
     @State private var showArguments = false
     
     var body: some View {
@@ -24,12 +24,12 @@ struct ToolCallView: View {
                             .foregroundStyle(.secondary)
                         
                         Group {
-                            Text(toolCall.tool.title)
+                            Text(chatTool.tool.title)
                                 .fontWeight(.semibold)
                             
-                            Image(systemName: toolCall.tool.iconName)
+                            Image(systemName: chatTool.tool.iconName)
                         }
-                        .foregroundStyle(toolCall.tool.color)
+                        .foregroundStyle(chatTool.tool.color)
                         .opacity(0.9)
                     }
                     .padding(3)
@@ -46,7 +46,7 @@ struct ToolCallView: View {
                         .fill(.tertiary)
                         .frame(width: 2)
                 
-                    Text(toolCall.args)
+                    Text(chatTool.args)
                         .foregroundStyle(.secondary)
                         .textSelection(.enabled)
                         .monospaced()
@@ -58,7 +58,7 @@ struct ToolCallView: View {
 }
 
 #Preview {
-    ToolCallView(toolCall: .init(toolCallId: "toolUse", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}"))
+    ToolCallView(chatTool: .mockTool)
         .frame(width: 200, height: 100)
 }
 
