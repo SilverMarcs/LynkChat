@@ -211,6 +211,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         if let lastMessage = currentThread.last, lastMessage == message {
+            resetScroll()
             Scroller.scrollToBottom()
         }
     }

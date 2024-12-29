@@ -12,7 +12,7 @@ extension Message {
     
     static let mockUserMessage = Message(role: .user, content: String.shortContent, model: .claude3_5haiku)
     
-    static let assistantWithToolCall = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, toolCalls: [.init(tool: .scrapeUrls, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}")])
+    static let assistantWithToolCall = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, toolCalls: [.init(tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}")])
 }
 
 extension MessageGroup {

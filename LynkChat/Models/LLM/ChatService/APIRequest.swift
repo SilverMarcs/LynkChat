@@ -15,6 +15,7 @@ struct APIRequest: Encodable {
     let maxTokens: Int
     let system: String?
     let stream: Bool
+    let tools: [String]
 }
 
 enum HTTPMethod: String {

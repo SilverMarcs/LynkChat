@@ -18,8 +18,14 @@ struct PluginsOnboarding: View {
             content: {
                 Form {
                     Section {
-                        Toggle("URL Scrape", isOn: $config.urlScrape)
-                        Toggle("Google Search", isOn: $config.googleSearch)
+                        // custom binding that controls both config.webTools and config.scrapeLinks
+                        Toggle("Web Search", isOn: Binding(
+                            get: { config.webSearch || config.scrapeLinks },
+                            set: { newValue in
+                                config.webSearch = newValue
+                                config.scrapeLinks = newValue
+                            }
+                        ))
                         Toggle("Image Generate", isOn: $config.imageGenerate)
                         Toggle("Transcribe", isOn: $config.transcribe)
                     }

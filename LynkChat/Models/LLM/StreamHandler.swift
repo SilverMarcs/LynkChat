@@ -76,7 +76,8 @@ struct StreamHandler {
             temperature: chat.config.temperature,
             maxTokens: chat.config.maxTokens.rawValue,
             system: chat.config.systemPrompt,
-            stream: stream
+            stream: stream,
+            tools: chat.config.enabledTools.map { $0.rawValue }
         )
     }
     

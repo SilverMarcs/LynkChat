@@ -9,30 +9,28 @@ import Foundation
 import SwiftUI
 
 enum Tool: String, CaseIterable, Codable {
-    case scrapeUrls
     case webSearch
+    case scrapeLinks
     case imageGeneration
     
     var title: String {
         switch self {
-        case .scrapeUrls: "Fetch URL"
         case .webSearch: "Web Search"
+        case .scrapeLinks: "Fetch URL"
         case .imageGeneration: "Generate Image"
         }
     }
     
     var iconName: String {
         switch self {
-        case .scrapeUrls: "link"
-        case .webSearch: "magnifyingglass"
+        case .webSearch, .scrapeLinks: "network"
         case .imageGeneration: "photo"
         }
     }
     
     var color: Color {
         switch self {
-        case .scrapeUrls: .blue
-        case .webSearch: .green
+        case .webSearch, .scrapeLinks: .blue
         case .imageGeneration: .indigo
         }
     }

@@ -44,7 +44,8 @@ enum TitleGenerator {
                 temperature: 0.0,
                 maxTokens: 10,
                 system: "Generate Title based on user's instructions",
-                stream: false
+                stream: false,
+                tools: []
             )
             
             let response = try await APIService.nonStreamingResponse(from: request)
