@@ -23,14 +23,12 @@ struct ImageInspector: View {
                 
                 Section("Models") {
                     Picker("Model", selection: $session.config.model) {
-                        ForEach(ImageModel.allCases) { provider in
-                            Text(provider.name.uppercased())
-                                .tag(provider)
+                        ForEach(ImageModel.allCases) { model in
+                            Label(model.name, image: model.imageName)
+                                .tag(model)
                         }
                     }
-                    
-                    // TODO: do thisap
-//                    ModelPicker(model: $session.config.model, models: session.config.provider.models, label: "Model")
+                    .labelStyle(.titleAndIcon)
                 }
                 
                 Section("Parameters") {

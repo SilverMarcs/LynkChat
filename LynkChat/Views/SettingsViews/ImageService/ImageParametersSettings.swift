@@ -17,9 +17,9 @@ struct ImageParametersSettings: View {
             }
             
             Section("Models") {
-                Picker("Defualt", selection: $imageConfig.defaultModel) {
-                    ForEach(ImageModel.allCases, id: \.self) { model in
-                        Text(model.name)
+                Picker("Default", selection: $imageConfig.defaultModel) {
+                    ForEach(ImageModel.allCases) { model in
+                        Label(model.name, image: model.imageName)
                             .tag(model)
                     }
                 }

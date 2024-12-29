@@ -15,7 +15,7 @@ struct ParameterSettings: View {
     var body: some View {
         Form {
             Section("Model") {
-                ModelPicker(selectedModel: $modelConfig.defaultModel)
+                ModelPicker(selectedModel: $modelConfig.defaultModel, label: "Default")
             }
             
             Section("Basic") {

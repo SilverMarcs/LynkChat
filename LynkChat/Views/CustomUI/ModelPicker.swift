@@ -10,6 +10,7 @@ import SwiftUI
 struct ModelPicker: View {
     @StateObject private var modelConfig = ModelConfig.shared
     @Binding var selectedModel: ChatModel
+    var label: String = "Model"
     
     var enabledModels: [ModelGroup: [ChatModel]] {
         let filtered = ChatModel.allCases.filter { modelConfig.isEnabled($0) }
@@ -17,7 +18,7 @@ struct ModelPicker: View {
     }
     
     var body: some View {
-        Picker("Model", selection: $selectedModel) {
+        Picker(label, selection: $selectedModel) {
             ForEach(Array(enabledModels.keys), id: \.self) { group in
                 if let models = enabledModels[group], !models.isEmpty {
                     Section {
