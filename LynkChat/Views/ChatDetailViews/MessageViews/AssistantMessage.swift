@@ -25,8 +25,10 @@ struct AssistantMessage: View {
                 .padding(.leading, labelPadding)
             
             if let tools = message.tools {
-                ForEach(tools) { tool in
-                    ChatToolView(chatTool: tool)
+                HStack {   
+                    ForEach(tools) { tool in
+                        ChatToolView(chatTool: tool)
+                    }
                 }
             }
             

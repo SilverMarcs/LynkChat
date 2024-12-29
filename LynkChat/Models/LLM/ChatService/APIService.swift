@@ -27,7 +27,8 @@ struct APIService {
             let response = try JSONDecoder().decode(APIResponse.self, from: data)
             return APIResponse(
                 text: response.text,
-                usage: .init(promptTokens: response.usage.promptTokens, completionTokens: response.usage.completionTokens)
+                promptTokens: response.promptTokens,
+                completionTokens: response.completionTokens
             )
         } catch {
             // Print raw JSON data when decoding fails
@@ -91,20 +92,20 @@ struct APIService {
                                 let response = try JSONDecoder().decode(ResponseType.self, from: data)
                                 
                                 switch response {
-                                case .text(let content):
-                                    continuation.yield(.text(content: content))
+                                case .text(let textResponse):
+                                    continuation.yield(.text(textResponse))
                                     
-                                case .toolCall(let tool):
-                                    continuation.yield(.toolCall(call: tool))
+                                case .toolCall(let toolCallResponse):
+                                    continuation.yield(.toolCall(toolCallResponse))
                                     
-                                case .toolResult(let result):
-                                    continuation.yield(.toolResult(result: result))
+                                case .toolResult(let toolResultResponse):
+                                    continuation.yield(.toolResult(toolResultResponse))
                                     
-                                case .finish(let usage):
-                                    continuation.yield(.finish(usage: usage))
+                                case .finish(let finishResponse):
+                                    continuation.yield(.finish(finishResponse))
                                     
-                                case .error(let message):
-                                    throw RuntimeError(message)
+                                case .error(let errorResponse):
+                                    throw RuntimeError(errorResponse.content)
                                 }
                             } catch {
                                 AppLogger.error("Failed to decode stream response. Raw data:\n \(line)")

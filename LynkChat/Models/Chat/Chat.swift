@@ -207,7 +207,7 @@ final class Chat: Equatable, Identifiable, Hashable {
             contextResetPoint = nil
         } else {
             contextResetPoint = message
-            totalTokens = 0
+//            totalTokens = 0 // disabling since token count will help estimate usage
         }
         
         if let lastMessage = currentThread.last, lastMessage == message {

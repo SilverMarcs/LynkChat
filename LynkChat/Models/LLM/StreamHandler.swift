@@ -27,19 +27,31 @@ struct StreamHandler {
         
         for try await response in APIService.self.streamResponse(from: apiRequest) {
             switch response {
-            case .text(let content):
-                streamText += content
+            case .text(let textResponse):
+                streamText += textResponse.content
                 await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
-            case .toolCall(let tool):
-                assistant.tools?.append(.init(toolCallId: tool.toolCallId, tool: tool.tool, args: tool.args, result: nil))
-            case .toolResult(let toolResult):
-                if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResult.toolCallId }) {
-                    assistant.tools?[index].result = toolResult.result
+                
+            case .toolCall(let toolCallResponse):
+                assistant.tools?.append(.init(
+                    toolCallId: toolCallResponse.toolCallId,
+                    tool: toolCallResponse.tool,
+                    args: toolCallResponse.args,
+                    result: nil
+                ))
+                
+            case .toolResult(let toolResultResponse):
+                if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
+                    assistant.tools?[index].result = toolResultResponse.result
                 }
-            case .finish(let tokens):
-                totalTokens = calculateTotalTokens(tokens)
-            case .error(let message):
-                throw RuntimeError(message)
+                
+            case .finish(let finishResponse):
+                totalTokens = calculateTotalTokens(
+                    promptTokens: finishResponse.promptTokens,
+                    completionTokens: finishResponse.completionTokens
+                )
+                
+            case .error(let errorResponse):
+                throw RuntimeError(errorResponse.content)
             }
         }
         
@@ -84,7 +96,8 @@ struct StreamHandler {
         )
     }
     
-    private func calculateTotalTokens(_ tokens: TokenUsage) -> Int {
-        return tokens.promptTokens + tokens.completionTokens
+    func calculateTotalTokens(promptTokens: Int, completionTokens: Int) -> Int {
+        // New implementation using direct token values
+        return promptTokens + completionTokens // or whatever calculation you need
     }
 }

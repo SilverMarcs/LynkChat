@@ -16,7 +16,8 @@ struct ActionButton: View {
             Image(systemName: isStop ? "stop.circle.fill" : "arrow.up.circle.fill")
                 .font(.title).fontWeight(.semibold)
         }
-        .foregroundStyle((isStop ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (isStop ? .red : .accent))
+        .foregroundStyle((isStop ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (isStop ? .red : .blue))
+        .opacity(0.8)
         .buttonStyle(.plain)
         .contentTransition(.symbolEffect(.replace, options: .speed(2)))
         .keyboardShortcut(isStop ? "d" : .return)

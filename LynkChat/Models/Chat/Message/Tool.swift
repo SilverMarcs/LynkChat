@@ -38,7 +38,7 @@ enum Tool: String, CaseIterable, Codable {
     
     var color: Color {
         switch self {
-        case .webSearch, .scrapeLinks: .accent
+        case .webSearch, .scrapeLinks: .cyan
         case .imageGeneration: .mint
         }
     }

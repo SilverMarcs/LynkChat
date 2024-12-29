@@ -7,73 +7,61 @@
 
 import Foundation
 
-// MARK: - Subtypes
-struct ToolCall: Decodable {
+
+// MARK: - Response Models
+struct TextResponse: Decodable {
+    let type: String
+    let content: String
+}
+
+struct FinishResponse: Decodable {
+    let type: String
+    let promptTokens: Int
+    let completionTokens: Int
+}
+
+struct ErrorResponse: Decodable {
+    let type: String
+    let content: String
+}
+
+struct ToolCallResponse: Decodable {
+    let type: String
     let toolCallId: String
     let tool: Tool
     let args: String
 }
 
-struct ToolResult: Decodable {
+struct ToolResultResponse: Decodable {
+    let type: String
     let toolCallId: String
     let tool: Tool
     let result: String
 }
 
-struct TokenUsage: Codable {
-    let promptTokens: Int
-    let completionTokens: Int
-}
-
 // MARK: - Streaming Response
 enum ResponseType: Decodable {
-    case text(content: String)
-    case finish(usage: TokenUsage)
-    case error(message: String)
-    case toolCall(call: ToolCall)
-    case toolResult(result: ToolResult)
-
-    enum CodingKeys: String, CodingKey {
-        case type
-        case content
-        case usage
-        case toolCallId
-        case tool
-        case args
-        case result
-    }
+    case text(TextResponse)
+    case finish(FinishResponse)
+    case error(ErrorResponse)
+    case toolCall(ToolCallResponse)
+    case toolResult(ToolResultResponse)
     
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try container.decode(String.self, forKey: .type)
+        let container = try decoder.singleValueContainer()
         
-        switch type {
-        case "text":
-            let content = try container.decode(String.self, forKey: .content)
-            self = .text(content: content)
-            
-        case "toolCall":
-            let toolCallId = try container.decode(String.self, forKey: .toolCallId)
-            let tool = try container.decode(Tool.self, forKey: .tool)
-            let args = try container.decode(String.self, forKey: .args)
-            self = .toolCall(call: ToolCall(toolCallId: toolCallId, tool: tool, args: args))
-            
-        case "toolResult":
-            let toolCallId = try container.decode(String.self, forKey: .toolCallId)
-            let tool = try container.decode(Tool.self, forKey: .tool)
-            let result = try container.decode(String.self, forKey: .result)
-            self = .toolResult(result: ToolResult(toolCallId: toolCallId, tool: tool, result: result))
-            
-        case "finish":
-            let usage = try container.decode(TokenUsage.self, forKey: .usage)
-            self = .finish(usage: usage)
-            
-        case "error":
-            let message = try container.decode(String.self, forKey: .content)
-            self = .error(message: message)
-            
-        default:
-            throw RuntimeError("Invalid response Received")
+        if let textResponse = try? container.decode(TextResponse.self) {
+            self = .text(textResponse)
+        } else if let finishResponse = try? container.decode(FinishResponse.self) {
+            self = .finish(finishResponse)
+        } else if let errorResponse = try? container.decode(ErrorResponse.self) {
+            self = .error(errorResponse)
+        } else if let toolCallResponse = try? container.decode(ToolCallResponse.self) {
+            self = .toolCall(toolCallResponse)
+        } else if let toolResultResponse = try? container.decode(ToolResultResponse.self) {
+            self = .toolResult(toolResultResponse)
+        } else {
+            throw RuntimeError("Invalid response received \(container)") // TODO: test this line
         }
     }
 }
@@ -81,7 +69,8 @@ enum ResponseType: Decodable {
 // MARK: - Non Streaming Response
 struct APIResponse: Decodable {
     let text: String
-    let usage: TokenUsage
+    let promptTokens: Int
+    let completionTokens: Int
 }
 
 // MARK: - Error Response

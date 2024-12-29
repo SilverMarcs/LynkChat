@@ -21,7 +21,7 @@ struct ToolsBarView: View {
                 config.toggleTool(.scrapeLinks)
             }
         }
-        .opacity((config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? 0.85 : 0.8))
+        .opacity((config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? 0.85 : 0.9))
         .padding(.leading, (config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? -4 : 0))
         
         toolButton(
@@ -32,7 +32,7 @@ struct ToolsBarView: View {
                 config.toggleTool(.imageGeneration)
             }
         }
-        .opacity(config.isToolEnabled(.imageGeneration) ? 0.6 : 0.7)
+        .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
     }
     
     @ViewBuilder
@@ -48,7 +48,7 @@ struct ToolsBarView: View {
                 .padding(.vertical, isEnabled ? 3.5 : 0)
                 .foregroundStyle(isEnabled ? tool.color : .secondary)
                 .background {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: 10, style: .circular)
                         .fill(isEnabled ? tool.color.opacity(0.10) : .clear)
                         .stroke(isEnabled ? tool.color.opacity(0.3) : .clear, lineWidth: 1)
                 }
@@ -61,7 +61,12 @@ struct ToolsBarView: View {
 }
 
 #Preview {
-    InputArea(chat: Chat())
+    let chat = Chat()
+    chat.config.enabledTools.insert(.webSearch)
+    chat.config.enabledTools.insert(.scrapeLinks)
+    chat.config.enabledTools.insert(.imageGeneration)
+    
+    return InputArea(chat: chat)
         .environment(ChatVM())
         .frame(height: 94)
 }

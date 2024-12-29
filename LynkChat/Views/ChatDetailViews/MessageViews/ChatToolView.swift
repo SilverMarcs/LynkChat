@@ -23,14 +23,19 @@ struct ChatToolView: View {
                         Text("Used")
                             .foregroundStyle(.secondary)
                         
-                        Group {
-                            Text(chatTool.tool.title)
-                                .fontWeight(.semibold)
+//                        Group {
+//                            Text(chatTool.tool.title)
+//                                .fontWeight(.semibold)
+//                            
+//                            Image(systemName: chatTool.tool.iconName)
+//                        }
+//                        .foregroundStyle(chatTool.tool.color)
+//                        .opacity(0.9)
+                        Text("\(chatTool.tool.title) \(Image(systemName: chatTool.tool.iconName))")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(chatTool.tool.color)
+                            .opacity(0.9)
                             
-                            Image(systemName: chatTool.tool.iconName)
-                        }
-                        .foregroundStyle(chatTool.tool.color)
-                        .opacity(0.9)
                     }
                     .padding(3)
                 }

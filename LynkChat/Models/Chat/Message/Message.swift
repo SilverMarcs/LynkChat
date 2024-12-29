@@ -61,8 +61,7 @@ final class Message: Equatable, Identifiable, Hashable {
     }
 }
 
-
-
+// TODO: pass tool call and results
 extension Message {
     func toAPIMessage() -> APIMessage {
         var contentItems = [ContentItem]()
