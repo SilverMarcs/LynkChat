@@ -33,10 +33,6 @@ struct BasicInspector: View {
             }
             
             Section("Parameters") {
-                Toggle(isOn: $chat.config.stream) {
-                    Text("Stream")
-                }
-                
                 Picker("Max Tokens", selection: $chat.config.maxTokens) {
                     ForEach(MaxTokens.allCases, id: \.self) { option in
                         Text(option.description).tag(option)

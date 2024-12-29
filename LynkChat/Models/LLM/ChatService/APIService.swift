@@ -9,7 +9,7 @@ import Foundation
 
 struct APIService {
     static func nonStreamingResponse(from request: APIRequest) async throws -> APIResponse {
-        AppLogger.info("Sending request for model: \(String(describing: request.model))")
+        AppLogger.warning("Sending request for model: \(String(describing: request.model))")
         
         guard var urlRequest = makeRequest(path: .chat, method: .POST) else {
             throw URLError(.badURL)
@@ -30,17 +30,22 @@ struct APIService {
                 usage: .init(promptTokens: response.usage.promptTokens, completionTokens: response.usage.completionTokens)
             )
         } catch {
+            // Print raw JSON data when decoding fails
+            if let rawResponseString = String(data: data, encoding: .utf8) {
+                AppLogger.error("Failed to decode response. Raw JSON: \(rawResponseString)")
+            }
+            
             // Try to decode as error response
             if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
                 throw RuntimeError(errorResponse.error.details)
             }
             
-            throw error
+            throw RuntimeError("Failed to decode response: \(error.localizedDescription)")
         }
     }
     
     static func streamResponse(from request: APIRequest) -> AsyncThrowingStream<ResponseType, Error> {
-        AppLogger.info("Streaming response for model: \(String(describing: request.model))")
+        AppLogger.warning("Streaming response for model: \(String(describing: request.model))")
         
         return AsyncThrowingStream { continuation in
             Task {
@@ -62,7 +67,10 @@ struct APIService {
                             errorData.append(byte)
                         }
                         
-                        // TODO: log this
+                        // Log the raw error response
+                        if let rawErrorString = String(data: errorData, encoding: .utf8) {
+                            AppLogger.error("Server error response: \(rawErrorString)")
+                        }
                         
                         // Try to decode the error response
                         if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: errorData) {
@@ -78,27 +86,33 @@ struct APIService {
                         
                         AppLogger.debug("\(line)")
                         
-                        if let data = line.data(using: .utf8),
-                           let response = try? JSONDecoder().decode(ResponseType.self, from: data) {
-                            
-                            switch response {
-                            case .text(let content):
-                                continuation.yield(.text(content: content))
+                        if let data = line.data(using: .utf8) {
+                            do {
+                                let response = try JSONDecoder().decode(ResponseType.self, from: data)
                                 
-                            case .tool(let tool):
-                                continuation.yield(.tool(tool: tool))
-                                
-                            case .finish(let usage):
-                                continuation.yield(.finish(usage: usage))
-                                
-                            case .error(let message):
-                                throw RuntimeError(message)
+                                switch response {
+                                case .text(let content):
+                                    continuation.yield(.text(content: content))
+                                    
+                                case .tool(let tool):
+                                    continuation.yield(.tool(tool: tool))
+                                    
+                                case .finish(let usage):
+                                    continuation.yield(.finish(usage: usage))
+                                    
+                                case .error(let message):
+                                    throw RuntimeError(message)
+                                }
+                            } catch {
+                                AppLogger.error("Failed to decode stream response. Raw data: \(line)")
+                                throw error
                             }
                         }
                     }
                     
                     continuation.finish()
                 } catch {
+                    AppLogger.error("Stream error: \(error.localizedDescription)")
                     continuation.finish(throwing: error)
                 }
             }

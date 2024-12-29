@@ -46,6 +46,8 @@ struct AssistantMessage: View {
                                     }
                                 }
                             }
+                    } else {
+                        view
                     }
                 }
             

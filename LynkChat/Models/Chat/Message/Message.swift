@@ -73,7 +73,7 @@ extension Message {
         var contentItems = [ContentItem]()
         
         // Process data files
-        let processedDataFiles = FileHelper.processDataFiles2(dataFiles)
+        let processedDataFiles = FileHelper.processDataFiles(dataFiles)
         
         // Add processed text content from data files
         let textContents = processedDataFiles.compactMap { item -> String? in

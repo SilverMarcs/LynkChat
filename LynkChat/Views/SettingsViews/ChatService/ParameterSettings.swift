@@ -19,10 +19,6 @@ struct ParameterSettings: View {
             }
             
             Section("Basic") {
-                Toggle(isOn: $config.stream) {
-                    Text("Stream")
-                }
-                
                 Slider(
                     value: Binding(
                         get: { Double(config.temperature) },

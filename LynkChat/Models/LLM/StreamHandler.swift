@@ -19,15 +19,6 @@ struct StreamHandler {
 
     @MainActor
     func handleRequest() async throws {
-        if chat.config.stream {
-            try await handleStream()
-        } else {
-            try await handleNonStream()
-        }
-    }
-    
-    @MainActor
-    private func handleStream() async throws {
         var streamText = ""
         var lastUIUpdateTime = Date()
         var totalTokens = 0
@@ -59,27 +50,6 @@ struct StreamHandler {
             assistant.content = streamText
             lastUpdateTime = currentTime
         }
-    }
-
-    @MainActor
-    private func handleNonStream() async throws {
-//        let service = chat.config.provider.type.getService()
-        let service = APIService.self
-        let apiRequest = createAPIRequest(stream: false)
-        
-        let response = try await service.nonStreamingResponse(from: apiRequest)
-        
-        assistant.content = response.text
-        
-        let totalTokens = calculateTotalTokens(response.usage)
-        updateFinalState(totalTokens: totalTokens)
-    }
-    
-    private func updateFinalState(totalTokens: Int) {
-        chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
-        assistant.isReplying = false
-        AppConfig.shared.hasUserScrolled = false
-        try? assistant.modelContext?.save()
     }
     
     private func finaliseStream(streamText: String = "", totalTokens: Int) {

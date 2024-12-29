@@ -15,7 +15,7 @@ struct ChatInspector: View {
     var body: some View {
         #if os(macOS)
         macos
-            .frame(width: 400, height: 616)
+            .frame(width: 400, height: 582)
         #else
         ios
         #endif
