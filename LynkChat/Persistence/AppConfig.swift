@@ -25,10 +25,6 @@ class AppConfig: ObservableObject {
     #else
     @AppStorage("fontSize") var fontSize: Double = 17
     #endif
-    
-    @AppStorage("myApiKey") var myApiKey: String = ""
-    @AppStorage("printDebgLogs") var printDebgLogs = false
-    
     // General
     @AppStorage("autogenTitle") var autogenTitle: Bool = true
     @AppStorage("enterToSend") var enterToSend: Bool = true
@@ -46,4 +42,13 @@ class AppConfig: ObservableObject {
         fontSize = 17
         #endif
     }
+    
+    // DEBUG
+    @AppStorage("myApiKey") var myApiKey: String = ""
+    #if DEBUG
+    @AppStorage("printDebgLogs") var printDebgLogs = true
+    #else
+    @AppStorage("printDebgLogs") var printDebgLogs = false
+    #endif
+    
 }

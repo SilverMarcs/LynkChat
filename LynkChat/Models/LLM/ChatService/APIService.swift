@@ -9,7 +9,9 @@ import Foundation
 
 struct APIService {
     static func nonStreamingResponse(from request: APIRequest) async throws -> APIResponse {
-        guard var urlRequest = makeRequest(path: "/chat", method: "POST") else {
+        AppLogger.info("Sending request for model: \(String(describing: request.model))")
+        
+        guard var urlRequest = makeRequest(path: .chat, method: .POST) else {
             throw URLError(.badURL)
         }
         
@@ -17,10 +19,8 @@ struct APIService {
         
         let (data, _) = try await URLSession.shared.data(for: urlRequest)
         
-        if AppConfig.shared.printDebgLogs {
-            if let rawResponseString = String(data: data, encoding: .utf8) {
-                print(rawResponseString)
-            }
+        if let rawResponseString = String(data: data, encoding: .utf8) {
+            AppLogger.debug("\(rawResponseString)")
         }
         
         do {
@@ -40,10 +40,12 @@ struct APIService {
     }
     
     static func streamResponse(from request: APIRequest) -> AsyncThrowingStream<ResponseType, Error> {
+        AppLogger.info("Streaming response for model: \(String(describing: request.model))")
+        
         return AsyncThrowingStream { continuation in
             Task {
                 do {
-                    guard var urlRequest = makeRequest(path: "/chat", method: "POST") else {
+                    guard var urlRequest = makeRequest(path: .chat, method: .POST) else {
                         throw URLError(.badURL)
                     }
                     
@@ -60,6 +62,8 @@ struct APIService {
                             errorData.append(byte)
                         }
                         
+                        // TODO: log this
+                        
                         // Try to decode the error response
                         if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: errorData) {
                             throw RuntimeError(errorResponse.error.details)
@@ -72,9 +76,7 @@ struct APIService {
                     for try await line in result.lines {
                         if line.isEmpty { continue }
                         
-                        if AppConfig.shared.printDebgLogs {
-                            print(line)
-                        }
+                        AppLogger.debug("\(line)")
                         
                         if let data = line.data(using: .utf8),
                            let response = try? JSONDecoder().decode(ResponseType.self, from: data) {
@@ -84,7 +86,6 @@ struct APIService {
                                 continuation.yield(.text(content: content))
                                 
                             case .tool(let tool):
-                                print("Tool: \(tool)")
                                 continuation.yield(.tool(tool: tool))
                                 
                             case .finish(let usage):
@@ -104,16 +105,16 @@ struct APIService {
         }
     }
     
-    private static func makeRequest(path: String, method: String = "GET") -> URLRequest? {
-        guard let url = URL(string: "\(String.apiHost)\(path)") else {
+    private static func makeRequest(path: APIPath, method: HTTPMethod) -> URLRequest? {
+        guard let url = URL(string: "\(String.apiHost)\(path.pathString)") else {
             return nil
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = method
+        request.httpMethod = method.rawValue
         request.setValue(AppConfig.shared.myApiKey, forHTTPHeaderField: "x-api-key")
         
-        if method == "POST" {
+        if method == .POST {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
         

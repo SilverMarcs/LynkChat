@@ -58,20 +58,7 @@ struct FileHelper {
         }
     }
     
-    static func processDataFiles(_ dataFiles: [TypedData], messageId: String, role: MessageRole) -> [ContentItem] {
-        return dataFiles.map { data in
-            if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
-                return .text(data.formattedTextContent)
-            } else if data.fileType.conforms(to: .image) && role == .user {
-                return .image(mimeType: data.mimeType, data: data.data)
-            } else {
-                let warning = "Notify the user if a file has been added but the assistant could not find a compatible plugin to read that file type."
-                return .text("Message ID: \(messageId)\nFile: \(data.fileName)\n\(warning)")
-            }
-        }
-    }
-    
-    static func processDataFiles2(_ dataFiles: [TypedData]) -> [ContentItem] {
+    static func processDataFiles(_ dataFiles: [TypedData]) -> [ContentItem] {
         return dataFiles.map { data in
             if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
                 return .text(data.formattedTextContent)
@@ -83,8 +70,3 @@ struct FileHelper {
         }
     }
 }
-//
-//enum ContentItem {
-//    case text(String)
-//    case image(String, Data)  // mimeType, data
-//}

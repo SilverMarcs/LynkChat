@@ -16,3 +16,22 @@ struct APIRequest: Encodable {
     let system: String?
     let stream: Bool
 }
+
+enum HTTPMethod: String {
+    case POST
+    case GET
+}
+
+enum APIPath {
+    case chat
+    case image
+    
+    var pathString: String {
+        switch self {
+        case .chat:
+            return "/chat"
+        case .image:
+            return "/image"
+        }
+    }
+}

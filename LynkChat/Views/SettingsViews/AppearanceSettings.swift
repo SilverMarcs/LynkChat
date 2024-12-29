@@ -58,11 +58,8 @@ struct AppearanceSettings: View {
                     }
                     
                     MDView(content: String.onlyCodeBlock)
-                        .if(config.markdownProvider == .webview) {
-                            $0
-                                .id(config.codeBlockTheme)
-                                .padding(.bottom, -11)
-                        }
+                        .id(config.codeBlockTheme)
+                        .padding(.bottom, -11)
                 }
             }
         }
