@@ -1,5 +1,5 @@
 //
-//  ToolCallView.swift
+//  ChatToolView.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 16/09/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ToolCallView: View {
+struct ChatToolView: View {
     var chatTool: ChatTool
     @State private var showArguments = false
     
@@ -35,7 +35,6 @@ struct ToolCallView: View {
                     .padding(3)
                 }
                 .groupBoxStyle(PlatformGroupBoxStyle())
-//                .background(toolCall.tool.color.quinary)
             }
             .transaction { $0.animation = nil }
             .buttonStyle(.plain)
@@ -53,12 +52,16 @@ struct ToolCallView: View {
                 }
                 .padding(.vertical, 5)
             }
+            
+            if showArguments, let result = chatTool.result {
+                chatTool.tool.resultView(result)
+            }
         }
     }
 }
 
 #Preview {
-    ToolCallView(chatTool: .mockTool)
+    ChatToolView(chatTool: .mockTool)
         .frame(width: 200, height: 100)
 }
 

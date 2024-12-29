@@ -42,6 +42,16 @@ enum AppLogger {
         baseLogger.warning("\(message)")
     }
     
+    static func critical(_ message: String) {
+        guard AppConfig.shared.printDebgLogs else { return }
+        baseLogger.critical("\(message)")
+    }
+    
+    static func fault(_ message: String) {
+        guard AppConfig.shared.printDebgLogs else { return }
+        baseLogger.fault("\(message)")
+    }
+    
     static func log(level: OSLogType, _ message: String) {
         guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.log(level: level, "\(message)")

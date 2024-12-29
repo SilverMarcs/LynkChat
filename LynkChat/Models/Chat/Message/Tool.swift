@@ -44,12 +44,12 @@ enum Tool: String, CaseIterable, Codable {
     }
     
     // TODO: Implement this
-    func resultView(result: String) -> some View {
+    func resultView(_ result: String) -> some View {
         Text("Result: \(result)")
     }
     
     // TODO: Implement this
-    func callView() -> some View {
-        Text("Call View")
+    func argsView(_ args: String) -> some View {
+        Text("Args: \(args)")
     }
 }

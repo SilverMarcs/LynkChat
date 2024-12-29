@@ -23,10 +23,9 @@ struct StreamHandler {
         var lastUIUpdateTime = Date()
         var totalTokens = 0
         
-        let service = APIService.self
         let apiRequest = createAPIRequest(stream: true)
         
-        for try await response in service.streamResponse(from: apiRequest) {
+        for try await response in APIService.self.streamResponse(from: apiRequest) {
             switch response {
             case .text(let content):
                 streamText += content
@@ -34,8 +33,8 @@ struct StreamHandler {
             case .toolCall(let tool):
                 assistant.tools?.append(.init(toolCallId: tool.toolCallId, tool: tool.tool, args: tool.args, result: nil))
             case .toolResult(let toolResult):
-                if var tools = assistant.tools, let index = tools.firstIndex(where: { $0.toolCallId == toolResult.toolCallId }) {
-                    tools[index].result = toolResult.result
+                if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResult.toolCallId }) {
+                    assistant.tools?[index].result = toolResult.result
                 }
             case .finish(let tokens):
                 totalTokens = calculateTotalTokens(tokens)

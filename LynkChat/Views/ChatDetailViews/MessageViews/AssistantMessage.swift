@@ -26,7 +26,7 @@ struct AssistantMessage: View {
             
             if let tools = message.tools {
                 ForEach(tools) { tool in
-                    ToolCallView(chatTool: tool)
+                    ChatToolView(chatTool: tool)
                 }
             }
             

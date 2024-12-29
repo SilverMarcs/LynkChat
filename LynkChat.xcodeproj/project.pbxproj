@@ -71,7 +71,7 @@
 		084C24792D1FEAFD00AC431F /* CustomWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24742D1FEAFD00AC431F /* CustomWebView.swift */; };
 		084C247A2D1FEAFD00AC431F /* ResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24752D1FEAFD00AC431F /* ResourceLoader.swift */; };
 		084C74402C521A8A0015AE2F /* DismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C743F2C521A8A0015AE2F /* DismissButton.swift */; };
-		085276C02C98794C009184D2 /* ToolCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085276BF2C98794C009184D2 /* ToolCallView.swift */; };
+		085276C02C98794C009184D2 /* ChatToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085276BF2C98794C009184D2 /* ChatToolView.swift */; };
 		085361052C491BF0007DAB62 /* ImageSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085361042C491BF0007DAB62 /* ImageSession.swift */; };
 		085361072C492282007DAB62 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085361062C49225E007DAB62 /* Generation.swift */; };
 		085361092C4923E2007DAB62 /* ImageConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085361082C4923E2007DAB62 /* ImageConfig.swift */; };
@@ -269,7 +269,7 @@
 		084C24752D1FEAFD00AC431F /* ResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceLoader.swift; sourceTree = "<group>"; };
 		084C24762D1FEAFD00AC431F /* SwiftMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMarkdownView.swift; sourceTree = "<group>"; };
 		084C743F2C521A8A0015AE2F /* DismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissButton.swift; sourceTree = "<group>"; };
-		085276BF2C98794C009184D2 /* ToolCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCallView.swift; sourceTree = "<group>"; };
+		085276BF2C98794C009184D2 /* ChatToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatToolView.swift; sourceTree = "<group>"; };
 		085361042C491BF0007DAB62 /* ImageSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSession.swift; sourceTree = "<group>"; };
 		085361062C49225E007DAB62 /* Generation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generation.swift; sourceTree = "<group>"; };
 		085361082C4923E2007DAB62 /* ImageConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageConfig.swift; sourceTree = "<group>"; };
@@ -823,7 +823,7 @@
 				08C800482C36C521009581C5 /* AssistantMessageAux.swift */,
 				081297512CF5C3FF00440D19 /* AssistantMessage.swift */,
 				081CB4E42CFC9A320033E6A3 /* AssistantLabel.swift */,
-				085276BF2C98794C009184D2 /* ToolCallView.swift */,
+				085276BF2C98794C009184D2 /* ChatToolView.swift */,
 				08B8DE222C97F4EA0041A690 /* ToolResponseMessage.swift */,
 			);
 			path = MessageViews;
@@ -1105,7 +1105,7 @@
 				085361132C4939C5007DAB62 /* GenerationView.swift in Sources */,
 				084C243E2D1F1CEB00AC431F /* ImageModel.swift in Sources */,
 				0898252B2CE9BB1700980468 /* OnboardingPage.swift in Sources */,
-				085276C02C98794C009184D2 /* ToolCallView.swift in Sources */,
+				085276C02C98794C009184D2 /* ChatToolView.swift in Sources */,
 				08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */,
 				0893B2022C3955CC00D4D501 /* CustomSearchField.swift in Sources */,
 				08C5AD772CFB7FBF00F5FEA0 /* SelectedButtonStyle.swift in Sources */,

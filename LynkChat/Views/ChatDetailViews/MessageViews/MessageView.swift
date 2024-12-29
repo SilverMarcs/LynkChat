@@ -20,7 +20,7 @@ struct MessageView: View {
 //                if message.toolCalls.isEmpty {
 //                    AssistantMessageAux(message: message)
 //                } else {
-//                    ToolCallView(message: message)
+//                    ChatToolView(message: message)
 //                }
                 AssistantMessageAux(group: group)
 //            case .tool:

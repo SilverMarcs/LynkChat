@@ -30,7 +30,7 @@ final class Message: Equatable, Identifiable, Hashable {
     
     var tools: [ChatTool]? = []
     
-    // TODO: typed init functions for diff roles
+    // TODO: TODO: typed init functions for diff roles
     
     init(role: MessageRole,
          content: String = "",

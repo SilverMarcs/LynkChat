@@ -32,7 +32,7 @@ struct APIService {
         } catch {
             // Print raw JSON data when decoding fails
             if let rawResponseString = String(data: data, encoding: .utf8) {
-                AppLogger.error("Failed to decode response. Raw JSON: \(rawResponseString)")
+                AppLogger.fault("Failed to decode response. Raw JSON:\n \(rawResponseString)")
             }
             
             // Try to decode as error response
@@ -69,7 +69,7 @@ struct APIService {
                         
                         // Log the raw error response
                         if let rawErrorString = String(data: errorData, encoding: .utf8) {
-                            AppLogger.error("Server error response: \(rawErrorString)")
+                            AppLogger.fault("Server error response: \(rawErrorString)")
                         }
                         
                         // Try to decode the error response
@@ -107,7 +107,7 @@ struct APIService {
                                     throw RuntimeError(message)
                                 }
                             } catch {
-                                AppLogger.error("Failed to decode stream response. Raw data: \(line)")
+                                AppLogger.error("Failed to decode stream response. Raw data:\n \(line)")
                                 throw error
                             }
                         }
