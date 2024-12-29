@@ -24,10 +24,23 @@ struct ToolResultView: View {
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
+        case .webSearch:
+            if let result = chatTool.result {
+                SearchResultView(searchString: result)
+            } else {
+//                ProgressView()
+//                    .frame(width: 300, height: 300)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .fill(.background.quinary)
+//                    )
+//                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
             
         default:
             if let result = chatTool.result {
                 Text("Result: \(result)")
+                    .textSelection(.enabled)
             } else {
                 // Generic placeholder for other tools
                 HStack {
@@ -43,4 +56,9 @@ struct ToolResultView: View {
             }
         }
     }
+}
+
+#Preview {
+    ToolResultView(chatTool: .mockGoogleTool)
+        .frame(width: 400)
 }

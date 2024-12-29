@@ -13,12 +13,18 @@ extension Message {
     static let mockUserMessage = Message(role: .user, content: String.shortContent, model: .claude3_5haiku)
     
     static let assistantWithToolCall = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockTool])
+    
+    static let assistantWithImageTool = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockImageTool])
+    
+    static let assistantWithGoogleTool = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockGoogleTool])
 }
 
 extension ChatTool {
     static let mockTool = ChatTool(toolCallId: "toolUse", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: "This is the result of the tool url scraping of page")
     
     static let mockImageTool = ChatTool(toolCallId: "imageTool", tool: .imageGeneration, args: "{url : https://www.google.com}", result: "https://picsum.photos/200")
+    
+    static let mockGoogleTool = ChatTool(toolCallId: "googleTool", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: String.mockGoogleSearch)
 }
 
 extension MessageGroup {
@@ -132,81 +138,110 @@ extension String {
         """
     
     static let properMarkdown = """
-The error you're encountering is because you're trying to call a mutating function (`visit`) on `self` within a non-mutating context. In Swift, the `mutating` keyword indicates that the function modifies the instance it belongs to, and such methods can only be called on mutable instances.
+        The error you're encountering is because you're trying to call a mutating function (`visit`) on `self` within a non-mutating context. In Swift, the `mutating` keyword indicates that the function modifies the instance it belongs to, and such methods can only be called on mutable instances.
 
-To resolve this, you need to refactor your code to ensure that `visit` does not require a mutating context, or alternatively, refactor the logic so that the `visit` function is called outside of contexts where `self` is immutable.
+        To resolve this, you need to refactor your code to ensure that `visit` does not require a mutating context, or alternatively, refactor the logic so that the `visit` function is called outside of contexts where `self` is immutable.
 
-### Solution: Refactor `visit` Function
+        ### Solution: Refactor `visit` Function
 
-Let's assume `visit` is a function that traverses a `ListItem` and returns an `NSAttributedString`. You should ensure that this function is non-mutating, or you separate the logic such that `visit` does not capture `self` in a way that requires it to be mutable.
+        Let's assume `visit` is a function that traverses a `ListItem` and returns an `NSAttributedString`. You should ensure that this function is non-mutating, or you separate the logic such that `visit` does not capture `self` in a way that requires it to be mutable.
 
-Here's how you can refactor your code:
+        Here's how you can refactor your code:
 
-1. **Ensure `visit` is Non-Mutating**: If possible, modify the `visit` function so it does not require mutating `self`.
+        1. **Ensure `visit` is Non-Mutating**: If possible, modify the `visit` function so it does not require mutating `self`.
 
-```swift
-func visit(_ markup: Markup) -> NSAttributedString {
-    // Your logic to convert markup to NSAttributedString
-    // This logic should not depend on mutating self
-    return NSAttributedString(string: markup.format())
-}
-```
-
-2. **Refactor `parserResults`**: If `visit` inherently requires mutating behavior, consider separating the logic into a non-mutating context:
-
-```swift
-mutating func parserResults(from document: Document, highlightText: String) -> [ContentItem] {
-    var results = [ContentItem]()
-    var currentTextBuffer = NSMutableAttributedString()
-    
-    func appendCurrentAttrString() {
-        if !currentTextBuffer.string.isEmpty {
-            applyHighlighting(to: currentTextBuffer, highlightText: highlightText)
-            results.append(.text(currentTextBuffer))
-            currentTextBuffer = NSMutableAttributedString()
+        ```swift
+        func visit(_ markup: Markup) -> NSAttributedString {
+            // Your logic to convert markup to NSAttributedString
+            // This logic should not depend on mutating self
+            return NSAttributedString(string: markup.format())
         }
-    }
-    
-    func mapListItems(_ listItems: LazyMapSequence<MarkupChildren, ListItem>) -> [ListItemContent] {
-        listItems.map { listItem in
-            let text = visit(listItem) // Ensure `visit` is non-mutating
-            return ListItemContent(text: text, checkbox: listItem.checkbox)
+        ```
+
+        2. **Refactor `parserResults`**: If `visit` inherently requires mutating behavior, consider separating the logic into a non-mutating context:
+
+        ```swift
+        mutating func parserResults(from document: Document, highlightText: String) -> [ContentItem] {
+            var results = [ContentItem]()
+            var currentTextBuffer = NSMutableAttributedString()
+            
+            func appendCurrentAttrString() {
+                if !currentTextBuffer.string.isEmpty {
+                    applyHighlighting(to: currentTextBuffer, highlightText: highlightText)
+                    results.append(.text(currentTextBuffer))
+                    currentTextBuffer = NSMutableAttributedString()
+                }
+            }
+            
+            func mapListItems(_ listItems: LazyMapSequence<MarkupChildren, ListItem>) -> [ListItemContent] {
+                listItems.map { listItem in
+                    let text = visit(listItem) // Ensure `visit` is non-mutating
+                    return ListItemContent(text: text, checkbox: listItem.checkbox)
+                }
+            }
+            
+            document.children.forEach { markup in
+                if let codeBlock = markup as? CodeBlock {
+                    appendCurrentAttrString()
+                    results.append(.codeBlock(codeBlock.code.trimmingCharacters(in: .whitespacesAndNewlines), language: codeBlock.language))
+                } else if let table = markup as? Table {
+                    appendCurrentAttrString()
+                    results.append(.table(table))
+                } else if let orderedList = markup as? OrderedList {
+                    appendCurrentAttrString()
+                    let listItems = mapListItems(orderedList.listItems)
+                    results.append(.list(.ordered, listItems))
+                } else if let unorderedList = markup as? UnorderedList {
+                    appendCurrentAttrString()
+                    let listItems = mapListItems(unorderedList.listItems)
+                    results.append(.list(.unordered, listItems))
+                } else {
+                    let visitedText = visit(markup)
+                    currentTextBuffer.append(visitedText)
+                }
+            }
+            
+            appendCurrentAttrString()
+            
+            return results
         }
-    }
+        ```
+
+        ### Explanation
+
+        - **Non-Mutating `visit`**: Ensure `visit` does not need to modify `self`. It should be a pure function that takes a `Markup` and returns an `NSAttributedString`.
+        - **Separate Logic**: If `visit` must remain mutating, try to refactor your code to call `visit` in contexts where you have a mutable `self`, or redesign your data flow to avoid such requirements.
+
+        By ensuring `visit` is non-mutating or restructuring your code to avoid mutating contexts, you can resolve this error.
+    """
     
-    document.children.forEach { markup in
-        if let codeBlock = markup as? CodeBlock {
-            appendCurrentAttrString()
-            results.append(.codeBlock(codeBlock.code.trimmingCharacters(in: .whitespacesAndNewlines), language: codeBlock.language))
-        } else if let table = markup as? Table {
-            appendCurrentAttrString()
-            results.append(.table(table))
-        } else if let orderedList = markup as? OrderedList {
-            appendCurrentAttrString()
-            let listItems = mapListItems(orderedList.listItems)
-            results.append(.list(.ordered, listItems))
-        } else if let unorderedList = markup as? UnorderedList {
-            appendCurrentAttrString()
-            let listItems = mapListItems(unorderedList.listItems)
-            results.append(.list(.unordered, listItems))
-        } else {
-            let visitedText = visit(markup)
-            currentTextBuffer.append(visitedText)
-        }
-    }
-    
-    appendCurrentAttrString()
-    
-    return results
-}
-```
+    static let mockGoogleSearch = """
+        Result: [1] Revealed: The Top Artists, Songs, Albums, Podcasts, and ...
+        URL: https://newsroom.spotify.com/2024-12-04/top-songs-artists-podcasts-audiobooks-albums-trends-2024/
+        Snippet: Dec 4, 2024 ... Spotify Wrapped is all about celebrating the fans, artists, authors, podcasters, and creators who made 2024 the record-breaking, ...
 
-### Explanation
+        [2] Where can i find my most played songs - The Spotify Community
+        URL: https://community.spotify.com/t5/Content-Questions/Where-can-i-find-my-most-played-songs/td-p/6105746
+        Snippet: May 31, 2024 ... In your profile, you'll find 2 sections: Top artists this month and Top tracks this month. Hope this clears things up. If you have any questions ...
 
-- **Non-Mutating `visit`**: Ensure `visit` does not need to modify `self`. It should be a pure function that takes a `Markup` and returns an `NSAttributedString`.
-- **Separate Logic**: If `visit` must remain mutating, try to refactor your code to call `visit` in contexts where you have a mutable `self`, or redesign your data flow to avoid such requirements.
+        [3] From Breakout Pop Stars to Country Crossovers, Here's the Scoop ...
+        URL: https://newsroom.spotify.com/2024-12-04/from-breakout-pop-stars-to-country-crossovers-heres-the-scoop-on-2024s-biggest-music-trends-on-spotify/
+        Snippet: Dec 4, 2024 ... ... 2024's Biggest Music Trends on Spotify ... Level with us: Which 2024 music trend surprised you the most? ... Taylor Swift Takes the Crown as ...
 
-By ensuring `visit` is non-mutating or restructuring your code to avoid mutating contexts, you can resolve this error.
-"""
+        [4] Solved: How to exclude artist and/or genre from recommende ...
+        URL: https://community.spotify.com/t5/Content-Questions/How-to-exclude-artist-and-or-genre-from-recommended-music-and/td-p/5171617
+        Snippet: Mar 20, 2021 ... ... last summer, my son used my phone to cast music during a party. ... Does this method mess up the AI calculations and lead to spotify suggesting ...
 
+        [5] The Top Songs, Artists, Podcasts, and Listening Trends of 2023 ...
+        URL: https://newsroom.spotify.com/2023-11-29/top-songs-artists-podcasts-albums-trends-2023/
+        Snippet: Nov 29, 2023 ... In the last 24 months, India's classical music consumption grew by close to 500% on Spotify. Over 45% of Indian classical music listeners on ...
+
+        [6] Global Top 50 | 2024 Hits - playlist by Topsify | Spotify
+        URL: https://open.spotify.com/playlist/1KNl4AYfgZtOVm9KHkhPTF
+        Snippet: Global Top 50 | 2024 Hits. Packed with all the best songs of 2024. Today's most streamed tracks and top songs - worldwide! ... NEW DROP. Don Toliver. luther ...
+
+        [7] Solved: How to search for low-plays tracks? - The Spotify Community
+        URL: https://community.spotify.com/t5/Other-Podcasts-Partners-etc/How-to-search-for-low-plays-tracks/td-p/4398267
+        Snippet: About the boldness/size of the genres and artists, I would say that more popular ones are bolder than the lesser-known ones. I can't really think of a better or ...
+        """
 }

@@ -11,6 +11,7 @@ struct ToolImageView: View {
     var urlStr: String
     
     var body: some View {
+        // TODO: save to gallery btn
         AsyncImage(url: URL(string: urlStr)) { phase in
             if let image = phase.image {
                 image

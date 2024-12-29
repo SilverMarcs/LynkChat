@@ -17,15 +17,7 @@ struct MessageView: View {
             case .user:
                 UserMessage(group: group)
             case .assistant:
-//                if message.toolCalls.isEmpty {
-//                    AssistantMessageAux(message: message)
-//                } else {
-//                    ChatToolView(message: message)
-//                }
                 AssistantMessageAux(group: group)
-//            case .tool:
-//                ToolResponseMessage(message: message)
-
             }
             
             if chat.contextResetPoint == group {
