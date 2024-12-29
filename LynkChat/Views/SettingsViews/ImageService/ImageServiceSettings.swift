@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImageServiceSettings: View {
-    @State private var selectedTab: ServiceTab = .models
+    @State private var selectedTab: ImageServiceTab = .models
     
     var body: some View {
         Group {
@@ -28,7 +28,7 @@ struct ImageServiceSettings: View {
     
     var picker: some View {
         Picker("Tab", selection: $selectedTab) {
-            ForEach(ServiceTab.allCases, id: \.self) { tab in
+            ForEach(ImageServiceTab.allCases, id: \.self) { tab in
                 Label(tab.rawValue, systemImage: tab.imageName)
                     .tag(tab)
                     .labelStyle(.titleOnly)

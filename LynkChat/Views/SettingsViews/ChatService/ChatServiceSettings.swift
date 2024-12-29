@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChatServiceSettings: View {
-    @State private var selectedTab: ServiceTab = .models
+    @State private var selectedTab: ChatServiceTab = .models
     
     var body: some View {
         Group {
@@ -16,7 +16,9 @@ struct ChatServiceSettings: View {
             case .models:
                 ChatModelTable()
             case .parameters:
-                ParameterSettings()
+                ChatParameterSettings()
+            case .plugins:
+                ChatPluginSettings()
             }
         }
         .toolbar {
@@ -28,7 +30,7 @@ struct ChatServiceSettings: View {
     
     var picker: some View {
         Picker("Tab", selection: $selectedTab) {
-            ForEach(ServiceTab.allCases, id: \.self) { tab in
+            ForEach(ChatServiceTab.allCases, id: \.self) { tab in
                 Label(tab.rawValue, systemImage: tab.imageName)
                     .tag(tab)
                     .labelStyle(.titleOnly)

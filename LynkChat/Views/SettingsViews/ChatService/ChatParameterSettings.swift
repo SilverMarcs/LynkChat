@@ -1,5 +1,5 @@
 //
-//  ParameterSettings.swift
+//  ChatParameterSettings.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 08/07/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ParameterSettings: View {
+struct ChatParameterSettings: View {
     @ObservedObject var config = ChatConfigDefaults.shared
     @ObservedObject var modelConfig = ModelConfig.shared
     @State var expandAdvanced: Bool = true
@@ -74,5 +74,5 @@ struct ParameterSettings: View {
 }
 
 #Preview {
-    ParameterSettings()
+    ChatParameterSettings()
 }
