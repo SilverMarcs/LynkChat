@@ -187,6 +187,7 @@
 		08D22A8C2D212D7B007F9F4A /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A8B2D212D7B007F9F4A /* String++.swift */; };
 		08D22A8E2D212D96007F9F4A /* Number++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A8D2D212D96007F9F4A /* Number++.swift */; };
 		08D22A902D212DA9007F9F4A /* ModelContext++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A8F2D212DA9007F9F4A /* ModelContext++.swift */; };
+		08D22A942D21AFFD007F9F4A /* ChatTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A932D21AFFD007F9F4A /* ChatTool.swift */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08E7209A2CE7D46D0014888B /* SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E720992CE7D46D0014888B /* SearchToken.swift */; };
 		08F0EF1E2C6C2DFD00900ED0 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */; };
@@ -386,6 +387,7 @@
 		08D22A8B2D212D7B007F9F4A /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		08D22A8D2D212D96007F9F4A /* Number++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Number++.swift"; sourceTree = "<group>"; };
 		08D22A8F2D212DA9007F9F4A /* ModelContext++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext++.swift"; sourceTree = "<group>"; };
+		08D22A932D21AFFD007F9F4A /* ChatTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTool.swift; sourceTree = "<group>"; };
 		08D571672CF7CCAD002EC931 /* MessageGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupList.swift; sourceTree = "<group>"; };
 		08E720992CE7D46D0014888B /* SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToken.swift; sourceTree = "<group>"; };
 		08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
@@ -696,6 +698,7 @@
 		08A222BF2C2ABE4300D76C8B /* Message */ = {
 			isa = PBXGroup;
 			children = (
+				08D22A932D21AFFD007F9F4A /* ChatTool.swift */,
 				082F09DA2CB2715A00B7860A /* Message.swift */,
 				08CA42B22CF0F4430073BB01 /* MessageGroup.swift */,
 				0834E77A2C71A42F007CB294 /* TypedData.swift */,
@@ -1060,6 +1063,7 @@
 				08366D9E2D1B12F200BCB3B3 /* WindowScenesCollection.swift in Sources */,
 				08A00FEC2D19A400001D48CB /* InputEditor.swift in Sources */,
 				08D22A822D212B0E007F9F4A /* View+Scene++.swift in Sources */,
+				08D22A942D21AFFD007F9F4A /* ChatTool.swift in Sources */,
 				08D22A8E2D212D96007F9F4A /* Number++.swift in Sources */,
 				08D22A7B2D212732007F9F4A /* Logging.swift in Sources */,
 				08A222BE2C2ABDB400D76C8B /* InputManager.swift in Sources */,

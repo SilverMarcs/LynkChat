@@ -31,8 +31,12 @@ struct StreamHandler {
             case .text(let content):
                 streamText += content
                 await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
-            case .tool(let tool):
-                assistant.toolCalls?.append(tool)
+            case .toolCall(let tool):
+                assistant.tools?.append(.init(toolCallId: tool.toolCallId, tool: tool.tool, args: tool.args, result: nil))
+            case .toolResult(let toolResult):
+                if var tools = assistant.tools, let index = tools.firstIndex(where: { $0.toolCallId == toolResult.toolCallId }) {
+                    tools[index].result = toolResult.result
+                }
             case .finish(let tokens):
                 totalTokens = calculateTotalTokens(tokens)
             case .error(let message):

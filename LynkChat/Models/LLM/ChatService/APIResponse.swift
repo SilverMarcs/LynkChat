@@ -8,13 +8,16 @@
 import Foundation
 
 // MARK: - Subtypes
-struct ToolCall: Codable, Identifiable {
+struct ToolCall: Decodable {
+    let toolCallId: String
     let tool: Tool
     let args: String
-    
-    var id: String {
-        return tool.rawValue
-    }
+}
+
+struct ToolResult: Decodable {
+    let toolCallId: String
+    let tool: Tool
+    let result: String
 }
 
 struct TokenUsage: Codable {
@@ -27,14 +30,17 @@ enum ResponseType: Decodable {
     case text(content: String)
     case finish(usage: TokenUsage)
     case error(message: String)
-    case tool(tool: ToolCall)
+    case toolCall(call: ToolCall)
+    case toolResult(result: ToolResult)
 
     enum CodingKeys: String, CodingKey {
         case type
         case content
         case usage
+        case toolCallId
         case tool
         case args
+        case result
     }
     
     init(from decoder: Decoder) throws {
@@ -45,16 +51,27 @@ enum ResponseType: Decodable {
         case "text":
             let content = try container.decode(String.self, forKey: .content)
             self = .text(content: content)
-        case "tool":
-            let toolName = try container.decode(Tool.self, forKey: .tool)
+            
+        case "toolCall":
+            let toolCallId = try container.decode(String.self, forKey: .toolCallId)
+            let tool = try container.decode(Tool.self, forKey: .tool)
             let args = try container.decode(String.self, forKey: .args)
-            self = .tool(tool: ToolCall(tool: toolName, args: args))
+            self = .toolCall(call: ToolCall(toolCallId: toolCallId, tool: tool, args: args))
+            
+        case "toolResult":
+            let toolCallId = try container.decode(String.self, forKey: .toolCallId)
+            let tool = try container.decode(Tool.self, forKey: .tool)
+            let result = try container.decode(String.self, forKey: .result)
+            self = .toolResult(result: ToolResult(toolCallId: toolCallId, tool: tool, result: result))
+            
         case "finish":
             let usage = try container.decode(TokenUsage.self, forKey: .usage)
             self = .finish(usage: usage)
+            
         case "error":
             let message = try container.decode(String.self, forKey: .content)
             self = .error(message: message)
+            
         default:
             throw RuntimeError("Invalid response Received")
         }

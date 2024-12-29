@@ -94,8 +94,11 @@ struct APIService {
                                 case .text(let content):
                                     continuation.yield(.text(content: content))
                                     
-                                case .tool(let tool):
-                                    continuation.yield(.tool(tool: tool))
+                                case .toolCall(let tool):
+                                    continuation.yield(.toolCall(call: tool))
+                                    
+                                case .toolResult(let result):
+                                    continuation.yield(.toolResult(result: result))
                                     
                                 case .finish(let usage):
                                     continuation.yield(.finish(usage: usage))

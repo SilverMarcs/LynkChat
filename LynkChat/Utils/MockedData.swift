@@ -12,7 +12,11 @@ extension Message {
     
     static let mockUserMessage = Message(role: .user, content: String.shortContent, model: .claude3_5haiku)
     
-    static let assistantWithToolCall = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, toolCalls: [.init(tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}")])
+    static let assistantWithToolCall = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockTool])
+}
+
+extension ChatTool {
+    static let mockTool = ChatTool(toolCallId: "toolUse", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: "This is the result of the tool url scraping of page")
 }
 
 extension MessageGroup {

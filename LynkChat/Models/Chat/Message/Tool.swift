@@ -42,4 +42,14 @@ enum Tool: String, CaseIterable, Codable {
         case .imageGeneration: .mint
         }
     }
+    
+    // TODO: Implement this
+    func resultView(result: String) -> some View {
+        Text("Result: \(result)")
+    }
+    
+    // TODO: Implement this
+    func callView() -> some View {
+        Text("Call View")
+    }
 }

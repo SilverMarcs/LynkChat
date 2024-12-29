@@ -57,13 +57,19 @@ struct ChatListRow: View {
     var row: some View {
         HStack {
             ListRowImage(model: chat.config.model)
-//                .symbolEffect(.bounce, options: .speed(0.5), isActive: chat.isReplying)
             
             HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
                 .contentTransition(.numericText())
                 .lineLimit(1)
                 .font(font)
                 .opacity(0.9)
+            
+//            Label {
+//                Text(chat.title)
+//            } icon: {
+//                Image(chat.config.model.imageName)
+//                    .foregroundStyle(Color(hex: chat.config.model.color).gradient)
+//            }
             
             Spacer()
             
@@ -165,5 +171,5 @@ struct ChatListRow: View {
         ChatListRow(chat: .mockChat)
             .environment(ChatVM())
     }
-    .frame(width: 220)
+    .frame(width: 250)
 }

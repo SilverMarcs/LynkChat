@@ -10,10 +10,9 @@ import SwiftUI
 struct ListRowImage: View {
     var model: ModelImageProvider
     
-    
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 7)
                 .fill(Color(hex: model.color).gradient)
                 .frame(width: imageSize, height: imageSize)
 
@@ -24,7 +23,7 @@ struct ListRowImage: View {
     
     var imageSize: CGFloat {
         #if os(macOS)
-        return 23
+        return 22
         #else
         return 26
         #endif

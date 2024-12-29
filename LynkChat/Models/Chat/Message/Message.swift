@@ -8,13 +8,6 @@
 import Foundation
 import SwiftData
 
-enum MessageRole: String, Codable {
-    case user
-    case assistant
-    case system
-    case tool
-}
-
 @Model
 final class Message: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
@@ -35,7 +28,7 @@ final class Message: Equatable, Identifiable, Hashable {
     @Relationship(deleteRule: .cascade)
     var next: MessageGroup?
     
-    var toolCalls: [ToolCall]? = []
+    var tools: [ChatTool]? = []
     
     // TODO: typed init functions for diff roles
     
@@ -43,14 +36,14 @@ final class Message: Equatable, Identifiable, Hashable {
          content: String = "",
          model: ChatModel,
          dataFiles: [TypedData] = [],
-         toolCalls: [ToolCall]? = [],
+         tools: [ChatTool]? = [],
          isReplying: Bool = false,
          height: CGFloat = 0) {
         self.role = role
         self.content = content
         self.model = model
         self.dataFiles = dataFiles
-        self.toolCalls = toolCalls
+        self.tools = tools
         self.isReplying = isReplying
         self.height = height
     }
@@ -61,12 +54,14 @@ final class Message: Equatable, Identifiable, Hashable {
             content: content,
             model: model,
             dataFiles: dataFiles,
-            toolCalls: toolCalls,
+            tools: tools,
             isReplying: isReplying,
             height: height
         )
     }
 }
+
+
 
 extension Message {
     func toAPIMessage() -> APIMessage {
@@ -108,4 +103,9 @@ extension Message {
         
         return APIMessage(role: role, content: contentItems)
     }
+}
+
+enum MessageRole: String, Codable {
+    case user
+    case assistant
 }

@@ -58,7 +58,7 @@ struct ToolCallView: View {
 }
 
 #Preview {
-    ToolCallView(toolCall: .init(tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}"))
+    ToolCallView(toolCall: .init(toolCallId: "toolUse", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}"))
         .frame(width: 200, height: 100)
 }
 
