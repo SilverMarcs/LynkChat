@@ -20,6 +20,7 @@ struct ToolsBarView: View {
             config.toggleTool(.scrapeLinks)
         }
         .opacity((config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? 0.85 : 0.8))
+        .padding(.leading, (config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? -4 : 0))
         
         toolButton(
             tool: .imageGeneration,
@@ -40,37 +41,18 @@ struct ToolsBarView: View {
             Label(tool.shortTitle, systemImage: tool.iconName)
                 .imageScale(isEnabled ? .medium : .large)
                 .padding(.horizontal, isEnabled ? 7 : 2)
-                .padding(.vertical, isEnabled ? 3 : 0)
+                .padding(.vertical, isEnabled ? 3.5 : 0)
                 .foregroundStyle(isEnabled ? tool.color : .secondary)
                 .background {
-                    if isEnabled {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(tool.color.opacity(0.10))
-                    }
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(isEnabled ? tool.color.opacity(0.10) : .clear)
+                        .stroke(isEnabled ? tool.color.opacity(0.3) : .clear, lineWidth: 1)
                 }
+                .labelStyle(includingText: isEnabled)
                 .contentShape(Rectangle())
-                .apply {
-                    if isEnabled {
-                        $0.labelStyle(.titleAndIcon)
-                            .background {
-                                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .stroke(tool.color.opacity(0.3), lineWidth: 1)
-                            }
-                    } else {
-                        $0.labelStyle(.iconOnly)
-                    }
-                }
             }
             .buttonStyle(.plain)
-            .padding(.horizontal, isEnabled ? 1 : 5)
-        
-        var imageSize: CGFloat {
-            if isEnabled {
-                return 14
-            } else {
-                return 17
-            }
-        }
+            .padding(.horizontal, isEnabled ? 2 : 5)
     }
 }
 
@@ -78,4 +60,15 @@ struct ToolsBarView: View {
     InputArea(chat: Chat())
         .environment(ChatVM())
         .frame(height: 94)
+}
+
+extension View {
+    @ViewBuilder
+    func labelStyle(includingText: Bool) -> some View {
+        if includingText {
+            self.labelStyle(.titleAndIcon)
+        } else {
+            self.labelStyle(.iconOnly)
+        }
+    }
 }
