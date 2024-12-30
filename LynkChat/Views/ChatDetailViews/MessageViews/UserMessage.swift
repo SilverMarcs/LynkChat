@@ -62,7 +62,8 @@ struct UserMessage: View {
                             view
                         }
                     }
-                    
+                    .padding(3)
+    
 //                    AutoHeightTextView(text: displayedText, height: $textViewHeight)
 //                        .frame(height: group.activeMessage.height, alignment: .top)
 //                         .onChange(of: textViewHeight) {

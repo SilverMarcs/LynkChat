@@ -77,10 +77,27 @@ extension Message {
             return nil
         }
         
-        // Concatenate texts with the original message content
-        let combinedText = (textContents + [content])
+        // Create tool usage texts
+        let toolTexts = tools?.map { tool -> String in
+            let resultText: String
+            if tool.tool == .imageGeneration {
+                resultText = "generated image was shown to user"
+            } else {
+                resultText = tool.result ?? "No result"
+            }
+            
+            return """
+                Used \(tool.tool.rawValue) tool
+                Arguments: \(tool.args)
+                Tool Result:
+                \(resultText)
+                """
+        } ?? []
+        
+        // Concatenate texts with the original message content and tool texts
+        let combinedText = (textContents + [content] + toolTexts)
             .filter { !$0.isEmpty } // Filter out empty strings
-            .joined(separator: "\n")
+            .joined(separator: "\n\n") // Added double newline for better separation
         
         // Only add text content if it's not empty
         if !combinedText.isEmpty {
