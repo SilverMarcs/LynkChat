@@ -31,23 +31,8 @@ struct ToolResultView: View {
             .animation(.easeInOut(duration: 0.3), value: chatTool.result != nil)
             .frame(height: 66) // Set a fixed frame that matches both views
 
-        default:
-            if let result = chatTool.result {
-                Text("Result: \(result)")
-                    .textSelection(.enabled)
-            } else {
-                // Generic placeholder for other tools
-                HStack {
-                    ProgressView()
-                    Text("Processing \(chatTool.tool.rawValue)...")
-                        .foregroundColor(.secondary)
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(.background.quaternary)
-                )
-            }
+        case .scrapeLinks:
+            EmptyView()
         }
     }
 }
