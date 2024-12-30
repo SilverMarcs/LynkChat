@@ -33,7 +33,7 @@ struct ToolSearchPlaceholderView: View {
                     }
                     .padding(.horizontal, 4)
                     .frame(width: 155, height: 50, alignment: .leading)
-                    .redacted(reason: .placeholder)
+                    .shimmer(when: .constant(true))
                 }
                 .groupBoxStyle(PlatformGroupBoxStyle())
             }
@@ -48,7 +48,7 @@ struct ToolSearchPlaceholderView: View {
                 }
                 .padding(.horizontal, 5)
                 .frame(height: 50)
-                .redacted(reason: .placeholder)
+                .shimmer(when: .constant(true))
             }
             .groupBoxStyle(PlatformGroupBoxStyle())
         }

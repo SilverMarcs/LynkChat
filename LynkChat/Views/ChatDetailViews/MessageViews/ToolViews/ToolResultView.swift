@@ -53,8 +53,8 @@ struct ToolResultView: View {
 //    ToolResultView(chatTool: chatTool1)
 //        .frame(width: 700)
 //        .onAppear {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-//                chatTool.result = String.mockGoogleSearch
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                chatTool1.result = String.mockGoogleSearch
 //            }
 //        }
     
