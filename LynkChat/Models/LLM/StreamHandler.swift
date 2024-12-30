@@ -40,10 +40,8 @@ struct StreamHandler {
                 ))
                 
             case .toolResult(let toolResultResponse):
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                    if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
-                        assistant.tools?[index].result = toolResultResponse.result
-                    }
+                if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
+                    assistant.tools?[index].result = toolResultResponse.result
                 }
                 
             case .finish(let finishResponse):
