@@ -18,6 +18,7 @@ struct ChatToolView: View {
             }
         }
         
+        
         ForEach(tools) { chatTool in
             ToolResultView(chatTool: chatTool)
                 .transaction { $0.animation = nil }
