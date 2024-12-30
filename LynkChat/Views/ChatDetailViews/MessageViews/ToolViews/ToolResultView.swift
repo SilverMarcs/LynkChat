@@ -29,34 +29,40 @@ struct ToolResultView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: chatTool.result != nil)
-            .frame(height: 66) // Set a fixed frame that matches both views
 
         case .scrapeLinks:
             EmptyView()
         case .transcribe:
-            // TODO: do htis
             GroupBox {
                 if let result = chatTool.result {
-                    Text(result)
-                        .font(.callout)
-                        .lineLimit(3)
-                        .truncationMode(.tail)
+                    ToolTranscribeView(transcription: result)
                 } else {
-                    ProgressView()
+                    ToolTranscribePlaceholderView()
                 }
             }
+            .animation(.easeInOut(duration: 0.3), value: chatTool.result != nil)
         }
     }
 }
 
 #Preview {
-    @Previewable @State var chatTool: ChatTool = .mockGoogleTool2
+    @Previewable @State var chatTool1: ChatTool = .mockGoogleTool2
     
-    ToolResultView(chatTool: chatTool)
-        .frame(width: 700)
+    @Previewable @State var chatTool2: ChatTool = .mockTranscribeTool
+    
+//    ToolResultView(chatTool: chatTool1)
+//        .frame(width: 700)
+//        .onAppear {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//                chatTool.result = String.mockGoogleSearch
+//            }
+//        }
+    
+    ToolResultView(chatTool: chatTool2)
+        .frame(width: 700, height: 500)
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                chatTool.result = String.mockGoogleSearch
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                chatTool2.result = String.mockTranscription + "\n" + String.mockTranscription
             }
         }
 }

@@ -20,22 +20,20 @@ struct ToolSearchPlaceholderView: View {
                             .lineLimit(2)
                             .lineSpacing(0.1)
                             .foregroundStyle(.link)
-                            .redacted(reason: .placeholder)
                         
                         HStack(spacing: 5) {
                             Image(systemName: "globe")
                                 .frame(width: 12, height: 12)
                                 .foregroundStyle(Color.getRandomColor())
-                                .redacted(reason: .placeholder)
                             
                             Text("wwwbbccom")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                                .redacted(reason: .placeholder)
                         }
                     }
                     .padding(.horizontal, 4)
                     .frame(width: 155, height: 50, alignment: .leading)
+                    .redacted(reason: .placeholder)
                 }
                 .groupBoxStyle(PlatformGroupBoxStyle())
             }
@@ -46,11 +44,11 @@ struct ToolSearchPlaceholderView: View {
                         Image(systemName: "globe")
                             .frame(width: 10, height: 10)
                             .foregroundStyle(Color.getRandomColor())
-                            .redacted(reason: .placeholder)
                     }
                 }
                 .padding(.horizontal, 5)
                 .frame(height: 50)
+                .redacted(reason: .placeholder)
             }
             .groupBoxStyle(PlatformGroupBoxStyle())
         }

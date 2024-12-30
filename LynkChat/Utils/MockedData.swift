@@ -15,18 +15,16 @@ extension Message {
     static let assistantWithToolCall = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockTool])
     
     static let assistantWithImageTool = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockImageTool])
-    
-    static let assistantWithGoogleTool = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockGoogleTool])
 }
 
 extension ChatTool {
-    static let mockTool = ChatTool(toolCallId: "toolUse", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: "This is the result of the tool url scraping of page")
+    static let mockTool = ChatTool(toolCallId: "scrapeLinks123", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: "This is the result of the tool url scraping of page")
     
-    static let mockImageTool = ChatTool(toolCallId: "imageTool", tool: .imageGeneration, args: "{url : https://www.google.com}", result: "https://picsum.photos/200")
+    static let mockImageTool = ChatTool(toolCallId: "imageTool123", tool: .imageGeneration, args: "{url : https://www.google.com}", result: "https://picsum.photos/200")
     
-    static let mockGoogleTool = ChatTool(toolCallId: "googleTool", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: String.mockGoogleSearch)
-    
-    static let mockGoogleTool2 = ChatTool(toolCallId: "googleTool", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: nil)
+    static let mockGoogleTool2 = ChatTool(toolCallId: "googleTool123", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: nil)
+
+    static let mockTranscribeTool = ChatTool(toolCallId: "transcribel123", tool: .transcribe, args: "{key : ddgyusadg67ygyisdgiyas}", result: nil)
 }
 
 extension MessageGroup {
@@ -246,4 +244,7 @@ extension String {
         URL: https://community.spotify.com/t5/Other-Podcasts-Partners-etc/How-to-search-for-low-plays-tracks/td-p/4398267
         Snippet: About the boldness/size of the genres and artists, I would say that more popular ones are bolder than the lesser-known ones. I can't really think of a better or ...
         """
+    static let mockTranscription = """
+    This is the Micromachine Man presenting the most midget miniature motorcade of micromachines. Each one has dramatic details, terrific trim, precision paint jobs, plus incredible micromachine pocket play sets. There's a police station, fire station, restaurant, service station, and more. Perfect pocket portables to take any place. And there are many miniature play sets to play with, and each one comes with its own special edition micromachine vehicle and fun fantastic features that miraculously move. Raise the boat lift at the airport, marina, man the gun turret at the army base, clean your car at the car wash, raise the toll bridge. And these play sets fit together to form a micromachine world. Micromachine pocket play sets so tremendously tiny, so perfectly precise, so dazzlingly detailed, you'll want to pocket them all. Micromachines and micromachine pocket play sets sold separately from Galoob. The smaller they are, the better they are.
+    """
 }

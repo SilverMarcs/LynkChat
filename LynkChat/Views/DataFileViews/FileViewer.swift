@@ -12,17 +12,17 @@ struct FileViewer: View {
     
     var body: some View {
         GroupBox {
-            HStack {
+            HStack(spacing: 4) {
                 Image(platformImage: typedData.imageName)
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 38, height: 38)
+                    .frame(width: 27, height: 27)
                 
                 VStack(alignment: .leading) {
                     Text((typedData.fileName as NSString).deletingPathExtension)
                         .font(.callout)
-                        .fontWeight(.bold)
+                        .fontWeight(.semibold)
                         .lineLimit(1)
                         .truncationMode(.tail)
                     
@@ -33,7 +33,7 @@ struct FileViewer: View {
                 
                 Spacer()
             }
-            .frame(width: 135, height: 37)
+            .frame(width: 135, height: 28)
         }
         .groupBoxStyle(PlatformGroupBoxStyle())
     }
