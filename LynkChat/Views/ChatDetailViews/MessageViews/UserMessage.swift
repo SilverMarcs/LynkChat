@@ -48,19 +48,12 @@ struct UserMessage: View {
                         baseURL: "LynkChat Web Content",
                         codeBlockTheme: config.codeBlockTheme
                     )
-                    .apply { view in
-                        if config.markdownProvider == .webview {
-                            view
-                                .frame(height: group.activeMessage.height, alignment: .top)
-                                .onChange(of: height) {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                        if height > 0 {
-                                            group.activeMessage.height = height
-                                        }
-                                    }
-                                }
-                        } else {
-                            view
+                    .frame(height: group.activeMessage.height, alignment: .top)
+                    .onChange(of: height) {
+                        DispatchQueue.main.async {
+//                            if height > 0 {
+                                group.activeMessage.height = height
+//                            }
                         }
                     }
                     .padding(3)

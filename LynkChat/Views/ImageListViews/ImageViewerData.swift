@@ -58,58 +58,16 @@ struct ImageViewerData: View {
     }
     
     func saveImage() {
-        if imageConfig.saveToPhotos {
-            let image = PlatformImage(data: data)
-            
-            PHPhotoLibrary.requestAuthorization { status in
-                guard status == .authorized else {
-                    print("No access to photo library")
-                    return
-                }
-                
-                if let image = image {
-                    PHPhotoLibrary.shared().performChanges({
-                        PHAssetChangeRequest.creationRequestForAsset(from: image)
-                    }) { success, error in
-                        if success {
-                            print("Image saved to Photos")
-                            DispatchQueue.main.async {
-                                showCheckmark = true
-                                
-                                // Revert back to the original icon after 2 seconds
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    showCheckmark = false
-                                }
-                            }
-                        } else if let error = error {
-                            print("Error saving image to Photos: \(error)")
-                        }
+        ImageSaveUtil.saveImage(data: data) { success in
+            if success {
+                DispatchQueue.main.async {
+                    showCheckmark = true
+                    
+                    // Revert back to the original icon after 2 seconds
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        showCheckmark = false
                     }
-                } else {
-                    print("Error creating UIImage from data")
                 }
-            }
-        } else {
-            guard let downloadsDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
-                print("Unable to access Downloads directory")
-                return
-            }
-            
-            let fileName = UUID().uuidString + "_image.png"
-            let fileURL = downloadsDirectory.appendingPathComponent(fileName)
-            
-            do {
-                try data.write(to: fileURL)
-                print("Image saved to \(fileURL.path)")
-                
-                showCheckmark = true
-                
-                // Revert back to the original icon after 2 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    showCheckmark = false
-                }
-            } catch {
-                print("Error saving image: \(error)")
             }
         }
     }

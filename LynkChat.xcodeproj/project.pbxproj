@@ -202,6 +202,7 @@
 		08D22AB92D23165F007F9F4A /* ToolTranscribePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB82D23165F007F9F4A /* ToolTranscribePlaceholderView.swift */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08E2E50A2D231B7200A724B4 /* ShimmeringSkeletonRedact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E2E5092D231B7200A724B4 /* ShimmeringSkeletonRedact.swift */; };
+		08E2E50C2D23244300A724B4 /* ImageSaveUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E2E50B2D23244300A724B4 /* ImageSaveUtil.swift */; };
 		08E7209A2CE7D46D0014888B /* SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E720992CE7D46D0014888B /* SearchToken.swift */; };
 		08F0EF1E2C6C2DFD00900ED0 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */; };
 		08F369E32C3C278E002E4A35 /* ProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F369E22C3C278E002E4A35 /* ProviderType.swift */; };
@@ -415,6 +416,7 @@
 		08D22AB82D23165F007F9F4A /* ToolTranscribePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTranscribePlaceholderView.swift; sourceTree = "<group>"; };
 		08D571672CF7CCAD002EC931 /* MessageGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupList.swift; sourceTree = "<group>"; };
 		08E2E5092D231B7200A724B4 /* ShimmeringSkeletonRedact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringSkeletonRedact.swift; sourceTree = "<group>"; };
+		08E2E50B2D23244300A724B4 /* ImageSaveUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaveUtil.swift; sourceTree = "<group>"; };
 		08E720992CE7D46D0014888B /* SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToken.swift; sourceTree = "<group>"; };
 		08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		08F369E22C3C278E002E4A35 /* ProviderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderType.swift; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 		0821816B2C39011100171BF3 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				08E2E50B2D23244300A724B4 /* ImageSaveUtil.swift */,
 				08D22A7C2D212795007F9F4A /* Extensions */,
 				08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */,
 				087BB6892CF707B500B50001 /* Scroller.swift */,
@@ -1237,6 +1240,7 @@
 				08A222832C2AB4FD00D76C8B /* LynkChatApp.swift in Sources */,
 				089C7E122C405904005E3BE9 /* QuickPanelView.swift in Sources */,
 				08C8003A2C36BA30009581C5 /* InputArea.swift in Sources */,
+				08E2E50C2D23244300A724B4 /* ImageSaveUtil.swift in Sources */,
 				08B8DE212C97F3E10041A690 /* ChatConfigDefaults.swift in Sources */,
 				08D22A802D212AB9007F9F4A /* Environment++.swift in Sources */,
 				08F369E32C3C278E002E4A35 /* ProviderType.swift in Sources */,
