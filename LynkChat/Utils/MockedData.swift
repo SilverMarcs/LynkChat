@@ -25,6 +25,8 @@ extension ChatTool {
     static let mockImageTool = ChatTool(toolCallId: "imageTool", tool: .imageGeneration, args: "{url : https://www.google.com}", result: "https://picsum.photos/200")
     
     static let mockGoogleTool = ChatTool(toolCallId: "googleTool", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: String.mockGoogleSearch)
+    
+    static let mockGoogleTool2 = ChatTool(toolCallId: "googleTool", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: nil)
 }
 
 extension MessageGroup {
@@ -217,23 +219,23 @@ extension String {
     
     static let mockGoogleSearch = """
         [1] Revealed: The Top Artists, Songs, Albums, Podcasts, and ...
-        URL: https://newsroom.spotify.com/2024-12-04/top-songs-artists-podcasts-audiobooks-albums-trends-2024/
+        URL: https://www.twitter.com/2024-12-04/top-songs-artists-podcasts-audiobooks-albums-trends-2024/
         Snippet: Dec 4, 2024 ... Spotify Wrapped is all about celebrating the fans, artists, authors, podcasters, and creators who made 2024 the record-breaking, ...
 
         [2] Where can i find my most played songs - The Spotify Community
-        URL: https://community.spotify.com/t5/Content-Questions/Where-can-i-find-my-most-played-songs/td-p/6105746
+        URL: https://www.facebook.com/t5/Content-Questions/Where-can-i-find-my-most-played-songs/td-p/6105746
         Snippet: May 31, 2024 ... In your profile, you'll find 2 sections: Top artists this month and Top tracks this month. Hope this clears things up. If you have any questions ...
 
         [3] From Breakout Pop Stars to Country Crossovers, Here's the Scoop ...
-        URL: https://newsroom.spotify.com/2024-12-04/from-breakout-pop-stars-to-country-crossovers-heres-the-scoop-on-2024s-biggest-music-trends-on-spotify/
+        URL: https://www.theverge.com/2024-12-04/from-breakout-pop-stars-to-country-crossovers-heres-the-scoop-on-2024s-biggest-music-trends-on-spotify/
         Snippet: Dec 4, 2024 ... ... 2024's Biggest Music Trends on Spotify ... Level with us: Which 2024 music trend surprised you the most? ... Taylor Swift Takes the Crown as ...
 
         [4] Solved: How to exclude artist and/or genre from recommende ...
-        URL: https://community.spotify.com/t5/Content-Questions/How-to-exclude-artist-and-or-genre-from-recommended-music-and/td-p/5171617
+        URL: https://www.instagram.co,/t5/Content-Questions/How-to-exclude-artist-and-or-genre-from-recommended-music-and/td-p/5171617
         Snippet: Mar 20, 2021 ... ... last summer, my son used my phone to cast music during a party. ... Does this method mess up the AI calculations and lead to spotify suggesting ...
 
         [5] The Top Songs, Artists, Podcasts, and Listening Trends of 2023 ...
-        URL: https://newsroom.spotify.com/2023-11-29/top-songs-artists-podcasts-albums-trends-2023/
+        URL: https://www.9to5mac.com/2023-11-29/top-songs-artists-podcasts-albums-trends-2023/
         Snippet: Nov 29, 2023 ... In the last 24 months, India's classical music consumption grew by close to 500% on Spotify. Over 45% of Indian classical music listeners on ...
 
         [6] Global Top 50 | 2024 Hits - playlist by Topsify | Spotify

@@ -19,12 +19,18 @@ struct ToolResultView: View {
                 ToolImagePlaceholderView()
             }
         case .webSearch:
-            if let result = chatTool.result {
-                ToolSearchView(searchString: result)
-            } else {
-                ToolSearchPlaceholderView()
+            ZStack {
+                if let result = chatTool.result {
+                    ToolSearchView(searchString: result)
+                        .transition(.opacity)
+                } else {
+                    ToolSearchPlaceholderView()
+                        .transition(.opacity)
+                }
             }
-            
+            .animation(.easeInOut(duration: 0.3), value: chatTool.result != nil)
+            .frame(height: 66) // Set a fixed frame that matches both views
+
         default:
             if let result = chatTool.result {
                 Text("Result: \(result)")
@@ -47,6 +53,13 @@ struct ToolResultView: View {
 }
 
 #Preview {
-    ToolResultView(chatTool: .mockGoogleTool)
-        .frame(width: 400)
+    @Previewable @State var chatTool: ChatTool = .mockGoogleTool2
+    
+    ToolResultView(chatTool: chatTool)
+        .frame(width: 700)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                chatTool.result = String.mockGoogleSearch
+            }
+        }
 }
