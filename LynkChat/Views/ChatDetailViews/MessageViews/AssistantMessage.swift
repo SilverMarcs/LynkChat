@@ -24,7 +24,7 @@ struct AssistantMessage: View {
                 .transaction { $0.animation = nil }
                 .padding(.leading, labelPadding)
             
-            if let tools = message.tools {
+            if let tools = message.tools, !tools.isEmpty {
                 ChatToolView(tools: tools)
             }
             

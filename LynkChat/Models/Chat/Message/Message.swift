@@ -28,7 +28,7 @@ final class Message: Equatable, Identifiable, Hashable {
     @Relationship(deleteRule: .cascade)
     var next: MessageGroup?
     
-    var tools: [ChatTool]? = []
+    var tools: [ChatTool]?
     
     // TODO: TODO: typed init functions for diff roles
     

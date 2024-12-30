@@ -24,6 +24,7 @@ struct UserMessage: View {
         VStack(alignment: .trailing, spacing: 8) {
             if !group.dataFiles.isEmpty {
                 DataFilesView(dataFiles: group.dataFiles)
+                    .transaction { $0.animation = nil }
             }
             
             GroupBox {
