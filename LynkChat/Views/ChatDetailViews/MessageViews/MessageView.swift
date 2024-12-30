@@ -16,6 +16,7 @@ struct MessageView: View {
             switch group.role {
             case .user:
                 UserMessage(group: group)
+//                AssistantMessageAux(group: group)
             case .assistant:
                 AssistantMessageAux(group: group)
             }

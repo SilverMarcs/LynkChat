@@ -137,3 +137,13 @@ struct ModelEditTip: Tip {
     }
 }
     
+
+struct ImageGenToolTip: Tip {
+    var title: Text {
+        Text("Images generated here are temporary. Save them to your device if needed")
+    }
+    
+    var options: [Option] {
+        MaxDisplayCount(2)
+    }
+}

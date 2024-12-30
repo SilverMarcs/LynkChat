@@ -34,12 +34,13 @@ class CustomWebView: WKWebView {
     }
     #endif
 
-    func updateMarkdownContent(_ markdownContent: String, highlightString: String, fontSize: CGFloat, codeBlockTheme: CodeBlockTheme) {
+    func updateMarkdownContent(_ markdownContent: String, highlightString: String, fontSize: CGFloat, codeBlockTheme: CodeBlockTheme, enableMarkdown: Bool) {
         let data: [String: Any] = [
             "markdownContent": markdownContent,
             "highlightString": highlightString,
             "fontSize": fontSize,
-            "codeBlockTheme": codeBlockTheme.rawValue
+            "codeBlockTheme": codeBlockTheme.rawValue,
+            "enableMarkdown": enableMarkdown
         ]
         
         do {
@@ -56,6 +57,6 @@ class CustomWebView: WKWebView {
             self.contentHeight = contentHeight
             self.invalidateIntrinsicContentSize()
             self.coordinator?.updateCalculatedHeight(self.contentHeight)
-         }
+        }
     }
 }

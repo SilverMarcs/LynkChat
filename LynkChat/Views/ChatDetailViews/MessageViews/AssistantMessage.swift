@@ -33,27 +33,19 @@ struct AssistantMessage: View {
                 .environment(\.isReplying, message.isReplying)
                 .transaction { $0.animation = nil }
 //                .if(config.markdownProvider == .webview) { view in
-//                .apply { view in
-//                    if config.markdownProvider == .webview {
-//                        view
-//                            .frame(height: message.height, alignment: .top)
-//                            .onChange(of: height) {
-//                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//                                    if height > 0 {
-//                                        message.height = height
-//                                    }
-//                                }
-//                            }
-//                    } else {
-//                        view
-//                    }
-//                }
-                .frame(height: message.height, alignment: .top)
-                .onChange(of: height) {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        if height > 0 {
-                            message.height = height
-                        }
+                .apply { view in
+                    if config.markdownProvider == .webview {
+                        view
+                            .frame(height: message.height, alignment: .top)
+                            .onChange(of: height) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    if height > 0 {
+                                        message.height = height
+                                    }
+                                }
+                            }
+                    } else {
+                        view
                     }
                 }
             

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct ToolImageView: View {
     var urlStr: String
@@ -37,6 +38,11 @@ struct ToolImageView: View {
         }
         .frame(width: 300, height: 300)
         .clipShape(RoundedRectangle(cornerRadius: 10))
+        
+        // TODO: check this
+        TipView(ImageGenToolTip())
+            .frame(width: 300, height: 50)
+        
     }
 }
 

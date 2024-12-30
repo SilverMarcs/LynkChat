@@ -18,7 +18,7 @@ struct UserMessage: View {
 
     @State var isExpanded: Bool = false
     @State var showingTextSelection = false
-//    @State private var textViewHeight: CGFloat = 0
+    @State var height: CGFloat = 20
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
@@ -28,23 +28,48 @@ struct UserMessage: View {
             
             GroupBox {
                 VStack(alignment: .leading, spacing: 0) {
-                    HighlightableTextView(displayedText, highlightedText: chatVM.searchText)
-                        .textSelection(.enabled)
-                        .font(.system(size: config.fontSize))
-                        #if os(macOS)
-                        .lineSpacing(2)
-                        .padding(5)
-                        #endif
+//                    if chatVM.searchText.isEmpty {
+//                        Text(group.activeMessage.content)
+//                            .textSelection(.enabled)
+//                            .font(.system(size: config.fontSize))
+//                            #if os(macOS)
+//                            .lineSpacing(2)
+//                            .padding(5)
+//                            #endif
+//                    } else {
+                    // TODO: restore text versoon when crash is fixed
+                    SwiftMarkdownView(
+                        displayedText,
+                        calculatedHeight: $height,
+                        enableMarkdown: false,
+                        fontSize: CGFloat(config.fontSize - 0.5),
+                        highlightString: chatVM.searchText,
+                        baseURL: "LynkChat Web Content",
+                        codeBlockTheme: config.codeBlockTheme
+                    )
+                    .apply { view in
+                        if config.markdownProvider == .webview {
+                            view
+                                .frame(height: group.activeMessage.height, alignment: .top)
+                                .onChange(of: height) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                        if height > 0 {
+                                            group.activeMessage.height = height
+                                        }
+                                    }
+                                }
+                        } else {
+                            view
+                        }
+                    }
                     
 //                    AutoHeightTextView(text: displayedText, height: $textViewHeight)
-//                        .frame(height: message.activeMessage.height, alignment: .top)
+//                        .frame(height: group.activeMessage.height, alignment: .top)
 //                         .onChange(of: textViewHeight) {
 //                             DispatchQueue.main.async {
-//                                 message.activeMessage.height = textViewHeight
+//                                 group.activeMessage.height = textViewHeight
 //                             }
 //                         }
-                        
-
                     
                     if shouldShowMoreButton {
                         Button {

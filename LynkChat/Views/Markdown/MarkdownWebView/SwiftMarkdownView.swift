@@ -5,7 +5,9 @@ struct SwiftMarkdownView: PlatformViewRepresentable {
     var markdownContent: String
     var calculatedHeight: Binding<CGFloat>?
     
-    // Convert environment values to instance variables
+    // Add new parameter
+    var enableMarkdown: Bool
+    
     var fontSize: CGFloat
     var highlightString: String
     var baseURL: String
@@ -14,6 +16,7 @@ struct SwiftMarkdownView: PlatformViewRepresentable {
     public init(
         _ markdownContent: String,
         calculatedHeight: Binding<CGFloat>? = nil,
+        enableMarkdown: Bool = true,
         fontSize: CGFloat = 16,
         highlightString: String = "",
         baseURL: String = "",
@@ -21,6 +24,7 @@ struct SwiftMarkdownView: PlatformViewRepresentable {
     ) {
         self.markdownContent = markdownContent
         self.calculatedHeight = calculatedHeight
+        self.enableMarkdown = enableMarkdown
         self.fontSize = fontSize
         self.highlightString = highlightString
         self.baseURL = baseURL
@@ -32,7 +36,13 @@ struct SwiftMarkdownView: PlatformViewRepresentable {
     
     public func updatePlatformView(_ platformView: CustomWebView, context _: Context) {
         guard !platformView.isLoading else { return }
-        platformView.updateMarkdownContent(markdownContent, highlightString: highlightString, fontSize: fontSize, codeBlockTheme: codeBlockTheme)
+        platformView.updateMarkdownContent(
+            markdownContent,
+            highlightString: highlightString,
+            fontSize: fontSize,
+            codeBlockTheme: codeBlockTheme,
+            enableMarkdown: enableMarkdown
+        )
     }
 
     #if os(macOS)

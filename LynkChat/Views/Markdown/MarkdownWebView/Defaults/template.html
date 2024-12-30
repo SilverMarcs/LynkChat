@@ -157,7 +157,7 @@
           
           // Highlight only the text parts, not the SVGs
           const highlightedParts = parts.map(part =>
-            part.replace(regex, '<mark style="background-color: #f5d548; color: black;">$&</mark>')
+            part.replace(regex, '<mark style="background-color: #d3d34c; color: black;">$&</mark>')
           );
           
           // Reconstruct the content with SVGs
@@ -171,18 +171,31 @@
           
           return result;
         }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
       
       window.updateWithMarkdownContent = (data) => {
-        const { markdownContent, highlightString, fontSize, codeBlockTheme } = data;
-        
-        // Set the global variable for the highlight function to access
-        window.currentHighlightString = highlightString;
-        
-        // First render the markdown
-        let renderedContent = markdownIt.render(markdownContent);
+          const { markdownContent, highlightString, fontSize, codeBlockTheme, enableMarkdown } = data;
+          
+          // Set the global variable for the highlight function to access
+          window.currentHighlightString = highlightString;
+          
+          // Determine whether to use markdown rendering or plain text
+          let renderedContent;
+          if (enableMarkdown) {
+              // Use markdown-it rendering
+              renderedContent = markdownIt.render(markdownContent);
+          } else {
+              // Use plain text with basic HTML formatting
+              renderedContent = `<div style="white-space: pre-wrap;">${escapeHtml(markdownContent)}</div>`;
+          }
 
-        // Then apply highlighting to the rendered HTML
-        if (highlightString) {
+          // Then apply highlighting to the rendered HTML
+          if (highlightString) {
           const escapedHighlightString = highlightString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           const regex = new RegExp(escapedHighlightString, 'gi');
           
