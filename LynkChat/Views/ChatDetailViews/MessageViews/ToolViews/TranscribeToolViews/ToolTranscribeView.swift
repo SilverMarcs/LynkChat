@@ -16,6 +16,7 @@ struct ToolTranscribeView: View {
                 .font(.headline)
             
             Text(transcription)
+                .textSelection(.enabled)
         }
     }
 }

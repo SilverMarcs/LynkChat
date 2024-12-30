@@ -34,12 +34,16 @@ struct ToolResultView: View {
             EmptyView()
         case .transcribe:
             GroupBox {
-                if let result = chatTool.result {
-                    ToolTranscribeView(transcription: result)
-                } else {
-                    ToolTranscribePlaceholderView()
+                Group {
+                    if let result = chatTool.result {
+                        ToolTranscribeView(transcription: result)
+                    } else {
+                        ToolTranscribePlaceholderView()
+                    }
                 }
+                .padding(3)
             }
+            .groupBoxStyle(PlatformGroupBoxStyle())
             .animation(.easeInOut(duration: 0.3), value: chatTool.result != nil)
         }
     }
@@ -50,19 +54,21 @@ struct ToolResultView: View {
     
     @Previewable @State var chatTool2: ChatTool = .mockTranscribeTool
     
-//    ToolResultView(chatTool: chatTool1)
-//        .frame(width: 700)
-//        .onAppear {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                chatTool1.result = String.mockGoogleSearch
-//            }
-//        }
-    
-    ToolResultView(chatTool: chatTool2)
-        .frame(width: 700, height: 500)
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                chatTool2.result = String.mockTranscription + "\n" + String.mockTranscription
+    VStack {
+        ToolResultView(chatTool: chatTool1)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    chatTool1.result = String.mockGoogleSearch
+                }
             }
-        }
+        
+        ToolResultView(chatTool: chatTool2)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    chatTool2.result = String.mockTranscription + "\n" + String.mockTranscription
+                }
+            }
+    }
+    .padding()
+    .frame(width: 700, height: 300)
 }

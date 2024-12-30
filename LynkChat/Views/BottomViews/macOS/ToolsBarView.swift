@@ -33,6 +33,7 @@ struct ToolsBarView: View {
             }
         }
         .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
+        .scaleEffect(0.95)
         
         toolButton(
             tool: .transcribe,
