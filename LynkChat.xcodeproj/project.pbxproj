@@ -191,7 +191,10 @@
 		08D22A9B2D21D94F007F9F4A /* ToolImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */; };
 		08D22A9D2D21DD12007F9F4A /* ToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9C2D21DD12007F9F4A /* ToolButton.swift */; };
 		08D22A9F2D21E358007F9F4A /* ToolResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9E2D21E358007F9F4A /* ToolResultView.swift */; };
-		08D22AA12D21E620007F9F4A /* ToolWebSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA02D21E620007F9F4A /* ToolWebSearchView.swift */; };
+		08D22AA12D21E620007F9F4A /* ToolSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA02D21E620007F9F4A /* ToolSearchView.swift */; };
+		08D22AA42D22E29F007F9F4A /* ToolSearchPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA32D22E29F007F9F4A /* ToolSearchPlaceholderView.swift */; };
+		08D22AA62D22E2C4007F9F4A /* ToolImagePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */; };
+		08D22AAD2D22E368007F9F4A /* ToolSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08E7209A2CE7D46D0014888B /* SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E720992CE7D46D0014888B /* SearchToken.swift */; };
 		08F0EF1E2C6C2DFD00900ED0 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */; };
@@ -395,7 +398,10 @@
 		08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolImageView.swift; sourceTree = "<group>"; };
 		08D22A9C2D21DD12007F9F4A /* ToolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolButton.swift; sourceTree = "<group>"; };
 		08D22A9E2D21E358007F9F4A /* ToolResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResultView.swift; sourceTree = "<group>"; };
-		08D22AA02D21E620007F9F4A /* ToolWebSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolWebSearchView.swift; sourceTree = "<group>"; };
+		08D22AA02D21E620007F9F4A /* ToolSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchView.swift; sourceTree = "<group>"; };
+		08D22AA32D22E29F007F9F4A /* ToolSearchPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchPlaceholderView.swift; sourceTree = "<group>"; };
+		08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolImagePlaceholderView.swift; sourceTree = "<group>"; };
+		08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchResult.swift; sourceTree = "<group>"; };
 		08D571672CF7CCAD002EC931 /* MessageGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupList.swift; sourceTree = "<group>"; };
 		08E720992CE7D46D0014888B /* SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToken.swift; sourceTree = "<group>"; };
 		08F0EF1D2C6C2DFD00900ED0 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
@@ -905,13 +911,32 @@
 		08D22A992D21D938007F9F4A /* ToolViews */ = {
 			isa = PBXGroup;
 			children = (
-				08D22AA02D21E620007F9F4A /* ToolWebSearchView.swift */,
+				08D22AA72D22E2CB007F9F4A /* ImageToolViews */,
+				08D22AA22D22E265007F9F4A /* WebSearchViews */,
 				08D22A9E2D21E358007F9F4A /* ToolResultView.swift */,
 				085276BF2C98794C009184D2 /* ChatToolView.swift */,
-				08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */,
 				08D22A9C2D21DD12007F9F4A /* ToolButton.swift */,
 			);
 			path = ToolViews;
+			sourceTree = "<group>";
+		};
+		08D22AA22D22E265007F9F4A /* WebSearchViews */ = {
+			isa = PBXGroup;
+			children = (
+				08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */,
+				08D22AA32D22E29F007F9F4A /* ToolSearchPlaceholderView.swift */,
+				08D22AA02D21E620007F9F4A /* ToolSearchView.swift */,
+			);
+			path = WebSearchViews;
+			sourceTree = "<group>";
+		};
+		08D22AA72D22E2CB007F9F4A /* ImageToolViews */ = {
+			isa = PBXGroup;
+			children = (
+				08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */,
+				08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */,
+			);
+			path = ImageToolViews;
 			sourceTree = "<group>";
 		};
 		08F3CA022C705B1600A800F9 /* Windows */ = {
@@ -1042,6 +1067,7 @@
 				0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */,
 				084C244B2D1FBAC800AC431F /* ModelImageProvider.swift in Sources */,
 				087906892CA6E22900E5DCAD /* ImageContentView.swift in Sources */,
+				08D22AA42D22E29F007F9F4A /* ToolSearchPlaceholderView.swift in Sources */,
 				089DB5162CA865F70013E5C3 /* MockedData.swift in Sources */,
 				085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */,
 				08D22A982D21CEE3007F9F4A /* ImageServiceTab.swift in Sources */,
@@ -1059,7 +1085,7 @@
 				08D22A8C2D212D7B007F9F4A /* String++.swift in Sources */,
 				08D22A9F2D21E358007F9F4A /* ToolResultView.swift in Sources */,
 				08850D8B2CFE0A99004D944C /* PermissionsOnboarding.swift in Sources */,
-				08D22AA12D21E620007F9F4A /* ToolWebSearchView.swift in Sources */,
+				08D22AA12D21E620007F9F4A /* ToolSearchView.swift in Sources */,
 				08C800452C36C10A009581C5 /* MessageMenu.swift in Sources */,
 				08AAFB9C2C3D01A6002C04E0 /* ChatListCards.swift in Sources */,
 				08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */,
@@ -1126,6 +1152,7 @@
 				082B88172CD36CD80092C4D0 /* PlatformSpecificGroupBoxStyle.swift in Sources */,
 				085361132C4939C5007DAB62 /* GenerationView.swift in Sources */,
 				084C243E2D1F1CEB00AC431F /* ImageModel.swift in Sources */,
+				08D22AA62D22E2C4007F9F4A /* ToolImagePlaceholderView.swift in Sources */,
 				0898252B2CE9BB1700980468 /* OnboardingPage.swift in Sources */,
 				085276C02C98794C009184D2 /* ChatToolView.swift in Sources */,
 				08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */,
@@ -1166,6 +1193,7 @@
 				08B82C1D2C74EA9400DC0183 /* ImageViewer.swift in Sources */,
 				085361052C491BF0007DAB62 /* ImageSession.swift in Sources */,
 				08F815342C97F64E00B49355 /* BasicInspector.swift in Sources */,
+				08D22AAD2D22E368007F9F4A /* ToolSearchResult.swift in Sources */,
 				08A222832C2AB4FD00D76C8B /* LynkChatApp.swift in Sources */,
 				089C7E122C405904005E3BE9 /* QuickPanelView.swift in Sources */,
 				08C8003A2C36BA30009581C5 /* InputArea.swift in Sources */,

@@ -16,25 +16,13 @@ struct ToolResultView: View {
             if let result = chatTool.result {
                 ToolImageView(urlStr: result)
             } else {
-                ProgressView()
-                    .frame(width: 300, height: 300)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.background.quinary)
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                ToolImagePlaceholderView()
             }
         case .webSearch:
             if let result = chatTool.result {
-                SearchResultView(searchString: result)
+                ToolSearchView(searchString: result)
             } else {
-//                ProgressView()
-//                    .frame(width: 300, height: 300)
-//                    .background(
-//                        RoundedRectangle(cornerRadius: 10)
-//                            .fill(.background.quinary)
-//                    )
-//                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                ToolSearchPlaceholderView()
             }
             
         default:

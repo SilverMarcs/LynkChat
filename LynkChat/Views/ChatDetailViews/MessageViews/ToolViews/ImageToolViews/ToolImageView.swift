@@ -28,12 +28,7 @@ struct ToolImageView: View {
                         .frame(width: 75, height: 75)
                 }
             } else {
-                ProgressView()
-                    .frame(width: 300, height: 300)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.background.quinary)
-                    )
+                ToolImagePlaceholderView()
             }
         }
         .frame(width: 300, height: 300)
