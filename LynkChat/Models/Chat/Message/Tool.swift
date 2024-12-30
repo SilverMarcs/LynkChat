@@ -12,12 +12,14 @@ enum Tool: String, CaseIterable, Codable {
     case webSearch
     case scrapeLinks
     case imageGeneration
+    case transcribe
     
     var title: String {
         switch self {
         case .webSearch: "Web Search"
         case .scrapeLinks: "Fetch URL"
         case .imageGeneration: "Generate Image"
+        case .transcribe: "Transcribe"
         }
     }
     
@@ -26,13 +28,15 @@ enum Tool: String, CaseIterable, Codable {
         case .webSearch: "Web"
         case .scrapeLinks: "URL"
         case .imageGeneration: "Image"
+        case .transcribe: "Transcribe"
         }
     }
     
     var iconName: String {
         switch self {
         case .webSearch, .scrapeLinks: "network"
-        case .imageGeneration: "photo.on.rectangle"
+        case .imageGeneration: "photo.stack"
+        case .transcribe: "waveform"
         }
     }
     
@@ -40,11 +44,7 @@ enum Tool: String, CaseIterable, Codable {
         switch self {
         case .webSearch, .scrapeLinks: .cyan
         case .imageGeneration: .mint
+        case .transcribe: .green
         }
-    }
-    
-    // TODO: Implement this
-    func argsView(_ args: String) -> some View {
-        Text("Args: \(args)")
     }
 }

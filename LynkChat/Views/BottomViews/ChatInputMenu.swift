@@ -74,7 +74,7 @@ struct ChatInputMenu: View {
         }
         .fileImporter(
             isPresented: $isFilePickerPresented,
-            allowedContentTypes: [.text, .pdf, .image],
+            allowedContentTypes: [.text, .pdf, .image, .audio],
             allowsMultipleSelection: true
         ) { result in
             switch result {

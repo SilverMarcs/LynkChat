@@ -24,6 +24,7 @@ struct ChatConfig: Identifiable, Codable {
         if defaults.webSearch { tools.insert(.webSearch) }
         if defaults.scrapeLinks { tools.insert(.scrapeLinks) }
         if defaults.imageGenerate { tools.insert(.imageGeneration) }
+        if defaults.transcribe { tools.insert(.transcribe) }
         
         return tools
     }

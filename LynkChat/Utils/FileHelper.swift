@@ -57,16 +57,4 @@ struct FileHelper {
             return "bin"
         }
     }
-    
-    static func processDataFiles(_ dataFiles: [TypedData]) -> [ContentItem] {
-        return dataFiles.map { data in
-            if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
-                return .text(data.formattedTextContent)
-            } else if data.fileType.conforms(to: .image) {
-                return .image(mimeType: data.mimeType, data: data.data)
-            } else {
-                return .text("Error")
-            }
-        }
-    }
 }

@@ -33,6 +33,18 @@ struct ToolResultView: View {
 
         case .scrapeLinks:
             EmptyView()
+        case .transcribe:
+            // TODO: do htis
+            GroupBox {
+                if let result = chatTool.result {
+                    Text(result)
+                        .font(.callout)
+                        .lineLimit(3)
+                        .truncationMode(.tail)
+                } else {
+                    ProgressView()
+                }
+            }
         }
     }
 }

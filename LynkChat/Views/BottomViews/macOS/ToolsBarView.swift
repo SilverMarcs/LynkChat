@@ -33,6 +33,16 @@ struct ToolsBarView: View {
             }
         }
         .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
+        
+        toolButton(
+            tool: .transcribe,
+            isEnabled: config.isToolEnabled(.transcribe)
+        ) {
+            withAnimation(.spring(duration: 0.3)) {
+                config.toggleTool(.transcribe)
+            }
+        }
+        .opacity(config.isToolEnabled(.transcribe) ? 0.8 : 0.9)
     }
     
     @ViewBuilder

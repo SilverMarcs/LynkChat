@@ -7,11 +7,6 @@
 
 import Foundation
 
-struct APIModel: Codable {
-    let id: String
-    let name: String?
-}
-
 struct APIMessage: Encodable {
     let role: MessageRole
     let content: [ContentItem]
@@ -32,12 +27,13 @@ enum ContentItem: Encodable {
     case image(mimeType: String, data: Data)
     
     private enum CodingKeys: String, CodingKey {
-        case type, text, image
+        case type, text, image, audio
     }
     
     private enum ContentType: String, Encodable {
         case text
         case image
+        case audio
     }
     
     func encode(to encoder: Encoder) throws {

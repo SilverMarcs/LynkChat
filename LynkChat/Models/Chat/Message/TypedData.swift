@@ -41,6 +41,37 @@ struct TypedData: Codable, Identifiable, Hashable {
         PlatformImage(systemName: "doc.on.doc.fill")!
         #endif
     }
+    
+    static func processDataFiles(_ dataFiles: [TypedData]) async -> [ContentItem] {
+        var contentItems: [ContentItem] = []
+        var audioKeys: [String] = []
+        
+        for data in dataFiles {
+            if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
+                contentItems.append(.text(data.formattedTextContent))
+            } else if data.fileType.conforms(to: .image) {
+                contentItems.append(.image(mimeType: data.mimeType, data: data.data))
+            } else if data.fileType.conforms(to: .audio) {
+                do {
+                    let key = try await FileIOResponse.uploadAudioFile(data.data)
+                    audioKeys.append(key)
+                } catch {
+                    print("Error uploading audio file: \(error)")
+                }
+            }
+        }
+        
+        // If we have any audio keys, append them as text
+        if !audioKeys.isEmpty {
+            let audioKeysText = """
+                Audio File Key to use in download request:
+                \(audioKeys.joined(separator: "\n"))
+                """
+            contentItems.append(.text(audioKeysText))
+        }
+        
+        return contentItems
+    }
 }
 
 extension UTType {

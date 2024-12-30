@@ -63,11 +63,11 @@ final class Message: Equatable, Identifiable, Hashable {
 
 // TODO: pass tool call and results
 extension Message {
-    func toAPIMessage() -> APIMessage {
+    func toAPIMessage() async -> APIMessage {
         var contentItems = [ContentItem]()
         
         // Process data files
-        let processedDataFiles = FileHelper.processDataFiles(dataFiles)
+        let processedDataFiles = await TypedData.processDataFiles(dataFiles)
         
         // Add processed text content from data files
         let textContents = processedDataFiles.compactMap { item -> String? in

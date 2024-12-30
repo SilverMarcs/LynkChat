@@ -23,7 +23,7 @@ struct StreamHandler {
         var lastUIUpdateTime = Date()
         var totalTokens = 0
         
-        let apiRequest = createAPIRequest(stream: true)
+        let apiRequest = await createAPIRequest(stream: true)
         
         for try await response in APIService.self.streamResponse(from: apiRequest) {
             switch response {
@@ -81,9 +81,9 @@ struct StreamHandler {
         }
     }
     
-    private func createAPIRequest(stream: Bool) -> APIRequest {
+    private func createAPIRequest(stream: Bool) async -> APIRequest {
         let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
-        let apiMessages = adjustedContext.map { $0.toAPIMessage() }
+        let apiMessages = await adjustedContext.asyncMap { await $0.toAPIMessage() }
         
         return APIRequest(
             model: chat.config.model.id,
