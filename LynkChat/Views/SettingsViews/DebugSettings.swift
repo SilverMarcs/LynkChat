@@ -13,7 +13,11 @@ struct DebugSettings: View {
     var body: some View {
         Form {
             TextField("API Key", text: $config.myApiKey)
-            
+            Toggle(isOn: $config.useLocalhost) {
+                Text("Use Localhost")
+                Text("Using \(String.apiHost)")
+            }
+
             LabeledContent {
                 Button("Reset First Launch") {
                     config.finishedInitialSetup = false

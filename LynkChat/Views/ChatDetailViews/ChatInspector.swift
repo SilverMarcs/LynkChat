@@ -85,7 +85,7 @@ struct ChatInspector: View {
         }
         .formStyle(.grouped)
         #if os(macOS)
-        .frame(width: 400, height: 582)
+        .frame(width: 400, height: 680)
         .overlay(alignment: .topTrailing) {
             DismissButton()
                 .padding(10)
