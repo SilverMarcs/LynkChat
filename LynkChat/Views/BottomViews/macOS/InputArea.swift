@@ -120,7 +120,9 @@ struct InputArea: View {
 
     private var configInfo: some View {
         HStack(spacing: 4) {
-            ToolsBarView(config: $chat.config)
+            if chat.config.model.supportsTool {
+                ToolsBarView(config: $chat.config)
+            }
             
             ModelPicker(selectedModel: $chat.config.model)
             

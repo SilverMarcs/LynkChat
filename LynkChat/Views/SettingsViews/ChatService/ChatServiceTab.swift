@@ -2,7 +2,7 @@
 //  ChatServiceTab.swift
 //  LynkChat
 //
-//  Created by Zabir Raihan on 28/12/2024.
+//  Created by Zabir Raihan on 01/01/2025.
 //
 
 import Foundation
@@ -10,7 +10,6 @@ import Foundation
 enum ChatServiceTab: String, CaseIterable {
     case models = "Models"
     case parameters = "Parameters"
-    case plugins = "Plugins"
     
     var imageName: String {
         switch self {
@@ -18,8 +17,6 @@ enum ChatServiceTab: String, CaseIterable {
             return "cpu.fill"
         case .parameters:
             return "slider.horizontal.3"
-        case .plugins:
-            return "puzzlepiece"
         }
     }
 }

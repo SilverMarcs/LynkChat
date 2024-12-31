@@ -75,6 +75,15 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         }
     }
     
+    var supportsTool: Bool {
+        switch self {
+        case .claude3_5sonnet, .claude3_5haiku, .gpt4o, .gpt4omini, .deepseek:
+            true
+        default:
+            false
+        }
+    }
+    
     static func groupedModels() -> [ModelGroup: [ChatModel]] {
         Dictionary(grouping: ChatModel.allCases) { $0.group }
     }

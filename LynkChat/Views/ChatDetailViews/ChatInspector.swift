@@ -63,15 +63,17 @@ struct ChatInspector: View {
                 )
             }
             
-            Section("Plugins") {
-                LabeledContent("Enable") {
-                    ToolsBarView(config: $chat.config)
-                        .padding(.bottom, -7)
-                        #if !os(macOS)
-                        .padding(.top, -5)
-                        #endif
+            if chat.config.model.supportsTool {
+                Section("Plugins") {
+                    LabeledContent("Enable") {
+                        ToolsBarView(config: $chat.config)
+                            .padding(.bottom, -7)
+                            #if !os(macOS)
+                            .padding(.top, -5)
+                            #endif
+                    }
+                    .frame(height: 25)
                 }
-                .frame(height: 25)
             }
             
             Section("System Prompt") {

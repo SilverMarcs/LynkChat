@@ -12,11 +12,14 @@ struct ChatModelTable: View {
     @State private var selection: ChatModel.ID?
     
     var body: some View {
-        #if os(macOS)
-        macOS
-        #else
-        iOS
-        #endif
+        Group {
+#if os(macOS)
+            macOS
+#else
+            iOS
+#endif
+        }
+        // TODO: Toolbar info icon for extra info
     }
     
     var macOS: some View {

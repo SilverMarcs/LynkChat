@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct PluginsOnboarding: View {
-    @ObservedObject var config = ToolConfigDefaults.shared
-    
     var body: some View {
         GenericOnboardingView(
             icon: "hammer.fill",
@@ -18,16 +16,20 @@ struct PluginsOnboarding: View {
             content: {
                 Form {
                     Section {
-                        // custom binding that controls both config.webTools and config.scrapeLinks
-                        Toggle("Web Search", isOn: Binding(
-                            get: { config.webSearch || config.scrapeLinks },
-                            set: { newValue in
-                                config.webSearch = newValue
-                                config.scrapeLinks = newValue
-                            }
-                        ))
-                        Toggle("Image Generate", isOn: $config.imageGenerate)
-                        Toggle("Transcribe", isOn: $config.transcribe)
+                        HStack {
+                            Text("Web Search")
+                            Image(systemName: Tool.webSearch.iconName)
+                        }
+                        
+                        HStack {
+                            Text("Image Generate")
+                            Image(systemName: Tool.imageGeneration.iconName)
+                        }
+                        
+                        HStack {
+                            Text("Transcribe")
+                            Image(systemName: Tool.transcribe.iconName)
+                        }
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))
