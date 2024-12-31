@@ -84,6 +84,18 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         }
     }
     
+    var price: TokenUsage {
+        switch self {
+        case .claude3_5haiku: .init(promptTokens: 1, completionTokens: 3)
+        case .claude3_5sonnet: .init(promptTokens: 4, completionTokens: 10)
+        case .gpt4o: .init(promptTokens: 3, completionTokens: 8)
+        case .gpt4omini: .init(promptTokens: 1, completionTokens: 3)
+        case .gemini2Flash: .init(promptTokens: 1, completionTokens: 3)
+        case .deepseek: .init(promptTokens: 2, completionTokens: 4)
+        case .llama3_70: .init(promptTokens: 2, completionTokens: 4)
+        }
+    }
+    
     static func groupedModels() -> [ModelGroup: [ChatModel]] {
         Dictionary(grouping: ChatModel.allCases) { $0.group }
     }
@@ -95,3 +107,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     }
 }
 
+struct TokenUsage: Codable {
+    var promptTokens: Int
+    var completionTokens: Int
+}

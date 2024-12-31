@@ -32,6 +32,7 @@ struct ChatServiceSettings: View {
             ForEach(ChatServiceTab.allCases, id: \.self) { tab in
                 Label(tab.rawValue, systemImage: tab.imageName)
                     .tag(tab)
+                    .labelStyle(.titleOnly)
             }
         }
         .pickerStyle(.segmented)
