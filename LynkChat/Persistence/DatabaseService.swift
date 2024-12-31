@@ -55,6 +55,10 @@ final class DatabaseService: NSObject {
             
             // Demo favourite chat with some messages
             let favouriteChat = Chat()
+            let group = MessageGroup(message: .init(role: .user, content: "How do i sort in python?", model: .gpt4omini))
+            let secondGroup = MessageGroup(message: .init(role: .assistant, content: String.codeBlock, model: .gpt4omini))
+            favouriteChat.rootMessage = group
+            group.activeMessage.next = secondGroup
             favouriteChat.status = .starred
             favouriteChat.statusId = ChatStatus.starred.id
             favouriteChat.title = "Favourite Chat"

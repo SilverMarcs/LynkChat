@@ -45,16 +45,16 @@ struct ChatDetail: View {
                 }
             }
             .toolbarTitleDisplayMode(.inline)
-//            .onChange(of: chat.inputManager.prompt) {
-//                if chat.inputManager.state == .normal {
-//                    Scroller.scrollToBottom(animated: false)
-//                }
-//            }
-//            .onChange(of: chat.inputManager.dataFiles) {
-//                if chat.inputManager.state == .normal {
-//                    Scroller.scrollToBottom(animated: false)
-//                }
-//            }
+            .onChange(of: chat.inputManager.prompt) {
+                if chat.inputManager.state == .normal {
+                    Scroller.scrollToBottom(animated: false)
+                }
+            }
+            .onChange(of: chat.inputManager.dataFiles) {
+                if chat.inputManager.state == .normal {
+                    Scroller.scrollToBottom(animated: false)
+                }
+            }
             #if os(macOS)
             .onAppear {
                 if chatVM.searchText.isEmpty {
@@ -63,7 +63,7 @@ struct ChatDetail: View {
                 onAppearStuff(proxy: proxy)
             }
             .pasteHandler(chat: chat)
-            .navigationSubtitle("\(chat.config.model.name) • \(chat.config.systemPrompt.prefix(70))")
+            .navigationSubtitle("\(chat.config.model.name) • \(chat.config.systemPrompt.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines).prefix(70))")
             .onReceive(NotificationCenter.default.publisher(for: NSScrollView.willStartLiveScrollNotification)) { _ in
                 config.hasUserScrolled = true
             }
