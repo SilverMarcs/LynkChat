@@ -8,15 +8,15 @@
 import Foundation
 
 struct APIMessage: Encodable {
-    let role: MessageRole
+    let role: Message.Role
     let content: [ContentItem]
     
-    init(role: MessageRole, content: [ContentItem]) {
+    init(role: Message.Role, content: [ContentItem]) {
         self.role = role
         self.content = content
     }
     
-    init(role: MessageRole, text: String) {
+    init(role: Message.Role, text: String) {
         self.role = role
         self.content = [.text(text)]
     }

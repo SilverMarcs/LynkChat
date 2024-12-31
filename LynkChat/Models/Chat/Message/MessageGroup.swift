@@ -61,7 +61,7 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
         activeMessage.dataFiles
     }
     
-    var role: MessageRole {
+    var role: Message.Role {
         activeMessage.role
     }
     
@@ -98,7 +98,7 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     
     private func scrollToActiveMessage() {
         // TODO: add the aboev check etxernally
-        let anchor: UnitPoint = role == .assistant ? .bottom : .top
+        let anchor: UnitPoint = role == Message.Role.assistant ? .bottom : .top
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             Scroller.scroll(to: anchor, of: self)
         }

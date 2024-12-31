@@ -14,38 +14,34 @@ final class Message: Equatable, Identifiable, Hashable {
     var date: Date = Date()
     
     var model: ChatModel
-    var role: MessageRole
+    var role: Role
     var content: String
 
     @Relationship(deleteRule: .cascade)
-    var dataFiles: [TypedData] = []
+    var dataFiles: [TypedData]
     
     @Attribute(.ephemeral)
-    var isReplying: Bool = false
+    var isReplying: Bool
     
-    var height: CGFloat
+    var height: CGFloat = 20
     
     @Relationship(deleteRule: .cascade)
     var next: MessageGroup?
     
     var tools: [ChatTool]?
     
-    // TODO: TODO: typed init functions for diff roles
-    
-    init(role: MessageRole,
-         content: String = "",
-         model: ChatModel,
-         dataFiles: [TypedData] = [],
-         tools: [ChatTool]? = [],
-         isReplying: Bool = false,
-         height: CGFloat = 0) {
+    private init(role: Role,
+                 content: String = "",
+                 model: ChatModel,
+                 dataFiles: [TypedData],
+                 tools: [ChatTool]?,
+                 isReplying: Bool = false) {
         self.role = role
         self.content = content
         self.model = model
         self.dataFiles = dataFiles
         self.tools = tools
         self.isReplying = isReplying
-        self.height = height
     }
 
     func copy() -> Message {
@@ -55,9 +51,35 @@ final class Message: Equatable, Identifiable, Hashable {
             model: model,
             dataFiles: dataFiles,
             tools: tools,
-            isReplying: isReplying,
-            height: height
+            isReplying: isReplying
         )
+    }
+    
+    static func user(content: String, dataFiles: [TypedData] = []) -> Message {
+        Message(
+            role: .user,
+            content: content,
+            model: ModelConfig.shared.defaultModel,
+            dataFiles: dataFiles,
+            tools: nil,
+            isReplying: false
+        )
+    }
+    
+    static func assistant(model: ChatModel, content: String = "") -> Message {
+        Message(
+            role: .assistant,
+            content: content,
+            model: model,
+            dataFiles: [],
+            tools: [],
+            isReplying: true
+        )
+    }
+
+    enum Role: String, Codable {
+        case user
+        case assistant
     }
 }
 
@@ -119,9 +141,4 @@ extension Message {
         
         return APIMessage(role: role, content: contentItems)
     }
-}
-
-enum MessageRole: String, Codable {
-    case user
-    case assistant
 }

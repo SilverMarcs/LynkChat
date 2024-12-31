@@ -105,10 +105,10 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         unsetContextResetPointIfNeeded(for: userGroup)
         
-        let newUserMessage = Message(role: .user, content: inputManager.prompt, model: message.model, dataFiles: inputManager.dataFiles)
+        let newUserMessage = Message.user(content: inputManager.prompt, dataFiles: inputManager.dataFiles)
         userGroup.addMessage(newUserMessage)
         
-        let newAssistantMessage = Message(role: .assistant, model: config.model, isReplying: true)
+        let newAssistantMessage = Message.assistant(model: config.model)
         let newAssistantGroup = MessageGroup(message: newAssistantMessage)
         
         newUserMessage.next = newAssistantGroup
@@ -128,7 +128,7 @@ final class Chat: Equatable, Identifiable, Hashable {
             await editMessage(editingMessage)
             inputManager.editingMessage = nil
         } else {
-            let userMessage = Message(role: .user, content: inputManager.prompt, model: config.model, dataFiles: inputManager.dataFiles)
+            let userMessage = Message.user(content: inputManager.prompt, dataFiles: inputManager.dataFiles)
             let userGroup = MessageGroup(message: userMessage)
             
             if rootMessage == nil {
@@ -138,7 +138,7 @@ final class Chat: Equatable, Identifiable, Hashable {
                 lastGroup.activeMessage.next = userGroup
             }
             
-            let assistantMessage = Message(role: .assistant, model: config.model, isReplying: true)
+            let assistantMessage = Message.assistant(model: config.model)
             let assistantGroup = MessageGroup(message: assistantMessage)
             userGroup.activeMessage.next = assistantGroup
              
@@ -156,7 +156,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         unsetContextResetPointIfNeeded(for: message)
        
         if message.role == .assistant {
-            let newAssistantMessage = Message(role: .assistant, model: config.model)
+            let newAssistantMessage = Message.assistant(model: config.model)
             message.addMessage(newAssistantMessage)
             message.activeMessage.next = nil
            
@@ -164,13 +164,13 @@ final class Chat: Equatable, Identifiable, Hashable {
         } else if message.role == .user {
             if index + 1 < currentThread.count {
                 let assistantGroup = currentThread[index + 1]
-                let newAssistantMessage = Message(role: .assistant, model: config.model)
+                let newAssistantMessage = Message.assistant(model: config.model)
                 assistantGroup.addMessage(newAssistantMessage)
                 assistantGroup.activeMessage.next = nil
                
                 await processRequest(message: newAssistantMessage)
             } else {
-                let assistantMessage = Message(role: .assistant, model: config.model, isReplying: true)
+                let assistantMessage = Message.assistant(model: config.model)
                 let assistantGroup = MessageGroup(message: assistantMessage)
                 message.activeMessage.next = assistantGroup
                 

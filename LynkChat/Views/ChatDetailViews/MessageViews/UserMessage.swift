@@ -83,7 +83,7 @@ struct UserMessage: View {
                     }
                 }
             }
-            .transaction { $0.animation = nil }
+//            .transaction { $0.animation = nil }
             .groupBoxStyle(PlatformGroupBoxStyle())
             .background(
                 RoundedRectangle(cornerRadius: 5)

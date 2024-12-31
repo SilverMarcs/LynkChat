@@ -8,13 +8,9 @@
 import Foundation
 
 extension Message {
-    static let mockAssistantMessage = Message(role: .assistant, content: String.codeBlock, model: .claude3_5haiku, isReplying: false)
+    static let mockAssistantMessage = Message.assistant(model: .claude3_5haiku, content: String.codeBlock)
     
-    static let mockUserMessage = Message(role: .user, content: String.shortContent, model: .claude3_5haiku)
-    
-    static let assistantWithToolCall = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockTool])
-    
-    static let assistantWithImageTool = Message(role: .user, content: String.codeBlock, model: .claude3_5haiku, tools: [ChatTool.mockImageTool])
+    static let mockUserMessage = Message.user(content: String.shortContent)
 }
 
 extension ChatTool {
