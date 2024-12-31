@@ -15,15 +15,33 @@ struct DataFilesView: View {
     
     @State private var selectedFileURL: URL?
     
-    init(dataFiles: [TypedData], onDelete: ((TypedData) -> Void)? = nil) {
-        self.dataFiles = dataFiles
-        self.onDelete = onDelete
+    private var imageFiles: [TypedData] {
+        dataFiles.filter { $0.fileType.conforms(to: .image) }
+    }
+    
+    private var nonImageFiles: [TypedData] {
+        dataFiles.filter { !$0.fileType.conforms(to: .image) }
     }
     
     var body: some View {
-        FlowLayout(spacing: 8) {
-            ForEach(dataFiles) { file in
-                fileItemView(for: file)
+        VStack(alignment: .leading, spacing: 16) {
+            if !imageFiles.isEmpty {
+                LazyVGrid(columns: [
+                    GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 8)
+                ], spacing: 8) {
+                    ForEach(imageFiles) { file in
+                        fileItemView(for: file)
+                            .aspectRatio(1, contentMode: .fill)
+                    }
+                }
+            }
+            
+            if !nonImageFiles.isEmpty {
+                FlowLayout(spacing: 8) {
+                    ForEach(nonImageFiles) { file in
+                        fileItemView(for: file)
+                    }
+                }
             }
         }
         .quickLookPreview($selectedFileURL)
