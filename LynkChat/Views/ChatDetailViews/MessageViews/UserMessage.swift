@@ -50,11 +50,11 @@ struct UserMessage: View {
                     )
                     .frame(height: group.activeMessage.height, alignment: .top)
                     .onChange(of: height) {
-                        DispatchQueue.main.async {
+//                        DispatchQueue.main.async {
 //                            if height > 0 {
                                 group.activeMessage.height = height
 //                            }
-                        }
+//                        }
                     }
                     .padding(3)
     

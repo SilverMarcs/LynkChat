@@ -13,6 +13,8 @@ extension InputManager {
     // Define constants
     private enum Constants {
         static let maxFileSizeBytes: Int = 5 * 1024 * 1024 // 5MB in bytes
+        static let maxTotalFiles: Int = 5
+        static let maxAudioFiles: Int = 1
     }
     
     func processData(_ data: Data, fileType: UTType? = nil, fileName: String? = nil, url: URL? = nil) async throws {
@@ -30,6 +32,19 @@ extension InputManager {
             fileType: fileType,
             fileName: fileName
         )
+        
+        // Check total file limit
+        if dataFiles.count >= Constants.maxTotalFiles {
+            throw InputError.tooManyFiles(current: dataFiles.count, max: Constants.maxTotalFiles)
+        }
+        
+        // Check audio file limit
+        if fileType.conforms(to: .audio) {
+            let existingAudioFiles = dataFiles.filter { $0.fileType.conforms(to: .audio) }
+            if existingAudioFiles.count >= Constants.maxAudioFiles {
+                throw InputError.tooManyAudioFiles(max: Constants.maxAudioFiles)
+            }
+        }
     
         await MainActor.run {
             // Remove existing file with the same name, if any
@@ -42,6 +57,7 @@ extension InputManager {
             }
         }
     }
+    
     
     func processFile(at url: URL) async throws {
         // Check file size before loading data
@@ -57,34 +73,10 @@ extension InputManager {
     }
 }
 
-// Update the error enum to include more detailed information
-enum InputError: LocalizedError {
-    case fileTooLarge(size: Int, maxSize: Int)
-    case unsupportedAudioFormat
-    case unsupportedFileType
-    
-    var errorDescription: String? {
-        switch self {
-        case .fileTooLarge(let size, let maxSize):
-            return "File size (\(formatFileSize(size))) exceeds maximum allowed size (\(formatFileSize(maxSize)))"
-        case .unsupportedAudioFormat:
-            return "Unsupported audio format"
-        case .unsupportedFileType:
-            return "Unsupported file type"
-        }
-    }
-    
-    // Helper function to format file sizes in human-readable format
-    private func formatFileSize(_ bytes: Int) -> String {
-        let formatter = ByteCountFormatter()
-        formatter.allowedUnits = [.useMB, .useKB, .useBytes]
-        formatter.countStyle = .file
-        return formatter.string(fromByteCount: Int64(bytes))
-    }
-}
-
 extension InputManager {
-    func handleDrop(_ providers: [NSItemProvider]) -> Bool {
+    func handleDrop(_ providers: [NSItemProvider]) throws -> Bool {
+        guard !providers.isEmpty else { return false }
+        
         for provider in providers {
             // First, get the file name using loadFileRepresentation
             provider.loadFileRepresentation(forTypeIdentifier: UTType.item.identifier) { url, _ in
@@ -108,37 +100,29 @@ extension InputManager {
                     }
                     
                     Task {
-                        do {
-                            let fileType = typeIdentifier.flatMap { UTType($0) } ?? .data
-                            try await self.processData(data, fileType: fileType, fileName: fileName)
-                        } catch {
-                            print("Failed to process file: \(fileName). Error: \(error)")
-                        }
+                        let fileType = typeIdentifier.flatMap { UTType($0) } ?? .data
+                        try await self.processData(data, fileType: fileType, fileName: fileName)
                     }
                 }
             }
         }
         
-        return !providers.isEmpty
+        return true
     }
     
-    func loadTransferredPhotos(from selectedPhotos: [PhotosPickerItem]) async {
+    func loadTransferredPhotos(from selectedPhotos: [PhotosPickerItem]) async throws {
         for photo in selectedPhotos {
-            if let data = try? await photo.loadTransferable(type: Data.self) {
-                // Check file size
-                guard data.count <= Constants.maxFileSizeBytes else {
-                    print("Photo exceeds 5MB limit")
-                    continue
-                }
-                
-                let fileName = "photo_\(UUID().uuidString).jpg"
-                
-                do {
-                    try await self.processData(data, fileType: .jpeg, fileName: fileName)
-                } catch {
-                    print("Failed to process photo: \(fileName). Error: \(error)")
-                }
+            guard let data = try? await photo.loadTransferable(type: Data.self) else {
+                throw RuntimeError("Failed to load photo data")
             }
+            
+            // Check file size
+            guard data.count <= Constants.maxFileSizeBytes else {
+                throw InputError.fileTooLarge(size: data.count, maxSize: Constants.maxFileSizeBytes)
+            }
+            
+            let fileName = "photo_\(UUID().uuidString).jpg"
+            try await self.processData(data, fileType: .jpeg, fileName: fileName)
         }
     }
 }

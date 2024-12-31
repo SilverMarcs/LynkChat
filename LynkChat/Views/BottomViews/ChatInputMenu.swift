@@ -69,7 +69,11 @@ struct ChatInputMenu: View {
         .fixedSize()
         .photosPicker(isPresented: $showPhotosPicker, selection: $selectedPhotos, matching: .images)
         .task(id: selectedPhotos) {
-            await chat.inputManager.loadTransferredPhotos(from: selectedPhotos)
+            do {
+                try await chat.inputManager.loadTransferredPhotos(from: selectedPhotos)
+            } catch {
+                chat.errorMessage = "Failed to load transferred photos. Error: \(error)"
+            }
             selectedPhotos.removeAll()
         }
         .fileImporter(
@@ -89,7 +93,7 @@ struct ChatInputMenu: View {
                         do {
                             try await chat.inputManager.processFile(at: url)
                         } catch {
-                            print("Failed to process file: \(url.lastPathComponent). Error: \(error)")
+                            chat.errorMessage = "Failed to process file: \(url.lastPathComponent). Error: \(error)"
                         }
                         
                         url.stopAccessingSecurityScopedResource()

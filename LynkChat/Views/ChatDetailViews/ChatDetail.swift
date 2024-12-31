@@ -31,7 +31,12 @@ struct ChatDetail: View {
                 ChatToolbar(chat: chat)
             }
             .onDrop(of: [.text, .pdf, .image], isTargeted: nil) { providers in
-                chat.inputManager.handleDrop(providers)
+                do {
+                   return try chat.inputManager.handleDrop(providers)
+                } catch {
+                    chat.errorMessage = error.localizedDescription
+                    return false
+                }
             }
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
             .toolbarTitleMenu {
