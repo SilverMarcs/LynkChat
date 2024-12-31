@@ -28,6 +28,7 @@ struct ToolImageView: View {
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(.red)
                             .frame(width: 75, height: 75)
+                            .popoverTip(ImageGenToolTip())
                     }
                 } else {
                     ToolImagePlaceholderView()
@@ -51,9 +52,6 @@ struct ToolImageView: View {
         #if os(macOS)
         .onHover { isHovering = $0 }
         #endif
-        
-        TipView(ImageGenToolTip())
-            .frame(width: 300, height: 50)
     }
     
     func saveImage() {

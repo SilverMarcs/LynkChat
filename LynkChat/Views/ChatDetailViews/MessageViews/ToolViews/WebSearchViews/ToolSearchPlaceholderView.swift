@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ToolSearchPlaceholderView: View {
     var body: some View {
+        #if os(macOS)
         HStack(spacing: 8) {
             // First 4 results
             ForEach(1...4, id: \.self) { number in
@@ -52,6 +53,28 @@ struct ToolSearchPlaceholderView: View {
             }
             .groupBoxStyle(PlatformGroupBoxStyle())
         }
+        #else
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(1...4, id: \.self) { number in
+                    HStack(spacing: 6) {
+                        Image(systemName: "globe")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .foregroundStyle(Color.getRandomColor())
+                        
+                        Text("wwwbbccom")
+                            .font(.subheadline)
+                    }
+                    .shimmer(when: true)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(20)
+                }
+            }
+        }
+        #endif
     }
     
     private var count: Int {

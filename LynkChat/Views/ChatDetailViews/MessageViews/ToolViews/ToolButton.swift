@@ -19,7 +19,9 @@ struct ToolButton: View {
             GroupBox {
                 HStack(spacing: 4) {
                     Text("Used")
+                        #if os(macOS)
                         .foregroundStyle(.secondary)
+                        #endif
 
                     Text("\(chatTool.tool.title) \(Image(systemName: chatTool.tool.iconName))")
                         .fontWeight(.semibold)
@@ -27,7 +29,9 @@ struct ToolButton: View {
                         .opacity(0.9)
                         
                 }
+                #if os(macOS)
                 .padding(3)
+                #endif
             }
             .groupBoxStyle(PlatformGroupBoxStyle())
         }
