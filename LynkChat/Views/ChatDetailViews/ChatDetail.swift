@@ -153,7 +153,7 @@ struct ChatDetail: View {
         Color.clear
             .frame(height: colorViewHeight)
             #if os(macOS)
-            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowInsets(.init(top: -5, leading: 0, bottom: -5, trailing: 0))
             #endif
             .listRowSeparator(.hidden)
             .onChange(of: chat.isReplying) {

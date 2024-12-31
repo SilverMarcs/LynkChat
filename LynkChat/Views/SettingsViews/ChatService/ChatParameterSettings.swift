@@ -49,8 +49,19 @@ struct ChatParameterSettings: View {
                 }
             }
 
-            Section("System Prompt") {
+            Section {
                 sysPrompt
+            } header: {
+                HStack {
+                    Text("System Prompt")
+                    Spacer()
+                    Button {
+                        config.systemPrompt = String.systemPrompt
+                    } label: {
+                        Text("Reset to Default")
+                            .fontWeight(.regular)
+                    }
+                }
             }
         }
         .navigationTitle("Parameters")

@@ -76,6 +76,7 @@ struct ToolsBarView: View {
     chat.config.enabledTools.insert(.webSearch)
     chat.config.enabledTools.insert(.scrapeLinks)
     chat.config.enabledTools.insert(.imageGeneration)
+    chat.config.enabledTools.insert(.transcribe)
     
     return InputArea(chat: chat)
         .environment(ChatVM())

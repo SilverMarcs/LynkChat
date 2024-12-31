@@ -84,13 +84,14 @@ struct StreamHandler {
     private func createAPIRequest(stream: Bool) async -> APIRequest {
         let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
         let apiMessages = await adjustedContext.asyncMap { await $0.toAPIMessage() }
+        let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
         
         return APIRequest(
             model: chat.config.model.id,
             messages: apiMessages,
             temperature: chat.config.temperature,
             maxTokens: chat.config.maxTokens.rawValue,
-            system: chat.config.systemPrompt,
+            system: date + "\n" + chat.config.systemPrompt + "\n" + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
             stream: stream,
             tools: chat.config.enabledTools.map { $0.rawValue }
         )

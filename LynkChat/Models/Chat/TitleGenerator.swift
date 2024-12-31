@@ -36,7 +36,7 @@ enum TitleGenerator {
         
         do {
             let request = APIRequest(
-                model: ModelConfig.shared.titleModel.id,
+                model: ChatModel.deepseek.id,
                 messages: [APIMessage(
                     role: .user,
                     text: wrappedMessage

@@ -14,6 +14,6 @@ class ChatConfigDefaults: ObservableObject {
     @AppStorage("temperature") var temperature: Double = 0.7
     @AppStorage("maxTokens") var maxTokens: MaxTokens = .t4096
     
-    @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses extremeley concise."
+    @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = String.systemPrompt
     @AppStorage("systemPrompt") var systemPrompt: String = "You are a helpful assistant."
 }
