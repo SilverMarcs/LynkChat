@@ -88,6 +88,7 @@ struct ToolSearchView: View {
                                 
                                 VStack(alignment: .leading) {
                                     Text(result.title)
+                                        .multilineTextAlignment(.leading)
                                         .font(.headline)
                                         .lineLimit(2)
                                     
@@ -97,7 +98,6 @@ struct ToolSearchView: View {
                                 }
                             }
                         }
-                        .multilineTextAlignment(.leading)
                         .foregroundStyle(.primary)
                     }
                 }

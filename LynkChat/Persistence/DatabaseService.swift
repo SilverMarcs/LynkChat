@@ -45,7 +45,6 @@ final class DatabaseService: NSObject {
             if AppConfig.shared.finishedInitialSetup {
                 return container // Return the container if setup is already done
             }
-            
 
             // Archived chat
             let archivedChat = Chat()
@@ -58,9 +57,6 @@ final class DatabaseService: NSObject {
             let favouriteChat = Chat()
             favouriteChat.status = .starred
             favouriteChat.statusId = ChatStatus.starred.id
-            // TODO: add this
-//            favouriteChat.addMessage(.mockUserMessage)
-//            favouriteChat.messages.append(.mockAssistantGroup)
             favouriteChat.title = "Favourite Chat"
             modelContext.insert(favouriteChat)
             

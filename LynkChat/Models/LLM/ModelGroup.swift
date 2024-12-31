@@ -12,6 +12,7 @@ enum ModelGroup: String, Identifiable {
     case openAI
     case google
     case deepseek
+    case meta
     
     var id: String { self.rawValue }
     
@@ -21,6 +22,7 @@ enum ModelGroup: String, Identifiable {
         case .openAI: "OpenAI"
         case .google: "Google"
         case .deepseek: "Deepseek"
+        case .meta: "Meta"
         }
     }
 }

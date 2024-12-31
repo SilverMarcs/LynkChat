@@ -14,6 +14,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     case gpt4omini
     case gemini2Flash
     case deepseek
+    case llama3_70
     
     var id: String {
         switch self {
@@ -23,6 +24,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gpt4omini: "gpt-4o-mini"
         case .gemini2Flash: "gemini-2-flash"
         case .deepseek: "deepseek-chat"
+        case .llama3_70: "llama-3-70"
         }
     }
     
@@ -34,6 +36,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gpt4omini: "GPT-4om"
         case .gemini2Flash: "Gemini-2F"
         case .deepseek: "DeepSeek"
+        case .llama3_70: "Llama-3.3-70B"
         }
     }
 
@@ -43,6 +46,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
             case .gpt4o, .gpt4omini: "openai.symbols"
             case .gemini2Flash: "gemini.symbols"
             case .deepseek: "deepseek.symbols"
+            case .llama3_70: "meta.symbols"
         }
     }
 
@@ -52,6 +56,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gpt4o, .gpt4omini: "#00947A"
         case .gemini2Flash: "#E64335"
         case .deepseek: "#4F65E9"
+        case .llama3_70: "#2B66D9"
         }
     }
 
@@ -65,12 +70,10 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
             return .google
         case .deepseek:
             return .deepseek
+        case .llama3_70:
+            return .meta
         }
     }
-    
-//    var supportsImage: Bool {
-//    var supportsPlugin: Bool {
-//    var costPerMillionTokens: Double {
     
     static func groupedModels() -> [ModelGroup: [ChatModel]] {
         Dictionary(grouping: ChatModel.allCases) { $0.group }
