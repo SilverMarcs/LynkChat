@@ -22,7 +22,7 @@ struct QuickPanelView: View {
         VStack(alignment: .leading, spacing: 0) {
             textfieldView
                 .padding(15)
-                .padding(.leading, 1)
+                .padding(.trailing, -2)
                 .frame(height: 57)
             
             if !chat.inputManager.dataFiles.isEmpty {
@@ -73,19 +73,13 @@ struct QuickPanelView: View {
     var textfieldView: some View {
         HStack(spacing: 12) {
             Menu {
-                Picker("Model", selection: $chat.config.model) {
-                    ForEach(ChatModel.allCases) { model in
-                        Text(model.rawValue)
-                            .tag(model)
-                    }
+                ModelPicker(selectedModel: $chat.config.model)
+                
+                Menu {
+                    QPToolsConfigView(config: $chat.config)
+                } label: {
+                    Label("Tools", systemImage: "gear")
                 }
-                
-//                Menu {
-//                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-//                } label: {
-//                    Label("Tools", systemImage: "hammer")
-//                }
-                
             } label: {
                 Image(systemName: "magnifyingglass")
                     .resizable()
