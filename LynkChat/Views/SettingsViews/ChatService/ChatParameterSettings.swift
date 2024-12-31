@@ -77,7 +77,7 @@ struct ChatParameterSettings: View {
     
     var lineLimit: Int {
         #if os(macOS)
-        8
+        15
         #else
         5
         #endif

@@ -11,7 +11,7 @@ struct ErrorMessageView: View {
     var chat: Chat
     
     var body: some View {
-        if !chat.errorMessage.isEmpty {
+        if !chat.errorMessage.isEmpty || !chat.errorMessage.isEmpty {
             VStack {
                 HStack {
                     Text(chat.errorMessage)

@@ -52,7 +52,7 @@ struct ChatModelTable: View {
                     .alignment(.trailing)
                 }
             } footer: {
-                Text("Prices are for per million tokens for input / output tokens")
+                SectionFooterView(text: "Prices are for per million tokens for input / output tokens")
             }
         }
         .formStyle(.grouped)

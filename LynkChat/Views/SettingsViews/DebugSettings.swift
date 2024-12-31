@@ -23,7 +23,8 @@ struct DebugSettings: View {
                     config.finishedInitialSetup = false
                 }
             } label: {
-                Text(String(config.finishedInitialSetup))
+                
+                Text("First Launch Completed: \(config.finishedInitialSetup)")
             }
             
             Toggle("Print debug ines", isOn: $config.printDebgLogs)

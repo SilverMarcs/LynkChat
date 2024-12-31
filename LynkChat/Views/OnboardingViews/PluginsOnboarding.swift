@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct PluginsOnboarding: View {
+    @Environment(\.horizontalSizeClass) var horizontalSize
+    
     var body: some View {
         GenericOnboardingView(
             icon: "hammer.fill",
@@ -17,18 +19,30 @@ struct PluginsOnboarding: View {
                 Form {
                     Section {
                         HStack {
-                            Text("Web Search")
-                            Image(systemName: Tool.webSearch.iconName)
+                            Label("Web Search", systemImage: Tool.webSearch.iconName)
+                            if horizontalSize != .compact {
+                                Spacer()
+                                Text("Access up-to-date information")
+                                    .foregroundColor(.secondary)
+                            }
                         }
                         
                         HStack {
-                            Text("Image Generate")
-                            Image(systemName: Tool.imageGeneration.iconName)
+                            Label("Image Generate", systemImage: Tool.imageGeneration.iconName)
+                            if horizontalSize != .compact {
+                                Spacer()
+                                Text("Generate images from text")
+                                    .foregroundColor(.secondary)
+                            }
                         }
                         
                         HStack {
-                            Text("Transcribe")
-                            Image(systemName: Tool.transcribe.iconName)
+                            Label("Transcribe", systemImage: Tool.transcribe.iconName)
+                            if horizontalSize != .compact {
+                                Spacer()
+                                Text("Transcribe audio to text")
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                     #if os(iOS)

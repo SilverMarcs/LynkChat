@@ -13,7 +13,8 @@ struct APIKeyOnboarding: View {
     
     var body: some View {
         GenericOnboardingView(
-            icon: "cpu.fill",
+            icon: modelConfig.defaultModel.imageName,
+            useSFSymbol: false,
             iconColor: Color(hex: modelConfig.defaultModel.color),
             title: "Select default model",
             content: {
