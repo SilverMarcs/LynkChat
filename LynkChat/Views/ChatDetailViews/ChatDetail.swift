@@ -69,12 +69,13 @@ struct ChatDetail: View {
             }
             #else
             .task {
-                scrollToBottom(proxy: proxy, delay: 0.3)
+//                scrollToBottom(proxy: proxy, delay: 0.3)
+                Scroller.scrollToBottom(delay: 0.3)
                 onAppearStuff(proxy: proxy)
             }
             .listStyle(.plain)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
-                scrollToBottom(proxy: proxy, delay: 0.1)
+                    Scroller.scrollToBottom(delay: 0.1)
             }
             #if !os(visionOS)
             .scrollDismissesKeyboard(.immediately)

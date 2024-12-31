@@ -142,7 +142,7 @@ enum APIService {
 
 extension String {
     #if DEBUG
-    static let apiHost = "http://localhost:3000/api"
+    static let apiHost = "http://192.168.0.162:3000/api"
     #else
     static let apiHost = "https://llm-api-server.vercel.app/api"
     #endif

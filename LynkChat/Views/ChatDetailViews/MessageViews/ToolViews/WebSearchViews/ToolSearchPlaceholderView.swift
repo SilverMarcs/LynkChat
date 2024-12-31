@@ -53,6 +53,14 @@ struct ToolSearchPlaceholderView: View {
             .groupBoxStyle(PlatformGroupBoxStyle())
         }
     }
+    
+    private var count: Int {
+        #if os(macOS) || os(visionOS)
+        return 4
+        #else
+        return 2
+        #endif
+    }
 }
 
 #Preview {

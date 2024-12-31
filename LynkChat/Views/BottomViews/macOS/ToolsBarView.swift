@@ -21,8 +21,10 @@ struct ToolsBarView: View {
                 config.toggleTool(.scrapeLinks)
             }
         }
+        #if os(macOS)
         .opacity((config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? 0.85 : 0.9))
         .padding(.leading, (config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? -4 : 0))
+        #endif
         
         toolButton(
             tool: .imageGeneration,
@@ -32,8 +34,10 @@ struct ToolsBarView: View {
                 config.toggleTool(.imageGeneration)
             }
         }
-        .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
         .scaleEffect(0.95)
+        #if os(macOS)
+        .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
+        #endif
         
         toolButton(
             tool: .transcribe,
@@ -43,7 +47,9 @@ struct ToolsBarView: View {
                 config.toggleTool(.transcribe)
             }
         }
+        #if os(macOS)
         .opacity(config.isToolEnabled(.transcribe) ? 0.8 : 0.9)
+        #endif
     }
     
     @ViewBuilder
@@ -54,6 +60,7 @@ struct ToolsBarView: View {
     ) -> some View {
         Button(action: action) {
             Label(tool.shortTitle, systemImage: tool.iconName)
+            #if os(macOS)
                 .imageScale(isEnabled ? .medium : .large)
                 .padding(.horizontal, isEnabled ? 7 : 2)
                 .padding(.vertical, isEnabled ? 3.5 : 0)
@@ -65,9 +72,17 @@ struct ToolsBarView: View {
                 }
                 .labelStyle(includingText: isEnabled)
                 .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .padding(.horizontal, isEnabled ? 2 : 5)
+            #else
+                .labelStyle(.iconOnly)
+                .foregroundStyle(isEnabled ? tool.color : .secondary)
+            #endif
+        }
+        .buttonStyle(.plain)
+        #if os(macOS)
+        .padding(.horizontal, isEnabled ? 2 : 5)
+        #else
+        .padding(.horizontal, 5)
+        #endif
     }
 }
 

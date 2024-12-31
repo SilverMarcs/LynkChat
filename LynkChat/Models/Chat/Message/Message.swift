@@ -23,7 +23,7 @@ final class Message: Equatable, Identifiable, Hashable {
     @Attribute(.ephemeral)
     var isReplying: Bool = false
     
-    var height: CGFloat = 20
+    var height: CGFloat
     
     @Relationship(deleteRule: .cascade)
     var next: MessageGroup?
@@ -35,13 +35,15 @@ final class Message: Equatable, Identifiable, Hashable {
                  model: ChatModel,
                  dataFiles: [TypedData],
                  tools: [ChatTool]?,
-                 isReplying: Bool = false) {
+                 isReplying: Bool = false,
+                 height: CGFloat) {
         self.role = role
         self.content = content
         self.model = model
         self.dataFiles = dataFiles
         self.tools = tools
         self.isReplying = isReplying
+        self.height = height
     }
 
     func copy() -> Message {
@@ -51,7 +53,8 @@ final class Message: Equatable, Identifiable, Hashable {
             model: model,
             dataFiles: dataFiles,
             tools: tools,
-            isReplying: isReplying
+            isReplying: isReplying,
+            height: height
         )
     }
     
@@ -62,7 +65,8 @@ final class Message: Equatable, Identifiable, Hashable {
             model: ModelConfig.shared.defaultModel,
             dataFiles: dataFiles,
             tools: nil,
-            isReplying: false
+            isReplying: false,
+            height: 20
         )
     }
     
@@ -73,7 +77,8 @@ final class Message: Equatable, Identifiable, Hashable {
             model: model,
             dataFiles: [],
             tools: [],
-            isReplying: true
+            isReplying: true,
+            height: 0
         )
     }
 

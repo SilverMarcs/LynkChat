@@ -17,7 +17,7 @@ final class DatabaseService: NSObject {
     static let shared = DatabaseService()
 
     let container: ModelContainer = {
-        print(URL.applicationSupportDirectory.path(percentEncoded: false))
+        AppLogger.info(URL.applicationSupportDirectory.path(percentEncoded: false))
         let schema = Schema([
             Chat.self,
             Message.self,
@@ -27,6 +27,7 @@ final class DatabaseService: NSObject {
         
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
+        // TODO: if error then delete all existign data in all tables and reinit
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             let modelContext = container.mainContext

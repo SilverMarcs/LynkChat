@@ -1,5 +1,5 @@
 //
-//  BasicInspector.swift
+//  ChatInspector.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 15/09/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct BasicInspector: View {
+struct ChatInspector: View {
     @Environment(\.dismiss) var dismiss
     
     @Bindable var chat: Chat
@@ -63,6 +63,17 @@ struct BasicInspector: View {
                 )
             }
             
+            Section("Plugins") {
+                LabeledContent("Enable") {
+                    ToolsBarView(config: $chat.config)
+                        .padding(.bottom, -7)
+                        #if !os(macOS)
+                        .padding(.top, -5)
+                        #endif
+                }
+                .frame(height: 25)
+            }
+            
             Section("System Prompt") {
                 sysPrompt
             }
@@ -73,6 +84,13 @@ struct BasicInspector: View {
             }
         }
         .formStyle(.grouped)
+        #if os(macOS)
+        .frame(width: 400, height: 582)
+        .overlay(alignment: .topTrailing) {
+            DismissButton()
+                .padding(10)
+        }
+        #endif
     }
     
     private var title: some View {
@@ -127,6 +145,7 @@ struct BasicInspector: View {
         .buttonStyle(.plain)
         .listRowBackground(EmptyView())
         .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
         .confirmationDialog("Are you sure you want to delete all messages?", isPresented: $showingDeleteConfirmation) {
             Button("Delete All", role: .destructive) {
                 chat.deleteAllMessages()
@@ -138,14 +157,25 @@ struct BasicInspector: View {
     }
     
     private var exportButton: some View {
-        Button {
-            isExportingMarkdown = true
-        } label: {
-            Label("Export Markdown", systemImage: "richtext.page")
-                .labelStyle(.titleOnly)
+        Button(action: {}) {
+            Button {
+                isExportingMarkdown = true
+            } label: {
+//                Label("Export Markdown", systemImage: "richtext.page")
+                Text("Export Markdown")
+                    .frame(maxWidth: .infinity)
+            }
+            #if os(macOS)
+            .buttonStyle(ClickHighlightButton())
+            #else
+            .buttonStyle(.bordered)
+            #endif
+            .foregroundStyle(.accent)
         }
-        .buttonStyle(ClickHighlightButton())
-        .foregroundStyle(.accent)
+        .buttonStyle(.plain)
+        .listRowBackground(EmptyView())
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
         .fileExporter(
             isPresented: $isExportingMarkdown,
             document: MarkdownBackup(chat: chat),
@@ -160,4 +190,10 @@ struct BasicInspector: View {
             }
         }
     }
+}
+
+#Preview {
+//    @Previewable @State var chat = Chat()
+    
+    ChatInspector(chat: Chat())
 }

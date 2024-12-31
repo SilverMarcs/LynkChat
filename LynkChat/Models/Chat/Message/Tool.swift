@@ -28,7 +28,7 @@ enum Tool: String, CaseIterable, Codable {
         case .webSearch: "Web"
         case .scrapeLinks: "URL"
         case .imageGeneration: "Image"
-        case .transcribe: "Transcribe"
+        case .transcribe: "Audio"
         }
     }
     

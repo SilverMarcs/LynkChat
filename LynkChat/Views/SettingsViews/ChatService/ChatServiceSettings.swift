@@ -21,6 +21,7 @@ struct ChatServiceSettings: View {
                 ChatPluginSettings()
             }
         }
+        .toolbarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 picker
@@ -33,10 +34,15 @@ struct ChatServiceSettings: View {
             ForEach(ChatServiceTab.allCases, id: \.self) { tab in
                 Label(tab.rawValue, systemImage: tab.imageName)
                     .tag(tab)
+                    #if os(macOS)
                     .labelStyle(.titleOnly)
+                    #else
+                    .labelStyle(.iconOnly)
+                    #endif
             }
         }
         .pickerStyle(.segmented)
+        .fixedSize()
     }
 
 }

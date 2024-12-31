@@ -39,6 +39,7 @@ struct UserMessage: View {
 //                            #endif
 //                    } else {
                     // TODO: restore text versoon when crash is fixed
+                    #if os(macOS)
                     SwiftMarkdownView(
                         displayedText,
                         calculatedHeight: $height,
@@ -57,7 +58,16 @@ struct UserMessage: View {
 //                        }
                     }
                     .padding(3)
-    
+                    #else
+                    HighlightableTextView(displayedText, highlightedText: chatVM.searchText)
+                        .textSelection(.enabled)
+                        .font(.system(size: config.fontSize))
+                        #if os(macOS)
+                        .lineSpacing(2)
+                        .padding(5)
+                        #endif
+                    #endif
+                    
 //                    AutoHeightTextView(text: displayedText, height: $textViewHeight)
 //                        .frame(height: group.activeMessage.height, alignment: .top)
 //                         .onChange(of: textViewHeight) {

@@ -18,6 +18,7 @@ struct ListRowImage: View {
 
             Image(model.imageName)
                 .imageScale(.medium)
+                .foregroundStyle(.white)
         }
     }
     

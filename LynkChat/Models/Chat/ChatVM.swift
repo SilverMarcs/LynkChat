@@ -39,7 +39,8 @@ import SwiftUI
     }
     
     @MainActor
-    func createNewChat(model: ChatModel? = nil) {
+    @discardableResult
+    func createNewChat(model: ChatModel? = nil) -> Chat {
         let newChat = Chat()
         
         if let model = model {
@@ -48,6 +49,7 @@ import SwiftUI
         
         DatabaseService.shared.modelContext.insert(newChat)
         self.activeChat = newChat
+        return newChat
     }
     
     @MainActor

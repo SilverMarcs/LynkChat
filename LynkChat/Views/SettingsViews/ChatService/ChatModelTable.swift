@@ -12,6 +12,14 @@ struct ChatModelTable: View {
     @State private var selection: ChatModel.ID?
     
     var body: some View {
+        #if os(macOS)
+        macOS
+        #else
+        iOS
+        #endif
+    }
+    
+    var macOS: some View {
         Form {
             Table(ChatModel.allCases, selection: $selection) {
                 TableColumn("On") { model in
@@ -27,12 +35,29 @@ struct ChatModelTable: View {
                         Text(model.name)
                     }
                 }
-                
-
             }
         }
         .formStyle(.grouped)
         .toolbarTitleDisplayMode(.inline)
+    }
+        
+    
+    var iOS: some View {
+        List {
+            Section("Models") {
+                ForEach(ChatModel.allCases) { model in
+                    HStack {
+                        ModelImage(model: model)
+                        Text(model.name)
+                        
+                        Spacer()
+                        
+                        Toggle("Show", isOn: modelConfig.binding(for: model))
+                            .labelsHidden()
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -35,6 +35,7 @@ struct ImageServiceSettings: View {
             }
         }
         .pickerStyle(.segmented)
+        .fixedSize()
     }
 }
 

@@ -15,7 +15,7 @@ struct AssistantMessage: View {
     var group: MessageGroup
     var showMenu: Bool = true
     
-    @State var height: CGFloat = 20
+    @State var height: CGFloat = 0
     @State private var showingTextSelection = false
     
     var body: some View {

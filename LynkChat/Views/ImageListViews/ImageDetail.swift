@@ -59,7 +59,7 @@ struct ImageDetail: View {
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardDidShowNotification)) { _ in
-                scrollToBottom(proxy: proxy)
+                Scroller.scrollToBottom()
             }
             .sheet(isPresented: $showingInspector) {
                 ImageInspector(session: session, showingInspector: $showingInspector)
