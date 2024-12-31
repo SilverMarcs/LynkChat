@@ -246,6 +246,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     func errorDeleteLast() {
         guard let last = self.currentThread.last else { return }
         last.activeMessage.isReplying = false
+        last.activeMessage.tools = nil
         if last.activeMessage.content.isEmpty {
             if last.allMessages.count == 1 {
                 self.deleteLastMessage()

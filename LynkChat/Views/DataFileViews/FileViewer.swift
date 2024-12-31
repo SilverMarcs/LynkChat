@@ -33,7 +33,7 @@ struct FileViewer: View {
                 
                 Spacer()
             }
-            .frame(width: 135, height: 28)
+            .frame(height: 28)
         }
         .groupBoxStyle(PlatformGroupBoxStyle())
     }

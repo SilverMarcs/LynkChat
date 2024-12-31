@@ -11,35 +11,19 @@ import UniformTypeIdentifiers
 
 struct DataFilesView: View {
     let dataFiles: [TypedData]
-    let adaptiveGrid: Bool
     var onDelete: ((TypedData) -> Void)? = nil
     
     @State private var selectedFileURL: URL?
     
-    init(dataFiles: [TypedData], adaptiveGrid: Bool = false, onDelete: ((TypedData) -> Void)? = nil) {
+    init(dataFiles: [TypedData], onDelete: ((TypedData) -> Void)? = nil) {
         self.dataFiles = dataFiles
         self.onDelete = onDelete
-        self.adaptiveGrid = adaptiveGrid
     }
     
     var body: some View {
-        VStack {
-            if adaptiveGrid {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 135), spacing: 8)], spacing: 8) {
-                    ForEach(dataFiles.indices, id: \.self) { index in
-                        fileItemView(for: dataFiles[index])
-                    }
-                }
-            } else {
-                Grid(horizontalSpacing: 8, verticalSpacing: 8) {
-                    ForEach(Array(stride(from: 0, to: dataFiles.count, by: 3)), id: \.self) { index in
-                        GridRow {
-                            ForEach(0..<min(3, dataFiles.count - index), id: \.self) { offset in
-                                fileItemView(for: dataFiles[index + offset])
-                            }
-                        }
-                    }
-                }
+        FlowLayout(spacing: 8) {
+            ForEach(dataFiles) { file in
+                fileItemView(for: file)
             }
         }
         .quickLookPreview($selectedFileURL)
@@ -83,3 +67,4 @@ struct DataFilesView: View {
         .buttonStyle(.plain)
     }
 }
+
