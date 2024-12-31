@@ -59,17 +59,10 @@ struct ChatListRow: View {
             ListRowImage(model: chat.config.model)
             
             HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
-                .contentTransition(.numericText())
                 .lineLimit(1)
                 .font(font)
                 .opacity(0.9)
-            
-//            Label {
-//                Text(chat.title)
-//            } icon: {
-//                Image(chat.config.model.imageName)
-//                    .foregroundStyle(Color(hex: chat.config.model.color).gradient)
-//            }
+                .shimmerWithoutRedact(when: chat.isReplying)
             
             Spacer()
             

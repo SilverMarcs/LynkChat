@@ -92,10 +92,10 @@ final class Chat: Equatable, Identifiable, Hashable {
             
             streamingTask?.cancel()
             streamingTask = nil
-        }
-        
-        if AppConfig.shared.autogenTitle {
-            Task { await generateTitle() }
+            
+            if AppConfig.shared.autogenTitle {
+                Task { await generateTitle() }
+            }
         }
     }
 

@@ -21,7 +21,7 @@ final class Message: Equatable, Identifiable, Hashable {
     var dataFiles: [TypedData]
     
     @Attribute(.ephemeral)
-    var isReplying: Bool
+    var isReplying: Bool = false
     
     var height: CGFloat = 20
     

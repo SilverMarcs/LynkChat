@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: make building this view async?
 struct ToolSearchView: View {
     let searchString: String
     @State private var results: [SearchResult] = []

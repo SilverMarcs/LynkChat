@@ -15,7 +15,7 @@ struct ToolTranscribePlaceholderView: View {
             
             Text(String.mockTranscription)
         }
-        .shimmer(when: .constant(true))
+        .shimmer(when: true)
     }
 }
 
