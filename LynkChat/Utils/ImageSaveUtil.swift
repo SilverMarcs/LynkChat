@@ -8,7 +8,7 @@
 import SwiftUI
 import Photos
 
-class ImageSaveUtil {
+enum ImageSaveUtil {
     static func saveImage(data: Data, completion: @escaping (Bool) -> Void) {
         let imageConfig = ImageModelConfig.shared
         

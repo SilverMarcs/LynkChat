@@ -58,7 +58,7 @@ struct ChatDetail: View {
             #if os(macOS)
             .onAppear {
                 if chatVM.searchText.isEmpty {
-                    scrollToBottom(proxy: proxy, animated: false)
+                    Scroller.scrollToBottom(animated: false)
                 }
                 onAppearStuff(proxy: proxy)
             }
@@ -93,9 +93,9 @@ struct ChatDetail: View {
         
         if chatVM.searchText.isEmpty {
             #if os(macOS)
-            scrollToBottom(proxy: proxy, animated: false)
+            Scroller.scrollToBottom(animated: false)
             #else
-            scrollToBottom(proxy: proxy, delay: 0.3)
+            Scroller.scrollToBottom(delay: 0.3)
             #endif
         }
     }

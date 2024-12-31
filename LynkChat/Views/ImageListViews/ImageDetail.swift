@@ -26,8 +26,8 @@ struct ImageDetail: View {
                     .listRowSeparator(.hidden)
             }
             .task {
-                session.proxy = proxy
-                scrollToBottom(proxy: proxy)
+                AppConfig.shared.proxy = proxy
+                Scroller.scrollToBottom()
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 ImageInputView(session: session)

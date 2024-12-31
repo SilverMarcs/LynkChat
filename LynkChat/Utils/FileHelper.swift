@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FileHelper {
+enum FileHelper {
     static func createTemporaryURL(for typedData: TypedData) -> URL? {
         let tempDirectoryURL = FileManager.default.temporaryDirectory
         let fileName = typedData.fileName

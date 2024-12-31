@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct APIService {
+enum APIService {
     static func nonStreamingResponse(from request: APIRequest) async throws -> APIResponse {
         AppLogger.warning("Sending request for model: \(String(describing: request.model))")
         

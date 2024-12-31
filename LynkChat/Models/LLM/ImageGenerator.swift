@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImageGenerator {
+enum ImageGenerator {
     static func generateImages(config: ImageConfig) async throws -> [Data] {
             // Construct the URL
             guard let url = URL(string: "\(String.apiHost)/image") else {

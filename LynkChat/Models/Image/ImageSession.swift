@@ -22,9 +22,6 @@ class ImageSession {
     
     @Relationship(deleteRule: .cascade)
     var config: ImageConfig = ImageConfig()
-    
-    @Transient
-    var proxy: ScrollViewProxy?
 
     init() { }
     
@@ -37,9 +34,7 @@ class ImageSession {
 
         imageGenerations.append(generation)
         
-        if let proxy = proxy {
-            scrollToBottom(proxy: proxy, delay: 0.2)
-        }
+        Scroller.scrollToBottom(delay: 0.2)
 
         await generation.send()
     }

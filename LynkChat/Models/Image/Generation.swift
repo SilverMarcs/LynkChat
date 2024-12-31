@@ -71,10 +71,8 @@ class Generation {
             errorMessage = error.localizedDescription
             state = .error
         }
-        
-        if let proxy = session?.proxy {
-            scrollToBottom(proxy: proxy, delay: 0.2)
-        }
+    
+        Scroller.scrollToBottom(delay: 0.2)
     }
     
     @MainActor
