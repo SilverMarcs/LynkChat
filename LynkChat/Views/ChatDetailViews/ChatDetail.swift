@@ -19,14 +19,12 @@ struct ChatDetail: View {
     @State private var numberOfMessagesToShow = 2
     @State private var colorViewHeight: CGFloat = 0 // Initial height
     
+    @Namespace private var inputTransition
+    
     var body: some View {
         ScrollViewReader { proxy in
             content
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                if chat.status != .quick {
-                    InputArea(chat: chat)
-                }
-            }
+                .animation(.default, value: chat.currentThread.isEmpty)
             .toolbar {
                 ChatToolbar(chat: chat)
             }
@@ -113,7 +111,8 @@ struct ChatDetail: View {
     @ViewBuilder
     var content: some View {
         if chat.currentThread.isEmpty {
-            EmptyChat(chat: chat)
+            EmptyChat(chat: chat, namespace: inputTransition)
+                .transition(.opacity)
         } else {
             List {
                 ForEach(messagesToShow, id: \.self) { group in
@@ -145,6 +144,14 @@ struct ChatDetail: View {
                     .id(String.bottomID)
                     .listRowSeparator(.hidden)
             }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if chat.status != .quick {
+                    InputArea(chat: chat)
+                        .modifier(CommonInputStyling())
+                        .matchedGeometryEffect(id: "inputArea", in: inputTransition)
+                }
+            }
+            .transition(.opacity)
         }
     }
     

@@ -22,21 +22,6 @@ struct RoundedRectangleOverlayModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-//            .background(
-//                RoundedRectangle(cornerRadius: radius, style: style)
-//                    .fill(.background.secondary.opacity(0.4))
-//            )
-//            .overlay(
-//                RoundedRectangle(cornerRadius: radius, style: style)
-//                #if os(macOS)
-//                    .stroke(.tertiary, lineWidth: 0.6)
-//                #elseif os(visionOS)
-//                    .stroke(Color(.quaternaryLabel), lineWidth: 1)
-//                #else
-//                    .stroke(colorScheme == .dark ? Color(.tertiarySystemGroupedBackground) : Color(.tertiaryLabel), lineWidth: 1)
-//                #endif
-//                    .opacity(opacity)
-//            )
             .background(
                 RoundedRectangle(cornerRadius: radius, style: style)
                 #if os(macOS)

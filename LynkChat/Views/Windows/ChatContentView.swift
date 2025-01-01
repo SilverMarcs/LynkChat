@@ -44,6 +44,7 @@ struct ChatContentView: View {
                     .fullScreenBackground()
             }
         }
+        .background(.background)
         .onChange(of: undoManager, initial: true) {
             modelContext.undoManager = undoManager
         }

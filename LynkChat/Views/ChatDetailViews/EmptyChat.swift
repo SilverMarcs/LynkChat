@@ -9,34 +9,53 @@ import SwiftUI
 
 struct EmptyChat: View {
     @Bindable var chat: Chat
+    var namespace: Namespace.ID
     
     var body: some View {
         VStack {
-            Image("storm.SFSymbol")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)
-                .foregroundStyle(.quaternary)
+            Spacer()
             
-//            InputModelPickers(chat: chat)
-//                .scrollContentBackground(.hidden)
-//                .fixedSize()
+            Text("Start a conversation")
+                .font(.system(size: 27, weight: .bold))
+                .fontWeight(.bold)
+                .opacity(0.9)
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            
+            InputArea(chat: chat)
+                .multilineTextAlignment(.leading)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 100)
+                .scaleEffect(1.1)
+                .matchedGeometryEffect(id: "inputArea", in: namespace)
             
             if chat.status == .temporary {
-                Text("Temporary Chat")
-                    .font(.title2).fontWeight(.bold)
-                    .foregroundStyle(.tertiary)
-                
-                Text("Click button on top right of window to save this chat")
-                    .font(.body)
-                    .foregroundStyle(.tertiary)
+                VStack {
+                    Text("Temporary Chat")
+                        .font(.title2).fontWeight(.bold)
+                        .foregroundStyle(.tertiary)
+                    
+                    Text("Click button on top right of window to save this chat")
+                        .font(.body)
+                        .foregroundStyle(.tertiary)
+                }
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
             }
+            
+            Spacer()
+            
+            Text("AI Can make mistakes. Verify important information.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding()
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
         }
-        .multilineTextAlignment(.center)
-        .fullScreenBackground()
+//        .fullScreenBackground()
+        .toolbarBackground(.hidden)
+        .transition(.opacity.animation(.easeInOut(duration: 0.3)))
     }
 }
 
-#Preview {
-    EmptyChat(chat: .mockChat)
-}
+//#Preview {
+//    EmptyChat(chat: .mockChat)
+//        .environment(ChatVM())
+//}
