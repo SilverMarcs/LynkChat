@@ -22,7 +22,7 @@ struct ChatWindow: Scene {
             if let id = id {
                 ChatDetailWrapper(id: id)
                     .environment(ChatVM())
-                    .modelContainer(DatabaseService.shared.container)
+                    .modelContainer(globalContainer)
             } else {
                 Text("No ID")
             }

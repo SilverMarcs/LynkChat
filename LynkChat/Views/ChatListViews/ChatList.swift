@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import TipKit
 
 struct ChatList: View {
     @Environment(\.openWindow) var openWindow
@@ -24,10 +23,6 @@ struct ChatList: View {
 
         List(selection: $chatVM.selections) {
             ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
-            
-            TipView(SwipeActionTip())
-                .tipCornerRadius(8)
-                .listRowInsets(EdgeInsets(top: -6, leading: -5, bottom: 10, trailing: -5))
 
             #if os(macOS)
             if isSearching {

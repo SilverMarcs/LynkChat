@@ -26,7 +26,7 @@ import SwiftUI
     
     @MainActor
     func fork(newChat: Chat) {
-        let modelContext = DatabaseService.shared.modelContext
+        let modelContext = globalContainer.mainContext
         modelContext.insert(newChat)
         #if os(macOS)
         self.selections = [newChat]
@@ -47,7 +47,8 @@ import SwiftUI
             newChat.config.model = model
         }
         
-        DatabaseService.shared.modelContext.insert(newChat)
+        
+        globalContainer.mainContext.insert(newChat)
         self.activeChat = newChat
         return newChat
     }
