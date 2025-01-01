@@ -147,6 +147,7 @@ struct ChatDetail: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 if chat.status != .quick {
                     InputArea(chat: chat)
+                        .roundedRectangleOverlay(radius: 15, style: .circular)
                         .modifier(CommonInputStyling())
                         .matchedGeometryEffect(id: "inputArea", in: inputTransition)
                 }
