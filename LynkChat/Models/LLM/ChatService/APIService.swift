@@ -17,31 +17,24 @@ enum APIService {
         
         urlRequest.httpBody = try JSONEncoder().encode(request)
         
-        let (data, _) = try await URLSession.shared.data(for: urlRequest)
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        // First check if it's an error response
+        if let httpResponse = response as? HTTPURLResponse,
+           !(200...299).contains(httpResponse.statusCode) {
+            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
+            throw RuntimeError(errorResponse.error)
+        }
         
         if let rawResponseString = String(data: data, encoding: .utf8) {
             AppLogger.debug("\(rawResponseString)")
         }
         
         do {
-            let response = try JSONDecoder().decode(APIResponse.self, from: data)
-            return APIResponse(
-                text: response.text,
-                promptTokens: response.promptTokens,
-                completionTokens: response.completionTokens
-            )
+            return try JSONDecoder().decode(APIResponse.self, from: data)
         } catch {
-            // Print raw JSON data when decoding fails
-            if let rawResponseString = String(data: data, encoding: .utf8) {
-                AppLogger.fault("Failed to decode response. Raw JSON:\n \(rawResponseString)")
-            }
-            
-            // Try to decode as error response
-            if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
-                throw RuntimeError(errorResponse.error)
-            }
-            
-            throw RuntimeError("Failed to decode response: \(error.localizedDescription)")
+            AppLogger.fault("Failed to decode response: \(error.localizedDescription)")
+            throw error
         }
     }
     
@@ -62,24 +55,13 @@ enum APIService {
                     // Check if we received an error response
                     if let httpResponse = response as? HTTPURLResponse,
                        !(200...299).contains(httpResponse.statusCode) {
-                        // Collect the error response data
                         var errorData = Data()
                         for try await byte in result {
                             errorData.append(byte)
                         }
                         
-                        // Log the raw error response
-                        if let rawErrorString = String(data: errorData, encoding: .utf8) {
-                            AppLogger.fault("Server error response: \(rawErrorString)")
-                        }
-                        
-                        // Try to decode the error response
-                        if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: errorData) {
-                            throw RuntimeError(errorResponse.error)
-                        }
-                        
-                        // If error response decoding fails, throw generic error
-                        throw RuntimeError("Server error: \(httpResponse.statusCode)")
+                        let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: errorData)
+                        throw RuntimeError(errorResponse.error)
                     }
                     
                     for try await line in result.lines {
@@ -88,28 +70,19 @@ enum APIService {
                         AppLogger.debug("\(line)")
                         
                         if let data = line.data(using: .utf8) {
-                            do {
-                                let response = try JSONDecoder().decode(ResponseType.self, from: data)
-                                
-                                switch response {
-                                case .text(let textResponse):
-                                    continuation.yield(.text(textResponse))
-                                    
-                                case .toolCall(let toolCallResponse):
-                                    continuation.yield(.toolCall(toolCallResponse))
-                                    
-                                case .toolResult(let toolResultResponse):
-                                    continuation.yield(.toolResult(toolResultResponse))
-                                    
-                                case .finish(let finishResponse):
-                                    continuation.yield(.finish(finishResponse))
-                                    
-                                case .error(let errorResponse):
-                                    throw RuntimeError(errorResponse.content)
-                                }
-                            } catch {
-                                AppLogger.error("Failed to decode stream response. Raw data:\n \(line)")
-                                throw error
+                            let response = try JSONDecoder().decode(ResponseType.self, from: data)
+                            
+                            switch response {
+                            case .text(let textResponse):
+                                continuation.yield(.text(textResponse))
+                            case .toolCall(let toolCallResponse):
+                                continuation.yield(.toolCall(toolCallResponse))
+                            case .toolResult(let toolResultResponse):
+                                continuation.yield(.toolResult(toolResultResponse))
+                            case .finish(let finishResponse):
+                                continuation.yield(.finish(finishResponse))
+                            case .error(let errorResponse):
+                                throw RuntimeError(errorResponse.content)
                             }
                         }
                     }

@@ -78,6 +78,7 @@ struct InputArea: View {
         }
         .padding(4)
         .roundedRectangleOverlay(radius: 15, style: .circular)
+        .pasteHandler(chat: chat)
 //        .animation(.default, value: chat.currentThread.isEmpty)
 //        .transition(.opacity.animation(.easeInOut(duration: 1)))
     }

@@ -63,7 +63,7 @@ struct ToolsBarView: View {
             #if os(macOS)
                 .imageScale(isEnabled ? .medium : .large)
                 .padding(.horizontal, isEnabled ? 7 : 2)
-                .padding(.vertical, isEnabled ? 3.5 : 0)
+                .padding(.vertical, isEnabled ? 3 : 0)
                 .foregroundStyle(isEnabled ? tool.color : .secondary)
                 .background {
                     RoundedRectangle(cornerRadius: 10, style: .circular)

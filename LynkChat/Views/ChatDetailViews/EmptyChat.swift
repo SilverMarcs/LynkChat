@@ -16,17 +16,22 @@ struct EmptyChat: View {
             Spacer()
             
             Text("Start a conversation")
-                .font(.system(size: 27, weight: .bold))
+                .font(.system(size: 25, weight: .semibold))
                 .fontWeight(.bold)
                 .opacity(0.9)
                 .transition(.opacity.combined(with: .move(edge: .top)))
+                .padding(.bottom, 15)
             
             InputArea(chat: chat)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: 750)
+                .background {
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(.background.secondary)
+                }
                 .roundedRectangleOverlay(radius: 15, style: .circular)
                 .matchedGeometryEffect(id: "inputArea", in: namespace)
-                .scaleEffect(1.1)
+                .scaleEffect(1.05)
                 .padding(.horizontal, 90)
             
             if chat.status == .temporary {
