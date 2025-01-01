@@ -50,6 +50,7 @@ struct EmptyChat: View {
         }
         .toolbarBackground(.hidden)
         .transition(.opacity.animation(.easeInOut(duration: 0.3)))
+        .frame(maxWidth: .infinity)
     }
 }
 

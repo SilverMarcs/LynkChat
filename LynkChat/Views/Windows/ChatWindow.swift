@@ -48,6 +48,7 @@ struct ChatDetailWrapper: View {
         
         if let chat = chats.first {
             ChatDetail(chat: chat)
+                .background(.background)
                 .searchable(text: $chatVM.searchText)
         } else {
             Text("Chat not found")
