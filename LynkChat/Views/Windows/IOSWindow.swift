@@ -25,7 +25,7 @@ struct IOSWindow: Scene {
                 Group {
                     switch settingsVM.listState {
                     case .chats:
-                        ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText, searchTokens: [])
+                        ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
                             .searchable(text: $chatVM.searchText)
                     case .images:
                         ImageListIOS(selection: $selection)
