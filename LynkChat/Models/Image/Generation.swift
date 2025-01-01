@@ -48,7 +48,7 @@ class Generation {
                 state = .success
             } catch {
                 if state != .error {
-                    errorMessage = "Error fetching images: \(error)"
+                    errorMessage = "\(error.localizedDescription)"
                     state = .error
                 }
             }

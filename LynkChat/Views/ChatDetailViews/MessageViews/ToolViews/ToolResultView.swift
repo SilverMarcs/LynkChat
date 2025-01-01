@@ -31,7 +31,11 @@ struct ToolResultView: View {
             .animation(.easeInOut(duration: 0.3), value: chatTool.result != nil)
 
         case .scrapeLinks:
+            #if DEBUG
+            Text(chatTool.result ?? "Couldnt scrapes")
+            #else
             EmptyView()
+            #endif
         case .transcribe:
             GroupBox {
                 Group {

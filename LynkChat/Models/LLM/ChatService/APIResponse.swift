@@ -75,11 +75,5 @@ struct APIResponse: Decodable {
 
 // MARK: - Error Response
 struct APIErrorResponse: Decodable {
-    let error: ErrorDetails
-    
-    struct ErrorDetails: Decodable {
-        let message: String
-        let type: String
-        let details: String
-    }
+    let error: String
 }

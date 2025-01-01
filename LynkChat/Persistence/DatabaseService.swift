@@ -56,7 +56,6 @@ final class DatabaseService: NSObject {
             
             // Demo favourite chat with some messages
             let favouriteChat = Chat()
-//            let group = MessageGroup(message: .init(role: .user, content: "How do i sort in python?", model: .gpt4omini))
             let group = MessageGroup(message: Message.user(content: "How do i sort in python?"))
             let secondGroup = MessageGroup(message: Message.assistant(model: .gpt4omini, content: String.codeBlock))
             favouriteChat.rootMessage = group

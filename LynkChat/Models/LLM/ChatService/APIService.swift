@@ -38,7 +38,7 @@ enum APIService {
             
             // Try to decode as error response
             if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
-                throw RuntimeError(errorResponse.error.details)
+                throw RuntimeError(errorResponse.error)
             }
             
             throw RuntimeError("Failed to decode response: \(error.localizedDescription)")
@@ -75,7 +75,7 @@ enum APIService {
                         
                         // Try to decode the error response
                         if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: errorData) {
-                            throw RuntimeError(errorResponse.error.details)
+                            throw RuntimeError(errorResponse.error)
                         }
                         
                         // If error response decoding fails, throw generic error
