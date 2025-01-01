@@ -140,6 +140,7 @@ struct ChatList: View {
                 chatVM.createNewChat()
             }
             .menuIndicator(.hidden)
+            .popoverTip(NewChatTip())
         }
     }
     

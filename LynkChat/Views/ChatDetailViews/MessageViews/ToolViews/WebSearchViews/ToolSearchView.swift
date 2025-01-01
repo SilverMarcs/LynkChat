@@ -26,19 +26,22 @@ struct ToolSearchView: View {
                             } placeholder: {
                                 Image(systemName: "globe")
                                     .frame(width: 16, height: 16)
+                                    .foregroundColor(.secondary)
                             }
                             
                             Text(result.displayDomain)
                                 .font(.subheadline)
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 3)
                         .background(.quinary)
-                        .cornerRadius(20)
+                        .cornerRadius(10)
+                        #if os(macOS)
                         .background {
-                            RoundedRectangle(cornerRadius: 20)
+                            RoundedRectangle(cornerRadius: 10)
                                 .stroke(.quaternary, lineWidth: 1)
                         }
+                        #endif
                     }
                     .buttonStyle(.plain)
                 }
@@ -47,7 +50,8 @@ struct ToolSearchView: View {
                     showingPopover = true
                 } label: {
                     Image(systemName: "chevron.right")
-                    .padding(9)
+                        .imageScale(.small)
+                    .padding(6)
                     .padding(.horizontal, 1)
                     .background(.quinary)
                     .cornerRadius(20)

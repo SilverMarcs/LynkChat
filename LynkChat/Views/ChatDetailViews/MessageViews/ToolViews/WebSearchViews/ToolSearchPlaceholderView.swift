@@ -22,14 +22,16 @@ struct ToolSearchPlaceholderView: View {
                             .font(.subheadline)
                     }
                     .shimmer(when: true)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
                     .background(.quinary)
-                    .cornerRadius(20)
+                    .cornerRadius(10)
+                    #if os(macOS)
                     .background {
-                        RoundedRectangle(cornerRadius: 20)
+                        RoundedRectangle(cornerRadius: 10)
                             .stroke(.quaternary, lineWidth: 1)
                     }
+                    #endif
                 }
             }
         }

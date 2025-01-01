@@ -62,7 +62,7 @@ struct ProviderRefreshTip: Tip {
 
 struct NewChatTip: Tip {
     var title: Text {
-        Text("Long Tap to see list of all providers")
+        Text("Long Tap to see list of all models")
     }
     
     var message: Text {

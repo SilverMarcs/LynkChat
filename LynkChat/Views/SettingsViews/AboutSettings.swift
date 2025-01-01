@@ -40,7 +40,7 @@ struct AboutSettings: View {
                 LabeledContent {
                     Link("Follow on Instagram", destination: URL(string: "https://www.instagram.com/lynksphere")!)
                 } label: {
-                    Text("\(Image(systemName: "person")) Social Profile")
+                    Text("\(Image(systemName: "person")) Social")
                 }
             }
             
