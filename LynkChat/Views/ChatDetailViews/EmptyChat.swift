@@ -53,7 +53,9 @@ struct EmptyChat: View {
     }
 }
 
-//#Preview {
-//    EmptyChat(chat: .mockChat)
-//        .environment(ChatVM())
-//}
+#Preview {
+    @Previewable @Namespace var inputTransition
+    
+    EmptyChat(chat: .mockChat, namespace: inputTransition)
+        .environment(ChatVM())
+}
