@@ -105,6 +105,7 @@
 		08850D8B2CFE0A99004D944C /* PermissionsOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08850D8A2CFE0A99004D944C /* PermissionsOnboarding.swift */; platformFilters = (ios, xros, ); };
 		0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0886050E2CF61E4200A9657C /* ShortcutSettings.swift */; platformFilters = (macos, ); };
 		088A09F32C55C7740055B567 /* TextSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088A09F22C55C7740055B567 /* TextSelectionView.swift */; };
+		088D4AFE2D25823100E86706 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 088D4AFD2D25823100E86706 /* Localizable.xcstrings */; };
 		088DA8F92CA752EF006C017E /* IOSWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088DA8F82CA752EF006C017E /* IOSWindow.swift */; platformFilters = (ios, xros, ); };
 		088EF44E2D23D2FF007E48AE /* ImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088EF44D2D23D2FF007E48AE /* ImageList.swift */; };
 		08915D942C373340008ADE27 /* ProviderImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08915D932C373340008ADE27 /* ProviderImage.swift */; };
@@ -313,6 +314,7 @@
 		08850D8A2CFE0A99004D944C /* PermissionsOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsOnboarding.swift; sourceTree = "<group>"; };
 		0886050E2CF61E4200A9657C /* ShortcutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutSettings.swift; sourceTree = "<group>"; };
 		088A09F22C55C7740055B567 /* TextSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSelectionView.swift; sourceTree = "<group>"; };
+		088D4AFD2D25823100E86706 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		088DA8F82CA752EF006C017E /* IOSWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSWindow.swift; sourceTree = "<group>"; };
 		088EF44D2D23D2FF007E48AE /* ImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageList.swift; sourceTree = "<group>"; };
 		08915D932C373340008ADE27 /* ProviderImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderImage.swift; sourceTree = "<group>"; };
@@ -751,6 +753,7 @@
 				08A222822C2AB4FD00D76C8B /* LynkChatApp.swift */,
 				08A222882C2AB4FE00D76C8B /* Assets.xcassets */,
 				08A2228A2C2AB4FE00D76C8B /* LynkChat.entitlements */,
+				088D4AFD2D25823100E86706 /* Localizable.xcstrings */,
 			);
 			path = LynkChat;
 			sourceTree = "<group>";
@@ -1068,6 +1071,8 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
+				"zh-Hans",
 			);
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
@@ -1092,6 +1097,7 @@
 				084C24682D1FEA6C00AC431F /* template.html in Resources */,
 				084C24692D1FEA6C00AC431F /* default-iOS.css in Resources */,
 				084C246A2D1FEA6C00AC431F /* panda.css in Resources */,
+				088D4AFE2D25823100E86706 /* Localizable.xcstrings in Resources */,
 				084C246B2D1FEA6C00AC431F /* paraiso.css in Resources */,
 				084C246C2D1FEA6C00AC431F /* stackoverflow.css in Resources */,
 				084C246D2D1FEA6C00AC431F /* github.css in Resources */,
@@ -1367,6 +1373,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = LynkChat;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
 			};
@@ -1425,6 +1432,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = LynkChat;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 			};
 			name = Release;

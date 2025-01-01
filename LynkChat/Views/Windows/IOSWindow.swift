@@ -63,7 +63,7 @@ struct IOSWindow: Scene {
                     }
                 }
             }
-            .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
+            .fullScreenCover(isPresented: .constant(!config.hasCompletedOnboarding)) {
                 OnboardingView()
             }
         }

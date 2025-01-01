@@ -1,0 +1,586 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "%@" : {
+
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ Social" : {
+
+    },
+    "%@ Visit" : {
+
+    },
+    "%lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "^[%lld Chat](inflect: true) Selected" : {
+
+    },
+    "© 2024 LynkSphere" : {
+
+    },
+    "⌘ + Enter to send, ⌘ + L to focus on input box, ⌘ + V to paste files" : {
+
+    },
+    "⌥ + Space" : {
+
+    },
+    "About" : {
+
+    },
+    "About LynkChat" : {
+
+    },
+    "Access from anywhere in the OS" : {
+
+    },
+    "Access up-to-date information" : {
+
+    },
+    "Acknowledgements" : {
+
+    },
+    "Actual Size" : {
+
+    },
+    "Add images for LLM vision chat." : {
+
+    },
+    "Add Item" : {
+
+    },
+    "AI Can make mistakes. Verify important information." : {
+
+    },
+    "Allow" : {
+
+    },
+    "Allowed" : {
+
+    },
+    "API Key" : {
+
+    },
+    "Appearance" : {
+
+    },
+    "Application Settings" : {
+
+    },
+    "Archive" : {
+
+    },
+    "Are you sure you want to delete all messages?" : {
+
+    },
+    "Ask Anything..." : {
+
+    },
+    "Attach Files" : {
+
+    },
+    "Autogenerate Title" : {
+
+    },
+    "Basic" : {
+
+    },
+    "Camera" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Cancel Editing" : {
+
+    },
+    "Change chat selection to take effect" : {
+
+    },
+    "Chat Interaction" : {
+
+    },
+    "Chat not found" : {
+
+    },
+    "Chat Service" : {
+
+    },
+    "Chat with multiple LLM models, generate images, and more" : {
+
+    },
+    "Chats" : {
+
+    },
+    "Clear Search" : {
+
+    },
+    "Click button on top right of window to save this chat" : {
+
+    },
+    "Click on model name or code to edit" : {
+
+    },
+    "Code Block Theme" : {
+
+    },
+    "Code Execution or Search Retrieval cannnot be used with other tools enabled" : {
+
+    },
+    "Collapse" : {
+
+    },
+    "Company Website" : {
+
+    },
+    "Config" : {
+
+    },
+    "Connect" : {
+
+    },
+    "Context Cleared" : {
+
+    },
+    "Copy" : {
+
+    },
+    "Copy Files" : {
+
+    },
+    "Copy Prompt" : {
+
+    },
+    "Debug" : {
+
+    },
+    "Default" : {
+
+    },
+    "Default Parameters" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete All" : {
+
+    },
+    "Delete All Generations" : {
+
+    },
+    "Delete All Messages" : {
+
+    },
+    "Delete Generation" : {
+
+    },
+    "Delete Last Message" : {
+
+    },
+    "Delete Message" : {
+
+    },
+    "Dock icon reappears on app restart" : {
+
+    },
+    "Done" : {
+
+    },
+    "Edit" : {
+
+    },
+    "Edit Last Message" : {
+
+    },
+    "Enable" : {
+
+    },
+    "Enabling this makes input area laggy and is not recommended" : {
+
+    },
+    "Enter to send message" : {
+
+    },
+    "Exit SplitView" : {
+
+    },
+    "Expand" : {
+
+    },
+    "Export Markdown" : {
+
+    },
+    "Focus" : {
+
+    },
+    "Follow on Instagram" : {
+
+    },
+    "Font Size" : {
+
+    },
+    "Font Size Adjustment" : {
+
+    },
+    "Fork Chat" : {
+
+    },
+    "General" : {
+
+    },
+    "Generate images from text" : {
+
+    },
+    "Get Started" : {
+
+    },
+    "Global shortcut" : {
+
+    },
+    "Go into Models Section to refresh the provider's model list" : {
+
+    },
+    "Help" : {
+
+    },
+    "Hide icon in Dock" : {
+
+    },
+    "If enabled, chat window will be closed when image window is opened and vice versa" : {
+
+    },
+    "Image" : {
+
+    },
+    "Image Gen" : {
+
+    },
+    "Image Generate" : {
+
+    },
+    "Image Service" : {
+
+    },
+    "Image Unable to Load" : {
+
+    },
+    "Images" : {
+
+    },
+    "Images generated here are temporary. Save them to your device if needed" : {
+
+    },
+    "Images will be saved to Downloads folder otherwise" : {
+
+    },
+    "Input Box" : {
+
+    },
+    "Keyboard Shortcuts" : {
+
+    },
+    "Launch" : {
+
+    },
+    "Less" : {
+
+    },
+    "Long Tap the plus button to see list of all providers" : {
+
+    },
+    "Long Tap to see list of all models" : {
+
+    },
+    "LynkChat" : {
+
+    },
+    "LynkChat Help" : {
+
+    },
+    "Markdown" : {
+
+    },
+    "Markdown Provider" : {
+
+    },
+    "Max Tokens" : {
+
+    },
+    "Misc" : {
+
+    },
+    "Model" : {
+
+    },
+    "Models" : {
+
+    },
+    "More" : {
+
+    },
+    "Multi-LLM API Service in SwiftUI" : {
+
+    },
+    "N" : {
+
+    },
+    "Native uses less memeory but is far less capable" : {
+
+    },
+    "New Chat" : {
+
+    },
+    "Next" : {
+
+    },
+    "No ID" : {
+
+    },
+    "Number of Images (%lld)" : {
+
+    },
+    "On" : {
+
+    },
+    "Open Camera" : {
+
+    },
+    "Parameters" : {
+
+    },
+    "Photos Library" : {
+
+    },
+    "Plugins" : {
+
+    },
+    "Press Enter to search" : {
+
+    },
+    "Previous" : {
+
+    },
+    "Price" : {
+
+    },
+    "Print debug ines" : {
+
+    },
+    "Prompt" : {
+
+    },
+    "Quick Panel" : {
+
+    },
+    "Quick Panel Shortcut" : {
+
+    },
+    "Ready to Go" : {
+
+    },
+    "Regen Last Message" : {
+
+    },
+    "Regenerate" : {
+
+    },
+    "Remove" : {
+
+    },
+    "Reset" : {
+
+    },
+    "Reset Context" : {
+
+    },
+    "Reset First Launch" : {
+
+    },
+    "Reset to Default" : {
+
+    },
+    "Restart Onboarding" : {
+
+    },
+    "Save" : {
+
+    },
+    "Save to Photos Library" : {
+
+    },
+    "Search" : {
+
+    },
+    "Select or create a chat to get started" : {
+
+    },
+    "Select or create an image session" : {
+
+    },
+    "Select Text" : {
+
+    },
+    "Send a prompt • %@" : {
+
+    },
+    "Set" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Shortcuts" : {
+
+    },
+    "Show" : {
+
+    },
+    "Show Inspector" : {
+
+    },
+    "Show one window at a time" : {
+
+    },
+    "Skip" : {
+
+    },
+    "SplitView" : {
+
+    },
+    "Star" : {
+
+    },
+    "Start a conversation" : {
+
+    },
+    "Swipe left or right on list row for more actions" : {
+
+    },
+    "System Prompt" : {
+
+    },
+    "Tab" : {
+
+    },
+    "Tap Advanced for configuring plugins" : {
+
+    },
+    "Temperature" : {
+
+    },
+    "Temporary Chat" : {
+
+    },
+    "Title" : {
+
+    },
+    "Toggle Inspector" : {
+
+    },
+    "Tokens: %@" : {
+
+    },
+    "Tool" : {
+
+    },
+    "Tools" : {
+
+    },
+    "Transcribe" : {
+
+    },
+    "Transcribe audio to text" : {
+
+    },
+    "Transcription" : {
+
+    },
+    "Unset" : {
+
+    },
+    "Unstar" : {
+
+    },
+    "Upload pictures from gallery." : {
+
+    },
+    "Use Localhost" : {
+
+    },
+    "Used" : {
+
+    },
+    "Uses Claude 3.5 Haiku" : {
+
+    },
+    "Using %@" : {
+
+    },
+    "Web" : {
+
+    },
+    "Web Search" : {
+
+    },
+    "Welcome to LynkChat" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a LynkChat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "欢迎使用 LynkChat"
+          }
+        }
+      }
+    },
+    "Windows" : {
+
+    },
+    "wwwbbccom" : {
+
+    },
+    "Zoom In" : {
+
+    },
+    "Zoom Out" : {
+
+    }
+  },
+  "version" : "1.0"
+}
