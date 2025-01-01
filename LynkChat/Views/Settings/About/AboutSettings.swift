@@ -28,6 +28,7 @@ struct AboutSettings: View {
                 Text("© 2024 LynkSphere")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+                    .padding(.bottom, 10)
             }
             
             Section("Connect") {

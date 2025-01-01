@@ -110,50 +110,60 @@ struct ChatDetail: View {
     
     @ViewBuilder
     var content: some View {
+        #if os(macOS) || os(visionOS)
         if chat.currentThread.isEmpty {
             EmptyChat(chat: chat, namespace: inputTransition)
                 .transition(.opacity)
         } else {
-            List {
-                ForEach(messagesToShow, id: \.self) { group in
-                    MessageView(group: group)
-                        .environment(\.chat, chat)
-                        .onAppear {
-                            if group == messagesToShow.first {
-                                loadMoreMessages()
-                            }
-                        }
-                }
-                #if os(macOS)
-                .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))
-                #endif
-                .listRowSeparator(.hidden)
-                
-                ErrorMessageView(chat: chat)
-                
-                if chat.status != .quick {
-                    resizingColor
-                }
-                
-                Color.clear
-                    #if os(macOS)
-                    .listRowInsets(.init(top: -5, leading: 0, bottom: -5, trailing: 0))
-                    #endif
-                    .frame(height: 1)
-                    .transaction { $0.animation = nil }
-                    .id(String.bottomID)
-                    .listRowSeparator(.hidden)
-            }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                if chat.status != .quick {
-                    InputArea(chat: chat)
-                        .roundedRectangleOverlay(radius: 15, opacity: 0.6, style: .circular)
-                        .modifier(CommonInputStyling())
-                        .matchedGeometryEffect(id: "inputArea", in: inputTransition)
-                }
-            }
-            .transition(.opacity)
+            list
         }
+        #else
+        list
+        #endif
+    }
+    
+    var list: some View {
+        List {
+            ForEach(messagesToShow, id: \.self) { group in
+                MessageView(group: group)
+                    .environment(\.chat, chat)
+                    .onAppear {
+                        if group == messagesToShow.first {
+                            loadMoreMessages()
+                        }
+                    }
+            }
+            #if os(macOS)
+            .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))
+            #endif
+            .listRowSeparator(.hidden)
+            
+            ErrorMessageView(chat: chat)
+            
+            if chat.status != .quick {
+                resizingColor
+            }
+            
+            Color.clear
+                #if os(macOS)
+                .listRowInsets(.init(top: -5, leading: 0, bottom: -5, trailing: 0))
+                #endif
+                .frame(height: 1)
+                .transaction { $0.animation = nil }
+                .id(String.bottomID)
+                .listRowSeparator(.hidden)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if chat.status != .quick {
+                InputArea(chat: chat)
+                    #if os(macOS)
+                    .roundedRectangleOverlay(radius: 15, opacity: 0.6, style: .circular)
+                    .modifier(CommonInputStyling())
+                    #endif
+                    .matchedGeometryEffect(id: "inputArea", in: inputTransition)
+            }
+        }
+        .transition(.opacity)
     }
     
     private func loadMoreMessages() {

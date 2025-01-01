@@ -49,13 +49,12 @@ struct UserMessage: View {
                         baseURL: "LynkChat Web Content",
                         codeBlockTheme: config.codeBlockTheme
                     )
+                    .transaction { $0.animation = nil }
                     .frame(height: group.activeMessage.height, alignment: .top)
                     .onChange(of: height) {
-//                        DispatchQueue.main.async {
-//                            if height > 0 {
-                                group.activeMessage.height = height
-//                            }
-//                        }
+                        if height > 0 {
+                            group.activeMessage.height = height
+                        }
                     }
                     .padding(3)
                     #else

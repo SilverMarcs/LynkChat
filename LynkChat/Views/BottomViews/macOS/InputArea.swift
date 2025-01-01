@@ -78,7 +78,8 @@ struct InputArea: View {
         }
         .padding(4)
         .roundedRectangleOverlay(radius: 15, style: .circular)
-        .animation(.default, value: chat.currentThread.isEmpty)
+//        .animation(.default, value: chat.currentThread.isEmpty)
+//        .transition(.opacity.animation(.easeInOut(duration: 1)))
     }
         
     var expandInput: some View {

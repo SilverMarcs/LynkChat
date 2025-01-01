@@ -23,9 +23,10 @@ struct EmptyChat: View {
             
             InputArea(chat: chat)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: 750) 
+                .frame(maxWidth: 750)
                 .roundedRectangleOverlay(radius: 15, style: .circular)
                 .matchedGeometryEffect(id: "inputArea", in: namespace)
+                .scaleEffect(1.1)
                 .padding(.horizontal, 80)
             
             if chat.status == .temporary {
@@ -50,7 +51,6 @@ struct EmptyChat: View {
                 .transition(.opacity.combined(with: .move(edge: .bottom)))
         }
         .toolbarBackground(.hidden)
-        .transition(.opacity.animation(.easeInOut(duration: 0.3)))
         .frame(maxWidth: .infinity)
     }
 }

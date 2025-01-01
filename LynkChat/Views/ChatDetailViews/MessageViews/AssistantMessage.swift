@@ -38,11 +38,11 @@ struct AssistantMessage: View {
                         view
                             .frame(height: message.height, alignment: .top)
                             .onChange(of: height) {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                     if height > 0 {
                                         message.height = height
                                     }
-                                }
+//                                }
                             }
                     } else {
                         view
