@@ -144,7 +144,7 @@ struct ChatList: View {
         }
     }
     
-    init(status: ChatStatus, searchText: String, searchTokens: [ChatSearchToken]) {
+    init(status: ChatStatus, searchText: String) {
         let statusId = status.id
         let normalId = ChatStatus.normal.id
         let starredId = ChatStatus.starred.id
@@ -162,9 +162,8 @@ struct ChatList: View {
             }
         }
         
-        let searchPredicate: Predicate<Chat>
-        if searchText.count >= 2 && (searchTokens.isEmpty || searchTokens.contains(.title)) {
-            searchPredicate = #Predicate<Chat> {
+        if searchText.count >= 2 {
+            let searchPredicate = #Predicate<Chat> {
                 $0.title.localizedStandardContains(searchText)
             }
             
@@ -175,14 +174,14 @@ struct ChatList: View {
             
             _chats = Query(filter: combinedPredicate, sort: [sortDescriptor], animation: .default)
         } else {
-            // When not searching or search tokens don't include title, we only apply the status filter
+            // When not searching, we only apply the status filter
             _chats = Query(filter: statusPredicate, sort: [sortDescriptor], animation: .default)
         }
     }
 }
 
 #Preview {
-    ChatList(status: .normal, searchText: "", searchTokens: [])
+    ChatList(status: .normal, searchText: "")
     .frame(width: 400)
     .environment(ChatVM())
 }

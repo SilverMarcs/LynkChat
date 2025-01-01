@@ -71,6 +71,10 @@ struct MessageGroupList: View {
                         Text(chat.title)
                     }
                 }
+                
+                Divider()
+                    .frame(height: 1)
+                    .listRowInsets(.init(top: -5, leading: 0, bottom: -10, trailing: 0))
             }
         }
     }

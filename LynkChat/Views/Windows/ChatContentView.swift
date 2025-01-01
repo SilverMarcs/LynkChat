@@ -22,11 +22,11 @@ struct ChatContentView: View {
         @Bindable var chatVM = chatVM
         
         NavigationSplitView {
-            if !chatVM.searchText.isEmpty && chatVM.searchTokens.contains(.messages) {
+            if !chatVM.searchText.isEmpty {
                 MessageGroupList(searchText: chatVM.searchText)
                     .navigationSplitViewColumnWidth(min: 270, ideal: 300, max: 400)
             } else {
-                ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText, searchTokens: chatVM.searchTokens)
+                ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
                     .navigationSplitViewColumnWidth(min: 270, ideal: 300, max: 400)
             }
         } detail: {
@@ -50,14 +50,9 @@ struct ChatContentView: View {
         .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
             OnboardingView()
         }
-        .searchable(text: $chatVM.localSearchText, tokens: $chatVM.searchTokens, placement: searchPlacement) { token in
-            Text(token.name)
-        }
-        .searchSuggestions {
-            ForEach(chatVM.filteredTokens) { suggestion in
-                Text("Matching: \(suggestion.name)")
-                    .searchCompletion(suggestion)
-            }
+        .searchable(text: $chatVM.localSearchText, placement: searchPlacement)
+        .onSubmit(of: .search) {
+            chatVM.searchText = chatVM.localSearchText
         }
         .apply {
             if #available(iOS 18.0, macOS 15.0, *) {
@@ -65,12 +60,6 @@ struct ChatContentView: View {
             } else {
                 $0
             }
-        }
-        .onSubmit(of: .search) {
-            if chatVM.searchTokens.isEmpty {
-                chatVM.searchTokens = [.messages]
-            }
-            chatVM.searchText = chatVM.localSearchText
         }
         .onChange(of: chatVM.localSearchText) {
             if chatVM.localSearchText.isEmpty {

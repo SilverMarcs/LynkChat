@@ -64,17 +64,6 @@ import SwiftUI
     // MARK: - Search
     var searchText: String = ""
     var localSearchText: String = ""
-    var searchTokens = [ChatSearchToken]()
-    
-    var filteredTokens: [ChatSearchToken] {
-        if searchTokens.isEmpty {
-            return localSearchText.isEmpty
-                ? ChatSearchToken.allCases
-                : ChatSearchToken.allCases.filter { $0.name.lowercased().hasPrefix(localSearchText.lowercased()) }
-        } else {
-            return [] // Return an empty array if a token is already selected
-        }
-    }
     
     // MARK: - Quick Panel
     var isQuickPanelPresented: Bool = false
