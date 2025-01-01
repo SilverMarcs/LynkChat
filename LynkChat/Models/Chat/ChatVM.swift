@@ -57,7 +57,7 @@ import SwiftUI
     func createTemporaryChat() {
         let newChat = Chat()
         newChat.status = .temporary
-        DatabaseService.shared.modelContext.insert(newChat)
+        globalContainer.mainContext.insert(newChat)
         self.activeChat = newChat
     }
     

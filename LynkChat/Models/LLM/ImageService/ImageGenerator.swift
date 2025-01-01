@@ -77,13 +77,7 @@ enum ImageGenerator {
     }
 }
 
-struct ImageResponseData: Codable {
-    let url: String
-}
 
-struct ImageAPIResponse: Codable {
-    let data: [ImageResponseData]
-}
 
 // Error handling
 enum ImageAPIError: Error {

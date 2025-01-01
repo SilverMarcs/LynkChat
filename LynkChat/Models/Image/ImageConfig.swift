@@ -13,7 +13,4 @@ struct ImageConfig: Identifiable, Codable {
     
     var prompt: String = "" // TODO: must take in init tbh
     var numImages: Int = ImageModelConfig.shared.numImages
-//    var size: ImagesQuery.Size = ImageConfigDefaults.shared.size
-//    var quality: ImagesQuery.Quality = ImageConfigDefaults.shared.quality
-//    var style: ImagesQuery.Style = ImageConfigDefaults.shared.style
 }
