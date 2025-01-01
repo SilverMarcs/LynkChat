@@ -27,7 +27,7 @@ struct EmptyChat: View {
                 .roundedRectangleOverlay(radius: 15, style: .circular)
                 .matchedGeometryEffect(id: "inputArea", in: namespace)
                 .scaleEffect(1.1)
-                .padding(.horizontal, 80)
+                .padding(.horizontal, 90)
             
             if chat.status == .temporary {
                 VStack {

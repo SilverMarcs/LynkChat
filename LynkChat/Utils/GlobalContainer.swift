@@ -39,24 +39,15 @@ let globalContainer: ModelContainer = {
         if AppConfig.shared.finishedInitialSetup {
             return container // Return the container if setup is already done
         }
-
-        // Archived chat
-        let archivedChat = Chat()
-        archivedChat.status = .archived
-        archivedChat.statusId = ChatStatus.archived.id
-        archivedChat.title = "Archived Chat"
-        modelContext.insert(archivedChat)
         
-        // Demo favourite chat with some messages
-        let favouriteChat = Chat()
-        let group = MessageGroup(message: Message.user(content: "How do i sort in python?"))
-        let secondGroup = MessageGroup(message: Message.assistant(model: .gpt4omini, content: String.codeBlock))
-        favouriteChat.rootMessage = group
-        group.activeMessage.next = secondGroup
-        favouriteChat.status = .starred
-        favouriteChat.statusId = ChatStatus.starred.id
-        favouriteChat.title = "Favourite Chat"
-        modelContext.insert(favouriteChat)
+        // Create default chats
+        for model in ChatModel.allCases {
+            let chat = Chat()
+            chat.config.model = model
+            chat.title = model.name + " Chat"
+            let group = MessageGroup(message: Message.assistant(model: model, content: "Hi I am \(model.name). How may I help you?"))
+            modelContext.insert(chat)
+        }
         
         // Image session,
         modelContext.insert(ImageSession())

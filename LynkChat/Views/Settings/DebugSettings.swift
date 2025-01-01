@@ -17,13 +17,20 @@ struct DebugSettings: View {
                 Text("Use Localhost")
                 Text("Using \(String.apiHost)")
             }
+            
+            LabeledContent {
+                Button("Reset Chat filter usage") {
+                    config.hasUsedChatStatusFilter = false
+                }
+            } label: {
+                Text("Reset Chat filter usage: \(config.hasUsedChatStatusFilter)")
+            }
 
             LabeledContent {
                 Button("Reset First Launch") {
                     config.finishedInitialSetup = false
                 }
             } label: {
-                
                 Text("First Launch Completed: \(config.finishedInitialSetup)")
             }
             
