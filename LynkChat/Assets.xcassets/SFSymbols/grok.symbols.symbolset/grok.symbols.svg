@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg height="600" width="800" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Notes" font-family="'LucidaGrande', 'Lucida Grande', sans-serif" font-size="13">
+        <rect fill="white" height="600.0" width="800.0" x="0.0" y="0.0" />
+        <g font-size="13">
+            <text x="18.0" y="176.0">Small</text>
+            <text x="18.0" y="376.0">Medium</text>
+            <text x="18.0" y="576.0">Large</text>
+        </g>
+        <g font-size="9">
+            <text x="250.0" y="30.0">Ultralight</text>
+            <text x="450.0" y="30.0">Regular</text>
+            <text x="650.0" y="30.0">Black</text>
+            <text id="template-version" fill="#505050" text-anchor="end" x="785.0" y="575.0">Template v.3.0</text>
+            <a href="https://wangchujiang.com/#/app">
+                <text fill="#505050" text-anchor="end" x="785.0" y="590.0">https://wangchujiang.com/#/app</text>
+            </a>
+        </g>
+    </g>
+    <g id="Guides" stroke="rgb(39, 170, 225)" stroke-width="0.5">
+        <path id="Capline-S" d="M18,76 l800,0" />
+        <path id="H-reference" d="M85,145.755 L87.685,145.755 L113.369,79.287 L114.052,79.287 L114.052,76 L112.148,76 L85,145.755 Z M95.693,121.536 L130.996,121.536 L130.263,119.313 L96.474,119.313 L95.693,121.536 Z M139.15,145.755 L141.787,145.755 L114.638,76 L113.466,76 L113.466,79.287 L139.15,145.755 Z" stroke="none" />
+        <path id="Baseline-S" d="M18,146 l800,0" />
+        <path id="left-margin-Ultralight-S" d="M221,56 l0,110" />
+        <path id="right-margin-Ultralight-S" d="M309,56 l0,110" />
+        <path id="left-margin-Regular-S" d="M421,56 l0,110" />
+        <path id="right-margin-Regular-S" d="M509,56 l0,110" />
+        <path id="left-margin-Black-S" d="M621,56 l0,110" />
+        <path id="right-margin-Black-S" d="M709,56 l0,110" />
+        <path id="Capline-M" d="M18,276 l800,0" />
+        <path id="Baseline-M" d="M18,346 l800,0" />
+        <path id="Capline-L" d="M18,476 l800,0" />
+        <path id="Baseline-L" d="M18,546 l800,0" />
+    </g>
+    <g id="Symbols">
+        <g id="Ultralight-S">
+            <path d="M247.401,100.742 L279.356,146 L265.153,146 L233.198,100.742 L247.405,100.742 Z M247.389,125.878 L254.494,135.945 L247.395,146 L233.182,146 L247.389,125.878 Z M296.818,81.034 L296.818,146 L285.176,146 L285.176,97.522 L296.818,81.034 Z M296.818,76 L265.153,120.848 L258.048,110.784 L282.605,76 L296.818,76 Z" />
+        </g>
+        <g id="Regular-S">
+            <path d="M447.401,100.742 L479.356,146 L465.153,146 L433.198,100.742 L447.405,100.742 Z M447.389,125.878 L454.494,135.945 L447.395,146 L433.182,146 L447.389,125.878 Z M496.818,81.034 L496.818,146 L485.176,146 L485.176,97.522 L496.818,81.034 Z M496.818,76 L465.153,120.848 L458.048,110.784 L482.605,76 L496.818,76 Z" />
+        </g>
+        <g id="Black-S">
+            <path d="M647.401,100.742 L679.356,146 L665.153,146 L633.198,100.742 L647.405,100.742 Z M647.389,125.878 L654.494,135.945 L647.395,146 L633.182,146 L647.389,125.878 Z M696.818,81.034 L696.818,146 L685.176,146 L685.176,97.522 L696.818,81.034 Z M696.818,76 L665.153,120.848 L658.048,110.784 L682.605,76 L696.818,76 Z" />
+        </g>
+    </g>
+</svg>

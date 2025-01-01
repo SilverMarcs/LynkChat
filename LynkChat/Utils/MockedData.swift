@@ -7,69 +7,37 @@
 
 import Foundation
 
-extension Provider {
-    static var openAIProvider = Provider.factory(type: .openai)
-    static var googleProvider = Provider.factory(type: .google)
-    static var anthropicProvider = Provider.factory(type: .anthropic)
-    
-    static var mockProviders = [
-        openAIProvider,
-        googleProvider,
-        anthropicProvider,
-    ]
-}
-
-extension ProviderDefaults {
-    static var mockProviderDefaults = ProviderDefaults(defaultProvider: .openAIProvider, quickProvider: .openAIProvider, imageProvider: .openAIProvider, sttProvider: .openAIProvider)
-}
-
-extension AIModel {
-    static var gpt4 = AIModel(code: "gpt", name: "GPT-4", type: .chat)
-}
-
-extension AIModel {
-    static var dalle = AIModel(code: "dall-e-3", name: "DALL-E-3", type: .image)
-}
-
-extension AIModel {
-    static var whisper = AIModel(code: "whisper-1", name: "Whisper-1", type: .stt)
-}
-
 extension Message {
-    static let mockAssistantMessage = Message(role: .assistant, content: String.codeBlock, isReplying: false)
+    static let mockAssistantMessage = Message.assistant(model: .claude3_5haiku, content: String.codeBlock)
     
-    static let mockAssistantTolCallMessage = Message(role: .assistant, toolCalls: [.init(toolCallId: "HEX", tool: .urlScrape, arguments: "url: https://www.google.com")])
+    static let mockUserMessage = Message.user(content: String.shortContent)
+}
+
+extension ChatTool {
+    static let mockTool = ChatTool(toolCallId: "scrapeLinks123", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: "This is the result of the tool url scraping of page")
     
-    static var mockUserMessage: Message {
-        Message(role: .user, content: String.shortContent)
-    }
+    static let mockImageTool = ChatTool(toolCallId: "imageTool123", tool: .imageGeneration, args: "{url : https://www.google.com}", result: "https://picsum.photos/200")
     
-    static var mockToolMessage: Message {
-        Message(role: .tool, toolResponse: .init(toolCallId: "HEX", tool: .urlScrape, processedContent: "This is what I got"))
-    }
+    static let mockGoogleTool2 = ChatTool(toolCallId: "googleTool123", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: nil)
+
+    static let mockTranscribeTool = ChatTool(toolCallId: "transcribel123", tool: .transcribe, args: "{key : ddgyusadg67ygyisdgiyas}", result: nil)
 }
 
 extension MessageGroup {
     static var mockUserGroup = MessageGroup(message: .mockUserMessage)
     static var mockAssistantGroup = MessageGroup(message: .mockAssistantMessage)
-    static var mockToolGroup = MessageGroup(message: .mockToolMessage)
-    static var mockAssistantToolCallGroup = MessageGroup(message: .mockAssistantTolCallMessage)
-}
-
-extension ChatConfig {
-    static var mockChatConfig = ChatConfig(provider: .openAIProvider, purpose: .chat)
 }
 
 extension ImageConfig {
-    static var mockImageConfig = ImageConfig(prompt: "New York City", provider: .openAIProvider, model: .dalle)
+    static var mockImageConfig = ImageConfig()
 }
 
 extension Chat {
-    static var mockChat = Chat(config: .mockChatConfig)
+    static var mockChat = Chat()
 }
 
 extension ImageSession {
-    static var mockImageSession = ImageSession(config: .mockImageConfig)
+    static var mockImageSession = ImageSession()
 }
 
 extension Generation {
@@ -79,11 +47,6 @@ extension Generation {
 extension ChatVM {
     static var mockChatVM = ChatVM()
 }
-
-extension ImageVM {
-    static var mockImageVM = ImageVM()
-}
-
 
 extension String {
     static let markdownContent = """
@@ -171,81 +134,113 @@ extension String {
         """
     
     static let properMarkdown = """
-The error you're encountering is because you're trying to call a mutating function (`visit`) on `self` within a non-mutating context. In Swift, the `mutating` keyword indicates that the function modifies the instance it belongs to, and such methods can only be called on mutable instances.
+        The error you're encountering is because you're trying to call a mutating function (`visit`) on `self` within a non-mutating context. In Swift, the `mutating` keyword indicates that the function modifies the instance it belongs to, and such methods can only be called on mutable instances.
 
-To resolve this, you need to refactor your code to ensure that `visit` does not require a mutating context, or alternatively, refactor the logic so that the `visit` function is called outside of contexts where `self` is immutable.
+        To resolve this, you need to refactor your code to ensure that `visit` does not require a mutating context, or alternatively, refactor the logic so that the `visit` function is called outside of contexts where `self` is immutable.
 
-### Solution: Refactor `visit` Function
+        ### Solution: Refactor `visit` Function
 
-Let's assume `visit` is a function that traverses a `ListItem` and returns an `NSAttributedString`. You should ensure that this function is non-mutating, or you separate the logic such that `visit` does not capture `self` in a way that requires it to be mutable.
+        Let's assume `visit` is a function that traverses a `ListItem` and returns an `NSAttributedString`. You should ensure that this function is non-mutating, or you separate the logic such that `visit` does not capture `self` in a way that requires it to be mutable.
 
-Here's how you can refactor your code:
+        Here's how you can refactor your code:
 
-1. **Ensure `visit` is Non-Mutating**: If possible, modify the `visit` function so it does not require mutating `self`.
+        1. **Ensure `visit` is Non-Mutating**: If possible, modify the `visit` function so it does not require mutating `self`.
 
-```swift
-func visit(_ markup: Markup) -> NSAttributedString {
-    // Your logic to convert markup to NSAttributedString
-    // This logic should not depend on mutating self
-    return NSAttributedString(string: markup.format())
-}
-```
-
-2. **Refactor `parserResults`**: If `visit` inherently requires mutating behavior, consider separating the logic into a non-mutating context:
-
-```swift
-mutating func parserResults(from document: Document, highlightText: String) -> [ContentItem] {
-    var results = [ContentItem]()
-    var currentTextBuffer = NSMutableAttributedString()
-    
-    func appendCurrentAttrString() {
-        if !currentTextBuffer.string.isEmpty {
-            applyHighlighting(to: currentTextBuffer, highlightText: highlightText)
-            results.append(.text(currentTextBuffer))
-            currentTextBuffer = NSMutableAttributedString()
+        ```swift
+        func visit(_ markup: Markup) -> NSAttributedString {
+            // Your logic to convert markup to NSAttributedString
+            // This logic should not depend on mutating self
+            return NSAttributedString(string: markup.format())
         }
-    }
-    
-    func mapListItems(_ listItems: LazyMapSequence<MarkupChildren, ListItem>) -> [ListItemContent] {
-        listItems.map { listItem in
-            let text = visit(listItem) // Ensure `visit` is non-mutating
-            return ListItemContent(text: text, checkbox: listItem.checkbox)
+        ```
+
+        2. **Refactor `parserResults`**: If `visit` inherently requires mutating behavior, consider separating the logic into a non-mutating context:
+
+        ```swift
+        mutating func parserResults(from document: Document, highlightText: String) -> [ContentItem] {
+            var results = [ContentItem]()
+            var currentTextBuffer = NSMutableAttributedString()
+            
+            func appendCurrentAttrString() {
+                if !currentTextBuffer.string.isEmpty {
+                    applyHighlighting(to: currentTextBuffer, highlightText: highlightText)
+                    results.append(.text(currentTextBuffer))
+                    currentTextBuffer = NSMutableAttributedString()
+                }
+            }
+            
+            func mapListItems(_ listItems: LazyMapSequence<MarkupChildren, ListItem>) -> [ListItemContent] {
+                listItems.map { listItem in
+                    let text = visit(listItem) // Ensure `visit` is non-mutating
+                    return ListItemContent(text: text, checkbox: listItem.checkbox)
+                }
+            }
+            
+            document.children.forEach { markup in
+                if let codeBlock = markup as? CodeBlock {
+                    appendCurrentAttrString()
+                    results.append(.codeBlock(codeBlock.code.trimmingCharacters(in: .whitespacesAndNewlines), language: codeBlock.language))
+                } else if let table = markup as? Table {
+                    appendCurrentAttrString()
+                    results.append(.table(table))
+                } else if let orderedList = markup as? OrderedList {
+                    appendCurrentAttrString()
+                    let listItems = mapListItems(orderedList.listItems)
+                    results.append(.list(.ordered, listItems))
+                } else if let unorderedList = markup as? UnorderedList {
+                    appendCurrentAttrString()
+                    let listItems = mapListItems(unorderedList.listItems)
+                    results.append(.list(.unordered, listItems))
+                } else {
+                    let visitedText = visit(markup)
+                    currentTextBuffer.append(visitedText)
+                }
+            }
+            
+            appendCurrentAttrString()
+            
+            return results
         }
-    }
+        ```
+
+        ### Explanation
+
+        - **Non-Mutating `visit`**: Ensure `visit` does not need to modify `self`. It should be a pure function that takes a `Markup` and returns an `NSAttributedString`.
+        - **Separate Logic**: If `visit` must remain mutating, try to refactor your code to call `visit` in contexts where you have a mutable `self`, or redesign your data flow to avoid such requirements.
+
+        By ensuring `visit` is non-mutating or restructuring your code to avoid mutating contexts, you can resolve this error.
+    """
     
-    document.children.forEach { markup in
-        if let codeBlock = markup as? CodeBlock {
-            appendCurrentAttrString()
-            results.append(.codeBlock(codeBlock.code.trimmingCharacters(in: .whitespacesAndNewlines), language: codeBlock.language))
-        } else if let table = markup as? Table {
-            appendCurrentAttrString()
-            results.append(.table(table))
-        } else if let orderedList = markup as? OrderedList {
-            appendCurrentAttrString()
-            let listItems = mapListItems(orderedList.listItems)
-            results.append(.list(.ordered, listItems))
-        } else if let unorderedList = markup as? UnorderedList {
-            appendCurrentAttrString()
-            let listItems = mapListItems(unorderedList.listItems)
-            results.append(.list(.unordered, listItems))
-        } else {
-            let visitedText = visit(markup)
-            currentTextBuffer.append(visitedText)
-        }
-    }
-    
-    appendCurrentAttrString()
-    
-    return results
-}
-```
+    static let mockGoogleSearch = """
+        [1] Revealed: The Top Artists, Songs, Albums, Podcasts, and ...
+        URL: https://www.twitter.com/2024-12-04/top-songs-artists-podcasts-audiobooks-albums-trends-2024/
+        Snippet: Dec 4, 2024 ... Spotify Wrapped is all about celebrating the fans, artists, authors, podcasters, and creators who made 2024 the record-breaking, ...
 
-### Explanation
+        [2] Where can i find my most played songs - The Spotify Community
+        URL: https://www.facebook.com/t5/Content-Questions/Where-can-i-find-my-most-played-songs/td-p/6105746
+        Snippet: May 31, 2024 ... In your profile, you'll find 2 sections: Top artists this month and Top tracks this month. Hope this clears things up. If you have any questions ...
 
-- **Non-Mutating `visit`**: Ensure `visit` does not need to modify `self`. It should be a pure function that takes a `Markup` and returns an `NSAttributedString`.
-- **Separate Logic**: If `visit` must remain mutating, try to refactor your code to call `visit` in contexts where you have a mutable `self`, or redesign your data flow to avoid such requirements.
+        [3] From Breakout Pop Stars to Country Crossovers, Here's the Scoop ...
+        URL: https://www.theverge.com/2024-12-04/from-breakout-pop-stars-to-country-crossovers-heres-the-scoop-on-2024s-biggest-music-trends-on-spotify/
+        Snippet: Dec 4, 2024 ... ... 2024's Biggest Music Trends on Spotify ... Level with us: Which 2024 music trend surprised you the most? ... Taylor Swift Takes the Crown as ...
 
-By ensuring `visit` is non-mutating or restructuring your code to avoid mutating contexts, you can resolve this error.
-"""
+        [4] Solved: How to exclude artist and/or genre from recommende ...
+        URL: https://www.instagram.co,/t5/Content-Questions/How-to-exclude-artist-and-or-genre-from-recommended-music-and/td-p/5171617
+        Snippet: Mar 20, 2021 ... ... last summer, my son used my phone to cast music during a party. ... Does this method mess up the AI calculations and lead to spotify suggesting ...
 
+        [5] The Top Songs, Artists, Podcasts, and Listening Trends of 2023 ...
+        URL: https://www.9to5mac.com/2023-11-29/top-songs-artists-podcasts-albums-trends-2023/
+        Snippet: Nov 29, 2023 ... In the last 24 months, India's classical music consumption grew by close to 500% on Spotify. Over 45% of Indian classical music listeners on ...
+
+        [6] Global Top 50 | 2024 Hits - playlist by Topsify | Spotify
+        URL: https://open.spotify.com/playlist/1KNl4AYfgZtOVm9KHkhPTF
+        Snippet: Global Top 50 | 2024 Hits. Packed with all the best songs of 2024. Today's most streamed tracks and top songs - worldwide! ... NEW DROP. Don Toliver. luther ...
+
+        [7] Solved: How to search for low-plays tracks? - The Spotify Community
+        URL: https://community.spotify.com/t5/Other-Podcasts-Partners-etc/How-to-search-for-low-plays-tracks/td-p/4398267
+        Snippet: About the boldness/size of the genres and artists, I would say that more popular ones are bolder than the lesser-known ones. I can't really think of a better or ...
+        """
+    static let mockTranscription = """
+    This is the Micromachine Man presenting the most midget miniature motorcade of micromachines. Each one has dramatic details, terrific trim, precision paint jobs, plus incredible micromachine pocket play sets. There's a police station, fire station, restaurant, service station, and more. Perfect pocket portables to take any place. And there are many miniature play sets to play with, and each one comes with its own special edition micromachine vehicle and fun fantastic features that miraculously move. Raise the boat lift at the airport, marina, man the gun turret at the army base, clean your car at the car wash, raise the toll bridge. And these play sets fit together to form a micromachine world. Micromachine pocket play sets so tremendously tiny, so perfectly precise, so dazzlingly detailed, you'll want to pocket them all. Micromachines and micromachine pocket play sets sold separately from Galoob. The smaller they are, the better they are.
+    """
 }

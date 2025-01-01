@@ -19,3 +19,8 @@ enum OnboardingPage: Int, CaseIterable {
     case imageGen
     case ready
 }
+
+enum NavigationDirection {
+    case forward
+    case backward
+}

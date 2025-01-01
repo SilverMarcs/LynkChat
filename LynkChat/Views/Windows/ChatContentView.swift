@@ -37,7 +37,9 @@ struct ChatContentView: View {
                 #endif
                     .id(chat.id)
             } else {
-                Text("^[\(chatVM.selections.count) Chat](inflect: true) Selected")
+                Text(chatVM.selections.count > 0
+                    ? "^[\(chatVM.selections.count) Chat](inflect: true) Selected"
+                    : "Select or create a chat to get started")
                     .font(.title)
                     .fullScreenBackground()
             }

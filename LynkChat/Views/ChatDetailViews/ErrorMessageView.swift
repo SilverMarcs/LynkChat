@@ -8,32 +8,44 @@
 import SwiftUI
 
 struct ErrorMessageView: View {
-    @Binding var message: String
+    var chat: Chat
     
     var body: some View {
-        if !message.isEmpty {
-            HStack {
-                Text(message)
-                    .textSelection(.enabled)
-                
-                Button(role: .destructive) {
-                    withAnimation {
-                        message = ""
+        if !chat.errorMessage.isEmpty || !chat.errorMessage.isEmpty {
+            VStack {
+                HStack {
+                    Text(chat.errorMessage)
+                        .textSelection(.enabled)
+                    
+                    Button(role: .destructive) {
+                        withAnimation {
+                            chat.errorMessage = ""
+                        }
+                    } label: {
+                        Image(systemName: "delete.backward")
                     }
-                } label: {
-                    Image(systemName: "delete.backward")
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
+                .frame(maxWidth: .infinity)
+                .foregroundStyle(.red)
+                .opacity(chat.errorMessage.isEmpty ? 0 : 1)
+                .listRowSeparator(.hidden)
+                .transaction { $0.animation = nil }
+                
+//                if let last = chat.currentThread.last {
+//                    Button("Retry") {
+//                        Task { @MainActor in
+//                            await chat.regenerate(message: last)
+//                        }
+//                    }
+//                    .frame(maxWidth: .infinity)
+//                    .listRowSeparator(.hidden)
+//                }
             }
-            .frame(maxWidth: .infinity)
-            .foregroundStyle(.red)
-            .opacity(message.isEmpty ? 0 : 1)
-            .listRowSeparator(.hidden)
-            .transaction { $0.animation = nil }
         }
     }
 }
 
 #Preview {
-    ErrorMessageView(message: .constant("No message"))
+    ErrorMessageView(chat: .mockChat)
 }

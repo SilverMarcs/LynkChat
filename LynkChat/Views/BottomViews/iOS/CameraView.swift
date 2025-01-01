@@ -25,12 +25,12 @@ struct CameraView: UIViewControllerRepresentable {
         
     }
 
-    func makeCoordinator() -> Coordinator {
+    func makeCoordinator() -> CameraCoordinator {
         return Coordinator(picker: self, chatVM: chatVM)
     }
 }
 
-class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     var picker: CameraView
     var chatVM: ChatVM
     
@@ -48,7 +48,8 @@ class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerContro
             if let activeChat = chatVM.activeChat {
                 chat = activeChat
             } else {
-                chat = await chatVM.createNewChat()
+                // TODO: use modelactor here
+                chat = chatVM.createNewChat()
             }
             
             try? await chat.inputManager.processData(

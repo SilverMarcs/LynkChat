@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FileHelper {
+enum FileHelper {
     static func createTemporaryURL(for typedData: TypedData) -> URL? {
         let tempDirectoryURL = FileManager.default.temporaryDirectory
         let fileName = typedData.fileName
@@ -56,23 +56,5 @@ struct FileHelper {
             // Default to binary if unable to infer
             return "bin"
         }
-    }
-    
-    static func processDataFiles(_ dataFiles: [TypedData], messageId: String, role: MessageRole) -> [ContentItem] {
-        return dataFiles.map { data in
-            if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
-                return .text(data.formattedTextContent)
-            } else if data.fileType.conforms(to: .image) && role == .user {
-                return .image(data.mimeType, data.data)
-            } else {
-                let warning = "Notify the user if a file has been added but the assistant could not find a compatible plugin to read that file type."
-                return .text("Message ID: \(messageId)\nFile: \(data.fileName)\n\(warning)")
-            }
-        }
-    }
-    
-    enum ContentItem {
-        case text(String)
-        case image(String, Data)  // mimeType, data
     }
 }

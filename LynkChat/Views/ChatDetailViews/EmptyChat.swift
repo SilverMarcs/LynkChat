@@ -12,7 +12,7 @@ struct EmptyChat: View {
     
     var body: some View {
         VStack {
-            Image(chat.config.provider.type.imageName)
+            Image("storm.SFSymbol")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)

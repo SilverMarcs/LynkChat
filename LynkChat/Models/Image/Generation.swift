@@ -42,15 +42,13 @@ class Generation {
 
         generatingTask = Task {
             do {
-                let dataObjects = try await ImageGenerator.generateImages(
-                    config: config
-                )
+                let dataObjects = try await ImageGenerator.generateImages(config: config)
                 
                 self.images = dataObjects
                 state = .success
             } catch {
                 if state != .error {
-                    errorMessage = "Error fetching images: \(error)"
+                    errorMessage = "\(error.localizedDescription)"
                     state = .error
                 }
             }
@@ -73,10 +71,8 @@ class Generation {
             errorMessage = error.localizedDescription
             state = .error
         }
-        
-        if let proxy = session?.proxy {
-            scrollToBottom(proxy: proxy, delay: 0.2)
-        }
+    
+        Scroller.scrollToBottom(delay: 0.2)
     }
     
     @MainActor

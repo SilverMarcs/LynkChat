@@ -21,37 +21,22 @@ class ImageSession {
     var imageGenerations = [Generation]()
     
     @Relationship(deleteRule: .cascade)
-    var config: ImageConfig
-    
-    @Transient
-    var proxy: ScrollViewProxy?
+    var config: ImageConfig = ImageConfig()
 
-    init(config: ImageConfig) {
-        self.config = config
-    }
+    init() { }
     
     @MainActor
     func send() async {        
         guard !prompt.isEmpty else { return }
         
-        let generation = Generation(config: config.copy(prompt: prompt), session: self)
+        let generation = Generation(config: config, session: self)
+        generation.config.prompt = prompt
 
         imageGenerations.append(generation)
         
-        if let proxy = proxy {
-            scrollToBottom(proxy: proxy, delay: 0.2)
-        }
+        Scroller.scrollToBottom(delay: 0.2)
 
         await generation.send()
-    }
-    
-    @MainActor
-    func generateTitle(forced: Bool = false) async {
-        if forced || imageGenerations.count == 1 {
-            if let newTitle = await TitleGenerator.generateImageTitle(generations: imageGenerations, provider: config.provider) {
-                self.title = newTitle
-            }
-        }
     }
     
     func deleteGeneration(_ generation: Generation) {

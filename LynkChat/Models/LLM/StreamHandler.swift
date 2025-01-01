@@ -19,59 +19,60 @@ struct StreamHandler {
 
     @MainActor
     func handleRequest() async throws {
-        chat.config.provider.host = chat.config.provider.host.trimmingCharacters(in: .whitespacesAndNewlines)
-        if chat.config.stream {
-            try await handleStream()
-        } else {
-            try await handleNonStream()
+        var streamText = ""
+        var lastUIUpdateTime = Date()
+        var totalTokens = 0
+        
+        let apiRequest = await createAPIRequest(stream: true)
+        
+        for try await response in APIService.self.streamResponse(from: apiRequest) {
+            switch response {
+            case .text(let textResponse):
+                streamText += textResponse.content
+                await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
+                
+            case .toolCall(let toolCallResponse):
+                assistant.tools?.append(.init(
+                    toolCallId: toolCallResponse.toolCallId,
+                    tool: toolCallResponse.tool,
+                    args: toolCallResponse.args,
+                    result: nil
+                ))
+                
+            case .toolResult(let toolResultResponse):
+                if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
+                    assistant.tools?[index].result = toolResultResponse.result
+                }
+                
+            case .finish(let finishResponse):
+                totalTokens = calculateTotalTokens(
+                    promptTokens: finishResponse.promptTokens,
+                    completionTokens: finishResponse.completionTokens
+                )
+                
+            case .error(let errorResponse):
+                throw RuntimeError(errorResponse.content)
+            }
         }
+        
+        finaliseStream(streamText: streamText, totalTokens: totalTokens)
     }
     
     @MainActor
-    private func handleStream() async throws {
-        var streamText = ""
-        var lastUIUpdateTime = Date()
-        var pendingToolCalls: [ChatToolCall] = []
-        var totalTokens = 0
-        
-        let service = chat.config.provider.type.getService()
-
-        // must do droplast since last is the empty assistant message
-        for try await response in service.streamResponse(from: chat.adjustedContext.dropLast(), config: chat.config) {
-            switch response {
-            case .content(let content):
-                streamText += content
-                
-                let currentTime = Date()
-                if currentTime.timeIntervalSince(lastUIUpdateTime) >= Float.UIIpdateInterval {
-                    assistant.content = streamText
-//                    scrollDown()
-                    lastUIUpdateTime = currentTime
-                }
-            case .toolCalls(let calls):
-                pendingToolCalls.append(contentsOf: calls)
-            case .totalTokens(let tokens):
-                // TODO: collect statistics
-                totalTokens = tokens.inputTokens + tokens.outputTokens
-            }
+    private func updateUIIfNeeded(streamText: String, lastUpdateTime: inout Date) async {
+        let currentTime = Date()
+        if currentTime.timeIntervalSince(lastUpdateTime) >= Float.UIIpdateInterval {
+            assistant.content = streamText
+            lastUpdateTime = currentTime
         }
-
-        if !pendingToolCalls.isEmpty {
-            try await handleToolCalls(pendingToolCalls)
-        }
-        
-        finaliseStream(streamText: streamText, pendingToolCalls: pendingToolCalls, totalTokens: totalTokens)
     }
     
-    private func finaliseStream(streamText: String = "", pendingToolCalls: [ChatToolCall], totalTokens: Int) {
+    private func finaliseStream(streamText: String = "", totalTokens: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
             chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
-            assistant.toolCalls = pendingToolCalls
             assistant.content = streamText
             assistant.isReplying = false
-//            scrollDown()
             try? assistant.modelContext?.save()
-            #warning("This is very bad and should be rethinked")
             #if os(macOS)
             AppConfig.shared.hasUserScrolled = false
             #else
@@ -79,87 +80,25 @@ struct StreamHandler {
             #endif
         }
     }
-
-    @MainActor
-    private func handleNonStream() async throws {
-        let service = chat.config.provider.type.getService()
-        let adjustedContext: [Message] = chat.adjustedContext.dropLast()
-        let response = try await service.nonStreamingResponse(from: adjustedContext, config: chat.config)
+    
+    private func createAPIRequest(stream: Bool) async -> APIRequest {
+        let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
+        let apiMessages = await adjustedContext.asyncMap { await $0.toAPIMessage() }
+        let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
         
-        if let content = response.content {
-            assistant.content = content
-        }
-        
-        if let calls = response.toolCalls, !calls.isEmpty {
-            try await handleToolCalls(calls)
-        }
-        
-        let tokens = response.inputTokens + response.outputTokens
-        
-        chat.totalTokens = tokens > 0 ? tokens : chat.totalTokens
-        assistant.isReplying = false
-//        scrollDown()
-        AppConfig.shared.hasUserScrolled = false
-        try? assistant.modelContext?.save()
+        return APIRequest(
+            model: chat.config.model.id,
+            messages: apiMessages,
+            temperature: chat.config.temperature,
+            maxTokens: chat.config.maxTokens.rawValue,
+            system: date + "\n" + chat.config.systemPrompt + "\n" + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
+            stream: stream,
+            tools: chat.config.enabledTools.map { $0.rawValue }
+        )
     }
-
-    @MainActor
-    private func handleToolCalls(_ toolCalls: [ChatToolCall]) async throws {
-        // DO NOT call this when assistant.toolCalls is already populated. this func does it for you
-        assistant.isReplying = false // TODO: set to false only after adding toolcall
-        assistant.toolCalls = toolCalls
-        scrollDown()
-
-        var toolDatas: [TypedData] = []
-        var lastToolGroup: MessageGroup?
-
-        for call in assistant.toolCalls {
-            let toolResponse = ToolResponse(toolCallId: call.toolCallId, tool: call.tool)
-            let tool = Message(toolResponse: toolResponse)
-            let toolGroup = MessageGroup(message: tool)
-            toolGroup.chat = chat
-
-            if let lastGroup = lastToolGroup {
-                lastGroup.activeMessage.next = toolGroup
-            } else {
-                assistant.next = toolGroup
-            }
-            lastToolGroup = toolGroup
-
-            let toolData = try await call.tool.process(arguments: call.arguments)
-            toolDatas.append(contentsOf: toolData.data)
-            tool.toolResponse?.processedContent = toolData.string
-            tool.toolResponse?.processedData = toolData.data // possibly never used
-            tool.isReplying = false
-
-//            scrollDown()
-        }
-
-        let newAssistant: Message
-        if toolDatas.isEmpty {
-            newAssistant = Message(role: .assistant, provider: chat.config.provider, model: chat.config.model)
-            newAssistant.isReplying = true
-            let newAssistantGroup = MessageGroup(message: newAssistant)
-            newAssistantGroup.chat = chat
-            
-            lastToolGroup?.activeMessage.next = newAssistantGroup
-            
-            let streamer = StreamHandler(chat: chat, assistant: newAssistant)
-            try await streamer.handleRequest()
-        } else {
-            newAssistant = Message(role: .assistant, provider: chat.config.provider, model: chat.config.provider.imageModel)
-            newAssistant.content = "Here are the generated image(s):"
-            newAssistant.dataFiles = toolDatas
-            newAssistant.isReplying = false
-            
-            let newAssistantGroup = MessageGroup(message: newAssistant)
-            newAssistantGroup.chat = chat
-            
-            lastToolGroup?.activeMessage.next = newAssistantGroup
-        }
-    }
-
-    private func scrollDown() {
-        chat.scrollDown()
+    
+    func calculateTotalTokens(promptTokens: Int, completionTokens: Int) -> Int {
+        // New implementation using direct token values
+        return promptTokens + completionTokens // or whatever calculation you need
     }
 }

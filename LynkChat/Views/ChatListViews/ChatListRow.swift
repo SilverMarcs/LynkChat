@@ -44,7 +44,7 @@ struct ChatListRow: View {
         .contextMenu {
             Button {
                 Task {
-                    let newChat = await chat.copy(purpose: .chat)
+                    let newChat = await chat.copy()
                     chatVM.fork(newChat: newChat)
                 }
             } label: {
@@ -56,14 +56,13 @@ struct ChatListRow: View {
     
     var row: some View {
         HStack {
-            ProviderImage(provider: chat.config.provider, radius: 8, frame: imageSize, scale: .medium)
-                .symbolEffect(.bounce, options: .speed(0.5), isActive: chat.isReplying)
+            ListRowImage(model: chat.config.model)
             
             HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
-                .contentTransition(.numericText())
                 .lineLimit(1)
                 .font(font)
                 .opacity(0.9)
+                .shimmerWithoutRedact(when: chat.isReplying)
             
             Spacer()
             
@@ -78,14 +77,6 @@ struct ChatListRow: View {
         }
         .padding(padding)
 //        defaultMinListRowHeight()
-    }
-    
-    var imageSize: CGFloat {
-        #if os(macOS)
-        return 23
-        #else
-        return 26
-        #endif
     }
     
     var font: Font {
@@ -173,5 +164,5 @@ struct ChatListRow: View {
         ChatListRow(chat: .mockChat)
             .environment(ChatVM())
     }
-    .frame(width: 220)
+    .frame(width: 250)
 }

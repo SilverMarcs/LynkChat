@@ -30,7 +30,7 @@ struct InputArea: View {
                         Spacer(minLength: 0)
                         
                         if !chat.inputManager.dataFiles.isEmpty {
-                            DataFilesView(dataFiles: chat.inputManager.dataFiles, edge: .leading) { file in
+                            DataFilesView(dataFiles: chat.inputManager.dataFiles) { file in
                                 withAnimation {
                                     chat.inputManager.dataFiles.removeAll(where: { $0 == file })
                                 }

@@ -30,8 +30,13 @@ struct ChatDetail: View {
             .toolbar {
                 ChatToolbar(chat: chat)
             }
-            .onDrop(of: [.item], isTargeted: nil) { providers in
-                chat.inputManager.handleDrop(providers)
+            .onDrop(of: [.text, .pdf, .image], isTargeted: nil) { providers in
+                do {
+                   return try chat.inputManager.handleDrop(providers)
+                } catch {
+                    chat.errorMessage = error.localizedDescription
+                    return false
+                }
             }
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
             .toolbarTitleMenu {
@@ -40,36 +45,37 @@ struct ChatDetail: View {
                 }
             }
             .toolbarTitleDisplayMode(.inline)
-//            .onChange(of: chat.inputManager.prompt) {
-//                if chat.inputManager.state == .normal {
-//                    Scroller.scrollToBottom(animated: false)
-//                }
-//            }
-//            .onChange(of: chat.inputManager.dataFiles) {
-//                if chat.inputManager.state == .normal {
-//                    Scroller.scrollToBottom(animated: false)
-//                }
-//            }
+            .onChange(of: chat.inputManager.prompt) {
+                if chat.inputManager.state == .normal {
+                    Scroller.scrollToBottom(animated: false)
+                }
+            }
+            .onChange(of: chat.inputManager.dataFiles) {
+                if chat.inputManager.state == .normal {
+                    Scroller.scrollToBottom(animated: false)
+                }
+            }
             #if os(macOS)
             .onAppear {
                 if chatVM.searchText.isEmpty {
-                    scrollToBottom(proxy: proxy, animated: false)
+                    Scroller.scrollToBottom(animated: false)
                 }
                 onAppearStuff(proxy: proxy)
             }
             .pasteHandler(chat: chat)
-            .navigationSubtitle("\(chat.config.model.name) • \(chat.config.systemPrompt.prefix(70))")
+            .navigationSubtitle("\(chat.config.model.name) • \(chat.config.systemPrompt.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines).prefix(69))")
             .onReceive(NotificationCenter.default.publisher(for: NSScrollView.willStartLiveScrollNotification)) { _ in
                 config.hasUserScrolled = true
             }
             #else
             .task {
-                scrollToBottom(proxy: proxy, delay: 0.3)
+//                scrollToBottom(proxy: proxy, delay: 0.3)
+                Scroller.scrollToBottom(delay: 0.3)
                 onAppearStuff(proxy: proxy)
             }
             .listStyle(.plain)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
-                scrollToBottom(proxy: proxy, delay: 0.1)
+                    Scroller.scrollToBottom(delay: 0.1)
             }
             #if !os(visionOS)
             .scrollDismissesKeyboard(.immediately)
@@ -88,9 +94,9 @@ struct ChatDetail: View {
         
         if chatVM.searchText.isEmpty {
             #if os(macOS)
-            scrollToBottom(proxy: proxy, animated: false)
+            Scroller.scrollToBottom(animated: false)
             #else
-            scrollToBottom(proxy: proxy, delay: 0.3)
+            Scroller.scrollToBottom(delay: 0.3)
             #endif
         }
     }
@@ -110,10 +116,11 @@ struct ChatDetail: View {
             EmptyChat(chat: chat)
         } else {
             List {
-                ForEach(messagesToShow, id: \.self) { message in
-                    MessageView(message: message)
+                ForEach(messagesToShow, id: \.self) { group in
+                    MessageView(group: group)
+                        .environment(\.chat, chat)
                         .onAppear {
-                            if message == messagesToShow.first {
+                            if group == messagesToShow.first {
                                 loadMoreMessages()
                             }
                         }
@@ -123,7 +130,7 @@ struct ChatDetail: View {
                 #endif
                 .listRowSeparator(.hidden)
                 
-                ErrorMessageView(message: $chat.errorMessage)
+                ErrorMessageView(chat: chat)
                 
                 if chat.status != .quick {
                     resizingColor
@@ -152,7 +159,7 @@ struct ChatDetail: View {
         Color.clear
             .frame(height: colorViewHeight)
             #if os(macOS)
-            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowInsets(.init(top: -5, leading: 0, bottom: -5, trailing: 0))
             #endif
             .listRowSeparator(.hidden)
             .onChange(of: chat.isReplying) {

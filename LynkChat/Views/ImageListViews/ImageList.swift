@@ -10,24 +10,23 @@ import SwiftData
 
 struct ImageList: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(ImageVM.self) var imageVM
     @Environment(\.modelContext) var modelContext
-    
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
+
+    @Binding var selection: ImageSession?
     
     @Query(sort: \ImageSession.date, order: .reverse, animation: .default)
     var sessions: [ImageSession]
     
+    @State var searchText: String = ""
+    
     var body: some View {
-        @Bindable var imageVM = imageVM
-        
         ScrollViewReader { proxy in
-            List(selection: $imageVM.selections) {
-                ChatListCards(source: .imagelist, chatCount: "↗", imageSessionsCount: String(sessions.count))
+            List(selection: $selection) {
+                ChatListCards(source: .images, chatCount: "↗", imageSessionsCount: String(sessions.count))
                 
                 ForEach(sessions) { session in
                     ImageRow(session: session)
+                        .environment(\.imageSearchText, searchText)
                         .tag(session)
                         .listRowSeparator(.visible)
                         .listRowSeparatorTint(Color.gray.opacity(0.2))
@@ -38,10 +37,10 @@ struct ImageList: View {
                 toolbar
             }
             .navigationTitle("Images")
-            .searchable(text: $imageVM.searchText, placement: searchPlacement)
+            .searchable(text: $searchText, placement: searchPlacement)
             .task {
-                if imageVM.selections.isEmpty, let first = sessions.first, !(horizontalSizeClass == .compact) {
-                    imageVM.selections = [first]
+                if selection == nil, let first = sessions.first, !(horizontalSizeClass == .compact) {
+                    selection = first
                 }
             }
         }
@@ -52,19 +51,14 @@ struct ImageList: View {
         ToolbarItem { Spacer() }
         
         ToolbarItem(placement: .automatic) {
-            Menu {
-                ForEach(providers) { provider in
-                    Button(provider.name) {
-                        imageVM.createNewSession(provider: provider)
-                    }
-                    .keyboardShortcut(.none)
-                }
+            Button {
+                let imageSession = ImageSession()
+                modelContext.insert(imageSession)
+                selection = imageSession
             } label: {
                 Label("Add Item", systemImage: "square.and.pencil")
-            } primaryAction: {
-                imageVM.createNewSession()
             }
-            .menuIndicator(.hidden)
+            .keyboardShortcut(.none)
         }
     }
     
@@ -78,15 +72,20 @@ struct ImageList: View {
 
     private func deleteItems(offsets: IndexSet) {
         for index in offsets {
-            if imageVM.selections.contains(sessions[index]) {
-                imageVM.selections.remove(sessions[index])
+//            if imageVM.selections.contains(sessions[index]) {
+//                imageVM.selections.remove(sessions[index])
+//            }
+            let session = sessions[index]
+            if selection == session {
+                selection = nil
             }
-            modelContext.delete(sessions[index])
+                
+            modelContext.delete(session)
         }
     }
 }
 
 
 #Preview {
-    ImageList()
+    ImageList(selection: .constant(nil))
 }

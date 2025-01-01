@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PluginsOnboarding: View {
-    @ObservedObject var config = ToolConfigDefaults.shared
+    @Environment(\.horizontalSizeClass) var horizontalSize
     
     var body: some View {
         GenericOnboardingView(
@@ -18,17 +18,39 @@ struct PluginsOnboarding: View {
             content: {
                 Form {
                     Section {
-                        Toggle("URL Scrape", isOn: $config.urlScrape)
-                        Toggle("Google Search", isOn: $config.googleSearch)
-                        Toggle("Image Generate", isOn: $config.imageGenerate)
-                        Toggle("Transcribe", isOn: $config.transcribe)
+                        HStack {
+                            Label("Web Search", systemImage: Tool.webSearch.iconName)
+                            if horizontalSize != .compact {
+                                Spacer()
+                                Text("Access up-to-date information")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        
+                        HStack {
+                            Label("Image Generate", systemImage: Tool.imageGeneration.iconName)
+                            if horizontalSize != .compact {
+                                Spacer()
+                                Text("Generate images from text")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        
+                        HStack {
+                            Label("Transcribe", systemImage: Tool.transcribe.iconName)
+                            if horizontalSize != .compact {
+                                Spacer()
+                                Text("Transcribe audio to text")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))
                     #endif
                 }
             },
-            footerText: "Disable plugins if LLMs behave unexpectedly"
+            footerText: "Enable plugins to give your AI assistant more capabilities"
         )
     }
 }

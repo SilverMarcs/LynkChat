@@ -15,6 +15,10 @@ struct AutoHeightTextView: NSViewRepresentable {
     
     typealias NSViewType = CustomTextView
     
+    static func == (lhs: AutoHeightTextView, rhs: AutoHeightTextView) -> Bool {
+        return lhs.text == rhs.text && lhs.height == rhs.height && lhs.config.fontSize == rhs.config.fontSize
+    }
+    
     func makeNSView(context: Context) -> CustomTextView {
         let textView = CustomTextView()
         textView.isEditable = false

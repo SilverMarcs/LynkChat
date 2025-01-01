@@ -16,7 +16,7 @@ struct ChatListCards: View {
     
     @ObservedObject var config = AppConfig.shared
     
-    var source: Source
+    var source: ListState
     var chatCount: String
     var imageSessionsCount: String
     
@@ -68,9 +68,9 @@ struct ChatListCards: View {
     
     func handleChatPress() {
         switch source {
-        case .chatlist:
+        case .chats:
             cycleChatStatus()
-        case .imagelist:
+        case .images:
             #if os(macOS)
             openWindow(id: WindowID.chats)
             if config.onlyOneWindow {
@@ -124,6 +124,6 @@ struct ChatListCards: View {
 }
 
 #Preview {
-    ChatListCards(source: .chatlist, chatCount: "5", imageSessionsCount: "?")
+    ChatListCards(source: .chats, chatCount: "5", imageSessionsCount: "?")
         .environment(ChatVM())
 }

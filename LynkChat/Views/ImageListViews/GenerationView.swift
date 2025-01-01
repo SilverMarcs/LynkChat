@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GenerationView: View {
-    @ObservedObject var imageConfig = ImageConfigDefaults.shared
+    @ObservedObject var imageConfig = ImageModelConfig.shared
     var generation: Generation
     private let spacing: CGFloat = 10
     private let size: CGFloat = 300
@@ -40,14 +40,15 @@ struct GenerationView: View {
             
             
             VStack(alignment: .leading) {
-                Text(generation.config.model.name)
-                    .font(.caption)
-                    .padding(.leading, 5)
-                    .foregroundStyle(LinearGradient(
-                        colors: [.purple, .pink],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    ))
+//                Text(generation.config.model.name)
+//                    .font(.caption)
+//                    .padding(.leading, 5)
+//                    .foregroundStyle(LinearGradient(
+//                        colors: [.purple, .pink],
+//                        startPoint: .leading,
+//                        endPoint: .trailing
+//                    ))
+                AssistantLabel(model: generation.config.model)
                 
                 if generation.state == .error {
                     Text(generation.errorMessage)

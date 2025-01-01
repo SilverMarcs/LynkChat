@@ -49,21 +49,19 @@ final class Chat: Equatable, Identifiable, Hashable {
     }
     
     @Relationship(deleteRule: .cascade)
-    var config: ChatConfig
+    var config: ChatConfig = ChatConfig()
     
     @Transient
     var streamingTask: Task<Void, Error>?
     @Transient
     var isReplying: Bool {
-        currentThread.last?.isReplying ?? false
+        currentThread.last?.activeMessage.isReplying ?? false
     }
 
     @Transient
     var inputManager = InputManager()
     
-    init(config: ChatConfig) {
-        self.config = config
-    }
+    init() { }
     
     @MainActor
     func processRequest(message: Message) async {
@@ -86,9 +84,6 @@ final class Chat: Equatable, Identifiable, Hashable {
             
             do {
                 scrollDown()
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//                    self.scrollDown()
-//                }
                 
                 try await streamer.handleRequest()
             } catch {
@@ -97,10 +92,10 @@ final class Chat: Equatable, Identifiable, Hashable {
             
             streamingTask?.cancel()
             streamingTask = nil
-        }
-        
-        if AppConfig.shared.autogenTitle {
-            Task { await generateTitle() }
+            
+            if AppConfig.shared.autogenTitle {
+                Task { await generateTitle() }
+            }
         }
     }
 
@@ -110,12 +105,11 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         unsetContextResetPointIfNeeded(for: userGroup)
         
-        let newUserMessage = Message(role: .user, content: inputManager.prompt, provider: message.provider, model: message.model, dataFiles: inputManager.dataFiles)
+        let newUserMessage = Message.user(content: inputManager.prompt, dataFiles: inputManager.dataFiles)
         userGroup.addMessage(newUserMessage)
         
-        let newAssistantMessage = Message(role: .assistant, provider: config.provider, model: config.model, isReplying: true)
+        let newAssistantMessage = Message.assistant(model: config.model)
         let newAssistantGroup = MessageGroup(message: newAssistantMessage)
-        newAssistantGroup.chat = self
         
         newUserMessage.next = newAssistantGroup
          
@@ -131,22 +125,11 @@ final class Chat: Equatable, Identifiable, Hashable {
         resetScroll()
         
         if let editingMessage = inputManager.editingMessage {
-            if config.useCache {
-                DispatchQueue.main.async {
-                    editingMessage.useCache = true
-                }
-            }
             await editMessage(editingMessage)
             inputManager.editingMessage = nil
         } else {
-            let userMessage = Message(role: .user, content: inputManager.prompt, dataFiles: inputManager.dataFiles)
-            if config.useCache {
-                DispatchQueue.main.async {
-                    userMessage.useCache = true
-                }
-            }
+            let userMessage = Message.user(content: inputManager.prompt, dataFiles: inputManager.dataFiles)
             let userGroup = MessageGroup(message: userMessage)
-            userGroup.chat = self
             
             if rootMessage == nil {
                 rootMessage = userGroup
@@ -155,9 +138,8 @@ final class Chat: Equatable, Identifiable, Hashable {
                 lastGroup.activeMessage.next = userGroup
             }
             
-            let assistantMessage = Message(role: .assistant, provider: config.provider, model: config.model, isReplying: true)
+            let assistantMessage = Message.assistant(model: config.model)
             let assistantGroup = MessageGroup(message: assistantMessage)
-            assistantGroup.chat = self
             userGroup.activeMessage.next = assistantGroup
              
             await processRequest(message: assistantMessage)
@@ -174,7 +156,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         unsetContextResetPointIfNeeded(for: message)
        
         if message.role == .assistant {
-            let newAssistantMessage = Message(role: .assistant)
+            let newAssistantMessage = Message.assistant(model: config.model)
             message.addMessage(newAssistantMessage)
             message.activeMessage.next = nil
            
@@ -182,15 +164,14 @@ final class Chat: Equatable, Identifiable, Hashable {
         } else if message.role == .user {
             if index + 1 < currentThread.count {
                 let assistantGroup = currentThread[index + 1]
-                let newAssistantMessage = Message(role: .assistant)
+                let newAssistantMessage = Message.assistant(model: config.model)
                 assistantGroup.addMessage(newAssistantMessage)
                 assistantGroup.activeMessage.next = nil
                
                 await processRequest(message: newAssistantMessage)
             } else {
-                let assistantMessage = Message(role: .assistant, provider: config.provider, model: config.model, isReplying: true)
+                let assistantMessage = Message.assistant(model: config.model)
                 let assistantGroup = MessageGroup(message: assistantMessage)
-                assistantGroup.chat = self
                 message.activeMessage.next = assistantGroup
                 
                 await processRequest(message: assistantMessage)
@@ -202,33 +183,21 @@ final class Chat: Equatable, Identifiable, Hashable {
         resetScroll()
         streamingTask?.cancel()
         streamingTask = nil
-        
-        guard let last = currentThread.last else { return }
-        last.isReplying = false
-//        if last.activeMessage.content.isEmpty {
-//            deleteLastMessage()
-//        }
+        errorDeleteLast()
     }
     
     private func handleError(_ error: Error) {
-        errorMessage = error.localizedDescription
-        scrollDown()
-        resetScroll()
-        stopStreaming()
-        
-        // TODO: only delete last mesasage and not entire group if group has other messages
-//        DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
-//            if let lastMessage = self.currentThread.last, lastMessage.content.isEmpty, lastMessage.role == .assistant {
-//                self.deleteLastMessage()
-//            }
-//        }
+        errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
+        DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
+            self.stopStreaming()
+        }
     }
     
     func generateTitle(forced: Bool = false) async {
         guard status != .quick else { return }
         guard forced || adjustedContext.count <= 2 else { return }
         
-        if let newTitle = await TitleGenerator.generateTitle(messages: adjustedContext, provider: config.provider) {
+        if let newTitle = await TitleGenerator.generateTitle(messages: adjustedContext) {
             self.title = newTitle
         }
     }
@@ -238,9 +207,11 @@ final class Chat: Equatable, Identifiable, Hashable {
             contextResetPoint = nil
         } else {
             contextResetPoint = message
+//            totalTokens = 0 // disabling since token count will help estimate usage
         }
         
         if let lastMessage = currentThread.last, lastMessage == message {
+            resetScroll()
             Scroller.scrollToBottom()
         }
     }
@@ -263,18 +234,26 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         if currentThread.count == 1 {
-            let temp = rootMessage
             rootMessage = nil
-            temp?.chat = nil
         } else {
             let secondToLastGroup = currentThread[currentThread.count - 2]
             secondToLastGroup.activeMessage.next = nil
-            lastGroup.chat = nil
         }
         
         Scroller.scrollToBottom()
-
-        errorMessage = ""
+    }
+    
+    func errorDeleteLast() {
+        guard let last = self.currentThread.last else { return }
+        last.activeMessage.isReplying = false
+        last.activeMessage.tools = nil
+    if last.activeMessage.content.isEmpty {
+            if last.allMessages.count == 1 {
+                self.deleteLastMessage()
+            } else {
+                last.deleteAndSetPreviousActive()
+            }
+        }
     }
     
     func deleteAllMessages() {
@@ -283,7 +262,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         stopStreaming()
         errorMessage = ""
         totalTokens = 0
-        
     }
     
     func scrollDown() {
@@ -297,16 +275,17 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
     
-    func copy(from message: Message? = nil, purpose: ChatConfigPurpose) async -> Chat {
-        let newChat = Chat(config: config.copy(purpose: purpose))
+    func copy(from message: Message? = nil) async -> Chat {
+        let newChat = Chat()
+        newChat.config.model = self.config.model
         
-        let leading = switch purpose {
-            case .chat: "Ψ"
-            case .quick: "↯"
-            case .title: "T"
-        }
+//        let leading = switch purpose {
+//            case .chat: "Ψ"
+//            case .quick: "↯"
+//            case .title: "T"
+//        }
         
-        newChat.title = "\(leading) \(self.title)"
+//        newChat.title = "\(leading) \(self.title)"
         newChat.totalTokens = self.totalTokens
         
         var threadToCopy: [MessageGroup] = []
@@ -324,7 +303,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         var previousGroup: MessageGroup?
         for group in threadToCopy {
             let copiedGroup = group.copy()
-            copiedGroup.chat = newChat
             
             if let previousGroup = previousGroup {
                 previousGroup.activeMessage.next = copiedGroup

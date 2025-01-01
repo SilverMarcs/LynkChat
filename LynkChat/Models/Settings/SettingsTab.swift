@@ -14,11 +14,10 @@ enum SettingsTab {
     case quickPanel
     case shortcuts
     #endif
-    case tools
-    case parameters
+    case chat
     case image
-    case providers
-    case advanced
-    case guides
     case about
+    #if DEBUG
+    case debug
+    #endif
 }

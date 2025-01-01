@@ -1,5 +1,5 @@
 //
-//  ProviderImage.swift
+//  ListRowImage.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 05/07/2024.
@@ -7,27 +7,30 @@
 
 import SwiftUI
 
-struct ProviderImage: View {
-    var provider: Provider
-    
-    var radius: CGFloat = 9
-    var frame: CGFloat = 25
-    
-    var scale: Image.Scale
+struct ListRowImage: View {
+    var model: ModelImageProvider
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: radius)
-                .fill(Color(hex: provider.color).gradient)
-                .frame(width: frame, height: frame)
+            RoundedRectangle(cornerRadius: 7)
+                .fill(Color(hex: model.color).gradient)
+                .frame(width: imageSize, height: imageSize)
 
-            Image(provider.type.imageName)
-                .foregroundStyle(provider.type == .ollama ? .black : .white)
-                .imageScale(scale)
+            Image(model.imageName)
+                .imageScale(.medium)
+                .foregroundStyle(.white)
         }
+    }
+    
+    var imageSize: CGFloat {
+        #if os(macOS)
+        return 22
+        #else
+        return 26
+        #endif
     }
 }
 
 #Preview {
-    ProviderImage(provider: .openAIProvider, scale: .small)
+    ListRowImage(model: ChatModel.gpt4o)
 }

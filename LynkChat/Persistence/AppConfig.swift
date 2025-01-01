@@ -13,18 +13,18 @@ class AppConfig: ObservableObject {
     
     var proxy: ScrollViewProxy?
     @Published var hasUserScrolled = false
-    
     @Published var showCamera = false
+    
+    @AppStorage("finishedInitialSetup") var finishedInitialSetup = false
     
     // Appearance
     @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .webview
-    @AppStorage("codeBlockTheme") var codeBlockTheme: CodeTheme = .atomOne
+    @AppStorage("codeBlockTheme") var codeBlockTheme: CodeBlockTheme = .atom
     #if os(macOS)
     @AppStorage("fontSize") var fontSize: Double = 13
     #else
     @AppStorage("fontSize") var fontSize: Double = 17
     #endif
-    
     // General
     @AppStorage("autogenTitle") var autogenTitle: Bool = true
     @AppStorage("enterToSend") var enterToSend: Bool = true
@@ -35,9 +35,6 @@ class AppConfig: ObservableObject {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
     @AppStorage("hasUsedChatStatusFilter") var hasUsedChatStatusFilter = false
     
-    // Quick
-    @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses extremeley concise."
-    
     func resetFontSize() {
         #if os(macOS)
         fontSize = 13
@@ -45,10 +42,14 @@ class AppConfig: ObservableObject {
         fontSize = 17
         #endif
     }
-}
-
-enum SidebarIconSize: String, Codable, CaseIterable {
-    case system
-    case medium
-    case large
+    
+    // DEBUG
+    @AppStorage("myApiKey") var myApiKey: String = ""
+    @AppStorage("useLocalhost") var useLocalhost = true
+    #if DEBUG
+    @AppStorage("printDebgLogs") var printDebgLogs = true
+    #else
+    @AppStorage("printDebgLogs") var printDebgLogs = false
+    #endif
+    
 }

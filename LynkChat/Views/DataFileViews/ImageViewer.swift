@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ImageViewer: View {
-    @ObservedObject var imageConfig = ImageConfigDefaults.shared
-    
+    @ObservedObject var imageConfig = ImageModelConfig.shared
     let typedData: TypedData
     
     var body: some View {
@@ -17,13 +16,14 @@ struct ImageViewer: View {
             Image(platformImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-//                .frame(width: 125, height: 48)
-                .frame(width: 125, height: 47)
-                .roundedRectangleOverlay(radius: 5)
-                .clipShape(RoundedRectangle(cornerRadius: 5))
+                .frame(minWidth: 150, minHeight: 150)
+                .roundedRectangleOverlay(radius: 8)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
         } else {
             Text("Image Unable to Load")
-                .frame(width: 125, height: 47)
+                .frame(width: 150, height: 150)
+                .background(Color.gray.opacity(0.2))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }
 }

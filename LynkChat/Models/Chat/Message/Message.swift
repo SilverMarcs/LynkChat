@@ -13,61 +13,137 @@ final class Message: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
     var date: Date = Date()
     
-    @Relationship(deleteRule: .nullify)
-    var provider: Provider?
-    @Relationship(deleteRule: .nullify)
-    var model: AIModel?
-    
+    var model: ChatModel
+    var role: Role
     var content: String
 
     @Relationship(deleteRule: .cascade)
-    var dataFiles: [TypedData] = []
-    var role: MessageRole
+    var dataFiles: [TypedData]
     
     @Attribute(.ephemeral)
     var isReplying: Bool = false
     
-    var toolCalls: [ChatToolCall] = []
-    var toolResponse: ToolResponse?
-    
-    var useCache: Bool = false
-    var height: CGFloat = 0
+    var height: CGFloat
     
     @Relationship(deleteRule: .cascade)
     var next: MessageGroup?
     
-    // TODO: typed init functions for diff roles
+    var tools: [ChatTool]?
     
-    init(role: MessageRole, content: String = "", provider: Provider? = nil, model: AIModel? = nil, dataFiles: [TypedData] = [], toolCalls: [ChatToolCall] = [], toolResponse: ToolResponse? = nil, isReplying: Bool = false, height: CGFloat = 0) {
+    private init(role: Role,
+                 content: String = "",
+                 model: ChatModel,
+                 dataFiles: [TypedData],
+                 tools: [ChatTool]?,
+                 isReplying: Bool = false,
+                 height: CGFloat) {
         self.role = role
         self.content = content
-        self.provider = provider
         self.model = model
         self.dataFiles = dataFiles
-        self.toolCalls = toolCalls
-        self.toolResponse = toolResponse
+        self.tools = tools
         self.isReplying = isReplying
         self.height = height
-    }
-    
-    init(toolResponse: ToolResponse) {
-        self.role = .tool
-        self.content = ""
-        self.toolResponse = toolResponse
-        self.isReplying = true
     }
 
     func copy() -> Message {
         return Message(
             role: role,
             content: content,
-            provider: provider,
             model: model,
             dataFiles: dataFiles,
-            toolCalls: toolCalls,
-            toolResponse: toolResponse,
+            tools: tools,
             isReplying: isReplying,
             height: height
         )
+    }
+    
+    static func user(content: String, dataFiles: [TypedData] = []) -> Message {
+        Message(
+            role: .user,
+            content: content,
+            model: ModelConfig.shared.defaultModel,
+            dataFiles: dataFiles,
+            tools: nil,
+            isReplying: false,
+            height: 20
+        )
+    }
+    
+    static func assistant(model: ChatModel, content: String = "") -> Message {
+        Message(
+            role: .assistant,
+            content: content,
+            model: model,
+            dataFiles: [],
+            tools: [],
+            isReplying: true,
+            height: 0
+        )
+    }
+
+    enum Role: String, Codable {
+        case user
+        case assistant
+    }
+}
+
+// TODO: pass tool call and results
+extension Message {
+    func toAPIMessage() async -> APIMessage {
+        var contentItems = [ContentItem]()
+        
+        // Process data files
+        let processedDataFiles = await TypedData.processDataFiles(dataFiles)
+        
+        // Add processed text content from data files
+        let textContents = processedDataFiles.compactMap { item -> String? in
+            if case .text(let text) = item {
+                return text.isEmpty ? nil : text // Filter out empty strings
+            }
+            return nil
+        }
+        
+        // Create tool usage texts
+        let toolTexts = tools?.map { tool -> String in
+            let resultText: String
+            if tool.tool == .imageGeneration {
+                resultText = "generated image was shown to user"
+            } else {
+                resultText = tool.result ?? "No result"
+            }
+            
+            return """
+                Used \(tool.tool.rawValue) tool
+                Arguments: \(tool.args)
+                Tool Result:
+                \(resultText)
+                """
+        } ?? []
+        
+        // Concatenate texts with the original message content and tool texts
+        let combinedText = (textContents + [content] + toolTexts)
+            .filter { !$0.isEmpty } // Filter out empty strings
+            .joined(separator: "\n\n") // Added double newline for better separation
+        
+        // Only add text content if it's not empty
+        if !combinedText.isEmpty {
+            contentItems.append(.text(combinedText))
+        }
+        
+        // Add images from data files
+        let imageItems = processedDataFiles.compactMap { item -> (mimeType: String, data: Data)? in
+            if case .image(let mimeType, let data) = item {
+                return (mimeType: mimeType, data: data)
+            }
+            return nil
+        }
+        
+        // Add image items to contentItems
+        imageItems.forEach { imageItem in
+            contentItems.append(.image(mimeType: imageItem.mimeType, data: imageItem.data))
+        }
+        
+        return APIMessage(role: role, content: contentItems)
     }
 }

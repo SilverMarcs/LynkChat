@@ -12,33 +12,25 @@ struct Shortcut: Identifiable {
     let key: String
     let action: String
     
-    static let chatNavigationShortcuts = [
-        Shortcut(key: "⌘ + N", action: "New Chat"),
-        Shortcut(key: "⌘ + ]", action: "Next Chat"),
-        Shortcut(key: "⌘ + [", action: "Previous Chat"),
-    ]
-        
     static let chatInteractionShortcuts = [
+        Shortcut(key: "⌘ + N", action: "New Chat"),
         Shortcut(key: "⌘ + Return", action: "Send Prompt"),
+        Shortcut(key: "⌘ + V", action: "Paste File from Clipboard"),
         Shortcut(key: "⌘ + L", action: "Focus Inputbox"),
-        Shortcut(key: "⌘ + R", action: "Regenerate Last Response"),
+        Shortcut(key: "⌘ + R", action: "Regenerate Last Message"),
         Shortcut(key: "⌘ + E", action: "Edit Last Prompt"),
         Shortcut(key: "⌘ + K", action: "Rest Context"),
-        Shortcut(key: "⌘ + D", action: "Delete Last Prompt/Response"),
-        
-        Shortcut(key: "⌘ Shift + .", action: "Switch to Next Model"),
-        Shortcut(key: "⌘ Shift + ,", action: "Switch to Previous Model"),
-    
-    ]
-        
-    static let appSettingsShortcuts = [
-        Shortcut(key: "⌘ + .", action: "Open Chat Config Menu"),
-        Shortcut(key: "⌘ + ,", action: "Open App Settings"),
+        Shortcut(key: "⌘ + D", action: "Delete Last Message"),
     ]
         
     static let fontSizeShortcuts = [
         Shortcut(key: "⌘  + +", action: "Increase Font Size"),
         Shortcut(key: "⌘  + -", action: "Decrease Font Size"),
         Shortcut(key: "⌘  + O", action: "Reset Font Size"),
+    ]
+    
+    static let appSettingsShortcuts = [
+        Shortcut(key: "⌘ + .", action: "Open Chat Config Menu"),
+        Shortcut(key: "⌘ + ,", action: "Open App Settings"),
     ]
 }

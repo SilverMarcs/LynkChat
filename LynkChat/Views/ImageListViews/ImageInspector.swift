@@ -7,40 +7,28 @@
 
 import SwiftUI
 import SwiftData
-import OpenAI
 
 struct ImageInspector: View {
     @Bindable var session: ImageSession
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
     
     @Binding var showingInspector: Bool
-    
-    var filteredProviders: [Provider] {
-        providers.filter { !$0.imageModels.isEmpty }
-    }
     
     var body: some View {
         NavigationStack {
             Form {
                 Section("Title") {
-                    HStack(spacing: 0) {
-                        TextField("Title", text: $session.title)
-                            .labelsHidden()
-                        
-                        Spacer()
-                        
-                        generateTitle
-                    }
+                    TextField("Title", text: $session.title)
+                        .labelsHidden()
                 }
                 
                 Section("Models") {
-                    ProviderPicker(provider: $session.config.provider,
-                                   providers: providers) { provider in
-                        session.config.model = provider.imageModel
+                    Picker("Model", selection: $session.config.model) {
+                        ForEach(ImageModel.allCases) { model in
+                            Label(model.name, image: model.imageName)
+                                .tag(model)
+                        }
                     }
-                    
-                    ModelPicker(model: $session.config.model, models: session.config.provider.imageModels, label: "Model")
+                    .labelStyle(.titleAndIcon)
                 }
                 
                 Section("Parameters") {
@@ -50,23 +38,23 @@ struct ImageInspector: View {
                         }
                     }
                     
-                    Picker("Size", selection: $session.config.size) {
-                        ForEach(ImagesQuery.Size.allCases, id: \.self) { size in
-                            Text(size.rawValue.capitalized).tag(size)
-                        }
-                    }
-                    
-                    Picker("Quality", selection: $session.config.quality) {
-                        ForEach(ImagesQuery.Quality.allCases, id: \.self) { quality in
-                            Text(quality.rawValue.uppercased()).tag(quality)
-                        }
-                    }
-                    
-                    Picker("Style", selection: $session.config.style) {
-                        ForEach(ImagesQuery.Style.allCases, id: \.self) { style in
-                            Text(style.rawValue.capitalized).tag(style)
-                        }
-                    }
+//                    Picker("Size", selection: $session.config.size) {
+//                        ForEach(ImagesQuery.Size.allCases, id: \.self) { size in
+//                            Text(size.rawValue.capitalized).tag(size)
+//                        }
+//                    }
+//                    
+//                    Picker("Quality", selection: $session.config.quality) {
+//                        ForEach(ImagesQuery.Quality.allCases, id: \.self) { quality in
+//                            Text(quality.rawValue.uppercased()).tag(quality)
+//                        }
+//                    }
+//                    
+//                    Picker("Style", selection: $session.config.style) {
+//                        ForEach(ImagesQuery.Style.allCases, id: \.self) { style in
+//                            Text(style.rawValue.capitalized).tag(style)
+//                        }
+//                    }
                 }
             }
             .toolbar {
@@ -91,16 +79,6 @@ struct ImageInspector: View {
             .scrollDisabled(true)
             #endif
         }
-    }
-    
-    private var generateTitle: some View {
-        Button {
-            Task { await session.generateTitle(forced: true) }
-        } label: {
-            Image(systemName: "sparkles")
-        }
-        .buttonStyle(.plain)
-        .foregroundStyle(.mint.gradient)
     }
     
     private var deleteAllMessages: some View {

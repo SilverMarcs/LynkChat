@@ -8,28 +8,27 @@
 import SwiftUI
 
 struct ImageContentView: View {
-    @Environment(ImageVM.self) private var sessionVM
     @State var showingInspector: Bool = true
+    @State var selection: ImageSession?
     
     var body: some View {
         NavigationSplitView {
-            ImageList()
+            ImageList(selection: $selection)
                 #if os(macOS)
                 .navigationSplitViewColumnWidth(min: 240, ideal: 280, max: 400)
                 #endif
         } detail: {
-            if let imageSession = sessionVM.activeImageSession {
+            if let imageSession = selection {
                 ImageDetail(session: imageSession)
                     .id(imageSession.id)
             } else {
-                Text("^[\(sessionVM.selections.count) Image Session](inflect: true) Selected")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(.background)
+                Text("Select or create an image session")
                     .font(.title)
+                    .fullScreenBackground()
             }
         }
         .inspector(isPresented: $showingInspector) {
-            if let imageSession = sessionVM.activeImageSession {
+            if let imageSession = selection {
                 ImageInspector(session: imageSession, showingInspector: $showingInspector)
                     .id(imageSession.id)
             } else {

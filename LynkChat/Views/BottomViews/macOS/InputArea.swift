@@ -19,14 +19,13 @@ struct InputArea: View {
 
     @State private var isExpanded = false
     @State private var showExpandButton = false
-    @State private var isHovering = false
     
     @FocusState var isFocused: FocusedField?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if !chat.inputManager.dataFiles.isEmpty {
-                DataFilesView(dataFiles: chat.inputManager.dataFiles, adaptiveGrid: true) { file in
+                DataFilesView(dataFiles: chat.inputManager.dataFiles) { file in
                     withAnimation {
                         chat.inputManager.dataFiles.removeAll(where: { $0 == file })
                     }
@@ -56,12 +55,7 @@ struct InputArea: View {
             HStack {
                 ChatInputMenu(chat: chat)
                 
-                if horizontalSizeClass != .compact {
-                    configInfo
-                        .onHover { hovering in
-                            isHovering = hovering
-                        }
-                }
+                configInfo
                 
                 Spacer()
                 
@@ -126,30 +120,15 @@ struct InputArea: View {
 
     private var configInfo: some View {
         HStack(spacing: 4) {
-            CustomToolsView(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
-                .toggleStyle(.button)
-                .labelStyle(.iconOnly)
-                .buttonStyle(.borderless)
-                .padding(.trailing, 5)
-            
-            if isHovering {
-                InputModelPickers(chat: chat)
-                    .labelsHidden()
-                    .opacity(0.65)
-                
-            } else {
-                HStack(spacing: 6) {
-                    Text(chat.config.provider.name)
-                        .padding(.leading, 3)
-                        .padding(.trailing, 15)
-                        .textCase(.uppercase)
-                        .foregroundStyle(.secondary)
-                    
-                    Text(chat.config.model.name)
-                        .padding(.leading, 3)
-                        .foregroundStyle(.secondary)
-                }
+            if chat.config.model.supportsTool {
+                ToolsBarView(config: $chat.config)
             }
+            
+            ModelPicker(selectedModel: $chat.config.model)
+            
+            .buttonStyle(.borderless)
+            .labelsHidden()
+            .opacity(0.65)
         }
     }
     

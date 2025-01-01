@@ -11,34 +11,42 @@ struct AssistantMessage: View {
     @Environment(ChatVM.self) var chatVM
     
     @ObservedObject var config = AppConfig.shared
-    
     var message: Message
     var group: MessageGroup
     var showMenu: Bool = true
     
-    @State var height: CGFloat = 20
+    @State var height: CGFloat = 0
     @State private var showingTextSelection = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AssistantLabel(message: message)
+            AssistantLabel(model: message.model)
                 .transaction { $0.animation = nil }
                 .padding(.leading, labelPadding)
+            
+            if let tools = message.tools, !tools.isEmpty {
+                ChatToolView(tools: tools)
+            }
             
             MDView(content: message.content, calculatedHeight: $height)
                 .environment(\.searchText, chatVM.searchText)
                 .environment(\.isReplying, message.isReplying)
                 .transaction { $0.animation = nil }
-                .if(config.markdownProvider == .webview) { view in
-                    view
-                        .frame(height: message.height, alignment: .top)
-                        .onChange(of: height) {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                if height > 0 {
-                                    message.height = height
+//                .if(config.markdownProvider == .webview) { view in
+                .apply { view in
+                    if config.markdownProvider == .webview {
+                        view
+                            .frame(height: message.height, alignment: .top)
+                            .onChange(of: height) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    if height > 0 {
+                                        message.height = height
+                                    }
                                 }
                             }
-                        }
+                    } else {
+                        view
+                    }
                 }
             
             if !message.dataFiles.isEmpty {
@@ -58,7 +66,7 @@ struct AssistantMessage: View {
                     SecondaryNavigationButtons(group: group)
                     Spacer()
                 } else {
-                    if group.secondaryMessages.count > 1 {
+                    if group.allMessages.count > 1 {
                         NavigationButtons(message: group)
                         Spacer()
                     }
@@ -73,7 +81,7 @@ struct AssistantMessage: View {
             TextSelectionView(content: message.content)
         }
         .contextMenu {
-            MessageMenu(message: group) {
+            MessageMenu(group: group) {
                 showingTextSelection.toggle()
             }
         }

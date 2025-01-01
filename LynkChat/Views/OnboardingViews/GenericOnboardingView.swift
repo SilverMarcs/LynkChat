@@ -10,6 +10,7 @@ import SwiftUI
 struct GenericOnboardingView<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     let icon: String
+    var useSFSymbol: Bool = true
     let iconColor: Color
     let title: String
     let content: () -> Content
@@ -22,16 +23,23 @@ struct GenericOnboardingView<Content: View>: View {
                 
                 // Icon and Title
                 VStack(spacing: 10) {
-                    Image(systemName: icon)
-                        .foregroundStyle(iconColor)
-                        .font(.system(size: geometry.size.height * 0.1))
-                        .animation(.default, value: iconColor)
+                    Group {
+                        if useSFSymbol {
+                            Image(systemName: icon)
+                        } else {
+                            Image(icon)
+                        }
+                    }
+                    .foregroundStyle(iconColor)
+                    .font(.system(size: geometry.size.height * 0.1))
                     
                     Text(title)
                         .font(.title)
                         .bold()
                 }
                 .frame(height: geometry.size.height * 0.25)
+                .animation(.default, value: icon)
+                .animation(.default, value: iconColor)
                 
                 // Content
                 content()

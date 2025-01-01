@@ -53,6 +53,7 @@ struct GoogleCodeExecutionTip: Tip {
     }
 }
 
+// TODO: shwo this in provider default page
 struct ProviderRefreshTip: Tip {
     var title: Text {
         Text("Go into Models Section to refresh the provider's model list")
@@ -136,3 +137,13 @@ struct ModelEditTip: Tip {
     }
 }
     
+
+struct ImageGenToolTip: Tip {
+    var title: Text {
+        Text("Images generated here are temporary. Save them to your device if needed")
+    }
+    
+    var options: [Option] {
+        MaxDisplayCount(2)
+    }
+}

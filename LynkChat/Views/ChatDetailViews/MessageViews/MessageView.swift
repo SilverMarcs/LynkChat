@@ -8,27 +8,21 @@
 import SwiftUI
 
 struct MessageView: View {
-    var message: MessageGroup
+    @Environment(\.chat) var chat
+    var group: MessageGroup
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            switch message.role {
+            switch group.role {
             case .user:
-                UserMessage(message: message)
+                UserMessage(group: group)
+//                AssistantMessageAux(group: group)
             case .assistant:
-                if message.toolCalls.isEmpty {
-                    AssistantMessageAux(message: message)
-                } else {
-                    ToolCallView(message: message)
-                }
-            case .tool:
-                ToolResponseMessage(message: message)
-            default:
-                Text("Unknown role")
+                AssistantMessageAux(group: group)
             }
             
-            if message.chat?.contextResetPoint == message {
-                ContextResetDivider() { message.chat?.resetContext(at: message)}
+            if chat.contextResetPoint == group {
+                ContextResetDivider() { chat.resetContext(at: group)}
                     .padding(.vertical)
             }
         }
@@ -41,8 +35,8 @@ struct MessageView: View {
 
 #Preview {
     VStack {
-        MessageView(message: .mockUserGroup)
-        MessageView(message: .mockAssistantGroup)
+        MessageView(group: .mockUserGroup)
+        MessageView(group: .mockAssistantGroup)
     }
     .frame(width: 400)
     .padding()

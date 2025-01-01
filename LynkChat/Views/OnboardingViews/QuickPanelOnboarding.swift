@@ -5,11 +5,10 @@
 //  Created by Zabir Raihan on 17/11/2024.
 //
 
-#if os(macOS)
 import SwiftUI
 
 struct QuickPanelOnboarding: View {
-    @Bindable var provider: Provider
+    @ObservedObject var modelConfig: ModelConfig = .shared
     
     var body: some View {
         GenericOnboardingView(
@@ -19,14 +18,13 @@ struct QuickPanelOnboarding: View {
             content: {
                 Form {
                     LabeledContent {
-//                        KeyboardShortcuts.Recorder(for: .togglePanel)
                         Text("⌥ + Space")
+                            .monospaced()
                     } label: {
                         Text("Global shortcut")
-
                     }
                     
-                    ModelPicker(model: $provider.liteModel, models: provider.chatModels, label: "Quick Panel Model")
+                    ModelPicker(selectedModel: $modelConfig.quickModel)
                 }
             },
             footerText: "Access from anywhere in the OS"
@@ -36,7 +34,6 @@ struct QuickPanelOnboarding: View {
 
 
  #Preview {
-     QuickPanelOnboarding(provider: .openAIProvider)
+     QuickPanelOnboarding()
          .frame(width: 500, height: 500)
  }
-#endif

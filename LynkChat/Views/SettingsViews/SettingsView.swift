@@ -12,8 +12,6 @@ struct SettingsView: View {
     @Environment(SettingsVM.self) private var settingsVM
     
     @State private var columnVisibility = NavigationSplitViewVisibility.automatic
-
-    @Query var providerDefaults: [ProviderDefaults]
     
     var body: some View {
         @Bindable var settingsVM = settingsVM
@@ -30,24 +28,12 @@ struct SettingsView: View {
                 Label("Quick Panel", systemImage: "bolt.fill")
                     .tag(SettingsTab.quickPanel)
                 #endif
+                   
+                Label("Chat Service", systemImage: "quote.bubble")
+                    .tag(SettingsTab.chat)
                 
-                Label("Plugins", systemImage: "hammer")
-                    .tag(SettingsTab.tools)
-                
-                Label("Parameters", systemImage: "slider.horizontal.3")
-                    .tag(SettingsTab.parameters)
-                
-                Label("Image Gen", systemImage: "photo")
+                Label("Image Service", systemImage: "photo")
                     .tag(SettingsTab.image)
-                
-                Label("Providers", systemImage: "cpu")
-                    .tag(SettingsTab.providers)
-                
-                Label("Advanced", systemImage: "gearshape.2")
-                    .tag(SettingsTab.advanced)
-                
-                Label("Guides", systemImage: "book")
-                    .tag(SettingsTab.guides)
                 
                 #if os(macOS)
                 Label("Shortcuts", systemImage: "command")
@@ -56,6 +42,11 @@ struct SettingsView: View {
                 
                 Label("About", systemImage: "info.circle")
                     .tag(SettingsTab.about)
+                
+                #if DEBUG
+                Label("Debug", systemImage: "ladybug")
+                    .tag(SettingsTab.debug)
+                #endif
                          
             }
             #if !os(visionOS)
@@ -78,26 +69,22 @@ struct SettingsView: View {
                     AppearanceSettings()
                 #if os(macOS)
                 case .quickPanel:
-                    QuickPanelSettings(providerDefaults: providerDefaults.first!)
+                    QuickPanelSettings()
                 #endif
-                case .tools:
-                    PluginSettings(providerDefaults: providerDefaults.first!)
-                case .parameters:
-                    ParameterSettings()
+                case .chat:
+                    ChatServiceSettings()
                 case .image:
-                    ImageSettings(providerDefaults: providerDefaults.first!)
-                case .providers:
-                    ProviderList()
-                case .advanced:
-                    AdvancedSettings()
-                case .guides:
-                    GuidesSettings()
+                    ImageServiceSettings()
                 #if os(macOS)
                 case .shortcuts:
                     ShortcutSettings()
                 #endif
                 case .about:
                     AboutSettings()
+                #if DEBUG
+                case .debug:
+                    DebugSettings()
+                #endif
                 default:
                     EmptyView()
                 }
@@ -119,5 +106,4 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .modelContainer(for: ProviderDefaults.self, inMemory: true)
 }

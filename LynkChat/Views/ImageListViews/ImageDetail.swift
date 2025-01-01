@@ -10,7 +10,6 @@ import SwiftData
 
 struct ImageDetail: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(ImageVM.self) var imageVM
     @Bindable var session: ImageSession
     @State private var showingInspector: Bool = false
     
@@ -27,8 +26,8 @@ struct ImageDetail: View {
                     .listRowSeparator(.hidden)
             }
             .task {
-                session.proxy = proxy
-                scrollToBottom(proxy: proxy)
+                AppConfig.shared.proxy = proxy
+                Scroller.scrollToBottom()
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 ImageInputView(session: session)
@@ -60,7 +59,7 @@ struct ImageDetail: View {
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardDidShowNotification)) { _ in
-                scrollToBottom(proxy: proxy)
+                Scroller.scrollToBottom()
             }
             .sheet(isPresented: $showingInspector) {
                 ImageInspector(session: session, showingInspector: $showingInspector)

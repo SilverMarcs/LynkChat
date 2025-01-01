@@ -6,25 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ChatCommands: Commands {
-    @ObservedObject var config = AppConfig.shared
     @Environment(ChatVM.self) var chatVM
+    @Environment(\.modelContext) var modelContext
+    @ObservedObject var config = AppConfig.shared
     @FocusState var isFocused: FocusedField?
     
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
             Button("New Chat") {
-                Task {
-                    await chatVM.createNewChat()
-                }
+                chatVM.createNewChat()
             }
             .keyboardShortcut("n")
             
             Button("Temporary Chat") {
-                Task {
-                    await chatVM.createTemporaryChat()
-                }
+                chatVM.createTemporaryChat()
             }
             .keyboardShortcut("n", modifiers: [.command, .shift])
         }

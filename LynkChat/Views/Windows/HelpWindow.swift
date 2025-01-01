@@ -15,15 +15,13 @@ struct HelpWindow: Scene {
     func conditionalAboutWindow() -> some Scene {
         if #available(macOS 15.0, *) {
             return UtilityWindow("Help", id: WindowID.help) {
-                GuidesSettings()
-                    .frame(width: 400, height: 500)
+                Text(try! AttributedString(markdown: "Visit [Guides](https://lynkchat.com/products/lynkchat) for more information."))
             }
             .restorationBehavior(.disabled)
             .windowIdealSize(.fitToContent)
         } else {
             return Window("Help", id: WindowID.help) {
-                GuidesSettings()
-                    .frame(width: 400, height: 500)
+                Text(try! AttributedString(markdown: "Visit [Guides](https://lynkchat.com/products/lynkchat) for more information."))
             }
         }
     }

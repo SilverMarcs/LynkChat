@@ -13,8 +13,6 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     var id: UUID = UUID()
     var date: Date = Date()
     
-    var chat: Chat?
-    
     @Relationship(deleteRule: .cascade)
     var rootMessage: Message?
     
@@ -38,9 +36,6 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     func addMessage(_ message: Message) {
-        message.provider = chat?.config.provider
-        message.model = chat?.config.model
-        
         if message.role == .assistant {
             message.isReplying = true
         }
@@ -53,75 +48,25 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     // MARK: - computed message properties
-    var provider: Provider? {
-        activeMessage.provider
-    }
-    
-    var model: AIModel? {
+    // TODO: dont really need all these props since we can just use the activeMessage directly and we shudnt expose all these props
+    var model: ChatModel {
         activeMessage.model
     }
     
     var content: String {
-        get {
-            activeMessage.content
-        }
-        set {
-            activeMessage.content = newValue
-        }
+        activeMessage.content
     }
 
     var dataFiles: [TypedData] {
-        get {
-            activeMessage.dataFiles
-        }
-        set {
-            activeMessage.dataFiles = newValue
-        }
+        activeMessage.dataFiles
     }
     
-    var role: MessageRole {
-        get {
-            activeMessage.role
-        }
-        set {
-            activeMessage.role = newValue
-        }
+    var role: Message.Role {
+        activeMessage.role
     }
     
     var isReplying: Bool {
-        get {
-            activeMessage.isReplying
-        }
-        set {
-            activeMessage.isReplying = newValue
-        }
-    }
-    
-    var toolCalls: [ChatToolCall] {
-        get {
-            activeMessage.toolCalls
-        }
-        set {
-            activeMessage.toolCalls = newValue
-        }
-    }
-    
-    var toolResponse: ToolResponse? {
-        get {
-            activeMessage.toolResponse
-        }
-        set {
-            activeMessage.toolResponse = newValue
-        }
-    }
-    
-    var useCache: Bool {
-        get {
-            activeMessage.useCache
-        }
-        set {
-            activeMessage.useCache = newValue
-        }
+        activeMessage.isReplying
     }
     
     // MARK: - Active Message Navigation
@@ -152,8 +97,8 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     }
     
     private func scrollToActiveMessage() {
-        guard let chat = chat, chat.currentThread.last == self else { return }
-        let anchor: UnitPoint = role == .assistant ? .bottom : .top
+        // TODO: add the aboev check etxernally
+        let anchor: UnitPoint = role == Message.Role.assistant ? .bottom : .top
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             Scroller.scroll(to: anchor, of: self)
         }
@@ -166,6 +111,12 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
         
         let nextIndex = min(index, allMessages.count - 1)
         activeMessage = allMessages[nextIndex]
+    }
+    
+    func deleteAndSetPreviousActive() {
+        let currentIndex = allMessages.firstIndex(of: activeMessage)!
+        activeMessage = allMessages[currentIndex - 1]
+        allUnorderedMessages.removeAll { $0 == allMessages[currentIndex] }
     }
     
     // MARK: - Secondary Message Navigation

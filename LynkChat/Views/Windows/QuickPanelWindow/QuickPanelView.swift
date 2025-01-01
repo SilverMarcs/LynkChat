@@ -17,15 +17,12 @@ struct QuickPanelView: View {
     var toggleVisibility: () -> Void
 
     @FocusState private var isFocused: Bool
-
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             textfieldView
                 .padding(15)
-                .padding(.leading, 1)
+                .padding(.trailing, -2)
                 .frame(height: 57)
             
             if !chat.inputManager.dataFiles.isEmpty {
@@ -76,22 +73,13 @@ struct QuickPanelView: View {
     var textfieldView: some View {
         HStack(spacing: 12) {
             Menu {
-                ProviderPicker(
-                    provider: $chat.config.provider,
-                    providers: providers,
-                    onChange: { newProvider in
-                        chat.config.model = newProvider.liteModel
-                    }
-                )
-
-                ModelPicker(model: $chat.config.model, models: chat.config.provider.chatModels, label: "Model")
+                ModelPicker(selectedModel: $chat.config.model)
                 
                 Menu {
-                    ToolsController(tools: $chat.config.tools, isGoogle: chat.config.provider.type == .google)
+                    QPToolsConfigView(config: $chat.config)
                 } label: {
-                    Label("Tools", systemImage: "hammer")
+                    Label("Tools", systemImage: "gear")
                 }
-                
             } label: {
                 Image(systemName: "magnifyingglass")
                     .resizable()
@@ -132,13 +120,11 @@ struct QuickPanelView: View {
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
                 
                 Group {
-                    Text(chat.config.provider.name.uppercased())
-                    
                     Text(chat.config.model.name)
                     
-                    ForEach(chat.config.tools.enabledTools) { tool in
-                        Image(systemName: tool.icon)
-                    }
+//                    ForEach(chat.config.tools.enabledTools) { tool in
+//                        Image(systemName: tool.icon)
+//                    }
                 }
                 .font(.caption)
                 
@@ -166,16 +152,7 @@ struct QuickPanelView: View {
         
         chat.deleteAllMessages()
         chat.inputManager.dataFiles.removeAll()
-        let oldConfig = chat.config
-        oldConfig.systemPrompt = ChatConfigDefaults.shared.systemPrompt
-
-        let fetchDefaults = FetchDescriptor<ProviderDefaults>()
-        let defaults = try! modelContext.fetch(fetchDefaults)
-        
-        let quickProvider = defaults.first!.quickProvider
-        chat.config = .init(provider: quickProvider, purpose: .quick)
-        
-        modelContext.delete(oldConfig)
+        chat.config.model = ModelConfig.shared.quickModel
     }
     
     private func addToDB() {
@@ -183,7 +160,7 @@ struct QuickPanelView: View {
         NSApp.keyWindow?.makeKeyAndOrderFront(nil)
         
         Task {
-            let newChat = await chat.copy(purpose: .chat)
+            let newChat = await chat.copy()
             chatVM.fork(newChat: newChat)
             resetChat()
             
@@ -198,8 +175,6 @@ struct QuickPanelView: View {
         if chat.inputManager.prompt.isEmpty {
             return
         }
-        
-        chat.config.systemPrompt = AppConfig.shared.quickSystemPrompt
         
         Task {
             await chat.sendInput()

@@ -18,14 +18,12 @@ struct ChatList: View {
     @ObservedObject var config = AppConfig.shared
     
     @Query var chats: [Chat] // see init method below
-    @Query(filter: #Predicate<Provider> { $0.isEnabled })
-    var providers: [Provider]
     
     var body: some View {
         @Bindable var chatVM = chatVM
 
         List(selection: $chatVM.selections) {
-            ChatListCards(source: .chatlist, chatCount: String(chats.count), imageSessionsCount: "↗")
+            ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
             
             TipView(SwipeActionTip())
                 .tipCornerRadius(8)
@@ -110,20 +108,6 @@ struct ChatList: View {
         
         #if os(macOS)
         ToolbarItem(placement: .keyboard) {
-            Button(action: { chatVM.goToPreviousChat(chats: chats) }) {
-                Image(systemName: "chevron.left")
-            }
-            .keyboardShortcut("[", modifiers: [.command, .shift])
-        }
-        
-        ToolbarItem(placement: .keyboard) {
-            Button(action: { chatVM.goToNextChat(chats: chats) }) {
-                Image(systemName: "chevron.right")
-            }
-            .keyboardShortcut("]", modifiers: [.command, .shift])
-        }
-
-        ToolbarItem(placement: .keyboard) {
             Button(action: {
                 // Get the indices of the selected chats
                 let indices = chatVM.selections.compactMap { chat in
@@ -143,34 +127,24 @@ struct ChatList: View {
         
         ToolbarItem {
             Menu {
-                ForEach(providers) { provider in
-                    Menu {
-                        ForEach(provider.chatModels.filter { $0.isEnabled }) { model in
-                            Button(model.name) {
-                                NewChatTip().invalidate(reason: .actionPerformed)
-                                Task {
-                                    await chatVM.createNewChat(provider: provider, model: model)
-                                }
+                ForEach(Array(ChatModel.groupedEnabledModels().keys), id: \.self) { group in
+                    Section {
+                        ForEach(ChatModel.groupedEnabledModels()[group] ?? []) { model in
+                            Button {
+                                chatVM.createNewChat(model: model)
+                            } label: {
+                                Label(model.name, image: model.imageName)
+                                    .labelStyle(.titleAndIcon)
                             }
-                        }
-                    } label: {
-                        Label(provider.name, image: provider.type.imageName)
-                    } primaryAction: {
-                        NewChatTip().invalidate(reason: .actionPerformed)
-                        Task {
-                            await chatVM.createNewChat(provider: provider)
                         }
                     }
                 }
             } label: {
-                Label("Long Tap", systemImage: "square.and.pencil")
+                Label("New Chat", systemImage: "square.and.pencil")
             } primaryAction: {
-                Task {
-                    await chatVM.createNewChat()
-                }
+                chatVM.createNewChat()
             }
             .menuIndicator(.hidden)
-            .popoverTip(NewChatTip())
         }
     }
     

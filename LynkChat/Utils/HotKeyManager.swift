@@ -1,0 +1,89 @@
+//
+//  HotKeyManager.swift
+//  LynkChat
+//
+//  Created by Zabir Raihan on 26/12/2024.
+//
+
+import AppKit
+import Carbon
+
+class HotKeyManager {
+    private var eventHandler: EventHandlerRef?
+    private var hotKeyRef: EventHotKeyRef?
+    
+    private let hotKeySignature: UInt32 = 0x48554E47 // "HUNG"
+    private let hotKeyID = UInt32(1)
+    
+    private let callback: () -> Void
+    
+    init(callback: @escaping () -> Void) {
+        self.callback = callback
+        registerHotKey()
+    }
+    
+    private func registerHotKey() {
+        // Create hot key ID
+        let hotKeyID = EventHotKeyID(signature: hotKeySignature, id: self.hotKeyID)
+        
+        // Register Option + Space
+        let registerError = RegisterEventHotKey(
+            UInt32(kVK_Space), // Space key
+            UInt32(optionKey), // Option modifier
+            hotKeyID,
+            GetEventDispatcherTarget(),
+            0,
+            &hotKeyRef
+        )
+        
+        guard registerError == noErr else {
+            print("Failed to register hot key")
+            return
+        }
+        
+        // Install event handler
+        let eventSpec = [
+            EventTypeSpec(eventClass: OSType(kEventClassKeyboard),
+                         eventKind: UInt32(kEventHotKeyPressed))
+        ]
+        
+        InstallEventHandler(
+            GetEventDispatcherTarget(),
+            { (_, event, _) -> OSStatus in
+                var hotKeyID = EventHotKeyID()
+                let error = GetEventParameter(
+                    event,
+                    UInt32(kEventParamDirectObject),
+                    UInt32(typeEventHotKeyID),
+                    nil,
+                    MemoryLayout<EventHotKeyID>.size,
+                    nil,
+                    &hotKeyID
+                )
+                
+                if error == noErr {
+                    HotKeyManager.shared?.callback()
+                    return noErr
+                }
+                
+                return OSStatus(eventNotHandledErr)
+            },
+            1,
+            eventSpec,
+            nil,
+            &eventHandler
+        )
+    }
+    
+    deinit {
+        if let hotKeyRef = hotKeyRef {
+            UnregisterEventHotKey(hotKeyRef)
+        }
+        if let eventHandler = eventHandler {
+            RemoveEventHandler(eventHandler)
+        }
+    }
+    
+    // Singleton instance to keep it alive
+    static var shared: HotKeyManager?
+}

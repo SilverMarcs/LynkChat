@@ -40,63 +40,24 @@ import SwiftUI
     
     @MainActor
     @discardableResult
-    func createNewChat(provider: Provider? = nil, model: AIModel? = nil) async -> Chat {
-        let modelContext = DatabaseService.shared.modelContext
-        
-        let provider = provider ?? DatabaseService.shared.getDefaultProvider()
-        let config = ChatConfig(provider: provider, purpose: .chat)
+    func createNewChat(model: ChatModel? = nil) -> Chat {
+        let newChat = Chat()
         
         if let model = model {
-            config.model = model
+            newChat.config.model = model
         }
         
-        let newChat = Chat(config: config)
-        modelContext.insert(newChat)
-        
-        searchText = ""
-        searchTokens = []
-        selections = [newChat]
-        
+        DatabaseService.shared.modelContext.insert(newChat)
+        self.activeChat = newChat
         return newChat
     }
     
     @MainActor
-    @discardableResult
-    func createTemporaryChat() async -> Chat {
-        let modelContext = DatabaseService.shared.modelContext
-        
-        let provider = DatabaseService.shared.getDefaultProvider()
-        let config = ChatConfig(provider: provider, purpose: .chat)
-        
-        let newChat = Chat(config: config)
-        newChat.statusId = ChatStatus.temporary.id
-        
-        modelContext.insert(newChat)
-        
-        searchText = ""
-        searchTokens = []
-        selections = [newChat]
-        
-        return newChat
-    }
-    
-    // MARK: - Navigation
-    func goToNextChat(chats: [Chat]) {
-        guard let activeChat = activeChat,
-              let index = chats.firstIndex(of: activeChat),
-              index < chats.count - 1 else { return }
-        
-        let nextChat = chats[index + 1]
-        selections = [nextChat]
-    }
-
-    func goToPreviousChat(chats: [Chat]) {
-        guard let activeChat = activeChat,
-              let index = chats.firstIndex(of: activeChat),
-              index > 0 else { return }
-        
-        let previousChat = chats[index - 1]
-        selections = [previousChat]
+    func createTemporaryChat() {
+        let newChat = Chat()
+        newChat.status = .temporary
+        DatabaseService.shared.modelContext.insert(newChat)
+        self.activeChat = newChat
     }
     
     // MARK: - Search
