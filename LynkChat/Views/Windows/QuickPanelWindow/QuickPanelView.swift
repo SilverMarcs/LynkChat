@@ -57,9 +57,10 @@ struct QuickPanelView: View {
                 }
             }
         }
-        .onChange(of: isFocused) {
-            isFocused = true
-        }
+        // MUST NOT DO THIS> IT PREVENTS TEXT SELECTION
+//        .onChange(of: isFocused) {
+//            isFocused = true
+//        }
         .onChange(of: chat.inputManager.dataFiles.isEmpty) {
             if chat.inputManager.dataFiles.isEmpty && chat.currentThread.isEmpty {
                 updateHeight(57)

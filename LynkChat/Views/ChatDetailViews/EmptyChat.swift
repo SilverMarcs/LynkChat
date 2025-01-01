@@ -23,9 +23,10 @@ struct EmptyChat: View {
             
             InputArea(chat: chat)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: 700) 
+                .frame(maxWidth: 750) 
                 .roundedRectangleOverlay(radius: 15, style: .circular)
                 .matchedGeometryEffect(id: "inputArea", in: namespace)
+                .padding(.horizontal, 80)
             
             if chat.status == .temporary {
                 VStack {
