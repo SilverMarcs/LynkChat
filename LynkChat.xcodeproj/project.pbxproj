@@ -128,7 +128,6 @@
 		089DB5182CA8EC140013E5C3 /* ImageViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089DB5172CA8EC140013E5C3 /* ImageViewerData.swift */; };
 		08A00FEC2D19A400001D48CB /* InputEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A00FEB2D19A400001D48CB /* InputEditor.swift */; platformFilters = (macos, ); };
 		08A00FEE2D19A416001D48CB /* InputEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A00FED2D19A416001D48CB /* InputEditor.swift */; platformFilters = (ios, xros, ); };
-		08A00FF02D19A580001D48CB /* InputModelPickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A00FEF2D19A580001D48CB /* InputModelPickers.swift */; };
 		08A222832C2AB4FD00D76C8B /* LynkChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A222822C2AB4FD00D76C8B /* LynkChatApp.swift */; };
 		08A222852C2AB4FD00D76C8B /* ChatContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A222842C2AB4FD00D76C8B /* ChatContentView.swift */; platformFilters = (macos, ); };
 		08A222872C2AB4FD00D76C8B /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A222862C2AB4FD00D76C8B /* Chat.swift */; };
@@ -337,7 +336,6 @@
 		089DB5172CA8EC140013E5C3 /* ImageViewerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewerData.swift; sourceTree = "<group>"; };
 		08A00FEB2D19A400001D48CB /* InputEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputEditor.swift; sourceTree = "<group>"; };
 		08A00FED2D19A416001D48CB /* InputEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputEditor.swift; sourceTree = "<group>"; };
-		08A00FEF2D19A580001D48CB /* InputModelPickers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputModelPickers.swift; sourceTree = "<group>"; };
 		08A2227F2C2AB4FD00D76C8B /* LynkChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LynkChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08A222822C2AB4FD00D76C8B /* LynkChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LynkChatApp.swift; sourceTree = "<group>"; };
 		08A222842C2AB4FD00D76C8B /* ChatContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatContentView.swift; sourceTree = "<group>"; };
@@ -721,7 +719,6 @@
 		08A00FEA2D19A3C0001D48CB /* macOS */ = {
 			isa = PBXGroup;
 			children = (
-				08A00FEF2D19A580001D48CB /* InputModelPickers.swift */,
 				08A00FEB2D19A400001D48CB /* InputEditor.swift */,
 				080A187C2D1402DA0081C6B1 /* InputArea.swift */,
 				080E0F742D18593200DCA9E3 /* ToolsBarView.swift */,
@@ -1287,7 +1284,6 @@
 				089C7E142C405B01005E3BE9 /* QuickPanelSettings.swift in Sources */,
 				08D22A9D2D21DD12007F9F4A /* ToolButton.swift in Sources */,
 				08D22A862D212C46007F9F4A /* PlatformAlias.swift in Sources */,
-				08A00FF02D19A580001D48CB /* InputModelPickers.swift in Sources */,
 				0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */,
 				081C1D942C3BD33F0078BB24 /* ChatParameterSettings.swift in Sources */,
 				0853611F2C4A38C9007DAB62 /* GenericSlider.swift in Sources */,
