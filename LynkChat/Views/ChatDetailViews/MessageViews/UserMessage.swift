@@ -29,43 +29,13 @@ struct UserMessage: View {
             
             GroupBox {
                 VStack(alignment: .leading, spacing: 0) {
-//                    if chatVM.searchText.isEmpty {
-//                        Text(group.activeMessage.content)
-//                            .textSelection(.enabled)
-//                            .font(.system(size: config.fontSize))
-//                            #if os(macOS)
-//                            .lineSpacing(2)
-//                            .padding(5)
-//                            #endif
-//                    } else {
-                    // TODO: restore text versoon when crash is fixed
-                    #if os(macOS)
-                    SwiftMarkdownView(
-                        displayedText,
-                        calculatedHeight: $height,
-                        enableMarkdown: false,
-                        fontSize: CGFloat(config.fontSize - 0.5),
-                        highlightString: chatVM.searchText,
-                        baseURL: "LynkChat Web Content",
-                        codeBlockTheme: config.codeBlockTheme
-                    )
-                    .transaction { $0.animation = nil }
-                    .frame(height: group.activeMessage.height, alignment: .top)
-                    .onChange(of: height) {
-                        if height > 0 {
-                            group.activeMessage.height = height
-                        }
-                    }
-                    .padding(3)
-                    #else
                     HighlightableTextView(displayedText, highlightedText: chatVM.searchText)
-                        .textSelection(.enabled)
+//                        .textSelection(.enabled)
                         .font(.system(size: config.fontSize))
                         #if os(macOS)
                         .lineSpacing(2)
                         .padding(5)
                         #endif
-                    #endif
                     
 //                    AutoHeightTextView(text: displayedText, height: $textViewHeight)
 //                        .frame(height: group.activeMessage.height, alignment: .top)
