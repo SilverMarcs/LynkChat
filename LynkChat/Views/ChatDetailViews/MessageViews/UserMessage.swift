@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct UserMessage: View {
     @Environment(\.chat) var chat
@@ -74,6 +75,9 @@ struct UserMessage: View {
                 NavigationButtons(message: group)
             }
             #endif
+            
+            TipView(ContextMenuTip())
+                .frame(width: 300)
         }
         .padding(.leading, leadingPadding)
         .frame(maxWidth: .infinity, alignment: .trailing)

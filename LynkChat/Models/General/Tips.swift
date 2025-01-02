@@ -87,3 +87,23 @@ struct ImageGenToolTip: Tip {
         MaxDisplayCount(2)
     }
 }
+
+struct ContextMenuTip: Tip {
+    var title: Text {
+        Text("Context Menu")
+    }
+    
+    var message: Text? {
+        Text("Right click on messages to access more settings.")
+    }
+    
+    #if os(macOS)
+    var image: Image? {
+        Image(systemName: "contextualmenu.and.cursorarrow")
+    }
+    #endif
+    
+//    var options: [Option] {
+//        MaxDisplayCount(2)
+//    }
+}
