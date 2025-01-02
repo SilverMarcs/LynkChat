@@ -43,16 +43,16 @@ struct ChatDetail: View {
                 }
             }
             .toolbarTitleDisplayMode(.inline)
-            .onChange(of: chat.inputManager.prompt) {
-                if chat.inputManager.state == .normal {
-                    Scroller.scrollToBottom(animated: false)
-                }
-            }
-            .onChange(of: chat.inputManager.dataFiles) {
-                if chat.inputManager.state == .normal {
-                    Scroller.scrollToBottom(animated: false)
-                }
-            }
+//            .onChange(of: chat.inputManager.prompt) {
+//                if chat.inputManager.state == .normal {
+//                    Scroller.scrollToBottom(animated: false)
+//                }
+//            }
+//            .onChange(of: chat.inputManager.dataFiles) {
+//                if chat.inputManager.state == .normal {
+//                    Scroller.scrollToBottom(animated: false)
+//                }
+//            }
             #if os(macOS)
             .onAppear {
                 if chatVM.searchText.isEmpty {
@@ -172,25 +172,32 @@ struct ChatDetail: View {
         }
     }
     
+    @State var change: Bool = false
+    
     var resizingColor: some View {
         Color.clear
-            .frame(height: colorViewHeight)
+//            .frame(height: colorViewHeight)
+//            .frame(width: 200)
+            .frame(height: 1)
+             .modifier(AnimatingCellHeight(height: change ? 475 : 1))
             #if os(macOS)
             .listRowInsets(.init(top: -5, leading: 0, bottom: -5, trailing: 0))
             #endif
             .listRowSeparator(.hidden)
             .onChange(of: chat.isReplying) {
                 if chat.isReplying {
-                    colorViewHeight = 475
-                }
-            }
-            .onChange(of: config.hasUserScrolled) {
-                if config.hasUserScrolled {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                        colorViewHeight = 0
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        change = true
+                    } completion: {
+                        Scroller.scrollToBottom()
                     }
                 }
             }
+            .onChange(of: config.hasUserScrolled) {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    change = false
+                }
+        }
     }
 }
 

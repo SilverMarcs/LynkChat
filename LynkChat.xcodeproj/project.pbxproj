@@ -88,7 +88,6 @@
 		086477582D2523AD00969DBA /* ModelImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477572D2523AD00969DBA /* ModelImageProvider.swift */; };
 		086477602D2528A000969DBA /* ImageRequest+Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0864775F2D2528A000969DBA /* ImageRequest+Response.swift */; };
 		086477632D252A5200969DBA /* GlobalContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477622D252A5200969DBA /* GlobalContainer.swift */; };
-		0865E0962CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */; };
 		0868AC8B2D0B2C7900F8B8FE /* NativeMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */; };
 		086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */; };
 		086E620C2C39BC4500AB4110 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */; };
@@ -101,6 +100,7 @@
 		087F3F8F2CDDEF79001298B3 /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087F3F8E2CDDEF79001298B3 /* SettingsTab.swift */; };
 		087F3F922CDDF00C001298B3 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087F3F912CDDF00C001298B3 /* SettingsVM.swift */; };
 		087F3F942CDE19EC001298B3 /* AboutWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087F3F932CDE19EC001298B3 /* AboutWindow.swift */; platformFilters = (macos, ); };
+		087F99752D26FEFB00D6EDDD /* AnimatingCellHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087F99742D26FEFB00D6EDDD /* AnimatingCellHeight.swift */; };
 		088475342CAE8E57006C04F0 /* AppIconMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088475332CAE8E57006C04F0 /* AppIconMenu.swift */; platformFilters = (ios, xros, ); };
 		08850D8B2CFE0A99004D944C /* PermissionsOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08850D8A2CFE0A99004D944C /* PermissionsOnboarding.swift */; platformFilters = (ios, xros, ); };
 		0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0886050E2CF61E4200A9657C /* ShortcutSettings.swift */; platformFilters = (macos, ); };
@@ -297,7 +297,6 @@
 		086477572D2523AD00969DBA /* ModelImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImageProvider.swift; sourceTree = "<group>"; };
 		0864775F2D2528A000969DBA /* ImageRequest+Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRequest+Response.swift"; sourceTree = "<group>"; };
 		086477622D252A5200969DBA /* GlobalContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalContainer.swift; sourceTree = "<group>"; };
-		0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryBorderedButtonStyle.swift; sourceTree = "<group>"; };
 		0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMarkdownView.swift; sourceTree = "<group>"; };
 		086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryNavigationButtons.swift; sourceTree = "<group>"; };
 		086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessageView.swift; sourceTree = "<group>"; };
@@ -310,6 +309,7 @@
 		087F3F8E2CDDEF79001298B3 /* SettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTab.swift; sourceTree = "<group>"; };
 		087F3F912CDDF00C001298B3 /* SettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
 		087F3F932CDE19EC001298B3 /* AboutWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutWindow.swift; sourceTree = "<group>"; };
+		087F99742D26FEFB00D6EDDD /* AnimatingCellHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatingCellHeight.swift; sourceTree = "<group>"; };
 		088475332CAE8E57006C04F0 /* AppIconMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconMenu.swift; sourceTree = "<group>"; };
 		08850D8A2CFE0A99004D944C /* PermissionsOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsOnboarding.swift; sourceTree = "<group>"; };
 		0886050E2CF61E4200A9657C /* ShortcutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutSettings.swift; sourceTree = "<group>"; };
@@ -663,6 +663,7 @@
 			isa = PBXGroup;
 			children = (
 				08AAFB912C3C88CA002C04E0 /* Buttons */,
+				087F99742D26FEFB00D6EDDD /* AnimatingCellHeight.swift */,
 				0898252E2CE9C0F200980468 /* PageDots.swift */,
 				086477482D2468D500969DBA /* FlowLayout.swift */,
 				0828E5452D157AF900DED52B /* AutoHeightTextView.swift */,
@@ -808,7 +809,6 @@
 		08AAFB912C3C88CA002C04E0 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
-				0865E0952CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift */,
 				08C5AD762CFB7FBF00F5FEA0 /* SelectedButtonStyle.swift */,
 				08FD45592CB8EF680046D165 /* ClickHighlightButton.swift */,
 				081F58B72C6C8FFE00565F20 /* HoverScaleButton.swift */,
@@ -1179,6 +1179,7 @@
 				08D22A7B2D212732007F9F4A /* Logging.swift in Sources */,
 				08A222BE2C2ABDB400D76C8B /* InputManager.swift in Sources */,
 				08F840062C9AA26C000CB498 /* CameraView.swift in Sources */,
+				087F99752D26FEFB00D6EDDD /* AnimatingCellHeight.swift in Sources */,
 				08D22AB02D22F9D3007F9F4A /* InputFileHandler.swift in Sources */,
 				089825252CE9B62900980468 /* APIKeyOnboarding.swift in Sources */,
 				08C49FD82C502EC90085792F /* FileHelper.swift in Sources */,
@@ -1245,7 +1246,6 @@
 				087F3F942CDE19EC001298B3 /* AboutWindow.swift in Sources */,
 				08A313472C4AD03300C3E578 /* ImageInputView.swift in Sources */,
 				08C5AD752CFB792200F5FEA0 /* CustomCopyButton.swift in Sources */,
-				0865E0962CFC903100C40B83 /* PrimaryBorderedButtonStyle.swift in Sources */,
 				08CA42B32CF0F4430073BB01 /* MessageGroup.swift in Sources */,
 				08A77CC92C65A3AD0087D0F3 /* SectionFooterView.swift in Sources */,
 				081CB4E52CFC9A320033E6A3 /* AssistantLabel.swift in Sources */,

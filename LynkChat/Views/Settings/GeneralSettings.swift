@@ -19,7 +19,7 @@ struct GeneralSettings: View {
             Section("Title") {
                 Toggle(isOn: $config.autogenTitle) {
                     Text("Autogenerate Title")
-                    Text("Uses Claude 3.5 Haiku")
+                    Text("Uses Deepseek model")
                 }
             }
             
