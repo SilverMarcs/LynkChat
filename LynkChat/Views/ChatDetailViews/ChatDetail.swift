@@ -28,7 +28,7 @@ struct ChatDetail: View {
             .toolbar {
                 ChatToolbar(chat: chat)
             }
-            .onDrop(of: [.text, .pdf, .image], isTargeted: nil) { providers in
+            .onDrop(of: Array(chat.config.model.supportedTypes), isTargeted: nil) { providers in
                 do {
                    return try chat.inputManager.handleDrop(providers)
                 } catch {

@@ -13,6 +13,7 @@ enum InputError: LocalizedError {
     case unsupportedFileType
     case tooManyFiles(current: Int, max: Int)
     case tooManyAudioFiles(max: Int)
+    case imageNotSupported
     
     var errorDescription: String? {
         switch self {
@@ -26,6 +27,8 @@ enum InputError: LocalizedError {
             return "Cannot add more files. Maximum number of files (\(max)) reached"
         case .tooManyAudioFiles(let max):
             return "Cannot add more audio files. Maximum number of audio files (\(max)) reached"
+        case .imageNotSupported:
+            return "Images are not supported in this context"
         }
     }
     

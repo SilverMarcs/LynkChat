@@ -45,13 +45,13 @@ extension InputManager {
                 throw InputError.tooManyAudioFiles(max: Constants.maxAudioFiles)
             }
         }
-    
+        
         await MainActor.run {
             // Remove existing file with the same name, if any
             if let existingIndex = self.dataFiles.firstIndex(where: { $0.fileName == fileName }) {
                 self.dataFiles.remove(at: existingIndex)
             }
-
+            
             withAnimation {
                 self.dataFiles.insert(typedData, at: 0)
             }
@@ -129,7 +129,7 @@ extension InputManager {
 
 #if os(macOS)
 extension InputManager {
-    func handlePaste(pasteboardItem: NSPasteboardItem) {
+    func handlePaste(pasteboardItem: NSPasteboardItem, supportedTypes: Set<UTType>) {
         Task {
             do {
                 if let fileURLData = pasteboardItem.data(forType: .fileURL),
@@ -145,19 +145,19 @@ extension InputManager {
                     
                     let fileType = try fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier
                     if let fileUTType = fileType.flatMap({ UTType($0) }) {
-                        if fileUTType.conforms(to: .text) ||
-                           fileUTType.conforms(to: .pdf) ||
-                           fileUTType.conforms(to: .audio) {
-                            try await processFile(at: fileURL)
-                        }
-                    }
-                    
-                } else if let imageData = pasteboardItem.data(forType: .png) ?? pasteboardItem.data(forType: .tiff) {
-                    guard imageData.count <= Constants.maxFileSizeBytes else {
-                        throw InputError.fileTooLarge(size: imageData.count, maxSize: Constants.maxFileSizeBytes)
-                    }
-                    try await processData(imageData, fileType: .png, fileName: "Pasted_Image_\(UUID().uuidString).png")
-                }
+                          if supportedTypes.contains(where: { fileUTType.conforms(to: $0) }) {
+                              try await processFile(at: fileURL)
+                          }
+                      }
+                  } else if let imageData = pasteboardItem.data(forType: .png) ?? pasteboardItem.data(forType: .tiff) {
+                      // Check if images are supported
+                      guard supportedTypes.contains(where: { $0.conforms(to: .image) }) else {
+                          throw InputError.imageNotSupported
+                      }
+                      
+                      // Existing size check...
+                      try await processData(imageData, fileType: .png, fileName: "Pasted_Image_\(UUID().uuidString).png")
+                  }
             } catch {
                 print("Error processing paste: \(error)")
             }

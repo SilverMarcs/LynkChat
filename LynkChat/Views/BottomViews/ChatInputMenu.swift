@@ -43,6 +43,7 @@ struct ChatInputMenu: View {
                 } label: {
                     Label("Photos Library", systemImage: "photo.on.rectangle.angled")
                 }
+                .disabled(!chat.config.model.supportedTypes.contains(.image))
                 
                 Button {
                     isFilePickerPresented = true
@@ -78,7 +79,7 @@ struct ChatInputMenu: View {
         }
         .fileImporter(
             isPresented: $isFilePickerPresented,
-            allowedContentTypes: [.text, .pdf, .image, .audio],
+            allowedContentTypes: Array(chat.config.model.supportedTypes),
             allowsMultipleSelection: true
         ) { result in
             switch result {

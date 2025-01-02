@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UniformTypeIdentifiers
 
 enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
     case claude3_5sonnet
@@ -81,6 +82,17 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
             true
         default:
             false
+        }
+    }
+    
+    var supportedTypes: Set<UTType> {
+        switch self {
+        case .claude3_5sonnet, .gpt4o, .gpt4omini, .gemini2Flash:
+            [.text, .pdf, .image, .audio]
+        case .deepseek, .claude3_5haiku:
+            [.text, .pdf, .audio]
+        case .llama3_70:
+            [.text, .pdf]
         }
     }
     

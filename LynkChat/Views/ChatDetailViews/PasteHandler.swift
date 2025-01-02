@@ -43,7 +43,7 @@ struct PasteHandler: ViewModifier {
 
         for item in pasteboardItems {
             if Set(item.types).intersection(handledTypes).isEmpty == false {
-                chat.inputManager.handlePaste(pasteboardItem: item)
+                chat.inputManager.handlePaste(pasteboardItem: item, supportedTypes: chat.config.model.supportedTypes)
                 handledFiles = true
             } else if item.types.contains(.string) {
                 containsText = true

@@ -59,17 +59,17 @@ struct InputArea: View {
                 
                 Spacer()
                 
-                if chat.inputManager.state == .editing {
-                    cancelEditing
-                } else {
-                    Button {
-//                        chat.startDictation()
-                    } label: {
-                        Image(systemName: "mic")
-                    }
-                    .foregroundStyle(.secondary)
-                    .buttonStyle(.plain)
-                }
+//                if chat.inputManager.state == .editing {
+//                    cancelEditing
+//                } else {
+//                    Button {
+////                        chat.startDictation()
+//                    } label: {
+//                        Image(systemName: "mic")
+//                    }
+//                    .foregroundStyle(.secondary)
+//                    .buttonStyle(.plain)
+//                }
                 
                 ActionButton(isStop: chat.isReplying) {
                     chat.isReplying ? chat.stopStreaming() : sendInput()
@@ -115,7 +115,6 @@ struct InputArea: View {
                 .foregroundStyle(.red)
                 .opacity(0.8)
         }
-        .transition(.symbolEffect(.appear))
         .buttonStyle(.plain)
         .keyboardShortcut(.cancelAction)
     }
