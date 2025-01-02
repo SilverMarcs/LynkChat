@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct EmptyChat: View {
     @Bindable var chat: Chat
@@ -33,6 +34,10 @@ struct EmptyChat: View {
                 .matchedGeometryEffect(id: "inputArea", in: namespace)
                 .scaleEffect(1.05)
                 .padding(.horizontal, 90)
+            
+            TipView(PlusButtonTip())
+                .fixedSize()
+//                .frame(height: 30)
             
             if chat.status == .temporary {
                 VStack {

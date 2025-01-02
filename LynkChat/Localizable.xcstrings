@@ -148,13 +148,10 @@
     "Click button on top right of window to save this chat" : {
 
     },
-    "Click on model name or code to edit" : {
+    "Click on %@ to generate a title based on conversation. Configure auto title generation in settings" : {
 
     },
     "Code Block Theme" : {
-
-    },
-    "Code Execution or Search Retrieval cannnot be used with other tools enabled" : {
 
     },
     "Collapse" : {
@@ -262,13 +259,13 @@
     "Generate images from text" : {
 
     },
+    "Generate Title" : {
+
+    },
     "Get Started" : {
 
     },
     "Global shortcut" : {
-
-    },
-    "Go into Models Section to refresh the provider's model list" : {
 
     },
     "Help" : {
@@ -298,7 +295,7 @@
     "Images" : {
 
     },
-    "Images generated here are temporary. Save them to your device if needed" : {
+    "Images generated here are temporary. Save them to your device using the %@ button" : {
 
     },
     "Images will be saved to Downloads folder otherwise" : {
@@ -316,10 +313,7 @@
     "Less" : {
 
     },
-    "Long Tap the plus button to see list of all providers" : {
-
-    },
-    "Long Tap to see list of all models" : {
+    "Long Tap Shortcut" : {
 
     },
     "LynkChat" : {
@@ -406,6 +400,9 @@
     "Quick Panel Shortcut" : {
 
     },
+    "Quickly access all available chat models by holding the %@ button. Configure visible models in settings" : {
+
+    },
     "Ready to Go" : {
 
     },
@@ -439,6 +436,9 @@
     "Save" : {
 
     },
+    "Save to Device" : {
+
+    },
     "Save to Photos Library" : {
 
     },
@@ -455,9 +455,6 @@
 
     },
     "Send a prompt • %@" : {
-
-    },
-    "Set" : {
 
     },
     "Settings" : {
@@ -487,6 +484,9 @@
     "Start a conversation" : {
 
     },
+    "Swipe Actions" : {
+
+    },
     "Swipe left or right on list row for more actions" : {
 
     },
@@ -494,9 +494,6 @@
 
     },
     "Tab" : {
-
-    },
-    "Tap Advanced for configuring plugins" : {
 
     },
     "Temperature" : {
@@ -527,9 +524,6 @@
 
     },
     "Transcription" : {
-
-    },
-    "Unset" : {
 
     },
     "Unstar" : {

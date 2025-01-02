@@ -19,10 +19,14 @@ struct PlusButtonTip: Tip {
 
 struct SwipeActionTip: Tip {
     var title: Text {
+        Text("Swipe Actions")
+    }
+    
+    var message: Text? {
         Text("Swipe left or right on list row for more actions")
     }
     
-    var image: Image {
+    var image: Image? {
         Image(systemName: "hand.draw.fill")
     }
     
@@ -31,116 +35,52 @@ struct SwipeActionTip: Tip {
     }
 }
 
-//struct ChatCardTip: Tip {
-//    var title: Text {
-//        Text("Click on the Chats card to cycle beterrn Starred or Archived chats")
-//    }
-//    
-//    var options: [Option] {
-//        MaxDisplayCount(3)
-//    }
-//}
-
-//struct GenerateTitleTip: Tip {
-//    var title: Text {
-//        Text("Generate Title")
-//    }
-//}
-
-struct GoogleCodeExecutionTip: Tip {
+struct GenerateTitleTip: Tip {
     var title: Text {
-        Text("Code Execution or Search Retrieval cannnot be used with other tools enabled")
+        Text("Generate Title")
     }
-}
-
-// TODO: shwo this in provider default page
-struct ProviderRefreshTip: Tip {
-    var title: Text {
-        Text("Go into Models Section to refresh the provider's model list")
+    
+    var message: Text? {
+        Text("Click on \(Image(systemName: "sparkles")) to generate a title based on conversation. Configure auto title generation in settings")
+    }
+    
+    var image: Image? {
+        Image(systemName: "sparkles")
     }
 }
 
 struct NewChatTip: Tip {
     var title: Text {
-        Text("Long Tap to see list of all models")
+        Text("Long Tap Shortcut")
     }
     
-    var message: Text {
-        Text("Long Tap the plus button to see list of all providers")
+    var message: Text? {
+        Text("Quickly access all available chat models by holding the \(Image(systemName: "square.and.pencil")) button. Configure visible models in settings")
     }
-    
-    var options: [Option] {
-        MaxDisplayCount(3)
-    }
-    
-    var image: Image {
-        Image(systemName: "plus")
-    }
-    
-//    var actions: [Action] {
-//        Action(id: "provider-list", title: "Provider Settings")
-//        Action(id: "faq", title: "View our FAQ")
-//    }
-}
 
-//struct OpenSettingsTip: Tip {
-//    var title: Text {
-//        Text("Configure more in settings")
-//    }
-//    
-//    var actions: [Action] {
-//        Action(id: "launch-settings", title: "Settings (⌘ + ,)")
-//    }
-//    
-//    var options: [Option] {
-//        MaxDisplayCount(3)
-//    }
-//}
-
-//struct QuickPanelTip: Tip {
-//    var title: Text {
-//        Text("Launch Floating Chat Window")
-//    }
-//    
-//    var actions: [Action] {
-//        Action(id: "launch-quick-panel", title: "Open Settings")
-//    }
-//}
-
-//struct ChatInspectorTip: Tip {
-//    var title: Text {
-//        Text("Tap Top left icon of the page to configure chat options like plugins, temperature, max tokens etc")
-//    }
-//    
-//    var options: [Option] {
-//        MaxDisplayCount(3)
-//    }
-//}
-
-struct ChatInspectorToolsTip: Tip {
-    var title: Text {
-        Text("Tap Advanced for configuring plugins")
-    }
-    
     var options: [Option] {
         MaxDisplayCount(2)
     }
-}
-
-struct ModelEditTip: Tip {
-    var title: Text {
-        Text("Click on model name or code to edit")
-    }
     
-    var options: [Option] {
-        MaxDisplayCount(3)
+//    #if !os(macOS)
+    var image: Image? {
+        Image(systemName: "square.and.pencil")
+            .resizable()
     }
+//    #endif
 }
-    
 
 struct ImageGenToolTip: Tip {
     var title: Text {
-        Text("Images generated here are temporary. Save them to your device if needed")
+        Text("Save to Device")
+    }
+    
+    var message: Text? {
+        Text("Images generated here are temporary. Save them to your device using the \(Image(systemName: "square.and.arrow.up.circle.fill")) button")
+    }
+    
+    var image: Image? {
+        Image(systemName: "square.and.arrow.up.circle.fill")
     }
     
     var options: [Option] {

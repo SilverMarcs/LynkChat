@@ -37,9 +37,6 @@ struct InputArea: View {
                     .padding(.vertical, -1)
             }
             
-            TipView(PlusButtonTip())
-                .frame(height: 30)
-            
             InputEditor(chat: chat)
                 .padding(.horizontal, 5)
                 .padding(.vertical, 3)

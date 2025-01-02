@@ -25,6 +25,7 @@ struct ChatInspector: View {
                     title
                     Spacer()
                     generateTitle
+                        .popoverTip(GenerateTitleTip())
                 }
             }
             
