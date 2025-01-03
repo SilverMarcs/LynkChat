@@ -56,9 +56,10 @@ struct InputArea: View {
                 
                 Spacer()
                 
-//                if chat.inputManager.state == .editing {
-//                    cancelEditing
-//                } else {
+                if chat.inputManager.state == .editing {
+                    cancelEditing
+                }
+//                else {
 //                    Button {
 ////                        chat.startDictation()
 //                    } label: {
