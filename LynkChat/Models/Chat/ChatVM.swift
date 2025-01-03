@@ -47,7 +47,6 @@ import SwiftUI
             newChat.config.model = model
         }
         
-        
         globalContainer.mainContext.insert(newChat)
         self.activeChat = newChat
         return newChat

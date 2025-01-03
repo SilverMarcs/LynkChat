@@ -29,7 +29,7 @@ struct StreamHandler {
             switch response {
             case .text(let textResponse):
                 streamText += textResponse.content
-                rupdateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
+                await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
                 
             case .toolCall(let toolCallResponse):
                 assistant.tools?.append(.init(
@@ -58,7 +58,7 @@ struct StreamHandler {
         finaliseStream(streamText: streamText, totalTokens: totalTokens)
     }
     
-//    @MainActor
+    @MainActor
     private func updateUIIfNeeded(streamText: String, lastUpdateTime: inout Date) {
         let currentTime = Date()
         if currentTime.timeIntervalSince(lastUpdateTime) >= Float.UIIpdateInterval {
