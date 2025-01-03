@@ -34,7 +34,7 @@ struct ToolsBarView: View {
                 config.toggleTool(.imageGeneration)
             }
         }
-        .scaleEffect(0.95)
+        .scaleEffect(config.isToolEnabled(.imageGeneration) ? 0.95 : 0.85)
         #if os(macOS)
         .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
         #endif
