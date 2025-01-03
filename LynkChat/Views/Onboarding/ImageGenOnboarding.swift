@@ -14,7 +14,7 @@ struct ImageGenOnboarding: View {
         GenericOnboardingView(
             icon: "photo.stack",
             iconColor: .indigo,
-            title: "Generate Images with DALL-E",
+            title: "Generate Beautiful Images",
             content: {
                 Form {
                     Section {

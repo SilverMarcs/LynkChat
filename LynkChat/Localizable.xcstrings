@@ -211,9 +211,6 @@
     "Delete Message" : {
 
     },
-    "Dock icon reappears on app restart" : {
-
-    },
     "Done" : {
 
     },
@@ -230,6 +227,9 @@
 
     },
     "Enter to send message" : {
+
+    },
+    "Enter to send messages" : {
 
     },
     "Exit SplitView" : {
@@ -272,9 +272,6 @@
 
     },
     "Help" : {
-
-    },
-    "Hide icon in Dock" : {
 
     },
     "If enabled, chat window will be closed when image window is opened and vice versa" : {
@@ -544,9 +541,6 @@
     "Used" : {
 
     },
-    "Uses Deepseek model" : {
-
-    },
     "Using %@" : {
 
     },
@@ -571,9 +565,6 @@
           }
         }
       }
-    },
-    "Windows" : {
-
     },
     "wwwbbccom" : {
 

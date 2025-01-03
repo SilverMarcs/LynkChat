@@ -22,7 +22,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
 
     var name: String {
         switch self {
-        case .flux_schnell: "Flux Schnell"
+        case .flux_schnell: "Flux"
         case .dall_e_2: "DALL-E 2"
         case .dall_e_3: "DALL-E 3"
         }

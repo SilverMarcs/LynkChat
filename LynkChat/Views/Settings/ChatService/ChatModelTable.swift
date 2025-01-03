@@ -44,6 +44,14 @@ struct ChatModelTable: View {
                         Image(systemName: model.supportsTool ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .foregroundStyle(model.supportsTool ? .green : .red)
                     }
+                    .width(50)
+                    .alignment(.center)
+                    
+                    TableColumn("Image") { model in
+                        Image(systemName: model.supportedTypes.contains(.image) ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundStyle(model.supportedTypes.contains(.image) ? .green : .red)
+                    }
+                    .width(50)
                     .alignment(.center)
                     
                     TableColumn("Price") { model in
@@ -52,7 +60,7 @@ struct ChatModelTable: View {
                     .alignment(.trailing)
                 }
             } footer: {
-                SectionFooterView(text: "Prices are for per million tokens for input / output tokens")
+                SectionFooterView(text: "Prices are for per million input or output tokens")
             }
         }
         .formStyle(.grouped)

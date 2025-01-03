@@ -10,17 +10,25 @@ import SwiftData
 
 struct APIKeyOnboarding: View {
     @ObservedObject var modelConfig: ModelConfig = .shared
+    @ObservedObject var config: AppConfig = .shared
     
     var body: some View {
         GenericOnboardingView(
             icon: modelConfig.defaultModel.imageName,
             useSFSymbol: false,
             iconColor: Color(hex: modelConfig.defaultModel.color),
-            title: "Select default model",
+            title: "Chat with various LLMs",
             content: {
                 Form {
                     Section {
                         ModelPicker(selectedModel: $modelConfig.defaultModel)
+                    }
+                    #if os(iOS)
+                    .listRowBackground(Color(.secondarySystemBackground))
+                    #endif
+                    
+                    Section {
+                        Toggle("Enter to send messages", isOn: $config.enterToSend)
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))

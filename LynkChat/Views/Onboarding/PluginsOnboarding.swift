@@ -12,7 +12,7 @@ struct PluginsOnboarding: View {
     
     var body: some View {
         GenericOnboardingView(
-            icon: "hammer.fill",
+            icon: "puzzlepiece.extension.fill",
             iconColor: .cyan,
             title: "Connect LLMs with plugins",
             content: {

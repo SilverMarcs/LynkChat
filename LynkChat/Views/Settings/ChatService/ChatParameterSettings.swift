@@ -41,7 +41,7 @@ struct ChatParameterSettings: View {
                     }
                 )
                 
-               Picker("Max Tokens", selection: $config.maxTokens) {
+                Picker("Max Tokens", selection: $config.maxTokens) {
                     ForEach(MaxTokens.allCases, id: \.self) { option in
                         Text(option.description)
                             .tag(option)

@@ -28,6 +28,7 @@ struct GenericOnboardingView<Content: View>: View {
                             Image(systemName: icon)
                         } else {
                             Image(icon)
+                                .scaleEffect(1.1)
                         }
                     }
                     .foregroundStyle(iconColor)

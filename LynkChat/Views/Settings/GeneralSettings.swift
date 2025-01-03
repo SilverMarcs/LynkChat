@@ -19,31 +19,18 @@ struct GeneralSettings: View {
             Section("Title") {
                 Toggle(isOn: $config.autogenTitle) {
                     Text("Autogenerate Title")
-                    Text("Uses Deepseek model")
+//                    Text("Uses Deepseek model")
                 }
             }
             
-            #if os(macOS)
-            Section("Windows") {
+            Section("Misc") {
+                #if os(macOS)
                 Toggle(isOn: $config.onlyOneWindow) {
                     Text("Show one window at a time")
                     Text("If enabled, chat window will be closed when image window is opened and vice versa")
                 }
-                Toggle(isOn: $config.hideDock) {
-                    Text("Hide icon in Dock")
-                    Text("Dock icon reappears on app restart")
-                }
-                .onChange(of: config.hideDock) {
-                    if config.hideDock {
-                        NSApp.setActivationPolicy(.accessory)
-                    } else {
-                        NSApp.setActivationPolicy(.regular)
-                    }
-                }
-            }
-            #endif
-            
-            Section("Misc") {
+                #endif
+                
                 Toggle(isOn: $config.enterToSend) {
                     Text("Enter to send message")
                     Text("Enabling this makes input area laggy and is not recommended")
