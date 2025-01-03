@@ -18,12 +18,12 @@ struct ImageViewer: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(minWidth: 150, minHeight: 150)
                 .roundedRectangleOverlay(radius: 8)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(.rect(cornerRadius: 8))
         } else {
             Text("Image Unable to Load")
                 .frame(width: 150, height: 150)
                 .background(Color.gray.opacity(0.2))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(.rect(cornerRadius: 8))
         }
     }
 }

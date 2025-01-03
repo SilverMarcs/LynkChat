@@ -26,10 +26,7 @@ struct EmptyChat: View {
             InputArea(chat: chat)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: 750)
-                .background {
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(.background.secondary)
-                }
+                .background(.background.secondary, in: .rect(cornerRadius: 15))
                 .roundedRectangleOverlay(radius: 15, style: .circular)
                 .matchedGeometryEffect(id: "inputArea", in: namespace)
                 .scaleEffect(1.05)

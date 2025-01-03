@@ -28,14 +28,11 @@ struct GenerationView: View {
                     .textSelection(.enabled)
                     .padding(.vertical, 7)
                     .padding(.horizontal, 11)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                        #if os(macOS)
-                            .fill(.background.quinary)
-                        #else
-                            .fill(.background.secondary)
-                        #endif
-                    )
+                    #if os(macOS)
+                    .background(.background.quinary, in: .rect(cornerRadius: 15))
+                    #else
+                    .background(.background.secondary, in: .rect(cornerRadius: 15))
+                    #endif
             }
             
             
@@ -62,10 +59,7 @@ struct GenerationView: View {
                             ForEach(1 ... generation.config.numImages, id: \.self) { image in
                                 ProgressView()
                                     .frame(width: size, height: size)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .fill(.background.quinary)
-                                    )
+                                    .background(.background.quinary, in: .rect(cornerRadius: 15))
                             }
                         } else if generation.state == .success {
                             ForEach(generation.images, id: \.self) { image in

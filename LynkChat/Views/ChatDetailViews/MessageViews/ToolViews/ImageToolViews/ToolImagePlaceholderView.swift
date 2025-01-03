@@ -11,10 +11,7 @@ struct ToolImagePlaceholderView: View {
     var body: some View {
         ProgressView()
             .frame(width: 300, height: 300)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background.quinary)
-            )
+            .background(.background.quinary, in: .rect(cornerRadius: 10))
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }

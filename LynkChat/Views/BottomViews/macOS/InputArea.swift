@@ -105,10 +105,7 @@ struct InputArea: View {
                 .padding(4)
                 .font(.system(size: 12))
                 .padding(.horizontal, 2)
-                .background(
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(.red.quinary)
-                )
+                .background(.red.quinary, in: .rect(cornerRadius: 6))
                 .foregroundStyle(.red)
                 .opacity(0.8)
         }
