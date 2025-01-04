@@ -125,13 +125,14 @@ final class Chat: Equatable, Identifiable, Hashable {
             state = .started
         }
         
+        guard !inputManager.prompt.isEmpty else { return }
+        
         if state == .notStarted {
             state = .waiting
             try? await Task.sleep(nanoseconds: 1_000_000_000)
             state = .started
         }
         
-        guard !inputManager.prompt.isEmpty else { return }
         inputManager.prompt = inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
         errorMessage = ""
         resetScroll()

@@ -15,38 +15,41 @@ struct InputEditor: View {
     @FocusState var isFocused: FocusedField?
     
     var body: some View {
-        // TODO: split into diff view pehraps inloen with multine singlelineviews
-        Group {
-            if config.enterToSend {
-                TextField(placeHolder, text: $chat.inputManager.prompt, axis: .vertical)
-                    .lineLimit(25, reservesSpace: false)
-                    .textFieldStyle(.plain)
-                    .onSubmit {
-                        if NSApp.currentEvent?.modifierFlags.contains(.shift) == true {
-                            chat.inputManager.prompt += "\n"
-                        } else {
-                            Task { @MainActor in
-                                await chat.sendInput()
+        ZStack(alignment: .leading) {
+            if chat.inputManager.prompt.isEmpty {
+                Text(placeHolder)
+                    .padding(.leading, 1)
+                    .foregroundStyle(.placeholder)
+            }
+            
+            TextEditor(text: $chat.inputManager.prompt)
+                .padding(.leading, -4)
+                .frame(maxHeight: 370)
+                .fixedSize(horizontal: false, vertical: true)
+                .scrollContentBackground(.hidden)
+                .apply {
+                    if config.enterToSend {
+                        $0.onChange(of: chat.inputManager.prompt) { oldValue, newValue in
+                            let modifiers = NSApp.currentEvent?.modifierFlags
+                            if modifiers?.contains(.shift) != true && modifiers?.contains(.option) != true {
+                                let hasNewlineAtEnd = chat.inputManager.prompt.last?.isNewline == .some(true)
+                                let isDeleting = oldValue.count > chat.inputManager.prompt.count
+                                
+                                if hasNewlineAtEnd && !isDeleting {
+                                    chat.inputManager.prompt.removeLast()
+                                    isFocused = nil
+                                    Task { @MainActor in
+                                        await chat.sendInput()
+                                    }
+                                }
                             }
                         }
+                    } else {
+                        $0
                     }
-            } else {
-                ZStack(alignment: .leading) {
-                    if chat.inputManager.prompt.isEmpty {
-                        Text(placeHolder)
-                            .padding(.leading, 1)
-                            .foregroundStyle(.placeholder)
-                    }
-                    
-                    TextEditor(text: $chat.inputManager.prompt)
-                        .padding(.leading, -4)
-                        .frame(maxHeight: 370)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .scrollContentBackground(.hidden)
                 }
-                .font(.body)
-            }
         }
+        .font(.body)
         .focused($isFocused, equals: .textEditor)
         .task {
             guard chatVM.selections.count == 1 else { return }
