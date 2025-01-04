@@ -18,13 +18,15 @@ class AppConfig: ObservableObject {
     @AppStorage("finishedInitialSetup") var finishedInitialSetup = false
     
     // Appearance
-    @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .webview
     @AppStorage("codeBlockTheme") var codeBlockTheme: CodeBlockTheme = .atom
     #if os(macOS)
     @AppStorage("fontSize") var fontSize: Double = 13
+    @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .webview
     #else
     @AppStorage("fontSize") var fontSize: Double = 17
+    @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .basic
     #endif
+    
     // General
     @AppStorage("autogenTitle") var autogenTitle: Bool = true
     @AppStorage("enterToSend") var enterToSend: Bool = false

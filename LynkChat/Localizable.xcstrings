@@ -352,9 +352,6 @@
     "N" : {
 
     },
-    "Native uses less memeory but is far less capable" : {
-
-    },
     "New Chat" : {
 
     },
@@ -536,6 +533,9 @@
 
     },
     "Use Localhost" : {
+
+    },
+    "Use webview for best performance" : {
 
     },
     "Used" : {

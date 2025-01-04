@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import MarkdownUI
+import HighlightSwift
 
 struct MDView: View {
     @Environment(\.searchText) private var searchText
@@ -22,7 +24,7 @@ struct MDView: View {
                 .textSelection(.enabled)
                 .font(.system(size: config.fontSize))
                 .lineSpacing(2)
-        case .basic:
+        case .basic where !searchText.isEmpty:
 //            MarkdownView(content: content)
 //                .searchText(searchText)
 //                .codeBlockFontSize(config.fontSize - 1)
@@ -39,6 +41,37 @@ struct MDView: View {
                 .lineSpacing(2)
                 .font(.system(size: config.fontSize))
                 
+        case .basic:
+            Markdown(content)
+                .textSelection(.enabled)
+                .lineSpacing(2)
+                .markdownTextStyle {
+                    FontSize(config.fontSize)
+                }
+                .markdownBlockStyle(\.codeBlock) { configuration in
+                    CodeText(configuration.content)
+                        .codeTextColors(.theme(.atomOne))
+                        .font(.system(size: config.fontSize - 1))
+                        .padding()
+                        .background(.background.secondary.opacity(0.2), in: .rect(cornerRadius: 8))
+                        .background {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(.quaternary, lineWidth: 1)
+                        }
+                        .overlay(alignment: .bottomTrailing) {
+                            Button {
+                                configuration.content.copyToPasteboard()
+                            } label: {
+                                Image(systemName: "document.on.clipboard")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .padding()
+                        }
+                        .padding(.bottom, 12)
+                    
+                }
+            
         case .webview:
             SwiftMarkdownView(
                 content,
