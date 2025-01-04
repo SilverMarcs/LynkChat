@@ -82,8 +82,11 @@ struct ChatInspector: View {
             }
             
             Section {
-                exportButton
-                deleteAllMessages
+                VStack {
+                    exportButton
+                    Divider()
+                    deleteAllMessages
+                }
             }
         }
         .formStyle(.grouped)
@@ -129,26 +132,21 @@ struct ChatInspector: View {
     }
     
     private var deleteAllMessages: some View {
-        Button(action: {}) {
-            Button(role: .destructive) {
-                if chat.isReplying { return }
-                
-                showingDeleteConfirmation.toggle()
-            } label: {
-                Text("Delete All Messages")
-                    .frame(maxWidth: .infinity)
-            }
-            .foregroundStyle(.red)
-            #if os(macOS)
-            .buttonStyle(ClickHighlightButton())
-            #else
-            .buttonStyle(.bordered)
-            #endif
+        Button(role: .destructive) {
+            if chat.isReplying { return }
+            
+            showingDeleteConfirmation.toggle()
+        } label: {
+            Text("Delete All Messages")
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
         }
+        .foregroundStyle(.red)
+        #if os(macOS)
+        .buttonStyle(ClickHighlightButton())
+        #else
         .buttonStyle(.plain)
-        .listRowBackground(EmptyView())
-        .listRowInsets(EdgeInsets())
-        .listRowSeparator(.hidden)
+        #endif
         .confirmationDialog("Are you sure you want to delete all messages?", isPresented: $showingDeleteConfirmation) {
             Button("Delete All", role: .destructive) {
                 chat.deleteAllMessages()
@@ -160,25 +158,19 @@ struct ChatInspector: View {
     }
     
     private var exportButton: some View {
-        Button(action: {}) {
-            Button {
-                isExportingMarkdown = true
-            } label: {
-//                Label("Export Markdown", systemImage: "richtext.page")
-                Text("Export Markdown")
-                    .frame(maxWidth: .infinity)
-            }
-            #if os(macOS)
-            .buttonStyle(ClickHighlightButton())
-            #else
-            .buttonStyle(.bordered)
-            #endif
-            .foregroundStyle(.accent)
+        Button {
+            isExportingMarkdown = true
+        } label: {
+            Text("Export Markdown")
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
         }
+        #if os(macOS)
+        .buttonStyle(ClickHighlightButton())
+        #else
         .buttonStyle(.plain)
-        .listRowBackground(EmptyView())
-        .listRowInsets(EdgeInsets())
-        .listRowSeparator(.hidden)
+        #endif
+        .foregroundStyle(.accent)
         .fileExporter(
             isPresented: $isExportingMarkdown,
             document: MarkdownBackup(chat: chat),
@@ -196,7 +188,5 @@ struct ChatInspector: View {
 }
 
 #Preview {
-//    @Previewable @State var chat = Chat()
-    
     ChatInspector(chat: Chat())
 }
