@@ -58,7 +58,7 @@ struct ChatParameterSettings: View {
                     Button {
                         config.systemPrompt = String.systemPrompt
                     } label: {
-                        Text("Reset to Default")
+                        Text("Default")
                             .fontWeight(.regular)
                     }
                 }
@@ -70,9 +70,11 @@ struct ChatParameterSettings: View {
     }
     
     var sysPrompt: some View {
-        TextField("System Prompt", text: $config.systemPrompt, axis: .vertical)
-            .lineLimit(lineLimit, reservesSpace: true)
+        TextEditor(text: $config.systemPrompt)
+            .font(.body)
+            .scrollContentBackground(.hidden)
             .labelsHidden()
+            .frame(maxHeight: 275)
     }
     
     var lineLimit: Int {

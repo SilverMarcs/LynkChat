@@ -19,12 +19,12 @@ struct SearchResultsPopover: View {
                         AsyncImage(url: URL(string: result.faviconURL)) { image in
                             image
                                 .resizable()
-                                .frame(width: 18, height: 18)
+                                .frame(width: 19, height: 19)
                         } placeholder: {
                             Image(systemName: "globe")
-                                .frame(width: 18, height: 18)
+                                .frame(width: 19, height: 19)
                         }
-                        .padding(.top, 2)
+                        .padding(.top, 3)
                         
                         VStack(alignment: .leading) {
                             Text(result.title)

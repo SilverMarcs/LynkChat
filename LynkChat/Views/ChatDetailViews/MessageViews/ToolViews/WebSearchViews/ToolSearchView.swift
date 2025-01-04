@@ -9,6 +9,8 @@ import SwiftUI
 
 // TODO: make building this view async?
 struct ToolSearchView: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
     let searchString: String
     @State private var results: [SearchResult] = []
     @State private var showingPopover = false
@@ -63,6 +65,8 @@ struct ToolSearchView: View {
                 .buttonStyle(.plain)
                 .popover(isPresented: $showingPopover) {
                     SearchResultsPopover(results: results)
+                        .presentationDetents(horizontalSizeClass == .compact ? [.medium] : [.large])
+                        .presentationDragIndicator(.hidden)
                 }
             }
         }
