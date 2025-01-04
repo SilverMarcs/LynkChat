@@ -77,6 +77,7 @@
 		085524E42C4ED2B800CBB827 /* ChatCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085524E32C4ED2B800CBB827 /* ChatCommands.swift */; };
 		085524E82C4ED61F00CBB827 /* ChatToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085524E72C4ED61F00CBB827 /* ChatToolbar.swift */; };
 		085645442C3F98DF00ED84DA /* TitleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085645432C3F98DF00ED84DA /* TitleGenerator.swift */; };
+		085AAE3A2D29103D00AB64B0 /* Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085AAE392D29103D00AB64B0 /* Constraints.swift */; };
 		085C15EF2D1DEE02007245CD /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15EE2D1DEE02007245CD /* OpenAIService.swift */; };
 		085C15F12D1DF0BC007245CD /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15F02D1DF0BC007245CD /* APIRequest.swift */; };
 		085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */; };
@@ -284,6 +285,7 @@
 		085524E32C4ED2B800CBB827 /* ChatCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCommands.swift; sourceTree = "<group>"; };
 		085524E72C4ED61F00CBB827 /* ChatToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatToolbar.swift; sourceTree = "<group>"; };
 		085645432C3F98DF00ED84DA /* TitleGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleGenerator.swift; sourceTree = "<group>"; };
+		085AAE392D29103D00AB64B0 /* Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constraints.swift; sourceTree = "<group>"; };
 		085C15EE2D1DEE02007245CD /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
 		085C15F02D1DF0BC007245CD /* APIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 		085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerStepper.swift; sourceTree = "<group>"; };
@@ -699,6 +701,7 @@
 		08A00FE92D19A3BB001D48CB /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				085AAE392D29103D00AB64B0 /* Constraints.swift */,
 				08A00FED2D19A416001D48CB /* InputEditor.swift */,
 				08C800392C36BA30009581C5 /* InputArea.swift */,
 				08F840052C9AA26C000CB498 /* CameraView.swift */,
@@ -1104,6 +1107,7 @@
 				082181602C3880F700171BF3 /* RoundedRectangleOverlay.swift in Sources */,
 				080E0F752D18593200DCA9E3 /* ToolsBarView.swift in Sources */,
 				08256BF72D1D34FA00C54BA1 /* APIResponse.swift in Sources */,
+				085AAE3A2D29103D00AB64B0 /* Constraints.swift in Sources */,
 				08B8DE132C97F3550041A690 /* MDView.swift in Sources */,
 				087F3F922CDDF00C001298B3 /* SettingsVM.swift in Sources */,
 				08AAFB9A2C3D0017002C04E0 /* ListCard.swift in Sources */,
