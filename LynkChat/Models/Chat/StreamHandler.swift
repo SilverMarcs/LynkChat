@@ -93,7 +93,7 @@ struct StreamHandler {
             maxTokens: chat.config.maxTokens.rawValue,
             system: date + "\n" + chat.config.systemPrompt + "\n" + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
             stream: stream,
-            tools: chat.config.enabledTools.map { $0.rawValue }
+            tools: chat.config.model.supportsTool ? chat.config.enabledTools.map { $0.rawValue } : []
         )
     }
     

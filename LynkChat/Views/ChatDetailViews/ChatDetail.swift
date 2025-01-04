@@ -74,9 +74,6 @@ struct ChatDetail: View {
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
                     Scroller.scrollToBottom(delay: 0.1)
             }
-            #if !os(visionOS)
-            .scrollDismissesKeyboard(.immediately)
-            #endif
             #endif
         }
     }
@@ -127,7 +124,16 @@ struct ChatDetail: View {
             list
         }
         #else
-        list
+        VStack(spacing: 0) {
+            list
+            
+            Spacer()
+        }
+        .padding(.bottom, 0) // Ensure there's no padding at the bottom.
+        .scrollDismissesKeyboard(.interactively)
+        .bottomBar {
+            InputArea(chat: chat)
+        }
         #endif
     }
     
@@ -162,17 +168,17 @@ struct ChatDetail: View {
                 .id(String.bottomID)
                 .listRowSeparator(.hidden)
         }
+        #if os(macOS)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if chat.status != .quick {
                 InputArea(chat: chat)
-                    #if os(macOS)
                     .roundedRectangleOverlay(radius: 15, opacity: 0.4, style: .circular)
                     .modifier(CommonInputStyling())
-                    #endif
                     .matchedGeometryEffect(id: "inputArea", in: inputTransition)
             }
         }
         .transition(.opacity)
+        #endif
     }
     
     private func loadMoreMessages() {

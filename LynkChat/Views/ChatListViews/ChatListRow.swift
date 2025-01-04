@@ -43,6 +43,7 @@ struct ChatListRow: View {
             Button {
                 Task {
                     let newChat = await chat.copy()
+                    newChat.title = "(Ψ) " + newChat.title
                     chatVM.fork(newChat: newChat)
                 }
             } label: {

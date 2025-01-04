@@ -22,6 +22,7 @@ struct ForkButton: View {
                 isForking = true
                 Task {
                     if let newChat = await copyChat() {
+                        newChat.title = "(Ψ) " + newChat.title
                         chatVM.fork(newChat: newChat)
                         isForking = false
                     }

@@ -15,5 +15,9 @@ class ChatConfigDefaults: ObservableObject {
     @AppStorage("maxTokens") var maxTokens: MaxTokens = .t4096
     
     @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses fairly concise."
+    #if os(macOS)
     @AppStorage("systemPrompt") var systemPrompt: String = String.systemPrompt
+    #else
+    @AppStorage("systemPrompt") var systemPrompt: String = String.systemPrompt + "\n\n + Be concise with your responses"
+    #endif
 }

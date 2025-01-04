@@ -162,6 +162,7 @@ struct QuickPanelView: View {
         
         Task {
             let newChat = await chat.copy()
+            newChat.title = "(↯) " + newChat.title
             chatVM.fork(newChat: newChat)
             resetChat()
             
