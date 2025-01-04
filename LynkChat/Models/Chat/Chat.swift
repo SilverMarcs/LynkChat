@@ -57,8 +57,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     var isReplying: Bool {
         currentThread.last?.activeMessage.isReplying ?? false
     }
-    
-    var state: ChatState = ChatState.notStarted
 
     @Transient
     var inputManager = InputManager()
@@ -121,18 +119,6 @@ final class Chat: Equatable, Identifiable, Hashable {
 
     @MainActor
     func sendInput() async {
-        if status == .quick {
-            state = .started
-        }
-        
-        guard !inputManager.prompt.isEmpty else { return }
-        
-        if state == .notStarted {
-            state = .waiting
-//            try? await Task.sleep(nanoseconds: 1_000_000_000)
-            state = .started
-        }
-        
         inputManager.prompt = inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
         errorMessage = ""
         resetScroll()
@@ -248,7 +234,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         if currentThread.count == 1 {
             rootMessage = nil
-            state = .notStarted
         } else {
             let secondToLastGroup = currentThread[currentThread.count - 2]
             secondToLastGroup.activeMessage.next = nil
@@ -276,7 +261,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         stopStreaming()
         errorMessage = ""
         totalTokens = 0
-        state = .notStarted
     }
     
     func scrollDown() {

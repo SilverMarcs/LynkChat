@@ -24,7 +24,7 @@ struct ChatDetail: View {
     var body: some View {
         ScrollViewReader { proxy in
             content
-                .animation(.default, value: chat.state == .waiting || chat.state == .started)
+                .animation(.default, value: chat.currentThread.isEmpty)
             .toolbar {
                 ChatToolbar(chat: chat)
             }
@@ -106,18 +106,8 @@ struct ChatDetail: View {
     
     @ViewBuilder
     var content: some View {
-        if chat.state == .waiting {
-            ProgressView()
-//                .padding(.top, 50)
-
-                #if os(macOS)
-                .toolbarBackground(.hidden, for: .windowToolbar)
-                #endif
-                .controlSize(.extraLarge)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
         #if os(macOS) || os(visionOS)
-        if chat.state == .notStarted {
+        if chat.currentThread.isEmpty {
             EmptyChat(chat: chat, namespace: inputTransition)
                 .transition(.opacity)
         } else {
@@ -125,7 +115,7 @@ struct ChatDetail: View {
         }
         #else
         VStack(spacing: 0) {
-            if chat.state == .notStarted {
+            if chat.currentThread.isEmpty {
                 VStack {
                     Text("Start a conversation")
                         .font(.title)
