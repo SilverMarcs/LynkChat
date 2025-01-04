@@ -47,11 +47,12 @@ class AppConfig: ObservableObject {
     
     // DEBUG
     @AppStorage("myApiKey") var myApiKey: String = ""
-    @AppStorage("useLocalhost") var useLocalhost = true
     @AppStorage("reset tips") var resetTips = false
     #if DEBUG
+    @AppStorage("useLocalhost") var useLocalhost = false
     @AppStorage("printDebgLogs") var printDebgLogs = true
     #else
+    @AppStorage("useLocalhost") var useLocalhost = false
     @AppStorage("printDebgLogs") var printDebgLogs = false
     #endif
     

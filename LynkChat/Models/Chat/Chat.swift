@@ -129,7 +129,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         if state == .notStarted {
             state = .waiting
-            try? await Task.sleep(nanoseconds: 1_000_000_000)
+//            try? await Task.sleep(nanoseconds: 1_000_000_000)
             state = .started
         }
         
