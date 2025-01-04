@@ -257,12 +257,13 @@ extension UIBottomBar {
                 backgroundView.trailingAnchor.constraint(equalTo: window.trailingAnchor),
                 backgroundView.bottomAnchor.constraint(equalTo: window.bottomAnchor),
                 
-                // hostingView | keyboard (V)
-                barView.bottomAnchor.constraint(equalTo: keyboardLayoutGuide.topAnchor),
-                
-                // Stable horizontal positioning relative to window
+                // Stable positioning relative to window and keyboard
                 barView.leadingAnchor.constraint(equalTo: window.leadingAnchor),
                 barView.trailingAnchor.constraint(equalTo: window.trailingAnchor),
+                barView.bottomAnchor.constraint(equalTo: keyboardLayoutGuide.topAnchor),
+                
+                // Add height constraint to ensure content expands upward
+                backgroundView.heightAnchor.constraint(greaterThanOrEqualTo: barView.heightAnchor),
                 
                 // hostingView <= safeArea
                 barView.topAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.topAnchor),

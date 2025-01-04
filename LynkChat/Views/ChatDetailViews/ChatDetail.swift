@@ -135,8 +135,8 @@ struct ChatDetail: View {
                 Spacer()
         }
         .padding(.bottom, 0) // Ensure there's no padding at the bottom.
-        .scrollDismissesKeyboard(.interactively)
-        .bottomBar {
+        .scrollDismissesKeyboard(.immediately)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             InputArea(chat: chat)
         }
         #endif
