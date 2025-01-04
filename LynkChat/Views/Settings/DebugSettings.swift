@@ -34,6 +34,14 @@ struct DebugSettings: View {
                 Text("First Launch Completed: \(config.finishedInitialSetup)")
             }
             
+            LabeledContent {
+                Button("Reset Tips") {
+                    config.resetTips.toggle()
+                }
+            } label: {
+                Text("Will reset tips on next launch: \(config.resetTips)")
+            }
+            
             Toggle("Print debug lines", isOn: $config.printDebgLogs)
         }
         .formStyle(.grouped)
