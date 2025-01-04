@@ -15,6 +15,7 @@ struct ActionButton: View {
         Button(action: action) {
             Image(systemName: isStop ? "stop.circle.fill" : "arrow.up.circle.fill")
                 .font(.title).fontWeight(.semibold)
+//                .font(.system(size: 20, weight: .regular))
         }
         .foregroundStyle((isStop ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (isStop ? .red : .blue))
         .opacity(0.85)

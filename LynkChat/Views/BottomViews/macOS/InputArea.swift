@@ -117,8 +117,14 @@ struct InputArea: View {
     private var configInfo: some View {
         HStack(spacing: 4) {
             if chat.config.model.supportsTool {
+                Divider()
+                    .frame(height: 15)
+                
                 ToolsBarView(config: $chat.config)
             }
+            
+            Divider()
+                .frame(height: 15)
             
             ModelPicker(selectedModel: $chat.config.model)
             

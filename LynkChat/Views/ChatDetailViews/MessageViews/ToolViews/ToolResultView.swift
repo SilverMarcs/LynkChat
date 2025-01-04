@@ -32,7 +32,7 @@ struct ToolResultView: View {
 
         case .scrapeLinks:
             #if DEBUG
-            Text(chatTool.result ?? "Couldnt scrapes")
+            Text(chatTool.result ?? "Couldnt scrape")
             #else
             EmptyView()
             #endif
