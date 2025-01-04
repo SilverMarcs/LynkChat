@@ -16,7 +16,7 @@ struct InputEditor: View {
     
     var body: some View {
         // TODO: split into diff view pehraps inloen with multine singlelineviews
-        TextField("Send a prompt • \(chat.config.model.name)", text: $chat.inputManager.prompt, axis: .vertical)
+        TextField("Send a prompt", text: $chat.inputManager.prompt, axis: .vertical)
             .padding(.leading, 6)
             .focused($isFocused, equals: .textEditor)
             .lineLimit(10, reservesSpace: false)

@@ -55,6 +55,9 @@
     "⌥ + Space" : {
 
     },
+    "123" : {
+
+    },
     "About" : {
 
     },
@@ -457,7 +460,7 @@
     "Select Text" : {
 
     },
-    "Send a prompt • %@" : {
+    "Send a prompt" : {
 
     },
     "Settings" : {
