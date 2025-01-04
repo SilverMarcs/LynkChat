@@ -13,6 +13,7 @@ struct ChatList: View {
     @Environment(\.isSearching) private var isSearching
     @Environment(ChatVM.self) var chatVM
     @Environment(\.modelContext) var modelContext
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     @ObservedObject var config = AppConfig.shared
     
@@ -53,17 +54,17 @@ struct ChatList: View {
         .toolbar {
             toolbar
         }
+        .task {
+            if horizontalSizeClass == .regular, let first = chats.first, chatVM.selections.isEmpty {
+                chatVM.selections = [first]
+            }
+        }
         #if os(macOS)
         .contextMenu(forSelectionType: Chat.self) { item in
             
         } primaryAction: { items in
             for item in items {
                 openWindow(value: item.id)
-            }
-        }
-        .task {
-            if let first = chats.first, chatVM.selections.isEmpty {
-                chatVM.selections = [first]
             }
         }
         #else

@@ -19,6 +19,7 @@ struct ToolImageView: View {
                 if let image = phase.image {
                     image
                         .resizable()
+                        .popoverTip(ImageGenToolTip())
                 } else if phase.error != nil {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
@@ -28,7 +29,6 @@ struct ToolImageView: View {
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(.red)
                             .frame(width: 75, height: 75)
-                            .popoverTip(ImageGenToolTip())
                     }
                 } else {
                     ToolImagePlaceholderView()

@@ -76,11 +76,11 @@ struct ImageGenToolTip: Tip {
     }
     
     var message: Text? {
-        Text("Images generated here are temporary. Save them to your device using the \(Image(systemName: "square.and.arrow.up.circle.fill")) button")
+        Text("Images generated here are temporary. Save them to your device using the \(Image(systemName: "square.and.arrow.down")) button")
     }
     
     var image: Image? {
-        Image(systemName: "square.and.arrow.up.circle.fill")
+        Image(systemName: "square.and.arrow.down")
     }
     
     var options: [Option] {
