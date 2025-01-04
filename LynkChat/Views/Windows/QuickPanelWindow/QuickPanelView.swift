@@ -123,9 +123,9 @@ struct QuickPanelView: View {
                 Group {
                     Text(chat.config.model.name)
                     
-//                    ForEach(chat.config.tools.enabledTools) { tool in
-//                        Image(systemName: tool.icon)
-//                    }
+                    ForEach(Array(chat.config.enabledTools)) { tool in
+                        Image(systemName: tool.iconName)
+                    }
                 }
                 .font(.caption)
                 

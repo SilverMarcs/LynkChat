@@ -8,11 +8,13 @@
 import Foundation
 import SwiftUI
 
-enum Tool: String, CaseIterable, Codable {
+enum Tool: String, Identifiable, CaseIterable, Codable {
     case webSearch
     case scrapeLinks
     case imageGeneration
     case transcribe
+    
+    var  id: Self { self }
     
     var title: String {
         switch self {
@@ -34,7 +36,8 @@ enum Tool: String, CaseIterable, Codable {
     
     var iconName: String {
         switch self {
-        case .webSearch, .scrapeLinks: "network"
+        case .webSearch: "network"
+        case .scrapeLinks: "link"
         case .imageGeneration: "photo.stack"
         case .transcribe: "waveform"
         }
