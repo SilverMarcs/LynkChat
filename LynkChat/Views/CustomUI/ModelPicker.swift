@@ -31,5 +31,6 @@ struct ModelPicker: View {
                 }
             }
         }
+        .menuOrder(.fixed)
     }
 }

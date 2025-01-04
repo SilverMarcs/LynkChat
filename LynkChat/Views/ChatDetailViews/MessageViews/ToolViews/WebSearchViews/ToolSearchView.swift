@@ -32,9 +32,9 @@ struct ToolSearchView: View {
                             Text(result.displayDomain)
                                 .font(.subheadline)
                         }
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 3)
-                        .background(.quinary)
+                        .padding(.horizontal, padding)
+                        .padding(.vertical, padding - 2)
+                        .background(.quinary.opacity(0.8))
                         .cornerRadius(10)
                         #if os(macOS)
                         .background {
@@ -69,6 +69,14 @@ struct ToolSearchView: View {
         .task {
             await parseResults()
         }
+    }
+    
+    var padding: CGFloat {
+        #if os(macOS)
+        return 5
+        #else
+        return 7
+        #endif
     }
     
     // TODO: must make async

@@ -8,7 +8,7 @@
 import Foundation
 import UniformTypeIdentifiers
 
-enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
+enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImageProvider {
     case claude3_5sonnet
     case claude3_5haiku
     case gpt4o
@@ -16,6 +16,10 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     case gemini2Flash
     case deepseek
     case llama3_70
+    
+    static var allCases: [ChatModel] {
+        [.claude3_5haiku, .claude3_5sonnet, .gpt4omini, .gpt4o, .gemini2Flash, .deepseek, .llama3_70]
+    }
     
     var id: String {
         switch self {
