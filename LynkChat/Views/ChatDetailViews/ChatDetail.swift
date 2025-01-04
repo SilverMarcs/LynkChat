@@ -24,7 +24,7 @@ struct ChatDetail: View {
     var body: some View {
         ScrollViewReader { proxy in
             content
-                .animation(.default, value: chat.currentThread.isEmpty)
+                .animation(.default, value: chat.state == .waiting || chat.state == .started)
             .toolbar {
                 ChatToolbar(chat: chat)
             }
@@ -109,8 +109,18 @@ struct ChatDetail: View {
     
     @ViewBuilder
     var content: some View {
+        if chat.state == .waiting {
+            ProgressView()
+//                .padding(.top, 50)
+
+                #if os(macOS)
+                .toolbarBackground(.hidden, for: .windowToolbar)
+                #endif
+                .controlSize(.extraLarge)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
         #if os(macOS) || os(visionOS)
-        if chat.currentThread.isEmpty {
+        if chat.state == .notStarted {
             EmptyChat(chat: chat, namespace: inputTransition)
                 .transition(.opacity)
         } else {
@@ -156,7 +166,7 @@ struct ChatDetail: View {
             if chat.status != .quick {
                 InputArea(chat: chat)
                     #if os(macOS)
-                    .roundedRectangleOverlay(radius: 15, opacity: 0.6, style: .circular)
+                    .roundedRectangleOverlay(radius: 15, opacity: 0.4, style: .circular)
                     .modifier(CommonInputStyling())
                     #endif
                     .matchedGeometryEffect(id: "inputArea", in: inputTransition)

@@ -41,6 +41,7 @@ struct GenericOnboardingView<Content: View>: View {
                 .frame(height: geometry.size.height * 0.25)
                 .animation(.default, value: icon)
                 .animation(.default, value: iconColor)
+                .multilineTextAlignment(.center)
                 
                 // Content
                 content()

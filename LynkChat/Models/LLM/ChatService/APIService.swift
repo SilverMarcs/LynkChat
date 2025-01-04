@@ -120,10 +120,10 @@ extension String {
         if AppConfig.shared.useLocalhost {
             "http://localhost:3000/api"
         } else {
-            "https://llm-api-server.vercel.app/api"
+            "https://lynkchat-server.vercel.app/api"
         }
     }
     #else
-    static let apiHost = "https://llm-api-server.vercel.app/api"
+    static let apiHost = "https://lynkchat-server.vercel.app/api"
     #endif
 }

@@ -11,7 +11,7 @@ struct ChatToolView: View {
     var tools: [ChatTool]
     
     var body: some View {
-        HStack {
+        FlowLayout {
             ForEach(tools) { chatTool in
                 ToolButton(chatTool: chatTool)
                     .transaction { $0.animation = nil }

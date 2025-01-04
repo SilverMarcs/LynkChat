@@ -304,6 +304,9 @@
     "Input Box" : {
 
     },
+    "Keep disabled for better performance." : {
+
+    },
     "Keyboard Shortcuts" : {
 
     },
@@ -388,7 +391,7 @@
     "Price" : {
 
     },
-    "Print debug ines" : {
+    "Print debug lines" : {
 
     },
     "Prompt" : {

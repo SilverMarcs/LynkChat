@@ -152,7 +152,7 @@ struct QuickPanelView: View {
         updateHeight(57)
         
         chat.deleteAllMessages()
-        chat.inputManager.dataFiles.removeAll()
+//        chat.inputManager.dataFiles.removeAll()
         chat.config.model = ModelConfig.shared.quickModel
     }
     

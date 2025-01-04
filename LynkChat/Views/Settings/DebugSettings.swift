@@ -34,7 +34,7 @@ struct DebugSettings: View {
                 Text("First Launch Completed: \(config.finishedInitialSetup)")
             }
             
-            Toggle("Print debug ines", isOn: $config.printDebgLogs)
+            Toggle("Print debug lines", isOn: $config.printDebgLogs)
         }
         .formStyle(.grouped)
         .navigationTitle("Debug")

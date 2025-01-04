@@ -16,8 +16,6 @@ struct ChatListRow: View {
     
     @Bindable var chat: Chat
     
-    var swipeTip = SwipeActionTip()
-    
     @State private var isAnimating = false
        @State private var previousTitle = ""
 

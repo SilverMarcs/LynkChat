@@ -29,6 +29,10 @@ struct APIKeyOnboarding: View {
                     
                     Section {
                         Toggle("Enter to send messages", isOn: $config.enterToSend)
+                    } footer: {
+                        #if os(macOS)
+                        Text("Keep disabled for better performance.")
+                        #endif
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))
