@@ -125,9 +125,24 @@ struct ChatDetail: View {
         }
         #else
         VStack(spacing: 0) {
-            list
+            if chat.state == .notStarted {
+                VStack {
+                    Text("Start a conversation")
+                        .font(.title)
+                    
+                    HStack(spacing: 15) {
+                        ToolsBarView(config: $chat.config)
+                            .scaleEffect(1.4)
+                    }
+                    .padding(.top, 10)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
             
-            Spacer()
+                list
+                
+                Spacer()
         }
         .padding(.bottom, 0) // Ensure there's no padding at the bottom.
         .scrollDismissesKeyboard(.interactively)
