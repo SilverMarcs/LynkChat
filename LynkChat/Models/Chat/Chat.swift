@@ -119,24 +119,20 @@ final class Chat: Equatable, Identifiable, Hashable {
 
     @MainActor
     func sendInput() async {
-        // Guard against empty prompt
         guard !inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
         }
         
-        // Store local variables before reset
-        let trimmedPrompt = inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
-        let dataFiles = inputManager.dataFiles
-        let editingMessage = inputManager.editingMessage
-        
-        inputManager.reset()
         errorMessage = ""
         resetScroll()
         
-        if let editingMessage = editingMessage {
+        if let editingMessage = inputManager.editingMessage {
             await editMessage(editingMessage)
         } else {
-            let userMessage = Message.user(content: trimmedPrompt, dataFiles: dataFiles)
+            let userMessage = Message.user(
+                content: inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines),
+                dataFiles: inputManager.dataFiles
+            )
             let userGroup = MessageGroup(message: userMessage)
             
             if rootMessage == nil {
@@ -152,6 +148,9 @@ final class Chat: Equatable, Identifiable, Hashable {
              
             await processRequest(message: assistantMessage)
         }
+        
+        // Reset inputManager after everything is done
+        inputManager.reset()
     }
 
     @MainActor
