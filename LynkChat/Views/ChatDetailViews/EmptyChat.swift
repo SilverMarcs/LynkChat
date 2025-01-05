@@ -10,7 +10,6 @@ import TipKit
 
 struct EmptyChat: View {
     @Bindable var chat: Chat
-    var namespace: Namespace.ID
     
     var body: some View {
         VStack {
@@ -58,6 +57,6 @@ struct EmptyChat: View {
 #Preview {
     @Previewable @Namespace var inputTransition
     
-    EmptyChat(chat: .mockChat, namespace: inputTransition)
+    EmptyChat(chat: .mockChat)
         .environment(ChatVM())
 }

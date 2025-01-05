@@ -13,6 +13,7 @@ class AppConfig: ObservableObject {
     
     var proxy: ScrollViewProxy?
     @Published var hasUserScrolled = false
+    @Published var expandColor = false
     @Published var showCamera = false
     
     @AppStorage("finishedInitialSetup") var finishedInitialSetup = false

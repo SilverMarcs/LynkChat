@@ -25,6 +25,11 @@ struct StreamHandler {
         
         let apiRequest = await createAPIRequest(stream: true)
         
+        DispatchQueue.main.async {
+            AppConfig.shared.expandColor = true
+            Scroller.scrollToBottom()
+        }
+        
         for try await response in APIService.self.streamResponse(from: apiRequest) {
             switch response {
             case .text(let textResponse):

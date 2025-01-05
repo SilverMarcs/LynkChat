@@ -7,25 +7,6 @@
 
 import SwiftUI
 
-// TODO: Deprecate this
-//func scrollToBottom(proxy: ScrollViewProxy, id: String = String.bottomID, anchor: UnitPoint = .bottom, animated: Bool = true, delay: TimeInterval = 0.0) {
-//    let action = {
-//        if animated {
-//            withAnimation {
-//                proxy.scrollTo(id, anchor: anchor)
-//            }
-//        } else {
-//            proxy.scrollTo(id, anchor: anchor)
-//        }
-//    }
-//    
-//    if delay > 0 {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: action)
-//    } else {
-//        DispatchQueue.main.async(execute: action)
-//    }
-//}
-
 enum Scroller<ID: Hashable> {
     static func scroll(to anchor: UnitPoint, of id: ID, animated: Bool = true, delay: TimeInterval = 0.0) {
         let action = {

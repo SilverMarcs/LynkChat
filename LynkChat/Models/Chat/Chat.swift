@@ -124,6 +124,10 @@ final class Chat: Equatable, Identifiable, Hashable {
             return
         }
         
+        withAnimation {
+            AppConfig.shared.expandColor = true
+        }
+        
         errorMessage = ""
         resetScroll()
         

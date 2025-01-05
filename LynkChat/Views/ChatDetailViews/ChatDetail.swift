@@ -19,8 +19,6 @@ struct ChatDetail: View {
     @State private var numberOfMessagesToShow = 2
     @State private var colorViewHeight: CGFloat = 0 // Initial height
     
-    @Namespace private var inputTransition
-    
     var body: some View {
         ScrollViewReader { proxy in
             content
@@ -74,6 +72,11 @@ struct ChatDetail: View {
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
                     Scroller.scrollToBottom(delay: 0.1)
             }
+//            .onScrollPhaseChange { oldPhase, newPhase in
+//                if config.expandColor && newPhase == .interacting {
+//                    config.expandColor = false
+//                }
+//            }
             #endif
         }
     }
@@ -108,7 +111,7 @@ struct ChatDetail: View {
     var content: some View {
         #if os(macOS) || os(visionOS)
         if chat.currentThread.isEmpty {
-            EmptyChat(chat: chat, namespace: inputTransition)
+            EmptyChat(chat: chat)
                 .transition(.opacity)
         } else {
             list
@@ -189,33 +192,40 @@ struct ChatDetail: View {
         }
     }
     
-    @State var change: Bool = false
-    
     var resizingColor: some View {
         Color.clear
             .frame(height: 1)
-             .modifier(AnimatingCellHeight(height: change ? 475 : 1))
+            .modifier(AnimatingCellHeight(height: config.expandColor ? height : 1))
             #if os(macOS)
             .listRowInsets(.init(top: -5, leading: 0, bottom: -5, trailing: 0))
             #endif
             .listRowSeparator(.hidden)
-            .onChange(of: chat.isReplying) {
-                if chat.isReplying {
-                    withAnimation(.easeInOut(duration: 0.9)) {
-                        DispatchQueue.main.async {
-                            change = true
-                        }
-                    } completion: {
-                        Scroller.scrollToBottom()
-                    }
-                }
-            }
+//            .onChange(of: config.expandColor) {
+//                if onfig.expandColor
+//                    withAnimation(.easeInOut(duration: 0.9)) {
+//                        DispatchQueue.main.async {
+//                            change = true
+//                        }
+//                    } completion: {
+//                        Scroller.scrollToBottom(delay: 0.2)
+//                    }
+//                }
+//            }
             .onChange(of: config.hasUserScrolled) {
                 withAnimation(.easeInOut(duration: 0.5)) {
-                    change = false
+                    config.expandColor = false
                 }
-        }
+            }
+//        }
     }
+}
+
+var height: CGFloat {
+    #if os(macOS)
+    return 475
+    #else
+    return 400
+    #endif
 }
 
 #Preview {
