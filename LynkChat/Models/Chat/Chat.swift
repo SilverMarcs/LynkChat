@@ -67,6 +67,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     func processRequest(message: Message) async {
         errorMessage = ""
         date = Date()
+        resetScroll()
         streamingTask = Task {
             let streamer = StreamHandler(chat: self, assistant: message)
             
@@ -208,6 +209,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     }
 
     func resetContext(at message: MessageGroup) {
+        resetScroll()
         if contextResetPoint == message {
             contextResetPoint = nil
         } else {

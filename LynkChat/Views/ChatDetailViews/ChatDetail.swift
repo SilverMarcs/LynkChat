@@ -79,7 +79,7 @@ struct ChatDetail: View {
     }
     
     func onAppearStuff(proxy: ScrollViewProxy) {
-        config.hasUserScrolled = false
+        chat.resetScroll()
         config.proxy = proxy
         
         if !chatVM.searchText.isEmpty {
@@ -197,8 +197,6 @@ struct ChatDetail: View {
     
     var resizingColor: some View {
         Color.clear
-//            .frame(height: colorViewHeight)
-//            .frame(width: 200)
             .frame(height: 1)
              .modifier(AnimatingCellHeight(height: change ? 475 : 1))
             #if os(macOS)
@@ -207,7 +205,7 @@ struct ChatDetail: View {
             .listRowSeparator(.hidden)
             .onChange(of: chat.isReplying) {
                 if chat.isReplying {
-                    withAnimation(.easeInOut(duration: 0.1)) {
+                    withAnimation(.easeInOut(duration: 0.5)) {
                         change = true
                     } completion: {
                         Scroller.scrollToBottom()

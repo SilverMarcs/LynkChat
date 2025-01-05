@@ -73,7 +73,7 @@ struct StreamHandler {
             assistant.content = streamText
             assistant.isReplying = false
             try? assistant.modelContext?.save()
-            AppConfig.shared.hasUserScrolled = false
+            chat.resetScroll()
         }
     }
     
