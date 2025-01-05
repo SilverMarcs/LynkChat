@@ -201,8 +201,10 @@ struct ChatDetail: View {
             .listRowSeparator(.hidden)
             .onChange(of: chat.isReplying) {
                 if chat.isReplying {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        change = true
+                    withAnimation(.easeInOut(duration: 0.9)) {
+                        DispatchQueue.main.async {
+                            change = true
+                        }
                     } completion: {
                         Scroller.scrollToBottom()
                     }

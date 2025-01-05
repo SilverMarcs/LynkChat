@@ -23,7 +23,6 @@ struct ToolsBarView: View {
         }
         #if os(macOS)
         .opacity((config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? 0.85 : 0.9))
-        .padding(.leading, (config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? -4 : 0))
         #endif
         
         toolButton(
@@ -34,7 +33,7 @@ struct ToolsBarView: View {
                 config.toggleTool(.imageGeneration)
             }
         }
-        .scaleEffect(config.isToolEnabled(.imageGeneration) ? 0.95 : 0.85)
+        .scaleEffect(config.isToolEnabled(.imageGeneration) ? 0.95 : 0.9)
         #if os(macOS)
         .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
         #endif
