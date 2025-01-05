@@ -20,21 +20,16 @@ struct EmptyChat: View {
                 .font(.system(size: 25, weight: .semibold))
                 .fontWeight(.bold)
                 .opacity(0.9)
-                .transition(.opacity.combined(with: .move(edge: .top)))
                 .padding(.bottom, 15)
             
             InputArea(chat: chat)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: 750)
-                .background(.background.secondary, in: .rect(cornerRadius: 15))
-                .roundedRectangleOverlay(radius: 15, style: .circular)
-                .matchedGeometryEffect(id: "inputArea", in: namespace)
                 .scaleEffect(1.05)
                 .padding(.horizontal, 90)
             
             TipView(PlusButtonTip())
                 .fixedSize()
-//                .frame(height: 30)
             
             if chat.status == .temporary {
                 VStack {
@@ -46,7 +41,6 @@ struct EmptyChat: View {
                         .font(.body)
                         .foregroundStyle(.tertiary)
                 }
-                .transition(.opacity.combined(with: .move(edge: .bottom)))
             }
             
             Spacer()
@@ -55,7 +49,6 @@ struct EmptyChat: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding()
-                .transition(.opacity.combined(with: .move(edge: .bottom)))
         }
         .toolbarBackground(.hidden)
         .frame(maxWidth: .infinity)

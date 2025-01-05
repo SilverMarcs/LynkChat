@@ -75,10 +75,10 @@ struct InputArea: View {
             }
         }
         .padding(4)
+        .background(chat.currentThread.isEmpty ? AnyShapeStyle(.background.secondary.opacity(0.8)) : AnyShapeStyle(.clear), in: .rect(cornerRadius: 15))
         .roundedRectangleOverlay(radius: 15, style: .circular)
         .pasteHandler(chat: chat)
-//        .animation(.default, value: chat.currentThread.isEmpty)
-//        .transition(.opacity.animation(.easeInOut(duration: 1)))
+        .modifier(CommonInputStyling())
     }
         
     var expandInput: some View {

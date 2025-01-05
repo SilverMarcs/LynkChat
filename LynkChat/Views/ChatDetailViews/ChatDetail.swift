@@ -24,7 +24,7 @@ struct ChatDetail: View {
     var body: some View {
         ScrollViewReader { proxy in
             content
-                .animation(.default, value: chat.currentThread.isEmpty)
+                .animation(.bouncy, value: chat.currentThread.isEmpty)
             .toolbar {
                 ChatToolbar(chat: chat)
             }
@@ -177,12 +177,8 @@ struct ChatDetail: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if chat.status != .quick {
                 InputArea(chat: chat)
-                    .roundedRectangleOverlay(radius: 15, opacity: 0.4, style: .circular)
-                    .modifier(CommonInputStyling())
-                    .matchedGeometryEffect(id: "inputArea", in: inputTransition)
             }
         }
-        .transition(.opacity)
         #endif
     }
     

@@ -27,7 +27,7 @@ struct ImageInputView: View {
             .buttonStyle(.plain)
         }
         .padding(2)
-        .roundedRectangleOverlay()
+        .roundedRectangleOverlay(radius: 15, opacity: 1, style: .circular)
         .modifier(CommonInputStyling())
         #if os(macOS)
         .task {

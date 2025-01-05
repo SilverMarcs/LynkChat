@@ -25,7 +25,7 @@ struct RoundedRectangleOverlayModifier: ViewModifier {
             .background(
                 RoundedRectangle(cornerRadius: radius, style: style)
                 #if os(macOS)
-                    .stroke(.quaternary, lineWidth: 0.6)
+                    .stroke(.quaternary, lineWidth: 1)
                 #elseif os(visionOS)
                     .stroke(Color(.quaternaryLabel), lineWidth: 1)
                 #else
