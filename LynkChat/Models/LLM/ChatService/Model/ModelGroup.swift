@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ModelGroup: String, Identifiable {
+enum ModelGroup: String, CaseIterable, Identifiable {
     case anthropic
     case openAI
     case google

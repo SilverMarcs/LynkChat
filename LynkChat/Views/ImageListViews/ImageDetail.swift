@@ -18,6 +18,7 @@ struct ImageDetail: View {
             List {
                 ForEach(session.imageGenerations.sorted(by: { $0.date < $1.date })) { generation in
                     GenerationView(generation: generation)
+                        .padding(.bottom)
                 }
                 .listRowSeparator(.hidden)
                 
