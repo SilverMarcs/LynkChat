@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct DebugSettings: View {
+    @Environment(\.openWindow) var openWindow
     @ObservedObject var config = AppConfig.shared
+    @State private var showWebView = false
     
     var body: some View {
         Form {
@@ -17,6 +19,21 @@ struct DebugSettings: View {
                 Toggle(isOn: $config.useLocalhost) {
                     Text("Use Localhost")
                     Text("Using \(String.apiHost)")
+                }
+                
+                LabeledContent("Opens API Webview") {
+                    Button("Open Window") {
+                        #if os(macOS)
+                        openWindow(id: WindowID.debugWeb)
+                        #else
+                        showWebView = true
+                        #endif
+                    }
+                    #if !os(macOS)
+                    .fullScreenCover(isPresented: $showWebView) {
+                        DebugWebview()
+                    }
+                    #endif
                 }
             }
             

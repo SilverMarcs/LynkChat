@@ -32,6 +32,8 @@
 		082A63382C55175E003996B7 /* MiscUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082A63372C55175E003996B7 /* MiscUtils.swift */; };
 		082B88172CD36CD80092C4D0 /* PlatformSpecificGroupBoxStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082B88162CD36CD80092C4D0 /* PlatformSpecificGroupBoxStyle.swift */; };
 		082F09DB2CB2715A00B7860A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082F09DA2CB2715A00B7860A /* Message.swift */; };
+		082FE1122D2C71DF00E22D0B /* DebugWebview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082FE1112D2C71DF00E22D0B /* DebugWebview.swift */; };
+		082FE1162D2C7A3700E22D0B /* DebugWebWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082FE1152D2C7A3700E22D0B /* DebugWebWindow.swift */; platformFilters = (macos, ); };
 		0834E7792C719C00007CB294 /* DataFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0834E7782C719C00007CB294 /* DataFileView.swift */; };
 		0834E77B2C71A42F007CB294 /* TypedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0834E77A2C71A42F007CB294 /* TypedData.swift */; };
 		08366D9E2D1B12F200BCB3B3 /* WindowScenesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08366D9D2D1B12F200BCB3B3 /* WindowScenesCollection.swift */; platformFilters = (macos, ); };
@@ -244,6 +246,8 @@
 		082A63372C55175E003996B7 /* MiscUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscUtils.swift; sourceTree = "<group>"; };
 		082B88162CD36CD80092C4D0 /* PlatformSpecificGroupBoxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformSpecificGroupBoxStyle.swift; sourceTree = "<group>"; };
 		082F09DA2CB2715A00B7860A /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		082FE1112D2C71DF00E22D0B /* DebugWebview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugWebview.swift; sourceTree = "<group>"; };
+		082FE1152D2C7A3700E22D0B /* DebugWebWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugWebWindow.swift; sourceTree = "<group>"; };
 		0834E7782C719C00007CB294 /* DataFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFileView.swift; sourceTree = "<group>"; };
 		0834E77A2C71A42F007CB294 /* TypedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedData.swift; sourceTree = "<group>"; };
 		08366D9D2D1B12F200BCB3B3 /* WindowScenesCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowScenesCollection.swift; sourceTree = "<group>"; };
@@ -510,6 +514,15 @@
 				08D22A972D21CEE3007F9F4A /* ImageServiceTab.swift */,
 			);
 			path = ImageService;
+			sourceTree = "<group>";
+		};
+		082FE1102D2C71C600E22D0B /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				08256BF32D1D341300C54BA1 /* DebugSettings.swift */,
+				082FE1112D2C71DF00E22D0B /* DebugWebview.swift */,
+			);
+			path = Debug;
 			sourceTree = "<group>";
 		};
 		084C24492D1FBA0C00AC431F /* ChatService */ = {
@@ -905,6 +918,7 @@
 		08C800512C36F79E009581C5 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				082FE1102D2C71C600E22D0B /* Debug */,
 				0864775D2D25274800969DBA /* About */,
 				0864775C2D25248C00969DBA /* QuickPanel */,
 				0864775B2D25244E00969DBA /* Appearance */,
@@ -915,7 +929,6 @@
 				08C800562C36F843009581C5 /* SettingsView.swift */,
 				081C1D972C3BD8A50078BB24 /* GeneralSettings.swift */,
 				089C7E132C405B01005E3BE9 /* QuickPanelSettings.swift */,
-				08256BF32D1D341300C54BA1 /* DebugSettings.swift */,
 				087F3F912CDDF00C001298B3 /* SettingsVM.swift */,
 				087F3F8E2CDDEF79001298B3 /* SettingsTab.swift */,
 			);
@@ -1021,6 +1034,7 @@
 				088475332CAE8E57006C04F0 /* AppIconMenu.swift */,
 				08A222842C2AB4FD00D76C8B /* ChatContentView.swift */,
 				087906882CA6E22900E5DCAD /* ImageContentView.swift */,
+				082FE1152D2C7A3700E22D0B /* DebugWebWindow.swift */,
 				08366D9D2D1B12F200BCB3B3 /* WindowScenesCollection.swift */,
 			);
 			path = Windows;
@@ -1181,6 +1195,7 @@
 				08D22A942D21AFFD007F9F4A /* ChatTool.swift in Sources */,
 				08D22A8E2D212D96007F9F4A /* Number++.swift in Sources */,
 				08D22A7B2D212732007F9F4A /* Logging.swift in Sources */,
+				082FE1162D2C7A3700E22D0B /* DebugWebWindow.swift in Sources */,
 				08A222BE2C2ABDB400D76C8B /* InputManager.swift in Sources */,
 				08F840062C9AA26C000CB498 /* CameraView.swift in Sources */,
 				087F99752D26FEFB00D6EDDD /* AnimatingCellHeight.swift in Sources */,
@@ -1297,6 +1312,7 @@
 				08D22A862D212C46007F9F4A /* PlatformAlias.swift in Sources */,
 				0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */,
 				081C1D942C3BD33F0078BB24 /* ChatParameterSettings.swift in Sources */,
+				082FE1122D2C71DF00E22D0B /* DebugWebview.swift in Sources */,
 				086477552D25237E00969DBA /* ModelConfig.swift in Sources */,
 				082880872D1FF1F800D3A4B0 /* ImageModelList.swift in Sources */,
 				086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */,

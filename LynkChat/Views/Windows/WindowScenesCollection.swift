@@ -14,6 +14,7 @@ struct WindowScenesCollection: Scene {
         conditionalSettingsWindow()
         AboutWindow()
         HelpWindow()
+        DebugWebWindow()
     }
     
     func conditionalSettingsWindow() -> some Scene {
