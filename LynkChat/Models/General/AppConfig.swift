@@ -52,9 +52,11 @@ class AppConfig: ObservableObject {
     #if DEBUG
     @AppStorage("useLocalhost") var useLocalhost = false
     @AppStorage("printDebgLogs") var printDebgLogs = true
+    @AppStorage("sendDebugModel") var sendDebugModel = false
     #else
     @AppStorage("useLocalhost") var useLocalhost = false
     @AppStorage("printDebgLogs") var printDebgLogs = false
+    @AppStorage("sendDebugModel") var sendDebugModel = false
     #endif
     
 }

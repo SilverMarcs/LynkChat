@@ -91,6 +91,9 @@
     "API Key" : {
 
     },
+    "API Settings" : {
+
+    },
     "Appearance" : {
 
     },
@@ -182,6 +185,9 @@
 
     },
     "Debug" : {
+
+    },
+    "Debug Options" : {
 
     },
     "Default" : {
@@ -430,6 +436,9 @@
     "Reset First Launch" : {
 
     },
+    "Reset Settings" : {
+
+    },
     "Reset Tips" : {
 
     },
@@ -461,6 +470,9 @@
 
     },
     "Send a prompt" : {
+
+    },
+    "Send debug model" : {
 
     },
     "Settings" : {
