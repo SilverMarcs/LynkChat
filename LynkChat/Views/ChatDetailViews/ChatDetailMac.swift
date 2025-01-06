@@ -1,0 +1,120 @@
+//
+//  ChatDetailMac.swift
+//  LynkChat
+//
+//  Created by Zabir Raihan on 06/01/2025.
+//
+
+import SwiftUI
+
+struct ChatDetailMac: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.modelContext) var modelContext
+    @Environment(ChatVM.self) private var chatVM
+    @ObservedObject var config: AppConfig = AppConfig.shared
+    
+    @Bindable var chat: Chat
+    
+    @State private var numberOfMessagesToShow = 2
+    @State private var colorViewHeight: CGFloat = 0
+    
+    var body: some View {
+        ScrollViewReader { proxy in
+            content
+                .animation(.bouncy, value: chat.currentThread.isEmpty)
+                .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
+                .navigationSubtitle("\(chat.config.model.name) • \(chat.config.systemPrompt.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines).prefix(69))")
+                .task {
+                    if chatVM.searchText.isEmpty {
+                        Scroller.scrollToBottom(animated: false)
+                    }
+                    onAppearStuff(proxy: proxy)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: NSScrollView.willStartLiveScrollNotification)) { _ in
+                    withAnimation {
+                        AppConfig.shared.expandColor = false
+                    }
+                }
+        }
+    }
+    
+    @ViewBuilder
+    var content: some View {
+        if chat.currentThread.isEmpty {
+            EmptyChat(chat: chat)
+                .transition(.opacity)
+        } else {
+            list
+        }
+    }
+    
+    var list: some View {
+        List {
+            ForEach(messagesToShow, id: \.self) { group in
+                MessageView(group: group)
+                    .environment(\.chat, chat)
+                    .onAppear {
+                        if group == messagesToShow.first {
+                            loadMoreMessages()
+                        }
+                    }
+            }
+            .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))
+            .listRowSeparator(.hidden)
+            
+            ErrorMessageView(chat: chat)
+            
+            if chat.status != .quick {
+                resizingColor
+            }
+            
+            Color.clear
+                .frame(height: 1)
+                .transaction { $0.animation = nil }
+                .id(String.bottomID)
+                .listRowSeparator(.hidden)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if chat.status != .quick {
+                InputArea(chat: chat)
+            }
+        }
+    }
+    
+    // Rest of the helper methods and computed properties
+    func onAppearStuff(proxy: ScrollViewProxy) {
+        AppConfig.shared.expandColor = false
+        config.proxy = proxy
+        
+        if !chatVM.searchText.isEmpty {
+            numberOfMessagesToShow = chat.currentThread.count
+        }
+        
+        if chatVM.searchText.isEmpty {
+            Scroller.scrollToBottom(animated: false)
+        }
+    }
+    
+    var messagesToShow: [MessageGroup] {
+        let totalMessages = chat.currentThread.count
+        if numberOfMessagesToShow >= totalMessages {
+            return chat.currentThread
+        } else {
+            return Array(chat.currentThread.suffix(numberOfMessagesToShow))
+        }
+    }
+    
+    private func loadMoreMessages() {
+        let totalMessages = chat.currentThread.count
+        if numberOfMessagesToShow <= totalMessages {
+            numberOfMessagesToShow += 2
+        }
+    }
+    
+    var resizingColor: some View {
+        Color.clear
+            .frame(height: 1)
+            .modifier(AnimatingCellHeight(height: config.expandColor ? 475 : 1))
+            .listRowSeparator(.hidden)
+    }
+}

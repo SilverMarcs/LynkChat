@@ -91,6 +91,8 @@
 		086477602D2528A000969DBA /* ImageRequest+Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0864775F2D2528A000969DBA /* ImageRequest+Response.swift */; };
 		086477632D252A5200969DBA /* GlobalContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477622D252A5200969DBA /* GlobalContainer.swift */; };
 		0868AC8B2D0B2C7900F8B8FE /* NativeMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */; };
+		086BBCD02D2C010B00F15F8B /* ChatDetailMobile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086BBCCF2D2C010B00F15F8B /* ChatDetailMobile.swift */; platformFilters = (ios, xros, ); };
+		086BBCD22D2C012500F15F8B /* ChatDetailMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086BBCD12D2C012500F15F8B /* ChatDetailMac.swift */; platformFilters = (macos, ); };
 		086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */; };
 		086E620C2C39BC4500AB4110 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */; };
 		087906872CA6C73100E5DCAD /* ImageWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087906862CA6C73100E5DCAD /* ImageWindow.swift */; platformFilters = (macos, ); };
@@ -299,6 +301,8 @@
 		0864775F2D2528A000969DBA /* ImageRequest+Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRequest+Response.swift"; sourceTree = "<group>"; };
 		086477622D252A5200969DBA /* GlobalContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalContainer.swift; sourceTree = "<group>"; };
 		0868AC8A2D0B2C7900F8B8FE /* NativeMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMarkdownView.swift; sourceTree = "<group>"; };
+		086BBCCF2D2C010B00F15F8B /* ChatDetailMobile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailMobile.swift; sourceTree = "<group>"; };
+		086BBCD12D2C012500F15F8B /* ChatDetailMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailMac.swift; sourceTree = "<group>"; };
 		086C65CC2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryNavigationButtons.swift; sourceTree = "<group>"; };
 		086E620B2C39BC4500AB4110 /* ErrorMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessageView.swift; sourceTree = "<group>"; };
 		087906862CA6C73100E5DCAD /* ImageWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageWindow.swift; sourceTree = "<group>"; };
@@ -847,10 +851,12 @@
 		08C8003B2C36BC56009581C5 /* ChatDetailViews */ = {
 			isa = PBXGroup;
 			children = (
+				08A222C32C2AC6B300D76C8B /* ChatDetail.swift */,
+				086BBCD12D2C012500F15F8B /* ChatDetailMac.swift */,
+				086BBCCF2D2C010B00F15F8B /* ChatDetailMobile.swift */,
 				08C800402C36BF54009581C5 /* MessageViews */,
 				08F815332C97F64E00B49355 /* ChatInspector.swift */,
 				082A63312C551108003996B7 /* MarkdownBackup.swift */,
-				08A222C32C2AC6B300D76C8B /* ChatDetail.swift */,
 				085524E72C4ED61F00CBB827 /* ChatToolbar.swift */,
 				0844C2742CA3E6E100F0A325 /* EmptyChat.swift */,
 				0810F5882CEAFB5C002D4ACF /* ContextResetDivider.swift */,
@@ -1185,6 +1191,7 @@
 				086477602D2528A000969DBA /* ImageRequest+Response.swift in Sources */,
 				08436F222CDE9182007A160F /* Acknowledgement.swift in Sources */,
 				08A222852C2AB4FD00D76C8B /* ChatContentView.swift in Sources */,
+				086BBCD22D2C012500F15F8B /* ChatDetailMac.swift in Sources */,
 				081F58B82C6C8FFE00565F20 /* HoverScaleButton.swift in Sources */,
 				0864774D2D247DB000969DBA /* ChatServiceTab.swift in Sources */,
 				08C800572C36F843009581C5 /* SettingsView.swift in Sources */,
@@ -1217,6 +1224,7 @@
 				084C243E2D1F1CEB00AC431F /* ImageModel.swift in Sources */,
 				08D22AA62D22E2C4007F9F4A /* ToolImagePlaceholderView.swift in Sources */,
 				0898252B2CE9BB1700980468 /* OnboardingPage.swift in Sources */,
+				086BBCD02D2C010B00F15F8B /* ChatDetailMobile.swift in Sources */,
 				085276C02C98794C009184D2 /* ChatToolView.swift in Sources */,
 				08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */,
 				0893B2022C3955CC00D4D501 /* CustomSearchField.swift in Sources */,
