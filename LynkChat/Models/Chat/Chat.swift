@@ -67,7 +67,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     func processRequest(message: Message) async {
         errorMessage = ""
         date = Date()
-        resetScroll()
         streamingTask = Task {
             let streamer = StreamHandler(chat: self, assistant: message)
             
@@ -84,8 +83,6 @@ final class Chat: Equatable, Identifiable, Hashable {
             #endif
             
             do {
-                scrollDown()
-                
                 try await streamer.handleRequest()
             } catch {
                 handleError(error)
@@ -129,7 +126,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         errorMessage = ""
-        resetScroll()
         
         if let editingMessage = inputManager.editingMessage {
             await editMessage(editingMessage)
@@ -161,7 +157,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     @MainActor
     func regenerate(message: MessageGroup) async {
         guard let index = currentThread.firstIndex(where: { $0 == message }) else { return }
-        resetScroll()
        
         unsetContextResetPointIfNeeded(for: message)
        
@@ -190,10 +185,12 @@ final class Chat: Equatable, Identifiable, Hashable {
     }
     
     func stopStreaming() {
-        resetScroll()
         streamingTask?.cancel()
         streamingTask = nil
         errorDeleteLast()
+        withAnimation {
+            AppConfig.shared.expandColor = false
+        }
     }
     
     private func handleError(_ error: Error) {
@@ -213,7 +210,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     }
 
     func resetContext(at message: MessageGroup) {
-        resetScroll()
         if contextResetPoint == message {
             contextResetPoint = nil
         } else {
@@ -222,7 +218,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         if let lastMessage = currentThread.last, lastMessage == message {
-            resetScroll()
             Scroller.scrollToBottom()
         }
     }
@@ -273,17 +268,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         stopStreaming()
         errorMessage = ""
         totalTokens = 0
-    }
-    
-    func scrollDown() {
-        guard !AppConfig.shared.hasUserScrolled else { return }
-        Scroller.scrollToBottom()
-    }
-    
-    func resetScroll() {
-        DispatchQueue.main.async {
-            AppConfig.shared.hasUserScrolled = false
-        }
     }
     
     func copy(from message: Message? = nil) async -> Chat {

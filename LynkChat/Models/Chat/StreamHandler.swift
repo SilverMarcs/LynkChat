@@ -17,7 +17,7 @@ struct StreamHandler {
         self.assistant = assistant
     }
 
-//    @MainActor
+    @MainActor
     func handleRequest() async throws {
         var streamText = ""
         var lastUIUpdateTime = Date()
@@ -25,16 +25,15 @@ struct StreamHandler {
         
         let apiRequest = await createAPIRequest(stream: true)
         
-        DispatchQueue.main.async {
-            AppConfig.shared.expandColor = true
-            Scroller.scrollToBottom()
-        }
+        AppConfig.shared.expandColor = true
+        Scroller.scrollToBottom()
+        Scroller.scrollToBottom()
         
         for try await response in APIService.self.streamResponse(from: apiRequest) {
             switch response {
             case .text(let textResponse):
                 streamText += textResponse.content
-                await updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
+                updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
                 
             case .toolCall(let toolCallResponse):
                 assistant.tools?.append(.init(
@@ -78,7 +77,9 @@ struct StreamHandler {
             assistant.content = streamText
             assistant.isReplying = false
             try? assistant.modelContext?.save()
-            chat.resetScroll()
+            withAnimation {
+                AppConfig.shared.expandColor = false
+            }
         }
     }
     

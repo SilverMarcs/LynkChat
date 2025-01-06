@@ -60,7 +60,9 @@ struct ChatDetail: View {
             }
             .navigationSubtitle("\(chat.config.model.name) • \(chat.config.systemPrompt.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines).prefix(69))")
             .onReceive(NotificationCenter.default.publisher(for: NSScrollView.willStartLiveScrollNotification)) { _ in
-                config.hasUserScrolled = true
+                withAnimation {
+                    AppConfig.shared.expandColor = false
+                }
             }
             #else
             .task {
@@ -82,7 +84,7 @@ struct ChatDetail: View {
     }
     
     func onAppearStuff(proxy: ScrollViewProxy) {
-        chat.resetScroll()
+        AppConfig.shared.expandColor = false
         config.proxy = proxy
         
         if !chatVM.searchText.isEmpty {
@@ -200,23 +202,6 @@ struct ChatDetail: View {
             .listRowInsets(.init(top: -5, leading: 0, bottom: -5, trailing: 0))
             #endif
             .listRowSeparator(.hidden)
-//            .onChange(of: config.expandColor) {
-//                if onfig.expandColor
-//                    withAnimation(.easeInOut(duration: 0.9)) {
-//                        DispatchQueue.main.async {
-//                            change = true
-//                        }
-//                    } completion: {
-//                        Scroller.scrollToBottom(delay: 0.2)
-//                    }
-//                }
-//            }
-            .onChange(of: config.hasUserScrolled) {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    config.expandColor = false
-                }
-            }
-//        }
     }
 }
 
