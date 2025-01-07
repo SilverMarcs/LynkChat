@@ -40,7 +40,7 @@ struct AppearanceSettings: View {
                     }
                 } label: {
                     Text("Markdown Provider")
-                    Text("Use webview for best performance")
+                    Text("Use webview for best performance and compatibility")
                 }
                 #if os(macOS)
                 .pickerStyle(.radioGroup)

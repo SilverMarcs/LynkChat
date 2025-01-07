@@ -25,9 +25,6 @@ struct ChatDetailMac: View {
                 .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
                 .navigationSubtitle("\(chat.config.model.name) • \(chat.config.systemPrompt.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines).prefix(69))")
                 .task {
-                    if chatVM.searchText.isEmpty {
-                        Scroller.scrollToBottom(animated: false)
-                    }
                     onAppearStuff(proxy: proxy)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSScrollView.willStartLiveScrollNotification)) { _ in
@@ -65,9 +62,12 @@ struct ChatDetailMac: View {
             ErrorMessageView(chat: chat)
             
             if chat.status != .quick {
-                resizingColor
+                Color.clear
+                    .frame(height: 1)
+                    .modifier(AnimatingCellHeight(height: config.expandColor ? 475 : 1))
+                    .listRowSeparator(.hidden)
             }
-            
+                
             Color.clear
                 .frame(height: 1)
                 .transaction { $0.animation = nil }
@@ -86,12 +86,10 @@ struct ChatDetailMac: View {
         AppConfig.shared.expandColor = false
         config.proxy = proxy
         
-        if !chatVM.searchText.isEmpty {
-            numberOfMessagesToShow = chat.currentThread.count
-        }
-        
         if chatVM.searchText.isEmpty {
             Scroller.scrollToBottom(animated: false)
+        } else {
+            numberOfMessagesToShow = chat.currentThread.count
         }
     }
     
@@ -109,12 +107,5 @@ struct ChatDetailMac: View {
         if numberOfMessagesToShow <= totalMessages {
             numberOfMessagesToShow += 2
         }
-    }
-    
-    var resizingColor: some View {
-        Color.clear
-            .frame(height: 1)
-            .modifier(AnimatingCellHeight(height: config.expandColor ? 475 : 1))
-            .listRowSeparator(.hidden)
     }
 }

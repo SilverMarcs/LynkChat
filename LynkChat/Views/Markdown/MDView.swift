@@ -51,7 +51,7 @@ struct MDView: View {
                 .markdownBlockStyle(\.codeBlock) { configuration in
                     CodeText(configuration.content)
                         .codeTextColors(.theme(.atomOne))
-                        .font(.system(size: config.fontSize - 2)
+                        .font(.system(size: config.fontSize - 2))
                         .padding()
                         .background(.background.secondary.opacity(0.2), in: .rect(cornerRadius: 8))
                         .background {
@@ -69,7 +69,6 @@ struct MDView: View {
                             .padding()
                         }
                         .padding(.bottom, 12)
-                    
                 }
             
         case .webview:

@@ -20,6 +20,10 @@ struct ChatDetailMobile: View {
     var body: some View {
         ScrollViewReader { proxy in
             content
+                .scrollDismissesKeyboard(.immediately)
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    InputArea(chat: chat)
+                }
                 .animation(.bouncy, value: chat.currentThread.isEmpty)
                 .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
                 .toolbarTitleMenu {
@@ -38,31 +42,23 @@ struct ChatDetailMobile: View {
         }
     }
     
+    @ViewBuilder
     var content: some View {
-        VStack(spacing: 0) {
-            if chat.currentThread.isEmpty {
-                VStack {
-                    Text("Start a conversation")
-                        .font(.title)
-                    
-                    HStack(spacing: 15) {
-                        ToolsBarView(config: $chat.config)
-                            .scaleEffect(1.4)
-                    }
-                    .padding(.top, 10)
+        if chat.currentThread.isEmpty {
+            VStack {
+                Text("Start a conversation")
+                    .font(.title)
+                
+                HStack(spacing: 15) {
+                    ToolsBarView(config: $chat.config)
+                        .scaleEffect(1.4)
                 }
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.top, 10)
             }
-            
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding()
+        } else {
             list
-            
-            Spacer()
-        }
-        .padding(.bottom, 0)
-        .scrollDismissesKeyboard(.immediately)
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            InputArea(chat: chat)
         }
     }
     
@@ -76,9 +72,10 @@ struct ChatDetailMobile: View {
             
             ErrorMessageView(chat: chat)
             
-            if chat.status != .quick {
-                resizingColor
-            }
+            Color.clear
+                .frame(height: 1)
+                .modifier(AnimatingCellHeight(height: config.expandColor ? 400 : 1))
+                .listRowSeparator(.hidden)
             
             Color.clear
                 .frame(height: 1)
@@ -86,19 +83,13 @@ struct ChatDetailMobile: View {
                 .id(String.bottomID)
                 .listRowSeparator(.hidden)
         }
+        .contentMargins(.bottom, -40)
     }
     
     // Rest of the helper methods and computed properties
     func onAppearStuff(proxy: ScrollViewProxy) {
+        AppConfig.shared.expandColor = false
         Scroller.scrollToBottom(delay: 0.3)
         config.proxy = proxy
-        AppConfig.shared.expandColor = false
-    }
-    
-    var resizingColor: some View {
-        Color.clear
-            .frame(height: 1)
-            .modifier(AnimatingCellHeight(height: config.expandColor ? 400 : 1))
-            .listRowSeparator(.hidden)
     }
 }
