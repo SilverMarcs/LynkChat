@@ -39,6 +39,7 @@ struct DataFilesView: View {
                         fileItemView(for: file)
                     }
                 }
+                .padding(.trailing, -8)
             }
             
             if !nonImageFiles.isEmpty {
@@ -47,6 +48,7 @@ struct DataFilesView: View {
                         fileItemView(for: file)
                     }
                 }
+                .padding(.trailing, -8)
             }
         }
         .quickLookPreview($selectedFileURL)

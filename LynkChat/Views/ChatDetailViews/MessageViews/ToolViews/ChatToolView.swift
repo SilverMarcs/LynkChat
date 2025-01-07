@@ -17,6 +17,7 @@ struct ChatToolView: View {
                     .transaction { $0.animation = nil }
             }
         }
+        .padding(.trailing, -8)
         
         
         ForEach(tools) { chatTool in
