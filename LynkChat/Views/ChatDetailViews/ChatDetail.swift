@@ -13,6 +13,8 @@ struct ChatDetail: View {
     
     var body: some View {
         Group {
+            TipView(ContextMenuTip())
+                .frame(maxWidth: 300, alignment: .trailing)
             #if os(macOS)
             ChatDetailMac(chat: chat)
             #else

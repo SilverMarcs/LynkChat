@@ -26,14 +26,6 @@ struct DataFilesView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             if !imageFiles.isEmpty {
-//                LazyVGrid(columns: [
-//                    GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 8)
-//                ], spacing: 8) {
-//                    ForEach(imageFiles) { file in
-//                        fileItemView(for: file)
-//                            .aspectRatio(1, contentMode: .fill)
-//                    }
-//                }
                 FlowLayout(spacing: 8) {
                     ForEach(imageFiles) { file in
                         fileItemView(for: file)

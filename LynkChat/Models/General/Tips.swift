@@ -62,12 +62,10 @@ struct NewChatTip: Tip {
         MaxDisplayCount(2)
     }
     
-//    #if !os(macOS)
     var image: Image? {
         Image(systemName: "square.and.pencil")
             .resizable()
     }
-//    #endif
 }
 
 struct ImageGenToolTip: Tip {
@@ -103,7 +101,25 @@ struct ContextMenuTip: Tip {
     }
     #endif
     
-//    var options: [Option] {
-//        MaxDisplayCount(2)
-//    }
+    var options: [Option] {
+        MaxDisplayCount(2)
+    }
+}
+
+struct AudioUploadingTip: Tip {
+    var title: Text {
+        Text("Audio Files")
+    }
+    
+    var message: Text? {
+        Text("Uploading audio files may take a moment. Please wait a moment after sending the message.")
+    }
+    
+    var image: Image? {
+        Image(systemName: "waveform")
+    }
+    
+    var options: [Option] {
+        MaxDisplayCount(2)
+    }
 }

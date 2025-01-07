@@ -46,6 +46,13 @@ struct ToolsBarView: View {
                 config.toggleTool(.transcribe)
             }
         }
+        .apply {
+            if config.isToolEnabled(.transcribe) {
+                $0.popoverTip(AudioUploadingTip())
+            } else {
+                $0
+            }
+        }
         #if os(macOS)
         .opacity(config.isToolEnabled(.transcribe) ? 0.8 : 0.9)
         #endif

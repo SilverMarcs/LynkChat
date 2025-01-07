@@ -112,6 +112,9 @@
     "Attach Files" : {
 
     },
+    "Audio Files" : {
+
+    },
     "Autogenerate Title" : {
 
     },
@@ -556,10 +559,13 @@
     "Upload pictures from gallery." : {
 
     },
+    "Uploading audio files may take a moment. Please wait after sending the message." : {
+
+    },
     "Use Localhost" : {
 
     },
-    "Use webview for best performance" : {
+    "Use webview for best performance and compatibility" : {
 
     },
     "Used" : {
