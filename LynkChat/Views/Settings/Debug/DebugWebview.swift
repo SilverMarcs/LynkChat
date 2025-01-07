@@ -32,13 +32,7 @@ struct DebugWebview: View {
         WebViewWrapper(url: url)
             .ignoresSafeArea()
             .overlay(alignment: .topLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.white, .regularMaterial)
-                        .padding(.leading)
-                }
+                DismissButton()
             }
     }
 }
