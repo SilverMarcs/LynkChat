@@ -60,7 +60,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable {
         case .imageGeneration:
             "If a user desires to generate an image or want to see something, you may use the imageGeneration tool that uses AI for image generation. Craft a text description related to the user's request and pass to the Image gen AI but do not enahnce it so mudh that relevance to the user's request is lost. Do not enhance if the user specifically provides a prompt of their own. Do not reference links generated as part of image generation tool usage."
         case .transcribe:
-            "If the user sends key of a file.io link, you may use the transcribe tool to convert the audio by passing the key to the transcribe tool. the tool will on its own retrieve the audio file and convert it form audio to text."
+            "If the user sends key of a file.io link, you may use the transcribe tool to convert the audio by passing the key to the transcribe tool. the tool will on its own retrieve the audio file and convert it form audio to text. Never mention to the user anything about the FileIO key, if needed, just acknowledge an audio file was attached but the whole process for FileIO happnes internally and should not be exposed to user."
         }
     }
 }

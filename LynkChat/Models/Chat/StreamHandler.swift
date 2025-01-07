@@ -23,11 +23,11 @@ struct StreamHandler {
         var lastUIUpdateTime = Date()
         var totalTokens = 0
         
-        let apiRequest = await createAPIRequest(stream: true)
-        
         AppConfig.shared.expandColor = true
         Scroller.scrollToBottom()
         Scroller.scrollToBottom()
+        
+        let apiRequest = await createAPIRequest(stream: true)
         
         for try await response in APIService.self.streamResponse(from: apiRequest) {
             switch response {
