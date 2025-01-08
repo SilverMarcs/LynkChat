@@ -93,7 +93,7 @@ struct StreamHandler {
             messages: apiMessages,
             temperature: chat.config.temperature,
             maxTokens: chat.config.maxTokens.rawValue,
-            system: date + "\n" + chat.config.systemPrompt + "\n" + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
+            system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
             stream: stream,
             tools: chat.config.model.supportsTool ? chat.config.enabledTools.map { $0.rawValue } : []
         )
