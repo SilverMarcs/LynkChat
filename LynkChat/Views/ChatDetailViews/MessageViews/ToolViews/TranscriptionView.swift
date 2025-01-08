@@ -11,11 +11,11 @@ struct TranscriptionView: View {
     var content: String?
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Label("Transcription", systemImage: "waveform")
-                .foregroundColor(.orange)
-                .font(.title3.bold())
-                .shimmerWithoutRedact(when: content == nil)
+//        VStack(alignment: .leading) {
+//            Label(content == nil ? "Transcribing" : "Transcript", systemImage: "waveform")
+//                .foregroundColor(.orange)
+//                .font(.title3.bold())
+//                .shimmerWithoutRedact(when: content == nil)
             
             GroupBox {
                 Text(String.mockTranscription)
@@ -26,7 +26,7 @@ struct TranscriptionView: View {
             }
             .groupBoxStyle(PlatformGroupBoxStyle())
             .animation(.easeIn, value: content != nil) // Add animation
-        }
+//        }
     }
 }
 

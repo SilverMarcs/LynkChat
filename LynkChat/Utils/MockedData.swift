@@ -244,3 +244,58 @@ extension String {
     This is the Micromachine Man presenting the most midget miniature motorcade of micromachines. Each one has dramatic details, terrific trim, precision paint jobs, plus incredible micromachine pocket play sets. There's a police station, fire station, restaurant, service station, and more. Perfect pocket portables to take any place. And there are many miniature play sets to play with, and each one comes with its own special edition micromachine vehicle and fun fantastic features that miraculously move. Raise the boat lift at the airport, marina, man the gun turret at the army base, clean your car at the car wash, raise the toll bridge. And these play sets fit together to form a micromachine world. Micromachine pocket play sets so tremendously tiny, so perfectly precise, so dazzlingly detailed, you'll want to pocket them all. Micromachines and micromachine pocket play sets sold separately from Galoob. The smaller they are, the better they are.
     """
 }
+
+extension String {
+    static let mockTavilyThorough = """
+    {
+      "query": "Squid Game 2 reviews opinions",
+      "responseTime": 1.62,
+      "images": [],
+      "results": [
+        {
+          "title": "Squid Game: Season 2 First Reviews: Just as Twisted and Ruthless, with ...",
+          "url": "https://editorial.rottentomatoes.com/article/squid-game-season-2-first-reviews-just-as-twisted-and-ruthless-with-plenty-of-surprises/",
+          "content": "Squid Game: Season 2 First Reviews: Just as Twisted and Ruthless, with Plenty of Surprises | Rotten Tomatoes 86% Squid Game: Season 2 The worldwide phenomenon is back, as Squid Game returns to Netflix this week for another thrilling season. 86% Squid Game: Season 2 (2024) premiered on Netflix on December 26, 2024. Resident of the states listed in the 'Your Rights' section of NBCUniversal’s Privacy Policy Only: To opt out of selling or sharing/processing for targeted advertising of information such as cookies and device identifiers processed for targeted ads (as defined by law) and related purposes for this site/app on this browser/device, switch this toggle to off (grey color) by moving it left and clicking “Confirm My Choice” below.",
+          "rawContent": null,
+          "score": 0.8014549
+        },
+        {
+          "title": "'Squid Game' Season 2 Review: The Games Work, Everything ... - Forbes",
+          "url": "https://www.forbes.com/sites/paultassi/2024/12/28/squid-game-season-2-review-the-games-work-everything-else-doesnt/",
+          "content": "Squid Game season 2 After three years, Netflix’s most successful show of all time has returned in the form of Squid Game season 2. Squid Game season 2 excels in some ways and not in others, fattened up with what feels like filler content, which is not great for a season only seven episodes long. There is also an interesting dynamic introduced here that was not present in season 1, the ability for players to vote to leave the games after every round, which results in some dramatic sequences and eventually wild moments like sides killing each other in order to secure their numbers. In order to do so, please follow the posting rules in our site's Terms of Service.",
+          "rawContent": null,
+          "score": 0.7116118
+        },
+        {
+          "title": "'Squid Game' Season Two: A spoiler-free review",
+          "url": "https://indianapolisrecorder.com/squid-game-season-2-review/",
+          "content": "Season two of \"Squid Game\" delivers a powerful continuation of the gripping and visceral drama that captivated global audiences in its first outing. Directed by Hwang Dong-hyuk, returning to the series' helm, season two raises the stakes while preserving the elements that made season one a cultural phenomenon.",
+          "rawContent": null,
+          "score": 0.68064564
+        },
+        {
+          "title": "'Squid Game' Season 2 Review - New Games, New Players, Still as Subtle ...",
+          "url": "https://collider.com/squid-game-season-2-review/",
+          "content": "Season 2 switches up the formula for Squid Game to offer a fresh take on the concept. Still, despite a promising start, the show continues to rely too heavily on the same archetypes that made the",
+          "rawContent": null,
+          "score": 0.6701125
+        },
+        {
+          "title": "'Squid Game' Season 2 Arrives With Worse Reviews Than Season 1 - Forbes",
+          "url": "https://www.forbes.com/sites/paultassi/2024/12/26/squid-game-season-2-arrives-with-worse-reviews-than-season-1/",
+          "content": "Squid Game season 2 has finally arrived after three years, the follow-up to the most-watched Netflix series of all time which has become a full-on brand for the service. Squid Game season – 2.2 billion hours viewed, 265.2 million views Stranger Things season 4 – 1.83 billion hours viewed, 140.7 million views Wednesday season 1 – 1.72 billion hours viewed, 252.1 million views Bridgerton season 1 – 929.3 million hours viewed, 113.3 million views Bridgerton season 3 – 846.5 million hours viewed, 106 million views Forbes Community Guidelines In order to do so, please follow the posting rules in our site's Terms of Service. Please read the full list of posting rules found in our site's Terms of Service.",
+          "rawContent": null,
+          "score": 0.57837737
+        }
+      ],
+      "answer": null
+    }
+    """
+
+}
+
+extension String {
+    static let mockTavilyModerate = """
+    [{\"url\":\"https://www.simplymac.com/iphone/iphone-se-4-latest-updates-specs-info-release-date-expectations-rumors\",\"content\":\"Apple’s strategic timing for the SE 4 release allows it to maintain market momentum between flagship iPhone launches. Apple is likely to release the iPhone SE 4 in March 2025. With a rumored March release, it’s expected to feature a modern iPhone XR-like design, a powerful A17 or A18 chip, and possibly Apple’s own 5G modem. The iPhone SE 4 features a significant camera upgrade. Apple may adjust the iPhone SE 4’s price due to its enhanced features. The iPhone SE 4 is generating buzz with its expected upgrades and new features. Apple is likely to launch the iPhone SE 4 in early 2025. What are the rumored new features of the iPhone SE 4?\"},{\"url\":\"https://www.macrumors.com/guide/iphone-se-4/\",\"content\":\"MacRumors guides you through the latest rumors about the iPhone SE 4, expected to launch in 2025. Learn about the possible features, such as an all-display design, a 6.1-inch OLED display, a 48-megapixel camera, and an Apple-designed 5G modem.\"},{\"url\":\"https://www.cnet.com/tech/mobile/iphone-se-4-rumors-apples-next-cheap-phone-may-pack-big-upgrades/\",\"content\":\"iPhone SE 4 Rumors: Apple's Next Cheap Phone May Pack Big Upgrades - CNET iPhone SE 4 Rumors: Apple's Next Cheap Phone May Pack Big Upgrades The iPhone SE Apple/CNET The analyst Kuo also reported in October that mass production of the new iPhone SE would begin in December 2024, further indication that an early 2025 release may be in store for Apple's next tiny phone. If the company is working on another iPhone SE, it will likely have a 6.1-inch screen similar to Apple's modern flagship phones. Apple doesn't disclose the battery capacities for its phones, but it says the iPhone 14 should get five extra hours of video playback compared to the third-generation iPhone SE. If the report is accurate, the iPhone SE will only have one rear camera, unlike Apple's more expensive phones.\"},{\"url\":\"https://www.macrumors.com/2024/12/29/iphone-se-4-rumored-features/\",\"content\":\"Apple plans to release a fourth-generation iPhone SE in March, according to multiple reports and rumors circulating in recent months. The device is expected to have a similar design as the base\"},{\"url\":\"https://www.phonearena.com/iphone-se-4-release-date-price-features-news\",\"content\":\"iPhone SE 4 release date predictions, price, specs, and must-know features - PhoneArena iPhone SE 4 design Adding more weight to the early 2025 launch rumors, well-known Apple insider Mark Gurman recently revealed that Apple is getting close to starting production of the new iPhone SE, codenamed V59. Overall, a March 2025 release seems to be the most likely option, especially with a recent leak again pointing to March as the month Apple will unveil the next-gen iPhone SE model. iPhone SE 4 price If the offers for the iPhone SE 3 are anything to go by, Apple, Verizon, AT&T, and T-Mobile will likely offer similar promotions and discounts when the new model launches. Latest iPhone SE 4 news\"}]
+    """
+}

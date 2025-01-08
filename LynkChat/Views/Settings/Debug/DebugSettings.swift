@@ -70,6 +70,10 @@ struct DebugSettings: View {
                 Toggle("Send debug model", isOn: $config.sendDebugModel)
             }
             
+            Section("UI Settings") {
+                Toggle("Show Raw Tool Response", isOn: $config.showUrlParsingResult)
+            }
+            
             Section {
                 LabeledContent {
                     Button("Hide Debug") {

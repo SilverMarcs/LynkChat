@@ -22,6 +22,7 @@
 		082181602C3880F700171BF3 /* RoundedRectangleOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0821815F2C3880F700171BF3 /* RoundedRectangleOverlay.swift */; };
 		0821816F2C39082900171BF3 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0821816E2C39082900171BF3 /* MessageView.swift */; };
 		082255622CE22D3200AAD32B /* SecretInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082255612CE22D3200AAD32B /* SecretInputView.swift */; };
+		08228CE12D2F176900BB6E8A /* ToolSearchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08228CE02D2F176900BB6E8A /* ToolSearchResultView.swift */; };
 		0822A6C52CF09F31008DF4FC /* ExpandedInputEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */; };
 		08256BF42D1D341300C54BA1 /* DebugSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF32D1D341300C54BA1 /* DebugSettings.swift */; };
 		08256BF72D1D34FA00C54BA1 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08256BF62D1D34FA00C54BA1 /* APIResponse.swift */; };
@@ -88,7 +89,6 @@
 		085C15F12D1DF0BC007245CD /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085C15F02D1DF0BC007245CD /* APIRequest.swift */; };
 		085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */; };
 		086477492D2468D500969DBA /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477482D2468D500969DBA /* FlowLayout.swift */; };
-		0864774B2D24764D00969DBA /* ToolSearchResultsPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0864774A2D24764D00969DBA /* ToolSearchResultsPopover.swift */; };
 		0864774D2D247DB000969DBA /* ChatServiceTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0864774C2D247DB000969DBA /* ChatServiceTab.swift */; };
 		086477552D25237E00969DBA /* ModelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477542D25237E00969DBA /* ModelConfig.swift */; };
 		086477582D2523AD00969DBA /* ModelImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477572D2523AD00969DBA /* ModelImageProvider.swift */; };
@@ -197,9 +197,7 @@
 		08D22A9B2D21D94F007F9F4A /* ToolImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */; };
 		08D22A9D2D21DD12007F9F4A /* ToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9C2D21DD12007F9F4A /* ToolButton.swift */; };
 		08D22A9F2D21E358007F9F4A /* ToolResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9E2D21E358007F9F4A /* ToolResultView.swift */; };
-		08D22AA12D21E620007F9F4A /* ToolSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA02D21E620007F9F4A /* ToolSearchView.swift */; };
 		08D22AA62D22E2C4007F9F4A /* ToolImagePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */; };
-		08D22AAD2D22E368007F9F4A /* ToolSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */; };
 		08D22AB02D22F9D3007F9F4A /* InputFileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AAF2D22F9D3007F9F4A /* InputFileHandler.swift */; };
 		08D22AB22D230608007F9F4A /* Sequence++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB12D230608007F9F4A /* Sequence++.swift */; };
 		08D22AB42D230988007F9F4A /* AudioFileAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB32D230988007F9F4A /* AudioFileAPI.swift */; };
@@ -235,6 +233,7 @@
 		0821815F2C3880F700171BF3 /* RoundedRectangleOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectangleOverlay.swift; sourceTree = "<group>"; };
 		0821816E2C39082900171BF3 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		082255612CE22D3200AAD32B /* SecretInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretInputView.swift; sourceTree = "<group>"; };
+		08228CE02D2F176900BB6E8A /* ToolSearchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchResultView.swift; sourceTree = "<group>"; };
 		0822A6C42CF09F31008DF4FC /* ExpandedInputEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedInputEditor.swift; sourceTree = "<group>"; };
 		08256BF32D1D341300C54BA1 /* DebugSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSettings.swift; sourceTree = "<group>"; };
 		08256BF62D1D34FA00C54BA1 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
@@ -299,7 +298,6 @@
 		085C15F02D1DF0BC007245CD /* APIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 		085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerStepper.swift; sourceTree = "<group>"; };
 		086477482D2468D500969DBA /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
-		0864774A2D24764D00969DBA /* ToolSearchResultsPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchResultsPopover.swift; sourceTree = "<group>"; };
 		0864774C2D247DB000969DBA /* ChatServiceTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatServiceTab.swift; sourceTree = "<group>"; };
 		086477542D25237E00969DBA /* ModelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelConfig.swift; sourceTree = "<group>"; };
 		086477572D2523AD00969DBA /* ModelImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImageProvider.swift; sourceTree = "<group>"; };
@@ -410,9 +408,7 @@
 		08D22A9A2D21D94F007F9F4A /* ToolImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolImageView.swift; sourceTree = "<group>"; };
 		08D22A9C2D21DD12007F9F4A /* ToolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolButton.swift; sourceTree = "<group>"; };
 		08D22A9E2D21E358007F9F4A /* ToolResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResultView.swift; sourceTree = "<group>"; };
-		08D22AA02D21E620007F9F4A /* ToolSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchView.swift; sourceTree = "<group>"; };
 		08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolImagePlaceholderView.swift; sourceTree = "<group>"; };
-		08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchResult.swift; sourceTree = "<group>"; };
 		08D22AAF2D22F9D3007F9F4A /* InputFileHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFileHandler.swift; sourceTree = "<group>"; };
 		08D22AB12D230608007F9F4A /* Sequence++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence++.swift"; sourceTree = "<group>"; };
 		08D22AB32D230988007F9F4A /* AudioFileAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileAPI.swift; sourceTree = "<group>"; };
@@ -971,23 +967,13 @@
 			isa = PBXGroup;
 			children = (
 				08D22AA72D22E2CB007F9F4A /* ImageToolViews */,
-				08D22AA22D22E265007F9F4A /* WebSearchViews */,
 				08D22A9E2D21E358007F9F4A /* ToolResultView.swift */,
 				085276BF2C98794C009184D2 /* ChatToolView.swift */,
 				08D22A9C2D21DD12007F9F4A /* ToolButton.swift */,
 				08D22AB82D23165F007F9F4A /* TranscriptionView.swift */,
+				08228CE02D2F176900BB6E8A /* ToolSearchResultView.swift */,
 			);
 			path = ToolViews;
-			sourceTree = "<group>";
-		};
-		08D22AA22D22E265007F9F4A /* WebSearchViews */ = {
-			isa = PBXGroup;
-			children = (
-				08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */,
-				08D22AA02D21E620007F9F4A /* ToolSearchView.swift */,
-				0864774A2D24764D00969DBA /* ToolSearchResultsPopover.swift */,
-			);
-			path = WebSearchViews;
 			sourceTree = "<group>";
 		};
 		08D22AA72D22E2CB007F9F4A /* ImageToolViews */ = {
@@ -1133,7 +1119,6 @@
 				08915D942C373340008ADE27 /* ProviderImage.swift in Sources */,
 				087906872CA6C73100E5DCAD /* ImageWindow.swift in Sources */,
 				0810F5892CEAFB5C002D4ACF /* ContextResetDivider.swift in Sources */,
-				0864774B2D24764D00969DBA /* ToolSearchResultsPopover.swift in Sources */,
 				0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */,
 				087906892CA6E22900E5DCAD /* ImageContentView.swift in Sources */,
 				089DB5162CA865F70013E5C3 /* MockedData.swift in Sources */,
@@ -1150,7 +1135,6 @@
 				08D22A8C2D212D7B007F9F4A /* String++.swift in Sources */,
 				08D22A9F2D21E358007F9F4A /* ToolResultView.swift in Sources */,
 				08850D8B2CFE0A99004D944C /* PermissionsOnboarding.swift in Sources */,
-				08D22AA12D21E620007F9F4A /* ToolSearchView.swift in Sources */,
 				08C800452C36C10A009581C5 /* MessageMenu.swift in Sources */,
 				08AAFB9C2C3D01A6002C04E0 /* ChatListCards.swift in Sources */,
 				08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */,
@@ -1254,6 +1238,7 @@
 				087F3F942CDE19EC001298B3 /* AboutWindow.swift in Sources */,
 				08A313472C4AD03300C3E578 /* ImageInputView.swift in Sources */,
 				08C5AD752CFB792200F5FEA0 /* CustomCopyButton.swift in Sources */,
+				08228CE12D2F176900BB6E8A /* ToolSearchResultView.swift in Sources */,
 				08CA42B32CF0F4430073BB01 /* MessageGroup.swift in Sources */,
 				08A77CC92C65A3AD0087D0F3 /* SectionFooterView.swift in Sources */,
 				081CB4E52CFC9A320033E6A3 /* AssistantLabel.swift in Sources */,
@@ -1267,7 +1252,6 @@
 				08B82C1D2C74EA9400DC0183 /* ImageViewer.swift in Sources */,
 				085361052C491BF0007DAB62 /* ImageSession.swift in Sources */,
 				08F815342C97F64E00B49355 /* ChatInspector.swift in Sources */,
-				08D22AAD2D22E368007F9F4A /* ToolSearchResult.swift in Sources */,
 				08A222832C2AB4FD00D76C8B /* LynkChatApp.swift in Sources */,
 				089C7E122C405904005E3BE9 /* QuickPanelView.swift in Sources */,
 				08C8003A2C36BA30009581C5 /* InputArea.swift in Sources */,

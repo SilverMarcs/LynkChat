@@ -475,9 +475,6 @@
     "Search" : {
 
     },
-    "Search Results" : {
-
-    },
     "Searching" : {
 
     },
@@ -509,6 +506,9 @@
 
     },
     "Show one window at a time" : {
+
+    },
+    "Show Raw Tool Response" : {
 
     },
     "Skip" : {
@@ -562,7 +562,7 @@
     "Transcribe audio to text" : {
 
     },
-    "Transcription" : {
+    "UI Settings" : {
 
     },
     "Unstar" : {

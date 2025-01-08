@@ -9,19 +9,25 @@ import SwiftUI
 
 struct ToolResultView: View {
     let chatTool: ChatTool
+    @ObservedObject var config = AppConfig.shared
     
     var body: some View {
         switch chatTool.tool {
         case .scrapeLinks:
-            #if DEBUG
-            Text(chatTool.result ?? "Couldnt scrape")
-            #else
-            EmptyView()
-            #endif
+            if config.showUrlParsingResult {
+                Text(chatTool.result ?? "Couldnt scrape")
+            } else {   
+                EmptyView()
+            }
         case .imageGeneration:
             ToolImageView(urlStr: chatTool.result)
         case .webSearch:
-            ToolSearchView(searchString: chatTool.result)
+            if config.showUrlParsingResult {
+                Text(chatTool.result ?? "Couldnt search")
+                    .textSelection(.enabled)
+            } else {
+                ToolSearchResultView(searchString: chatTool.result)
+            }
         case .transcribe:
             TranscriptionView(content: chatTool.result)
         }
@@ -37,7 +43,7 @@ struct ToolResultView: View {
         ToolResultView(chatTool: chatTool1)
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    chatTool1.result = String.mockGoogleSearch
+                    chatTool1.result = String.mockTavilyThorough
                 }
             }
         
