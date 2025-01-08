@@ -33,6 +33,7 @@ struct DebugWebview: View {
             .ignoresSafeArea()
             .overlay(alignment: .topLeading) {
                 DismissButton()
+                    .padding(.leading)
             }
     }
 }

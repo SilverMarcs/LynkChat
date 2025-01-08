@@ -16,17 +16,17 @@ struct DebugWebWindow: Scene {
         if #available(macOS 15.0, *) {
             return Window("Debug", id: WindowID.debugWeb) {
                 DebugWebview()
-                    .toolbarBackground(Color(hex: "#0e0e11"), for: .windowToolbar)
+                    .toolbarBackground(Color(hex: "#0c0d0d"), for: .windowToolbar)
             }
             .restorationBehavior(.disabled)
-            .defaultSize(.init(width: 1200, height: 900))
+            .defaultSize(.init(width: 1100, height: 850))
             .windowStyle(.hiddenTitleBar)
         } else {
             return Window("Debug", id: WindowID.debugWeb) {
                 DebugWebview()
                     .toolbarBackground(Color(hex: "#0c0d0d"), for: .windowToolbar)
             }
-            .defaultSize(.init(width: 1200, height: 900))
+            .defaultSize(.init(width: 1100, height: 850))
             .windowStyle(.hiddenTitleBar)
         }
     }
