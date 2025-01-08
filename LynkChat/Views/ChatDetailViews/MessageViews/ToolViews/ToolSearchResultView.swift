@@ -34,7 +34,7 @@ struct ToolSearchResultView: View {
                 } else {
                     // Placeholder state
                     ForEach(0..<5, id: \.self) { _ in
-                        pillContent(text: "Loading...", url: nil)
+                        pillContent(text: "com.example.com", url: nil)
                     }
                 }
             }
@@ -64,7 +64,7 @@ struct ToolSearchResultView: View {
                         .foregroundStyle(.accent)
                 }
                 
-                Text(text.prefix(30) + (text.count > 30 ? "..." : ""))
+                Text(text.prefix(20) + (text.count > 20 ? "..." : ""))
                     .font(.subheadline)
                     .lineLimit(1)
             }
