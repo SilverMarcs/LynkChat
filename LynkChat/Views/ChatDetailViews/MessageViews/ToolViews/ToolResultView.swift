@@ -12,43 +12,18 @@ struct ToolResultView: View {
     
     var body: some View {
         switch chatTool.tool {
-        case .imageGeneration:
-            if let result = chatTool.result {
-                ToolImageView(urlStr: result)
-            } else {
-                ToolImagePlaceholderView()
-            }
-        case .webSearch:
-            ZStack {
-                if let result = chatTool.result {
-                    ToolSearchView(searchString: result)
-                        .transition(.opacity)
-                } else {
-                    ToolSearchPlaceholderView()
-                        .transition(.opacity)
-                }
-            }
-            .animation(.easeInOut(duration: 0.3), value: chatTool.result != nil)
-
         case .scrapeLinks:
             #if DEBUG
             Text(chatTool.result ?? "Couldnt scrape")
             #else
             EmptyView()
             #endif
+        case .imageGeneration:
+            ToolImageView(urlStr: chatTool.result)
+        case .webSearch:
+            ToolSearchView(searchString: chatTool.result)
         case .transcribe:
-            GroupBox {
-                Group {
-                    if let result = chatTool.result {
-                        ToolTranscribeView(transcription: result)
-                    } else {
-                        ToolTranscribePlaceholderView()
-                    }
-                }
-                .padding(3)
-            }
-            .groupBoxStyle(PlatformGroupBoxStyle())
-            .animation(.easeInOut(duration: 0.3), value: chatTool.result != nil)
+            TranscriptionView(content: chatTool.result)
         }
     }
 }
@@ -61,14 +36,14 @@ struct ToolResultView: View {
     VStack {
         ToolResultView(chatTool: chatTool1)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     chatTool1.result = String.mockGoogleSearch
                 }
             }
         
         ToolResultView(chatTool: chatTool2)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     chatTool2.result = String.mockTranscription + "\n" + String.mockTranscription
                 }
             }

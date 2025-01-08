@@ -198,14 +198,12 @@
 		08D22A9D2D21DD12007F9F4A /* ToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9C2D21DD12007F9F4A /* ToolButton.swift */; };
 		08D22A9F2D21E358007F9F4A /* ToolResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A9E2D21E358007F9F4A /* ToolResultView.swift */; };
 		08D22AA12D21E620007F9F4A /* ToolSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA02D21E620007F9F4A /* ToolSearchView.swift */; };
-		08D22AA42D22E29F007F9F4A /* ToolSearchPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA32D22E29F007F9F4A /* ToolSearchPlaceholderView.swift */; };
 		08D22AA62D22E2C4007F9F4A /* ToolImagePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */; };
 		08D22AAD2D22E368007F9F4A /* ToolSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */; };
 		08D22AB02D22F9D3007F9F4A /* InputFileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AAF2D22F9D3007F9F4A /* InputFileHandler.swift */; };
 		08D22AB22D230608007F9F4A /* Sequence++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB12D230608007F9F4A /* Sequence++.swift */; };
 		08D22AB42D230988007F9F4A /* AudioFileAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB32D230988007F9F4A /* AudioFileAPI.swift */; };
-		08D22AB72D231651007F9F4A /* ToolTranscribeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB62D231651007F9F4A /* ToolTranscribeView.swift */; };
-		08D22AB92D23165F007F9F4A /* ToolTranscribePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB82D23165F007F9F4A /* ToolTranscribePlaceholderView.swift */; };
+		08D22AB92D23165F007F9F4A /* TranscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB82D23165F007F9F4A /* TranscriptionView.swift */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08E2E50A2D231B7200A724B4 /* ShimmeringSkeletonRedact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E2E5092D231B7200A724B4 /* ShimmeringSkeletonRedact.swift */; };
 		08E2E50C2D23244300A724B4 /* ImageSaveUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E2E50B2D23244300A724B4 /* ImageSaveUtil.swift */; };
@@ -413,14 +411,12 @@
 		08D22A9C2D21DD12007F9F4A /* ToolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolButton.swift; sourceTree = "<group>"; };
 		08D22A9E2D21E358007F9F4A /* ToolResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResultView.swift; sourceTree = "<group>"; };
 		08D22AA02D21E620007F9F4A /* ToolSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchView.swift; sourceTree = "<group>"; };
-		08D22AA32D22E29F007F9F4A /* ToolSearchPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchPlaceholderView.swift; sourceTree = "<group>"; };
 		08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolImagePlaceholderView.swift; sourceTree = "<group>"; };
 		08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSearchResult.swift; sourceTree = "<group>"; };
 		08D22AAF2D22F9D3007F9F4A /* InputFileHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFileHandler.swift; sourceTree = "<group>"; };
 		08D22AB12D230608007F9F4A /* Sequence++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence++.swift"; sourceTree = "<group>"; };
 		08D22AB32D230988007F9F4A /* AudioFileAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileAPI.swift; sourceTree = "<group>"; };
-		08D22AB62D231651007F9F4A /* ToolTranscribeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTranscribeView.swift; sourceTree = "<group>"; };
-		08D22AB82D23165F007F9F4A /* ToolTranscribePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTranscribePlaceholderView.swift; sourceTree = "<group>"; };
+		08D22AB82D23165F007F9F4A /* TranscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionView.swift; sourceTree = "<group>"; };
 		08D571672CF7CCAD002EC931 /* MessageGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupList.swift; sourceTree = "<group>"; };
 		08E2E5092D231B7200A724B4 /* ShimmeringSkeletonRedact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringSkeletonRedact.swift; sourceTree = "<group>"; };
 		08E2E50B2D23244300A724B4 /* ImageSaveUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaveUtil.swift; sourceTree = "<group>"; };
@@ -974,12 +970,12 @@
 		08D22A992D21D938007F9F4A /* ToolViews */ = {
 			isa = PBXGroup;
 			children = (
-				08D22AB52D231632007F9F4A /* TranscribeToolViews */,
 				08D22AA72D22E2CB007F9F4A /* ImageToolViews */,
 				08D22AA22D22E265007F9F4A /* WebSearchViews */,
 				08D22A9E2D21E358007F9F4A /* ToolResultView.swift */,
 				085276BF2C98794C009184D2 /* ChatToolView.swift */,
 				08D22A9C2D21DD12007F9F4A /* ToolButton.swift */,
+				08D22AB82D23165F007F9F4A /* TranscriptionView.swift */,
 			);
 			path = ToolViews;
 			sourceTree = "<group>";
@@ -988,7 +984,6 @@
 			isa = PBXGroup;
 			children = (
 				08D22AAC2D22E368007F9F4A /* ToolSearchResult.swift */,
-				08D22AA32D22E29F007F9F4A /* ToolSearchPlaceholderView.swift */,
 				08D22AA02D21E620007F9F4A /* ToolSearchView.swift */,
 				0864774A2D24764D00969DBA /* ToolSearchResultsPopover.swift */,
 			);
@@ -1013,15 +1008,6 @@
 				08D22AB32D230988007F9F4A /* AudioFileAPI.swift */,
 			);
 			path = InputManager;
-			sourceTree = "<group>";
-		};
-		08D22AB52D231632007F9F4A /* TranscribeToolViews */ = {
-			isa = PBXGroup;
-			children = (
-				08D22AB62D231651007F9F4A /* ToolTranscribeView.swift */,
-				08D22AB82D23165F007F9F4A /* ToolTranscribePlaceholderView.swift */,
-			);
-			path = TranscribeToolViews;
 			sourceTree = "<group>";
 		};
 		08F3CA022C705B1600A800F9 /* Windows */ = {
@@ -1150,7 +1136,6 @@
 				0864774B2D24764D00969DBA /* ToolSearchResultsPopover.swift in Sources */,
 				0828E5462D157AF900DED52B /* AutoHeightTextView.swift in Sources */,
 				087906892CA6E22900E5DCAD /* ImageContentView.swift in Sources */,
-				08D22AA42D22E29F007F9F4A /* ToolSearchPlaceholderView.swift in Sources */,
 				089DB5162CA865F70013E5C3 /* MockedData.swift in Sources */,
 				085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */,
 				08D22A982D21CEE3007F9F4A /* ImageServiceTab.swift in Sources */,
@@ -1184,7 +1169,7 @@
 				084C247A2D1FEAFD00AC431F /* ResourceLoader.swift in Sources */,
 				08E2E5102D23AE4500A724B4 /* QPToolsConfigView.swift in Sources */,
 				08CA42B82CF1F1530073BB01 /* EditButton.swift in Sources */,
-				08D22AB92D23165F007F9F4A /* ToolTranscribePlaceholderView.swift in Sources */,
+				08D22AB92D23165F007F9F4A /* TranscriptionView.swift in Sources */,
 				085361092C4923E2007DAB62 /* ImageConfig.swift in Sources */,
 				087F3F872CDDDC3C001298B3 /* AboutSettings.swift in Sources */,
 				084C24402D1F1E5100AC431F /* ImageModelConfig.swift in Sources */,
@@ -1226,7 +1211,6 @@
 				087BB68A2CF707B500B50001 /* Scroller.swift in Sources */,
 				08CA42BC2CF1F1E60073BB01 /* CopyButton.swift in Sources */,
 				085645442C3F98DF00ED84DA /* TitleGenerator.swift in Sources */,
-				08D22AB72D231651007F9F4A /* ToolTranscribeView.swift in Sources */,
 				089825352CE9F55B00980468 /* GenericOnboardingView.swift in Sources */,
 				08D22A902D212DA9007F9F4A /* ModelContext++.swift in Sources */,
 				08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */,

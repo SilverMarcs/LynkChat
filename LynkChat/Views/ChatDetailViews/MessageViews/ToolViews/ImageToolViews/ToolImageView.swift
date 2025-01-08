@@ -9,54 +9,57 @@ import SwiftUI
 import TipKit
 
 struct ToolImageView: View {
-    var urlStr: String
+    var urlStr: String?
     @State private var isHovering = true
     @State private var showCheckmark = false
     
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            AsyncImage(url: URL(string: urlStr)) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .popoverTip(ImageGenToolTip())
-                } else if phase.error != nil {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.red.quinary)
-                        Image(systemName: "exclamationmark.triangle.fill")
+        if let urlStr = urlStr {
+            ZStack(alignment: .topTrailing) {
+                AsyncImage(url: URL(string: urlStr)) { phase in
+                    if let image = phase.image {
+                        image
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundStyle(.red)
-                            .frame(width: 75, height: 75)
+                            .popoverTip(ImageGenToolTip())
+                    } else if phase.error != nil {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.red.quinary)
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundStyle(.red)
+                                .frame(width: 75, height: 75)
+                        }
+                    } else {
+                        ToolImagePlaceholderView()
                     }
-                } else {
-                    ToolImagePlaceholderView()
+                }
+                .frame(width: 300, height: 300)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+                if isHovering {
+                    Button(action: saveImage) {
+                        Image(systemName: showCheckmark ? "checkmark.circle.fill" : "square.and.arrow.up.circle.fill")
+                            .font(.largeTitle)
+                            .rotationEffect(.degrees(showCheckmark ? 0 : 180))
+                        
+                    }
+                    .foregroundStyle(.white, .black.tertiary)
+                    .buttonStyle(.plain)
+                    .padding(10)
                 }
             }
-            .frame(width: 300, height: 300)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            
-            if isHovering {
-                Button(action: saveImage) {
-                    Image(systemName: showCheckmark ? "checkmark.circle.fill" : "square.and.arrow.up.circle.fill")
-                        .font(.largeTitle)
-                        .rotationEffect(.degrees(showCheckmark ? 0 : 180))
-                    
-                }
-                .foregroundStyle(.white, .black.tertiary)
-                .buttonStyle(.plain)
-                .padding(10)
-            }
+            #if os(macOS)
+            .onHover { isHovering = $0 }
+            #endif
+        } else {
+            ToolImagePlaceholderView()
         }
-        #if os(macOS)
-        .onHover { isHovering = $0 }
-        #endif
     }
     
     func saveImage() {
-        guard let url = URL(string: urlStr) else {
-            print("Invalid URL")
+        guard let urlStr = urlStr, let url = URL(string: urlStr) else {
             return
         }
         
