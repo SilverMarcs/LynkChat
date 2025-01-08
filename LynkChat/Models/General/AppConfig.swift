@@ -57,5 +57,5 @@ class AppConfig: ObservableObject {
     @AppStorage("printDebgLogs") var printDebgLogs = false
     @AppStorage("sendDebugModel") var sendDebugModel = false
     #endif
-    
+    @AppStorage("showDebugMenu") var showDebugMenu: Bool = false
 }

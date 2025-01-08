@@ -13,6 +13,8 @@ struct SettingsView: View {
     
     @State private var columnVisibility = NavigationSplitViewVisibility.automatic
     
+    @ObservedObject var config = AppConfig.shared
+    
     var body: some View {
         @Bindable var settingsVM = settingsVM
         
@@ -43,10 +45,10 @@ struct SettingsView: View {
                 Label("About", systemImage: "info.circle")
                     .tag(SettingsTab.about)
                 
-                #if DEBUG
-                Label("Debug", systemImage: "ladybug")
-                    .tag(SettingsTab.debug)
-                #endif
+                if config.showDebugMenu {
+                    Label("Debug", systemImage: "ladybug")
+                        .tag(SettingsTab.debug)
+                }
                          
             }
             #if !os(visionOS)
@@ -81,10 +83,8 @@ struct SettingsView: View {
                 #endif
                 case .about:
                     AboutSettings()
-                #if DEBUG
                 case .debug:
                     DebugSettings()
-                #endif
                 default:
                     EmptyView()
                 }

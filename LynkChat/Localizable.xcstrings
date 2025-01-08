@@ -178,6 +178,9 @@
     "Context Menu" : {
 
     },
+    "Controls visibility of this page" : {
+
+    },
     "Copy" : {
 
     },
@@ -281,6 +284,9 @@
 
     },
     "Help" : {
+
+    },
+    "Hide Debug" : {
 
     },
     "If enabled, chat window will be closed when image window is opened and vice versa" : {

@@ -11,6 +11,8 @@
 		080E0F752D18593200DCA9E3 /* ToolsBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E0F742D18593200DCA9E3 /* ToolsBarView.swift */; };
 		080E70E82CDF1BC100A949C9 /* Tips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70E72CDF1BC100A949C9 /* Tips.swift */; };
 		080E70EE2CDF498F00A949C9 /* ChatStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E70ED2CDF498F00A949C9 /* ChatStatus.swift */; };
+		080F3AB42D2E5611004168C2 /* PasswordHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080F3AB32D2E5611004168C2 /* PasswordHelper.swift */; };
+		080F3AB62D2E56DA004168C2 /* IOSWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080F3AB52D2E56DA004168C2 /* IOSWindow.swift */; platformFilters = (ios, xros, ); };
 		0810F5892CEAFB5C002D4ACF /* ContextResetDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0810F5882CEAFB5C002D4ACF /* ContextResetDivider.swift */; };
 		081297522CF5C3FF00440D19 /* AssistantMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081297512CF5C3FF00440D19 /* AssistantMessage.swift */; };
 		081C1D942C3BD33F0078BB24 /* ChatParameterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081C1D932C3BD33F0078BB24 /* ChatParameterSettings.swift */; };
@@ -112,7 +114,6 @@
 		0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0886050E2CF61E4200A9657C /* ShortcutSettings.swift */; platformFilters = (macos, ); };
 		088A09F32C55C7740055B567 /* TextSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088A09F22C55C7740055B567 /* TextSelectionView.swift */; };
 		088D4AFE2D25823100E86706 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 088D4AFD2D25823100E86706 /* Localizable.xcstrings */; };
-		088DA8F92CA752EF006C017E /* IOSWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088DA8F82CA752EF006C017E /* IOSWindow.swift */; platformFilters = (ios, xros, ); };
 		088EF44E2D23D2FF007E48AE /* ImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088EF44D2D23D2FF007E48AE /* ImageList.swift */; };
 		08915D942C373340008ADE27 /* ProviderImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08915D932C373340008ADE27 /* ProviderImage.swift */; };
 		0893B2022C3955CC00D4D501 /* CustomSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0893B2012C3955CC00D4D501 /* CustomSearchField.swift */; platformFilters = (macos, ); };
@@ -225,6 +226,8 @@
 		080E0F742D18593200DCA9E3 /* ToolsBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsBarView.swift; sourceTree = "<group>"; };
 		080E70E72CDF1BC100A949C9 /* Tips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tips.swift; sourceTree = "<group>"; };
 		080E70ED2CDF498F00A949C9 /* ChatStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatStatus.swift; sourceTree = "<group>"; };
+		080F3AB32D2E5611004168C2 /* PasswordHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordHelper.swift; sourceTree = "<group>"; };
+		080F3AB52D2E56DA004168C2 /* IOSWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSWindow.swift; sourceTree = "<group>"; };
 		0810F5882CEAFB5C002D4ACF /* ContextResetDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextResetDivider.swift; sourceTree = "<group>"; };
 		081297512CF5C3FF00440D19 /* AssistantMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantMessage.swift; sourceTree = "<group>"; };
 		081C1D932C3BD33F0078BB24 /* ChatParameterSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatParameterSettings.swift; sourceTree = "<group>"; };
@@ -324,7 +327,6 @@
 		0886050E2CF61E4200A9657C /* ShortcutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutSettings.swift; sourceTree = "<group>"; };
 		088A09F22C55C7740055B567 /* TextSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSelectionView.swift; sourceTree = "<group>"; };
 		088D4AFD2D25823100E86706 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
-		088DA8F82CA752EF006C017E /* IOSWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSWindow.swift; sourceTree = "<group>"; };
 		088EF44D2D23D2FF007E48AE /* ImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageList.swift; sourceTree = "<group>"; };
 		08915D932C373340008ADE27 /* ProviderImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderImage.swift; sourceTree = "<group>"; };
 		0893B2012C3955CC00D4D501 /* CustomSearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSearchField.swift; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 		0821816B2C39011100171BF3 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				080F3AB32D2E5611004168C2 /* PasswordHelper.swift */,
 				08D22A7C2D212795007F9F4A /* Extensions */,
 				08E2E50B2D23244300A724B4 /* ImageSaveUtil.swift */,
 				08256BFA2D1D9A1800C54BA1 /* HotKeyManager.swift */,
@@ -1024,8 +1027,8 @@
 		08F3CA022C705B1600A800F9 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				080F3AB52D2E56DA004168C2 /* IOSWindow.swift */,
 				089C7E0E2C404E86005E3BE9 /* QuickPanelWindow */,
-				088DA8F82CA752EF006C017E /* IOSWindow.swift */,
 				084C24452D1F3D6800AC431F /* HelpWindow.swift */,
 				08B5D7B72C77A64000D1F100 /* ChatWindow.swift */,
 				087906862CA6C73100E5DCAD /* ImageWindow.swift */,
@@ -1199,6 +1202,7 @@
 				08A222BE2C2ABDB400D76C8B /* InputManager.swift in Sources */,
 				08F840062C9AA26C000CB498 /* CameraView.swift in Sources */,
 				087F99752D26FEFB00D6EDDD /* AnimatingCellHeight.swift in Sources */,
+				080F3AB62D2E56DA004168C2 /* IOSWindow.swift in Sources */,
 				08D22AB02D22F9D3007F9F4A /* InputFileHandler.swift in Sources */,
 				089825252CE9B62900980468 /* APIKeyOnboarding.swift in Sources */,
 				08C49FD82C502EC90085792F /* FileHelper.swift in Sources */,
@@ -1289,7 +1293,6 @@
 				08C800322C36AE1D009581C5 /* ChatList.swift in Sources */,
 				088EF44E2D23D2FF007E48AE /* ImageList.swift in Sources */,
 				08A77CC52C65A0B70087D0F3 /* AppearanceSettings.swift in Sources */,
-				088DA8F92CA752EF006C017E /* IOSWindow.swift in Sources */,
 				0898252D2CE9C0C100980468 /* ReadyPageView.swift in Sources */,
 				08A313492C4AD0DC00C3E578 /* CommonModifiers.swift in Sources */,
 				08D22A842D212C24007F9F4A /* Image++.swift in Sources */,
@@ -1302,6 +1305,7 @@
 				08B8DE1F2C97F3D10041A690 /* AppConfig.swift in Sources */,
 				084C24442D1F34AD00AC431F /* MaxTokens.swift in Sources */,
 				0844C2752CA3E6E100F0A325 /* EmptyChat.swift in Sources */,
+				080F3AB42D2E5611004168C2 /* PasswordHelper.swift in Sources */,
 				085C15F12D1DF0BC007245CD /* APIRequest.swift in Sources */,
 				082A63382C55175E003996B7 /* MiscUtils.swift in Sources */,
 				081C1D982C3BD8A50078BB24 /* GeneralSettings.swift in Sources */,

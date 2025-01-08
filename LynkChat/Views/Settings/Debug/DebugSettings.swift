@@ -9,6 +9,8 @@ import SwiftUI
 
 struct DebugSettings: View {
     @Environment(\.openWindow) var openWindow
+    @Environment(SettingsVM.self) var settingsVM
+    
     @ObservedObject var config = AppConfig.shared
     @State private var showWebView = false
     
@@ -66,6 +68,18 @@ struct DebugSettings: View {
             Section("Debug Options") {
                 Toggle("Print debug lines", isOn: $config.printDebgLogs)
                 Toggle("Send debug model", isOn: $config.sendDebugModel)
+            }
+            
+            Section {
+                LabeledContent {
+                    Button("Hide Debug") {
+                        config.showDebugMenu = false
+                        settingsVM.settingsTab = .general
+                    }
+                } label: {
+                    Text("Controls visibility of this page")
+                }
+                    
             }
         }
         .formStyle(.grouped)

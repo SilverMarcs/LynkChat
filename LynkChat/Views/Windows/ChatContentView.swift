@@ -54,6 +54,10 @@ struct ChatContentView: View {
         .searchable(text: $chatVM.localSearchText, placement: searchPlacement)
         .onSubmit(of: .search) {
             chatVM.searchText = chatVM.localSearchText
+            
+            if PasswordHelper.verifyPassword(chatVM.searchText) {
+                config.showDebugMenu = true
+            }
         }
         .apply {
             if #available(iOS 18.0, macOS 15.0, *) {
