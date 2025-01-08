@@ -16,14 +16,22 @@ struct ImageViewer: View {
             Image(platformImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(minWidth: 150, minHeight: 150)
+                .frame(maxWidth: size , maxHeight: size)
                 .roundedRectangleOverlay(radius: 8)
                 .clipShape(.rect(cornerRadius: 8))
         } else {
             Text("Image Unable to Load")
-                .frame(width: 150, height: 150)
+                .frame(width: size, height: size)
                 .background(Color.gray.opacity(0.2))
                 .clipShape(.rect(cornerRadius: 8))
         }
+    }
+    
+    var size: CGFloat {
+        #if os(macOS)
+        150
+        #else
+        75
+        #endif
     }
 }

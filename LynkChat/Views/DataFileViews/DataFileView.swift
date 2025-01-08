@@ -57,7 +57,7 @@ struct DataFilesView: View {
                 } label: {
                     Label("Remove", systemImage: "xmark.circle.fill")
                         #if !os(macOS)
-                        .padding(10)
+                        .padding(5)
                         .contentShape(.rect)
                         #endif
                 }
