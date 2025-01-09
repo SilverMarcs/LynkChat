@@ -19,7 +19,7 @@ enum TitleGenerator {
             return nil
         }
         
-        let conversationsString = messages.dropLast().map { message in
+        let conversationsString = messages.map { message in
             let dataFiles = message.dataFiles.map { dataFile in
                 "Data file: \(dataFile.fileName)"
             }.joined(separator: "\n")
@@ -35,26 +35,37 @@ enum TitleGenerator {
         """
         
         do {
-            let request = APIRequest(
-                model: "title-model",
-                messages: [APIMessage(
-                    role: .user,
-                    text: wrappedMessage
-                )],
-                temperature: 0.0,
-                maxTokens: 10,
-                system: "Generate Title based on user's instructions",
-                stream: false,
-                tools: []
-            )
+            let request = TitleRequest(prompt: wrappedMessage)
+              
+            guard let url = URL(string: "\(String.apiHost)/chat/title") else {
+              throw URLError(.badURL)
+            }
+
+            var urlRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.setValue(AppConfig.shared.myApiKey, forHTTPHeaderField: "x-api-key")
+            urlRequest.httpBody = try JSONEncoder().encode(request)
+
+
+            let (data, _) = try await URLSession.shared.data(for: urlRequest)
+            let response = try JSONDecoder().decode(TitleResponse.self, from: data)
+
+            AppLogger.info(response.title)
+
+            return response.title
             
-            let response = try await APIService.nonStreamingResponse(from: request)
-            let title = response.text.isEmpty ? "Error generating Title" : response.text
-            
-            return title.trimmingCharacters(in: .whitespacesAndNewlines)
         } catch {
             print("Error: \(error)")
             return nil
         }
     }
+}
+
+struct TitleRequest: Encodable {
+    let prompt: String
+}
+
+struct TitleResponse: Decodable {
+    let title: String
 }

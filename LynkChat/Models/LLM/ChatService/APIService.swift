@@ -8,36 +8,6 @@
 import Foundation
 
 enum APIService {
-    static func nonStreamingResponse(from request: APIRequest) async throws -> APIResponse {
-        AppLogger.warning("Sending request for model: \(String(describing: request.model))")
-        
-        guard var urlRequest = makeRequest(path: .chat, method: .POST) else {
-            throw URLError(.badURL)
-        }
-        
-        urlRequest.httpBody = try JSONEncoder().encode(request)
-        
-        let (data, response) = try await URLSession.shared.data(for: urlRequest)
-        
-        // First check if it's an error response
-        if let httpResponse = response as? HTTPURLResponse,
-           !(200...299).contains(httpResponse.statusCode) {
-            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
-            throw RuntimeError(errorResponse.error)
-        }
-        
-        if let rawResponseString = String(data: data, encoding: .utf8) {
-            AppLogger.debug("\(rawResponseString)")
-        }
-        
-        do {
-            return try JSONDecoder().decode(APIResponse.self, from: data)
-        } catch {
-            AppLogger.fault("Failed to decode response: \(error.localizedDescription)")
-            throw error
-        }
-    }
-    
     static func streamResponse(from request: APIRequest) -> AsyncThrowingStream<ResponseType, Error> {
         AppLogger.warning("Streaming response for model: \(String(describing: request.model))")
         

@@ -25,12 +25,15 @@ enum HTTPMethod: String {
 
 enum APIPath {
     case chat
+    case title
     case image
     
     var pathString: String {
         switch self {
         case .chat:
             return "/chat"
+        case .title:
+            return "/title"
         case .image:
             return "/image"
         }
