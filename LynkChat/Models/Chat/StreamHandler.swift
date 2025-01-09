@@ -88,6 +88,8 @@ struct StreamHandler {
         let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
         
         return APIRequest(
+            userId: "zabir",
+            sessionId: "lynkchat",
             model: AppConfig.shared.sendDebugModel ? "debug" : chat.config.model.id,
             messages: apiMessages,
             temperature: chat.config.temperature,
