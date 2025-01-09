@@ -28,7 +28,7 @@ struct ChatDetailMac: View {
                     onAppearStuff(proxy: proxy)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSScrollView.willStartLiveScrollNotification)) { _ in
-                    withAnimation {
+                    withAnimation(.easeInOut(duration: 0.5)) {
                         AppConfig.shared.expandColor = false
                     }
                 }

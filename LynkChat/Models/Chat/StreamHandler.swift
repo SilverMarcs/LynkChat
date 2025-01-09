@@ -24,7 +24,7 @@ struct StreamHandler {
         var totalTokens = 0
         
         AppConfig.shared.expandColor = true
-        Scroller.scrollToBottom(delay: 0.5)
+        Scroller.scrollToBottom(delay: 0.2)
         
         let apiRequest = await createAPIRequest(stream: true)
         
@@ -76,7 +76,7 @@ struct StreamHandler {
             assistant.content = streamText
             assistant.isReplying = false
             try? assistant.modelContext?.save()
-            withAnimation {
+            withAnimation(.easeInOut(duration: 0.5)) {
                 AppConfig.shared.expandColor = false
             }
         }

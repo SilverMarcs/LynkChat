@@ -65,6 +65,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     @MainActor
     func processRequest(message: Message) async {
+        status = .normal
         errorMessage = ""
         date = Date()
         streamingTask = Task {
@@ -188,7 +189,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         streamingTask?.cancel()
         streamingTask = nil
         errorDeleteLast()
-        withAnimation {
+        withAnimation(.easeInOut(duration: 0.5)) {
             AppConfig.shared.expandColor = false
         }
     }

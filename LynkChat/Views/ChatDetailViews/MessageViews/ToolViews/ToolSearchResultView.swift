@@ -12,7 +12,6 @@ struct ToolSearchResultView: View {
     let searchString: String?
     
     @State private var parsedResults: SearchResult?
-    @State private var parsedSearchItems: [SearchItem]?
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -21,12 +20,6 @@ struct ToolSearchResultView: View {
                     if let parsed = try? JSONDecoder().decode(SearchResult.self, from: searchString.data(using: .utf8) ?? Data()) {
                         ForEach(parsed.results, id: \.url) { result in
                             pillContent(text: result.title, url: result.url)
-                        }
-                    } else if let items = parseEscapedJSONString(searchString) {
-                        ForEach(items, id: \.url) { item in
-                            if let host = URL(string: item.url)?.host {
-                                pillContent(text: host, url: item.url)
-                            }
                         }
                     } else {
                         EmptyView()
@@ -92,15 +85,6 @@ struct ToolSearchResultView: View {
         return nil
     }
     
-    private func parseEscapedJSONString(_ string: String) -> [SearchItem]? {
-        // First, we need to handle the escaped quotes
-        let processedString = string
-            .replacingOccurrences(of: "\\\"", with: "\"") // Replace \" with "
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        return try? JSONDecoder().decode([SearchItem].self, from: processedString.data(using: .utf8) ?? Data())
-    }
-    
     var padding: CGFloat {
         #if os(macOS)
         return 6
@@ -128,9 +112,4 @@ struct SearchResult: Codable {
         let rawContent: String?
         let score: Double
     }
-}
-
-struct SearchItem: Codable {
-    let url: String
-    let content: String
 }
