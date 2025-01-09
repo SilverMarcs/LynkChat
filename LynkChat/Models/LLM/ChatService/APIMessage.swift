@@ -27,13 +27,12 @@ enum ContentItem: Encodable {
     case image(mimeType: String, data: Data)
     
     private enum CodingKeys: String, CodingKey {
-        case type, text, image, audio
+        case type, text, image, mimeType
     }
     
     private enum ContentType: String, Encodable {
         case text
         case image
-        case audio
     }
     
     func encode(to encoder: Encoder) throws {
@@ -45,8 +44,8 @@ enum ContentItem: Encodable {
             try container.encode(text, forKey: .text)
         case .image(let mimeType, let data):
             try container.encode(ContentType.image, forKey: .type)
-            try container.encode(mimeType, forKey: .image) // Optional: Include mimeType if needed
-            try container.encode(data.base64EncodedString(), forKey: .image)
+            try container.encode(data, forKey: .image) // Send raw data directly
+            try container.encode(mimeType, forKey: .mimeType)
         }
     }
 }
