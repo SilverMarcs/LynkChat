@@ -113,9 +113,13 @@ struct ToolSearchResultView: View {
 struct SearchResult: Codable {
     let query: String
     let responseTime: Double
-    let images: [String]
+    let images: [ImageResult]
     let results: [Result]
     let answer: String?
+    
+    struct ImageResult: Codable {
+        let url: String
+    }
     
     struct Result: Codable {
         let title: String

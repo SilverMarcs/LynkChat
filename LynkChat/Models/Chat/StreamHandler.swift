@@ -24,7 +24,7 @@ struct StreamHandler {
         var totalTokens = 0
         
         AppConfig.shared.expandColor = true
-        Scroller.scrollToBottom(delay: 0.3)
+        Scroller.scrollToBottom(delay: 0.5)
         
         let apiRequest = await createAPIRequest(stream: true)
         

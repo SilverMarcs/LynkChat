@@ -68,6 +68,10 @@ final class Chat: Equatable, Identifiable, Hashable {
         errorMessage = ""
         date = Date()
         streamingTask = Task {
+            if AppConfig.shared.autogenTitle {
+                Task { await generateTitle() }
+            }
+            
             let streamer = StreamHandler(chat: self, assistant: message)
             
             // Request background task before starting network operations
@@ -90,10 +94,6 @@ final class Chat: Equatable, Identifiable, Hashable {
             
             streamingTask?.cancel()
             streamingTask = nil
-            
-            if AppConfig.shared.autogenTitle {
-                Task { await generateTitle() }
-            }
         }
     }
 
@@ -205,7 +205,9 @@ final class Chat: Equatable, Identifiable, Hashable {
         guard forced || adjustedContext.count <= 2 else { return }
         
         if let newTitle = await TitleGenerator.generateTitle(messages: adjustedContext) {
-            self.title = newTitle
+            withAnimation {
+                self.title = newTitle
+            }
         }
     }
 

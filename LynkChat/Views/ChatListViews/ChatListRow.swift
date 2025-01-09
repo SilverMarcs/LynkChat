@@ -47,8 +47,6 @@ struct ChatListRow: View {
                 .font(font)
                 .opacity(0.9)
                 .shimmerWithoutRedact(when: chat.isReplying)
-                .transition(.blurReplace)
-//                .animation(.default, value: chat.title)
             
             Spacer()
             
