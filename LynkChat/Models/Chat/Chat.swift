@@ -65,7 +65,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     @MainActor
     func processRequest(message: Message) async {
-        status = .normal
         errorMessage = ""
         date = Date()
         streamingTask = Task {
@@ -120,10 +119,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     func sendInput() async {
         guard !inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
-        }
-        
-        withAnimation {
-            AppConfig.shared.expandColor = true
         }
         
         errorMessage = ""

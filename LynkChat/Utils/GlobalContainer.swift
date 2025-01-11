@@ -26,7 +26,6 @@ let globalContainer: ModelContainer = {
         let modelContext = container.mainContext
         
         // fetch chats with temporary status
-        // TODO: perhaps do this when changing selection
         var fetchTempChats = FetchDescriptor<Chat>()
         let tempId = ChatStatus.temporary.id
         fetchTempChats.predicate = #Predicate { $0.statusId == tempId }
