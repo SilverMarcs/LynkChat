@@ -22,11 +22,17 @@ struct EmptyChat: View {
         VStack {
             Spacer()
             
+            Image("AppIconPng")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 75, height: 75)
+                .opacity(0.9)
+            
             Text("Start a conversation")
                 .font(.system(size: 25, weight: .semibold))
                 .fontWeight(.bold)
                 .opacity(0.9)
-                .padding(.bottom, 15)
+//                .padding(.bottom, 5)
             
             VStack(alignment: .center) {
                 InputArea(chat: chat)
@@ -60,10 +66,12 @@ struct EmptyChat: View {
                             .buttonStyle(.plain)
                         }
                     }
+//                    .padding(.top, 5)
                 }
             }
             .frame(maxWidth: 750)
             .padding(.horizontal, 90)
+            .padding(.bottom, 80)
             
             Spacer()
             
