@@ -151,7 +151,7 @@
     "Clear Search" : {
 
     },
-    "Click button on top right of window to save this chat" : {
+    "Click %@ button on top right of window to save this chat" : {
 
     },
     "Click on %@ to generate a title based on conversation. Configure auto title generation in settings" : {
@@ -539,6 +539,9 @@
 
     },
     "Temporary Chat" : {
+
+    },
+    "TEMPORARY CHAT" : {
 
     },
     "Title" : {

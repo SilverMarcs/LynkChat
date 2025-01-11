@@ -28,7 +28,7 @@ struct EmptyChat: View {
                 .opacity(0.9)
                 .padding(.bottom, 15)
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .center) {
                 InputArea(chat: chat)
                     .multilineTextAlignment(.leading)
                     .scaleEffect(1.05)
@@ -37,28 +37,28 @@ struct EmptyChat: View {
                     .fixedSize()
                 
                 if chat.status == .temporary {
-                    VStack {
-                        Text("Temporary Chat")
-                            .font(.title2).fontWeight(.bold)
-                            .foregroundStyle(.tertiary)
+                    HStack {
+                        Image(systemName: "gauge.with.needle")
                         
-                        Text("Click button on top right of window to save this chat")
-                            .font(.body)
-                            .foregroundStyle(.tertiary)
+                        Text("TEMPORARY CHAT")
+                            .fontWidth(.condensed)
                     }
-                }
-            
-                HStack(alignment: .center) {
-                    ForEach(chats.dropFirst().prefix(4)) { chat in
-                        Button {
-                            chatVM.selections = [chat]
-                        } label: {
-                            ChatListRow(chat: chat, showModel: false)
-                                .frame(maxWidth: 175)
-                                .padding(5)
-                                .background(.quinary, in: .rect(cornerRadius: 10))
+                    .font(.title2).fontWeight(.bold)
+                    .foregroundStyle(.tertiary)
+                    
+                } else {
+                    HStack(alignment: .center) {
+                        ForEach(chats.dropFirst().prefix(4)) { chat in
+                            Button {
+                                chatVM.selections = [chat]
+                            } label: {
+                                ChatListRow(chat: chat, showModel: false)
+                                    .frame(maxWidth: 175)
+                                    .padding(5)
+                                    .background(.quinary, in: .rect(cornerRadius: 10))
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
             }

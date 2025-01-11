@@ -47,6 +47,7 @@ struct ChatToolbar: ToolbarContent {
                 } label: {
                     Label("Save", systemImage: "square.and.arrow.down")
                 }
+                .popoverTip(TemporaryChatTip())
             }
         }
         

@@ -123,3 +123,17 @@ struct AudioUploadingTip: Tip {
         MaxDisplayCount(2)
     }
 }
+
+struct TemporaryChatTip: Tip {
+    var title: Text {
+        Text("Temporary Chat")
+    }
+    
+    var message: Text? {
+        Text("Click \(Image(systemName: "square.and.arrow.down")) button on top right of window to save this chat")
+    }
+    
+    var image: Image? {
+        Image(systemName: "square.and.arrow.down")
+    }
+}
