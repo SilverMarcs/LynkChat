@@ -122,7 +122,7 @@ extension Message {
         } ?? []
         
         // Concatenate texts with the original message content and tool texts
-        let combinedText = (textContents + [content] + toolTexts)
+        let combinedText = (textContents + toolTexts + [content])
             .filter { !$0.isEmpty } // Filter out empty strings
             .joined(separator: "\n\n") // Added double newline for better separation
         

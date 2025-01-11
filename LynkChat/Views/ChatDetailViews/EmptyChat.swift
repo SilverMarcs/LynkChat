@@ -60,13 +60,12 @@ struct EmptyChat: View {
                             } label: {
                                 ChatListRow(chat: chat, showModel: false)
                                     .frame(maxWidth: 175)
-                                    .padding(5)
-                                    .background(.quinary, in: .rect(cornerRadius: 10))
+                                    .padding(3)
+                                    .background(.quinary, in: .rect(cornerRadius: 10, style: .circular))
                             }
                             .buttonStyle(.plain)
                         }
                     }
-//                    .padding(.top, 5)
                 }
             }
             .frame(maxWidth: 750)
