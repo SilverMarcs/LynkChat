@@ -41,6 +41,26 @@ import SwiftUI
     @MainActor
     @discardableResult
     func createNewChat(model: ChatModel? = nil) -> Chat {
+        let predicate = #Predicate<Chat> { chat in
+            chat.rootMessage == nil && (chat.statusId == 1 || chat.statusId == 2)
+        }
+        
+        var descriptor = FetchDescriptor<Chat>(
+            predicate: predicate,
+            sortBy: [SortDescriptor(\.date, order: .reverse)]
+        )
+        
+        descriptor.fetchLimit = 1
+        
+        if let existingEmptyChat = try? globalContainer.mainContext.fetch(descriptor).first {
+            if let model = model {
+                existingEmptyChat.config.model = model
+            }
+            selections = [existingEmptyChat]
+            self.activeChat = existingEmptyChat
+            return existingEmptyChat
+        }
+        
         let newChat = Chat()
         
         if let model = model {

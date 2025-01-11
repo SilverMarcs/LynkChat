@@ -30,7 +30,7 @@ enum APIService {
                             errorData.append(byte)
                         }
                         
-                        AppLogger.critical  ("Server error response: \(String(data: errorData, encoding: .utf8) ?? "Unable to read error data")")
+                        AppLogger.critical("Server error response: \(String(data: errorData, encoding: .utf8) ?? "Unable to read error data")")
                         
                         let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: errorData)
                         throw RuntimeError(errorResponse.error)
@@ -85,9 +85,7 @@ enum APIService {
     }
 }
 
-extension String {
-    #if DEBUG
-    
+extension String {    
     static var apiHost: String {
         if AppConfig.shared.useLocalhost {
             "http://localhost:3000/api"
@@ -95,7 +93,4 @@ extension String {
             "https://lynkchat-server.vercel.app/api"
         }
     }
-    #else
-    static let apiHost = "https://lynkchat-server.vercel.app/api"
-    #endif
 }
