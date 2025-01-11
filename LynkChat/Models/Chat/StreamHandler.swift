@@ -24,9 +24,9 @@ struct StreamHandler {
         var totalTokens = 0
         
         AppConfig.shared.expandColor = true
-        Scroller.scrollToBottom(delay: 0.2)
+        Scroller.scrollToBottom(delay: 0.3)
         
-        let apiRequest = await createAPIRequest(stream: true)
+        let apiRequest = await createAPIRequest()
         
         for try await response in APIService.self.streamResponse(from: apiRequest) {
             switch response {
@@ -82,20 +82,18 @@ struct StreamHandler {
         }
     }
     
-    private func createAPIRequest(stream: Bool) async -> APIRequest {
+    private func createAPIRequest() async -> APIRequest {
         let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
         let apiMessages = await adjustedContext.asyncMap { await $0.toAPIMessage() }
         let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
         
         return APIRequest(
             userId: "zabir",
-            sessionId: "lynkchat",
             model: AppConfig.shared.sendDebugModel ? "debug" : chat.config.model.id,
             messages: apiMessages,
             temperature: chat.config.temperature,
             maxTokens: chat.config.maxTokens.rawValue,
             system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
-            stream: stream,
             tools: chat.config.model.supportsTool ? chat.config.enabledTools.map { $0.rawValue } : []
         )
     }

@@ -10,13 +10,11 @@ import Foundation
 // TODO: make init that must check whether able to send own api key or not.
 struct APIRequest: Encodable {
     let userId: String
-    let sessionId: String
     let model: String
     let messages: [APIMessage]
     let temperature: Double
     let maxTokens: Int
     let system: String?
-    let stream: Bool
     let tools: [String]
 }
 
