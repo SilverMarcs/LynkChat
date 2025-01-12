@@ -33,20 +33,10 @@ struct AppearanceSettings: View {
             }
 
             Section("Markdown") {
-                Picker(selection: $config.markdownProvider) {
-                    ForEach(MarkdownProvider.allCases) { provider in
-                        Text(provider.name)
-                            .tag(provider)
-                    }
-                } label: {
-                    Text("Markdown Provider")
-                    Text("Use webview for best performance and compatibility")
-                }
+                Toggle("Enable Markdown", isOn: $config.isMarkdownEnabled)
+
                 #if os(macOS)
-                .pickerStyle(.radioGroup)
-                #endif
-                
-                if config.markdownProvider == .webview {
+                if config.isMarkdownEnabled {
                     Picker(selection: $config.codeBlockTheme) {
                         ForEach(CodeBlockTheme.allCases, id: \.self) { theme in
                             Text(theme.name)
@@ -61,6 +51,7 @@ struct AppearanceSettings: View {
                         .id(config.codeBlockTheme)
                         .padding(.bottom, -11)
                 }
+                #endif
             }
         }
         .formStyle(.grouped)

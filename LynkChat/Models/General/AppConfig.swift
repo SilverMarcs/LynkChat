@@ -19,12 +19,11 @@ class AppConfig: ObservableObject {
     
     // Appearance
     @AppStorage("codeBlockTheme") var codeBlockTheme: CodeBlockTheme = .atom
+    @AppStorage("isMarkdownEnabled") var isMarkdownEnabled: Bool = true
     #if os(macOS)
     @AppStorage("fontSize") var fontSize: Double = 13
-    @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .webview
     #else
     @AppStorage("fontSize") var fontSize: Double = 17
-    @AppStorage("markdownProvider") var markdownProvider: MarkdownProvider = .basic
     #endif
     
     // General

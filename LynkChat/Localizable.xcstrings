@@ -235,6 +235,9 @@
     "Enable" : {
 
     },
+    "Enable Markdown" : {
+
+    },
     "Enabling this makes input area laggy and is not recommended" : {
 
     },
@@ -341,9 +344,6 @@
 
     },
     "Markdown" : {
-
-    },
-    "Markdown Provider" : {
 
     },
     "Max Tokens" : {
@@ -578,9 +578,6 @@
 
     },
     "Use Localhost" : {
-
-    },
-    "Use webview for best performance and compatibility" : {
 
     },
     "Used" : {

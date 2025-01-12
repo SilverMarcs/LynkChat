@@ -134,6 +134,7 @@ struct InputArea: View {
     }
     
     private func sendInput() {
+        chatVM.searchText = ""
         Task { @MainActor in
             await chat.sendInput()
         }

@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+#if !os(macOS)
 import MarkdownUI
 import HighlightSwift
+#endif
 
 struct MDView: View {
     @Environment(\.searchText) private var searchText
@@ -18,30 +20,18 @@ struct MDView: View {
     var calculatedHeight: Binding<CGFloat>? = nil
 
     var body: some View {
-        switch config.markdownProvider {
-        case .disabled:
-            Text(content)
-                .textSelection(.enabled)
-                .font(.system(size: config.fontSize))
-                .lineSpacing(2)
-        case .basic where !searchText.isEmpty:
-//            MarkdownView(content: content)
-//                .searchText(searchText)
-//                .codeBlockFontSize(config.fontSize - 1)
-//                .highlightCode(isReplying ? false : true)
-//                .textSelection(.enabled)
-//                .font(.system(size: config.fontSize))
-//                .lineSpacing(2)
-//            Text(LocalizedStringKey(content))
-//                .textSelection(.enabled)
-//                .font(.system(size: config.fontSize))
-//                .lineSpacing(2)
-            NativeMarkdownView(text: content, highlightText: searchText)
-                .textSelection(.enabled)
-                .lineSpacing(2)
-                .font(.system(size: config.fontSize))
-                
-        case .basic:
+        if !searchText.isEmpty {
+            // Always use SwiftMarkdownView when there's search text
+            SwiftMarkdownView(
+                content,
+                calculatedHeight: calculatedHeight,
+                fontSize: CGFloat(config.fontSize),
+                highlightString: searchText,
+                baseURL: "LynkChat Web Content",
+                codeBlockTheme: config.codeBlockTheme
+            )
+        } else if config.isMarkdownEnabled {
+            #if !os(macOS)
             Markdown(content)
                 .textSelection(.enabled)
                 .lineSpacing(2)
@@ -70,8 +60,7 @@ struct MDView: View {
                         }
                         .padding(.bottom, 12)
                 }
-            
-        case .webview:
+            #else
             SwiftMarkdownView(
                 content,
                 calculatedHeight: calculatedHeight,
@@ -80,6 +69,13 @@ struct MDView: View {
                 baseURL: "LynkChat Web Content",
                 codeBlockTheme: config.codeBlockTheme
             )
+            #endif
+            
+        } else {
+            Text(content)
+                .textSelection(.enabled)
+                .font(.system(size: config.fontSize))
+                .lineSpacing(2)
         }
     }
 }

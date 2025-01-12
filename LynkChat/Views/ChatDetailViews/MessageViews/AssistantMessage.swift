@@ -33,7 +33,7 @@ struct AssistantMessage: View {
                 .environment(\.isReplying, message.isReplying)
                 .transaction { $0.animation = nil }
                 .apply { view in
-                    if config.markdownProvider == .webview {
+                    if config.isMarkdownEnabled {
                         view
                             .frame(height: message.height, alignment: .top)
                             .onChange(of: height) {
