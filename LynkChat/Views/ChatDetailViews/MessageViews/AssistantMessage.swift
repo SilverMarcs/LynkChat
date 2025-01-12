@@ -32,6 +32,7 @@ struct AssistantMessage: View {
                 .environment(\.searchText, chatVM.searchText)
                 .environment(\.isReplying, message.isReplying)
                 .transaction { $0.animation = nil }
+            #if os(macOS)
                 .apply { view in
                     if config.isMarkdownEnabled {
                         view
@@ -45,6 +46,7 @@ struct AssistantMessage: View {
                         view
                     }
                 }
+            #endif
             
             if !message.dataFiles.isEmpty {
                 ForEach(message.dataFiles, id: \.self) { data in
