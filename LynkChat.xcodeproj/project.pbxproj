@@ -200,7 +200,7 @@
 		08D22AA62D22E2C4007F9F4A /* ToolImagePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */; };
 		08D22AB02D22F9D3007F9F4A /* InputFileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AAF2D22F9D3007F9F4A /* InputFileHandler.swift */; };
 		08D22AB22D230608007F9F4A /* Sequence++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB12D230608007F9F4A /* Sequence++.swift */; };
-		08D22AB42D230988007F9F4A /* AudioFileAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB32D230988007F9F4A /* AudioFileAPI.swift */; };
+		08D22AB42D230988007F9F4A /* ImageKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB32D230988007F9F4A /* ImageKit.swift */; };
 		08D22AB92D23165F007F9F4A /* TranscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22AB82D23165F007F9F4A /* TranscriptionView.swift */; };
 		08D571682CF7CCAD002EC931 /* MessageGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D571672CF7CCAD002EC931 /* MessageGroupList.swift */; };
 		08E2E50A2D231B7200A724B4 /* ShimmeringSkeletonRedact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E2E5092D231B7200A724B4 /* ShimmeringSkeletonRedact.swift */; };
@@ -411,7 +411,7 @@
 		08D22AA52D22E2C4007F9F4A /* ToolImagePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolImagePlaceholderView.swift; sourceTree = "<group>"; };
 		08D22AAF2D22F9D3007F9F4A /* InputFileHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFileHandler.swift; sourceTree = "<group>"; };
 		08D22AB12D230608007F9F4A /* Sequence++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence++.swift"; sourceTree = "<group>"; };
-		08D22AB32D230988007F9F4A /* AudioFileAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileAPI.swift; sourceTree = "<group>"; };
+		08D22AB32D230988007F9F4A /* ImageKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageKit.swift; sourceTree = "<group>"; };
 		08D22AB82D23165F007F9F4A /* TranscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionView.swift; sourceTree = "<group>"; };
 		08D571672CF7CCAD002EC931 /* MessageGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupList.swift; sourceTree = "<group>"; };
 		08E2E5092D231B7200A724B4 /* ShimmeringSkeletonRedact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringSkeletonRedact.swift; sourceTree = "<group>"; };
@@ -991,7 +991,7 @@
 				08E2E50D2D238BE400A724B4 /* InputError.swift */,
 				08D22AAF2D22F9D3007F9F4A /* InputFileHandler.swift */,
 				08A222BD2C2ABDAF00D76C8B /* InputManager.swift */,
-				08D22AB32D230988007F9F4A /* AudioFileAPI.swift */,
+				08D22AB32D230988007F9F4A /* ImageKit.swift */,
 			);
 			path = InputManager;
 			sourceTree = "<group>";
@@ -1138,7 +1138,7 @@
 				08C800452C36C10A009581C5 /* MessageMenu.swift in Sources */,
 				08AAFB9C2C3D01A6002C04E0 /* ChatListCards.swift in Sources */,
 				08256BFB2D1D9A1800C54BA1 /* HotKeyManager.swift in Sources */,
-				08D22AB42D230988007F9F4A /* AudioFileAPI.swift in Sources */,
+				08D22AB42D230988007F9F4A /* ImageKit.swift in Sources */,
 				084C74402C521A8A0015AE2F /* DismissButton.swift in Sources */,
 				087F3F8D2CDDEF5D001298B3 /* Shortcut.swift in Sources */,
 				08C800372C36B8CC009581C5 /* ChatListRow.swift in Sources */,
