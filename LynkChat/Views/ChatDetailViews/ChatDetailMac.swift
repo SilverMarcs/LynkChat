@@ -50,6 +50,7 @@ struct ChatDetailMac: View {
             ForEach(messagesToShow, id: \.self) { group in
                 MessageView(group: group)
                     .environment(\.chat, chat)
+                    .environment(\.searchText, chatVM.searchText)
                     .onAppear {
                         if group == messagesToShow.first {
                             loadMoreMessages()

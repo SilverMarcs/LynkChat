@@ -58,10 +58,17 @@ struct EmptyChat: View {
                             Button {
                                 chatVM.selections = [chat]
                             } label: {
-                                ChatListRow(chat: chat, showModel: false)
-                                    .frame(maxWidth: 175)
-                                    .padding(3)
-                                    .background(.quinary, in: .rect(cornerRadius: 10, style: .circular))
+                                Label {
+                                    Text(chat.title)
+                                } icon: {
+                                    Image(chat.config.model.imageName)
+                                        .foregroundStyle(Color(hex: chat.config.model.color))
+                                }
+                                .frame(maxWidth: 175)
+                                .frame(height: 20)
+                                .padding(4)
+                                .padding(.horizontal, 1)
+                                .background(.quinary, in: .rect(cornerRadius: 9, style: .circular))
                             }
                             .buttonStyle(.plain)
                         }

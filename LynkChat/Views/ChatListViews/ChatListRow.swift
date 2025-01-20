@@ -15,7 +15,6 @@ struct ChatListRow: View {
     @ObservedObject var config = AppConfig.shared
     
     @Bindable var chat: Chat
-    var showModel: Bool = true
 
     var body: some View {
         row
@@ -55,12 +54,10 @@ struct ChatListRow: View {
                 .imageScale(.small)
                 .transition(.symbolEffect(.appear))
             
-            if showModel {
-                Text(chat.config.model.name)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fontWidth(.compressed)
-            }
+            Text(chat.config.model.name)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fontWidth(.compressed)
         }
         .padding(padding)
 //        defaultMinListRowHeight()

@@ -10,6 +10,7 @@ import TipKit
 
 struct UserMessage: View {
     @Environment(\.chat) var chat
+    @Environment(\.searchText) var searchText
     @Environment(\.colorScheme) var colorScheme
     @Environment(ChatVM.self) private var chatVM
     
@@ -30,14 +31,18 @@ struct UserMessage: View {
             
             GroupBox {
                 VStack(alignment: .leading, spacing: 0) {
-                    HighlightableTextView(displayedText, highlightedText: chatVM.searchText)
-//                        .textSelection(.enabled)
-                        .font(.system(size: config.fontSize))
-                        #if os(macOS)
-                        .lineSpacing(2)
-                        .padding(5)
-                        #endif
-                    
+                    if searchText.isEmpty {
+                        HighlightableTextView(displayedText, highlightedText: chatVM.searchText)
+    //                        .textSelection(.enabled)
+                            .font(.system(size: config.fontSize))
+                            #if os(macOS)
+                            .lineSpacing(2)
+                            .padding(5)
+                            #endif
+                    } else {
+                        MDView(content: displayedText)
+                    }
+
 //                    AutoHeightTextView(text: displayedText, height: $textViewHeight)
 //                        .frame(height: group.activeMessage.height, alignment: .top)
 //                         .onChange(of: textViewHeight) {
