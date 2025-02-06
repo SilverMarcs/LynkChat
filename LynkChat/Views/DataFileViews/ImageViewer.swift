@@ -29,7 +29,7 @@ struct ImageViewer: View {
     
     var size: CGFloat {
         #if os(macOS)
-        150
+        100
         #else
         75
         #endif

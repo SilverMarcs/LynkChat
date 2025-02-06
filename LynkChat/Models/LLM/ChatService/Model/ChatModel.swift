@@ -82,7 +82,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     
     var supportsTool: Bool {
         switch self {
-        case .claude3_5sonnet, .claude3_5haiku, .gpt4o, .gpt4omini, .deepseek:
+        case .claude3_5sonnet, .claude3_5haiku, .gpt4o, .gpt4omini, .deepseek, .gemini2Flash:
             true
         default:
             false

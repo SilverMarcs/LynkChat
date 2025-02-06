@@ -38,6 +38,7 @@ struct EmptyChat: View {
                 InputArea(chat: chat)
                     .multilineTextAlignment(.leading)
                     .scaleEffect(1.05)
+//                    .frame(maxHeight: 500)
                 
                 TipView(PlusButtonTip())
                     .fixedSize()
@@ -79,7 +80,7 @@ struct EmptyChat: View {
             .padding(.horizontal, 90)
             .padding(.bottom, 80)
             
-            Spacer()
+            Spacer(minLength: 1)
             
             Text("AI Can make mistakes. Verify important information.")
                 .font(.caption)
