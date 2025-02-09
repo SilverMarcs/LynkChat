@@ -40,7 +40,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
         case .gpt4o: "GPT-4o"
         case .gpt4omini: "GPT-4om"
         case .gemini2Flash: "Gemini-2F"
-        case .deepseek: "DeepSeek"
+        case .deepseek: "DeepSeek-V3"
         case .llama3_70: "Llama-3-70B"
         }
     }

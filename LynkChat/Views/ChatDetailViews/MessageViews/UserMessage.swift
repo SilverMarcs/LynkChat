@@ -33,8 +33,8 @@ struct UserMessage: View {
                 VStack(alignment: .leading, spacing: 0) {
                     if searchText.isEmpty {
                         HighlightableTextView(displayedText, highlightedText: chatVM.searchText)
-//                            .textSelection(.enabled)
-                            .font(.system(size: config.fontSize))
+                            .textSelection(.enabled)
+//                            .font(.system(size: config.fontSize))
                             #if os(macOS)
                             .lineSpacing(2)
                             .padding(5)
