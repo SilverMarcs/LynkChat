@@ -11,7 +11,7 @@ enum ModelGroup: String, CaseIterable, Identifiable {
     case anthropic
     case openAI
     case google
-    case deepseek
+    case deepseek_v3
     case meta
     
     var id: String { self.rawValue }
@@ -21,7 +21,7 @@ enum ModelGroup: String, CaseIterable, Identifiable {
         case .anthropic: "Anthropic"
         case .openAI: "OpenAI"
         case .google: "Google"
-        case .deepseek: "Deepseek"
+        case .deepseek_v3: "deepseek_v3"
         case .meta: "Meta"
         }
     }

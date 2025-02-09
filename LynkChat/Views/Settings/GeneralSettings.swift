@@ -19,7 +19,6 @@ struct GeneralSettings: View {
             Section("Title") {
                 Toggle(isOn: $config.autogenTitle) {
                     Text("Autogenerate Title")
-//                    Text("Uses Deepseek model")
                 }
             }
             

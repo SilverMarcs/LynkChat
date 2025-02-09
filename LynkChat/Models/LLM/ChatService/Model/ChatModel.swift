@@ -14,11 +14,11 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     case gpt4o
     case gpt4omini
     case gemini2Flash
-    case deepseek
+    case deepseek_v3
     case llama3_70
     
     static var allCases: [ChatModel] {
-        [.claude3_5haiku, .claude3_5sonnet, .gpt4omini, .gpt4o, .gemini2Flash, .deepseek, .llama3_70]
+        [.claude3_5haiku, .claude3_5sonnet, .gpt4omini, .gpt4o, .gemini2Flash, .deepseek_v3, .llama3_70]
     }
     
     var id: String {
@@ -28,7 +28,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
         case .gpt4o: "gpt-4o"
         case .gpt4omini: "gpt-4o-mini"
         case .gemini2Flash: "gemini-2-flash"
-        case .deepseek: "deepseek-chat"
+        case .deepseek_v3: "deepseek-chat"
         case .llama3_70: "llama-3-70"
         }
     }
@@ -40,7 +40,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
         case .gpt4o: "GPT-4o"
         case .gpt4omini: "GPT-4om"
         case .gemini2Flash: "Gemini-2F"
-        case .deepseek: "DeepSeek-V3"
+        case .deepseek_v3: "DeepSeek-V3"
         case .llama3_70: "Llama-3-70B"
         }
     }
@@ -50,7 +50,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
             case .claude3_5sonnet, .claude3_5haiku: "claude.symbols"
             case .gpt4o, .gpt4omini: "openai.symbols"
             case .gemini2Flash: "gemini.symbols"
-            case .deepseek: "deepseek.symbols"
+            case .deepseek_v3: "deepseek.symbols"
             case .llama3_70: "meta.symbols"
         }
     }
@@ -60,7 +60,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
         case .claude3_5sonnet, .claude3_5haiku: "#E6784B"
         case .gpt4o, .gpt4omini: "#00947A"
         case .gemini2Flash: "#E64335"
-        case .deepseek: "#4F65E9"
+        case .deepseek_v3: "#4F65E9"
         case .llama3_70: "#2B66D9"
         }
     }
@@ -73,8 +73,8 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
             return .openAI
         case .gemini2Flash:
             return .google
-        case .deepseek:
-            return .deepseek
+        case .deepseek_v3:
+            return .deepseek_v3
         case .llama3_70:
             return .meta
         }
@@ -82,7 +82,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     
     var supportsTool: Bool {
         switch self {
-        case .claude3_5sonnet, .claude3_5haiku, .gpt4o, .gpt4omini, .deepseek, .gemini2Flash:
+        case .claude3_5sonnet, .claude3_5haiku, .gpt4o, .gpt4omini, .deepseek_v3, .gemini2Flash:
             true
         default:
             false
@@ -92,11 +92,9 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     var supportedTypes: Set<UTType> {
         switch self {
         case .claude3_5sonnet, .gpt4o, .gpt4omini, .gemini2Flash:
-            [.text, .pdf, .image, .audio]
-        case .deepseek, .claude3_5haiku:
+            [.text, .pdf, .audio, .image]
+        case .deepseek_v3, .claude3_5haiku, .llama3_70:
             [.text, .pdf, .audio]
-        case .llama3_70:
-            [.text, .pdf]
         }
     }
     
@@ -107,7 +105,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
         case .gpt4o: .init(promptTokens: 3, completionTokens: 8)
         case .gpt4omini: .init(promptTokens: 1, completionTokens: 3)
         case .gemini2Flash: .init(promptTokens: 1, completionTokens: 3)
-        case .deepseek: .init(promptTokens: 2, completionTokens: 4)
+        case .deepseek_v3: .init(promptTokens: 2, completionTokens: 4)
         case .llama3_70: .init(promptTokens: 2, completionTokens: 4)
         }
     }
