@@ -41,16 +41,5 @@ struct QPToolsConfigView: View {
                 }
             }
         ))
-        
-        Toggle("Transcribe", isOn: Binding(
-            get: { config.isToolEnabled(.transcribe) },
-            set: { newValue in
-                if newValue {
-                    config.enableTool(.transcribe)
-                } else {
-                    config.disableTool(.transcribe)
-                }
-            }
-        ))
     }
 }

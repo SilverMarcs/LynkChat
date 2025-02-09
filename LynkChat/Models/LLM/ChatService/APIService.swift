@@ -42,19 +42,25 @@ enum APIService {
                         AppLogger.debug("\(line)")
                         
                         if let data = line.data(using: .utf8) {
-                            let response = try JSONDecoder().decode(ResponseType.self, from: data)
-                            
-                            switch response {
-                            case .text(let textResponse):
-                                continuation.yield(.text(textResponse))
-                            case .toolCall(let toolCallResponse):
-                                continuation.yield(.toolCall(toolCallResponse))
-                            case .toolResult(let toolResultResponse):
-                                continuation.yield(.toolResult(toolResultResponse))
-                            case .finish(let finishResponse):
-                                continuation.yield(.finish(finishResponse))
-                            case .error(let errorResponse):
-                                throw RuntimeError(errorResponse.content)
+                            do {
+                                let response = try JSONDecoder().decode(ResponseType.self, from: data)
+                                
+                                switch response {
+                                case .text(let textResponse):
+                                    continuation.yield(.text(textResponse))
+                                case .toolCall(let toolCallResponse):
+                                    continuation.yield(.toolCall(toolCallResponse))
+                                case .toolResult(let toolResultResponse):
+                                    continuation.yield(.toolResult(toolResultResponse))
+                                case .finish(let finishResponse):
+                                    continuation.yield(.finish(finishResponse))
+                                case .error(let errorResponse):
+                                    throw RuntimeError(errorResponse.content)
+                                }
+                            } catch {
+                                AppLogger.error("Decoding error: \(error.localizedDescription)")
+                                AppLogger.error("Raw response: \(String(data: data, encoding: .utf8) ?? "Unable to convert data to string")")
+                                throw error
                             }
                         }
                     }
@@ -85,7 +91,7 @@ enum APIService {
     }
 }
 
-extension String {    
+extension String {
     static var apiHost: String {
         if AppConfig.shared.useLocalhost {
             "http://localhost:3000/api"

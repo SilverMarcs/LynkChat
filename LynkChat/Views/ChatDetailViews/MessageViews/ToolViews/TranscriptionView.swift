@@ -10,15 +10,9 @@ import SwiftUI
 struct TranscriptionView: View {
     var content: String?
     
-    var body: some View {
-//        VStack(alignment: .leading) {
-//            Label(content == nil ? "Transcribing" : "Transcript", systemImage: "waveform")
-//                .foregroundColor(.orange)
-//                .font(.title3.bold())
-//                .shimmerWithoutRedact(when: content == nil)
-            
+    var body: some View {            
             GroupBox {
-                Text(String.mockTranscription)
+                Text(content ?? String.mockTranscription)
                     .shimmer(when: content == nil)
                     .textSelection(.enabled)
                     .padding(3)

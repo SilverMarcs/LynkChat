@@ -86,7 +86,7 @@ struct StreamHandler {
     
     private func createAPIRequest() async -> APIRequest {
         let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
-        let apiMessages = await adjustedContext.asyncMap { await $0.toAPIMessage() }
+        let apiMessages = await adjustedContext.asyncMap { $0.toAPIMessage() }
         let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
         
         return APIRequest(

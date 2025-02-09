@@ -35,15 +35,6 @@ struct PluginsOnboarding: View {
                                     .foregroundColor(.secondary)
                             }
                         }
-                        
-                        HStack {
-                            Label("Transcribe", systemImage: Tool.transcribe.iconName)
-                            if horizontalSize != .compact {
-                                Spacer()
-                                Text("Transcribe audio to text")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))

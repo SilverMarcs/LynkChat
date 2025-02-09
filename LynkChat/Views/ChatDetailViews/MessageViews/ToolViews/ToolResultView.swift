@@ -28,7 +28,7 @@ struct ToolResultView: View {
             } else {
                 ToolSearchResultView(searchString: chatTool.result)
             }
-        case .transcribe:
+        case .processFile:
             TranscriptionView(content: chatTool.result)
         }
     }

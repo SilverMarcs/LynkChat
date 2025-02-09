@@ -90,19 +90,11 @@ final class Message: Equatable, Identifiable, Hashable {
 
 // TODO: pass tool call and results
 extension Message {
-    func toAPIMessage() async -> APIMessage {
+    func toAPIMessage() -> APIMessage {
         var contentItems = [ContentItem]()
         
         // Process data files
-        let processedDataFiles = await TypedData.processDataFiles(dataFiles)
-        
-        // Add processed text content from data files
-        let textContents = processedDataFiles.compactMap { item -> String? in
-            if case .text(let text) = item {
-                return text.isEmpty ? nil : text // Filter out empty strings
-            }
-            return nil
-        }
+        let processedDataFiles = TypedData.processDataFiles(dataFiles)
         
         // Create tool usage texts
         let toolTexts = tools?.map { tool -> String in
@@ -121,28 +113,18 @@ extension Message {
                 """
         } ?? []
         
-        // Concatenate texts with the original message content and tool texts
-        let combinedText = (textContents + toolTexts + [content])
-            .filter { !$0.isEmpty } // Filter out empty strings
-            .joined(separator: "\n\n") // Added double newline for better separation
+        // Add the original message content and tool texts
+        let userText = ([content] + toolTexts)
+            .filter { !$0.isEmpty }
+            .joined(separator: "\n\n")
         
-        // Only add text content if it's not empty
-        if !combinedText.isEmpty {
-            contentItems.append(.text(combinedText))
+        // Only add user text content if it's not empty
+        if !userText.isEmpty {
+            contentItems.append(.text(userText))
         }
         
-        // Add images from data files
-        let imageItems = processedDataFiles.compactMap { item -> (mimeType: String, data: Data)? in
-            if case .image(let mimeType, let data) = item {
-                return (mimeType: mimeType, data: data)
-            }
-            return nil
-        }
-        
-        // Add image items to contentItems
-        imageItems.forEach { imageItem in
-            contentItems.append(.image(mimeType: imageItem.mimeType, data: imageItem.data))
-        }
+        // Add all processed data files (text, image, and other files)
+        contentItems.append(contentsOf: processedDataFiles)
         
         return APIMessage(role: role, content: contentItems)
     }

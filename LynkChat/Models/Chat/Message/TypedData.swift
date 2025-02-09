@@ -19,14 +19,15 @@ struct TypedData: Codable, Identifiable, Hashable {
     private var textContent: String? {
         if fileType.conforms(to: .text) {
             return String(data: data, encoding: .utf8) ?? "Unable to read text file content"
-        } else if fileType.conforms(to: .pdf) {
-            return PDFDocument(data: data)?.string ?? "Unable to read PDF content"
         }
         return nil
     }
     
     var formattedTextContent: String {
-        guard let content = textContent else { return "Unable to read file content for \(fileName). Notify the user" }
+        guard fileType.conforms(to: .text),
+              let content = textContent else { 
+            return "Non-text file: \(fileName)" 
+        }
         return "\(fileName)\n\(content)\n"
     }
     
@@ -42,22 +43,17 @@ struct TypedData: Codable, Identifiable, Hashable {
         #endif
     }
     
-    static func processDataFiles(_ dataFiles: [TypedData]) async -> [ContentItem] {
+    static func processDataFiles(_ dataFiles: [TypedData]) -> [ContentItem] {
         var contentItems: [ContentItem] = []
         
         for data in dataFiles {
-            if data.fileType.conforms(to: .text) || data.fileType.conforms(to: .pdf) {
+            if data.fileType.conforms(to: .text) {
                 contentItems.append(.text(data.formattedTextContent))
             } else if data.fileType.conforms(to: .image) {
                 contentItems.append(.image(mimeType: data.mimeType, data: data.data))
-            } else if data.fileType.conforms(to: .audio) {
-                do {
-                    let url = try await ImageKit.uploadFile(data: data)
-                    let audioItem: String = "Audio File UR:\n\(url)"
-                    contentItems.append(.text(audioItem))
-                } catch {
-                    print("Error uploading file: \(error)")
-                }
+            } else {
+                // Send non-text, non-image files as raw data
+                contentItems.append(.file(mimeType: data.mimeType, data: data.data, fileName: data.fileName))
             }
         }
         

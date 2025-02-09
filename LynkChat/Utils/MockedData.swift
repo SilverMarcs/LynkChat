@@ -20,7 +20,7 @@ extension ChatTool {
     
     static let mockGoogleTool2 = ChatTool(toolCallId: "googleTool123", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: nil)
 
-    static let mockTranscribeTool = ChatTool(toolCallId: "transcribel123", tool: .transcribe, args: "{key : ddgyusadg67ygyisdgiyas}", result: nil)
+    static let mockTranscribeTool = ChatTool(toolCallId: "transcribel123", tool: .processFile, args: "{key : ddgyusadg67ygyisdgiyas}", result: nil)
 }
 
 extension MessageGroup {

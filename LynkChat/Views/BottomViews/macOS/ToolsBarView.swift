@@ -37,25 +37,6 @@ struct ToolsBarView: View {
         #if os(macOS)
         .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
         #endif
-        
-        toolButton(
-            tool: .transcribe,
-            isEnabled: config.isToolEnabled(.transcribe)
-        ) {
-            withAnimation(.spring(duration: 0.3)) {
-                config.toggleTool(.transcribe)
-            }
-        }
-        .apply {
-            if config.isToolEnabled(.transcribe) {
-                $0.popoverTip(AudioUploadingTip())
-            } else {
-                $0
-            }
-        }
-        #if os(macOS)
-        .opacity(config.isToolEnabled(.transcribe) ? 0.8 : 0.9)
-        #endif
     }
     
     @ViewBuilder
@@ -97,7 +78,7 @@ struct ToolsBarView: View {
     chat.config.enabledTools.insert(.webSearch)
     chat.config.enabledTools.insert(.scrapeLinks)
     chat.config.enabledTools.insert(.imageGeneration)
-    chat.config.enabledTools.insert(.transcribe)
+    chat.config.enabledTools.insert(.processFile)
     
     return InputArea(chat: chat)
         .environment(ChatVM())
