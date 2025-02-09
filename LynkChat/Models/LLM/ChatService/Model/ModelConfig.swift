@@ -19,7 +19,10 @@ class ModelConfig: ObservableObject {
     @AppStorage("enable_gpt4o") var enable_gpt4o: Bool = true
     @AppStorage("enable_gpt4omini") var enable_gpt4omini: Bool = true
     @AppStorage("enable_gemini2Flash") var enable_gemini2Flash: Bool = true
+    
     @AppStorage("enable_deepseek_v3") var enable_deepseek_v3: Bool = true
+    @AppStorage("enable_deepseek_r1") var enable_deepseek_r1: Bool = true
+    
     @AppStorage("enable_llama_3_70") var enable_llama_3_70: Bool = true
 
     func binding(for model: ChatModel) -> Binding<Bool> {
@@ -54,6 +57,11 @@ class ModelConfig: ObservableObject {
                get: { self.enable_deepseek_v3 },
                set: { self.enable_deepseek_v3 = $0 }
            )
+       case .deepseek_r1:
+           Binding(
+                get: { self.enable_deepseek_r1 },
+                set: { self.enable_deepseek_r1 = $0 }
+                )
        case .llama3_70:
            Binding(
                get: { self.enable_llama_3_70 },
@@ -70,6 +78,7 @@ class ModelConfig: ObservableObject {
        case .gpt4omini: return enable_gpt4omini
        case .gemini2Flash: return enable_gemini2Flash
        case .deepseek_v3: return enable_deepseek_v3
+       case .deepseek_r1: return enable_deepseek_r1
        case .llama3_70: return enable_llama_3_70
        }
     }

@@ -53,6 +53,6 @@ extension String {
     """
     
     static let toolExtras = """
-    The assistant has access to tools like Web Search for finding latest information beyond your knowledge cutoff, Image Generation to generate images as per user request and Transcribe to transcribe potential audio files to text fof further analysis. If the user made a request that requires usage of such tools but did not pass such tools to you, you may notify the user to enable them in settings. But unless you are most certain that user's messages do not require using tools, make no mention of these tools.
+    The assistant has access to tools like Web Search for finding latest information beyond your knowledge cutoff, Image Generation to generate images as per user request. If the user made a request that requires usage of such tools but did not pass such tools to you, you may notify the user to enable them in settings. But unless you are most certain that user's messages do not require using tools, make no mention of these tools.
     """
 }
