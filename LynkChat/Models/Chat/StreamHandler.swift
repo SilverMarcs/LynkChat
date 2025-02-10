@@ -20,6 +20,7 @@ struct StreamHandler {
     @MainActor
     func handleRequest() async throws {
         var streamText = ""
+        var reasoning = ""
         var lastUIUpdateTime = Date()
         var totalTokens = 0
         
@@ -30,11 +31,15 @@ struct StreamHandler {
         
         let apiRequest = await createAPIRequest()
         
-        for try await response in APIService.self.streamResponse(from: apiRequest) {
+        for try await response in APIService.streamResponse(from: apiRequest) {
             switch response {
             case .text(let textResponse):
                 streamText += textResponse.content
-                updateUIIfNeeded(streamText: streamText, lastUpdateTime: &lastUIUpdateTime)
+                updateUIIfNeeded(streamText: streamText, reasoning: reasoning, lastUpdateTime: &lastUIUpdateTime)
+                
+            case .reasoning(let reasoningResponse):
+                reasoning += reasoningResponse.reasoning
+                updateUIIfNeeded(streamText: streamText, reasoning: reasoning, lastUpdateTime: &lastUIUpdateTime)
                 
             case .toolCall(let toolCallResponse):
                 assistant.tools?.append(.init(
@@ -64,10 +69,11 @@ struct StreamHandler {
     }
     
     @MainActor
-    private func updateUIIfNeeded(streamText: String, lastUpdateTime: inout Date) {
+    private func updateUIIfNeeded(streamText: String, reasoning: String, lastUpdateTime: inout Date) {
         let currentTime = Date()
         if currentTime.timeIntervalSince(lastUpdateTime) >= Float.UIIpdateInterval {
             assistant.content = streamText
+            assistant.reasoning = reasoning
             lastUpdateTime = currentTime
         }
     }

@@ -292,6 +292,9 @@
     "Hide Debug" : {
 
     },
+    "Hide reasoning" : {
+
+    },
     "If enabled, chat window will be closed when image window is opened and vice versa" : {
 
     },
@@ -509,6 +512,9 @@
 
     },
     "Show Raw Tool Response" : {
+
+    },
+    "Show reasoning" : {
 
     },
     "Skip" : {

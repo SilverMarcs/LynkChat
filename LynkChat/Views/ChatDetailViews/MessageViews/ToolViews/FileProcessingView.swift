@@ -1,5 +1,5 @@
 //
-//  TranscriptionView.swift
+//  FileProcessingView.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 30/12/2024.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct TranscriptionView: View {
+struct FileProcessingView: View {
     var content: String?
     
-    var body: some View {            
+    var body: some View {
             GroupBox {
                 Text(content ?? String.mockTranscription)
                     .shimmer(when: content == nil)
@@ -25,5 +25,5 @@ struct TranscriptionView: View {
 }
 
 #Preview {
-    TranscriptionView()
+    FileProcessingView()
 }

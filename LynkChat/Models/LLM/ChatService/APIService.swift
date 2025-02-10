@@ -48,6 +48,8 @@ enum APIService {
                                 switch response {
                                 case .text(let textResponse):
                                     continuation.yield(.text(textResponse))
+                                case .reasoning(let reasoningResponse):
+                                    continuation.yield(.reasoning(reasoningResponse))
                                 case .toolCall(let toolCallResponse):
                                     continuation.yield(.toolCall(toolCallResponse))
                                 case .toolResult(let toolResultResponse):

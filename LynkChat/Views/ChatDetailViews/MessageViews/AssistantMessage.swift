@@ -17,6 +17,7 @@ struct AssistantMessage: View {
     
     @State var height: CGFloat = 0
     @State private var showingTextSelection = false
+    @State private var showingReasoning = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -26,6 +27,20 @@ struct AssistantMessage: View {
             
             if let tools = message.tools, !tools.isEmpty {
                 ChatToolView(tools: tools)
+            }
+            
+            if let reason = message.reasoning, !reason.isEmpty {
+                Button {
+                    showingReasoning.toggle()
+                } label: {
+                    Text(showingReasoning ? "Hide reasoning" : "Show reasoning")
+                        .textSelection(.enabled)
+                }
+                
+                if showingReasoning {
+                    Text(reason)
+                        .foregroundStyle(.secondary)
+                }
             }
             
             MDView(content: message.content, calculatedHeight: $height)

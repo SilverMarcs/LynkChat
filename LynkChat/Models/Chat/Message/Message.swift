@@ -16,6 +16,7 @@ final class Message: Equatable, Identifiable, Hashable {
     var model: ChatModel
     var role: Role
     var content: String
+    var reasoning: String?
 
     @Relationship(deleteRule: .cascade)
     var dataFiles: [TypedData]
@@ -32,6 +33,7 @@ final class Message: Equatable, Identifiable, Hashable {
     
     private init(role: Role,
                  content: String = "",
+                 reasoning: String? = nil,
                  model: ChatModel,
                  dataFiles: [TypedData],
                  tools: [ChatTool]?,
@@ -39,6 +41,7 @@ final class Message: Equatable, Identifiable, Hashable {
                  height: CGFloat) {
         self.role = role
         self.content = content
+        self.reasoning = reasoning
         self.model = model
         self.dataFiles = dataFiles
         self.tools = tools
@@ -50,6 +53,7 @@ final class Message: Equatable, Identifiable, Hashable {
         return Message(
             role: role,
             content: content,
+            reasoning: reasoning,
             model: model,
             dataFiles: dataFiles,
             tools: tools,
@@ -113,8 +117,12 @@ extension Message {
                 """
         } ?? []
         
-        // Add the original message content and tool texts
-        let userText = ([content] + toolTexts)
+        // Add the original message content, reasoning (if exists), and tool texts
+        let messageComponents = [content]
+            + (reasoning.map { ["Reasoning: \($0)"] } ?? [])
+            + toolTexts
+        
+        let userText = messageComponents
             .filter { !$0.isEmpty }
             .joined(separator: "\n\n")
         

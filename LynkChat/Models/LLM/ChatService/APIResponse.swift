@@ -14,6 +14,11 @@ struct TextResponse: Decodable {
     let content: String
 }
 
+struct ReasoningResponse: Decodable {
+    let type: String
+    let reasoning: String
+}
+
 struct FinishResponse: Decodable {
     let type: String
     let promptTokens: Int
@@ -42,6 +47,7 @@ struct ToolResultResponse: Decodable {
 // MARK: - Streaming Response
 enum ResponseType: Decodable {
     case text(TextResponse)
+    case reasoning(ReasoningResponse)
     case finish(FinishResponse)
     case error(ErrorResponse)
     case toolCall(ToolCallResponse)
@@ -52,6 +58,8 @@ enum ResponseType: Decodable {
         
         if let textResponse = try? container.decode(TextResponse.self) {
             self = .text(textResponse)
+        } else if let reasoningResponse = try? container.decode(ReasoningResponse.self) {
+            self = .reasoning(reasoningResponse)
         } else if let finishResponse = try? container.decode(FinishResponse.self) {
             self = .finish(finishResponse)
         } else if let errorResponse = try? container.decode(ErrorResponse.self) {

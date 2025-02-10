@@ -29,7 +29,7 @@ struct ToolResultView: View {
                 ToolSearchResultView(searchString: chatTool.result)
             }
         case .processFile:
-            TranscriptionView(content: chatTool.result)
+            FileProcessingView(content: chatTool.result)
         }
     }
 }
