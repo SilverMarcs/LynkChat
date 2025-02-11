@@ -36,7 +36,7 @@ struct UserMessage: View {
                             .textSelection(.enabled)
 //                            .font(.system(size: config.fontSize))
                             #if os(macOS)
-                            .lineSpacing(2)
+//                            .lineSpacing(2)
                             .padding(5)
                             #endif
                     } else {

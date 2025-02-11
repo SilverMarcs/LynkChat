@@ -40,6 +40,7 @@ struct AssistantMessage: View {
                 if showingReasoning {
                     Text(reason)
                         .foregroundStyle(.secondary)
+                        .padding(.vertical, -10)
                 }
             }
             
