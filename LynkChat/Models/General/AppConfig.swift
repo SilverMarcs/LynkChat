@@ -34,7 +34,6 @@ class AppConfig: ObservableObject {
     
     // Onboarding
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
-    @AppStorage("hasUsedChatStatusFilter") var hasUsedChatStatusFilter = false
     
     func resetFontSize() {
         #if os(macOS)

@@ -98,7 +98,7 @@ extension String {
         if AppConfig.shared.useLocalhost {
             "http://localhost:3000/api"
         } else {
-            "https://lynkchat-server.vercel.app/api"
+            "https://api-server-gray.vercel.app/api"
         }
     }
 }

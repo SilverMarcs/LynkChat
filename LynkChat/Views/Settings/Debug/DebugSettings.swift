@@ -41,14 +41,6 @@ struct DebugSettings: View {
             
             Section("Reset Settings") {
                 LabeledContent {
-                    Button("Reset Chat filter usage") {
-                        config.hasUsedChatStatusFilter = false
-                    }
-                } label: {
-                    Text("Reset Chat filter usage: \(config.hasUsedChatStatusFilter)")
-                }
-
-                LabeledContent {
                     Button("Reset First Launch") {
                         config.finishedInitialSetup = false
                     }

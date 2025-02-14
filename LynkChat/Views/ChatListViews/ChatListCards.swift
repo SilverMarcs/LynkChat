@@ -55,19 +55,8 @@ struct ChatListCards: View {
                 count: chatCount) {
                     handleChatPress()
                 }
-                .symbolEffect(.bounce.down, options: .speed(0.1), isActive: config.hasUsedChatStatusFilter == false)
                 .contentTransition(.symbolEffect(.replace.offUp))
                 .disabled(isSearching)
-                .onAppear {
-                    if !config.hasUsedChatStatusFilter {
-                        isFlashing = true
-                    }
-                }
-                .onChange(of: config.hasUsedChatStatusFilter) {
-                    if config.hasUsedChatStatusFilter {
-                        isFlashing = false
-                    }
-                }
             
             ListCard(
                 icon: "photo.circle.fill", iconColor: .indigo, title: "Images",
@@ -96,7 +85,6 @@ struct ChatListCards: View {
     }
     
     func cycleChatStatus() {
-        config.hasUsedChatStatusFilter = true
         let statusesToCycle = ChatStatus.allCases.filter { $0 != .quick && $0 != .temporary }
         
         guard let currentStatusIndex = statusesToCycle.firstIndex(of: chatVM.statusFilter) else {
