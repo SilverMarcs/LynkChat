@@ -126,10 +126,9 @@ struct InputArea: View {
                 .frame(height: 15)
             
             ModelPicker(selectedModel: $chat.config.model)
-            
-            .buttonStyle(.borderless)
-            .labelsHidden()
-            .opacity(0.65)
+                .buttonStyle(.borderless)
+                .labelsHidden()
+                .opacity(0.65)
         }
     }
     

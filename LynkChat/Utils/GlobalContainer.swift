@@ -10,7 +10,6 @@ import Foundation
 
 @MainActor
 let globalContainer: ModelContainer = {
-//    AppLogger.info(URL.applicationSupportDirectory.path(percentEncoded: false))
     print((URL.applicationSupportDirectory.path(percentEncoded: false)))
     let schema = Schema([
         Chat.self,
@@ -40,15 +39,11 @@ let globalContainer: ModelContainer = {
             return container // Return the container if setup is already done
         }
         
-        // Create default chats
-//        for model in ChatModel.allCases {
-//            let chat = Chat()
-//            chat.config.model = model
-//            chat.title = model.name + " Chat"
-//            let group = MessageGroup(message: Message.assistant(model: model, content: "Hi I am \(model.name). How may I help you?"))
-//            modelContext.insert(chat)
-//        }
-        // TODO create chats with info/help
+        let chat = Chat()
+        chat.config.model = .gemini2Flash
+        chat.title = "Welcome to LynkChat"
+        let group = MessageGroup(message: Message.assistant(model: .gemini2Flash, content: String.onboarding))
+        modelContext.insert(chat)
         
         // Image session,
         modelContext.insert(ImageSession())

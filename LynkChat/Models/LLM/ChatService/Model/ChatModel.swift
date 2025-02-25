@@ -19,7 +19,16 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     case llama3_70
     
     static var allCases: [ChatModel] {
-        [.claude3_5haiku, .claude3_7sonnet, .gpt4omini, .gpt4o, .gemini2Flash, .deepseek_v3, .deepseek_r1, .llama3_70]
+        [
+            .claude3_5haiku,
+            .claude3_7sonnet,
+            .gpt4omini,
+            .gpt4o,
+            .gemini2Flash,
+            .deepseek_v3,
+            .deepseek_r1,
+            .llama3_70
+        ]
     }
     
     var id: String {

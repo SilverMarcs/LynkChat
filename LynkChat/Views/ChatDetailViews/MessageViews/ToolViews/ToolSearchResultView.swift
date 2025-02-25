@@ -22,7 +22,12 @@ struct ToolSearchResultView: View {
                             pillContent(text: result.title, url: result.url)
                         }
                     } else {
-                        EmptyView()
+                        // Show raw text if parsing fails
+                        Text(searchString)
+                            .padding(.horizontal, padding)
+                            .padding(.vertical, padding - 2)
+                            .background(.quaternary.opacity(0.6))
+                            .clipShape(.rect(cornerRadius: 12, style: .circular))
                     }
                 } else {
                     // Placeholder state
@@ -65,7 +70,7 @@ struct ToolSearchResultView: View {
             .disabled(searchString == nil)
             .padding(.horizontal, padding)
             .padding(.vertical, padding - 2)
-            .background(.quaternary.opacity(0.6))
+            .background(.quinary.opacity(0.6))
             .background {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .strokeBorder(.quaternary, lineWidth: 1)

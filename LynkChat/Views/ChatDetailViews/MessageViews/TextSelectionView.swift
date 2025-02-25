@@ -19,9 +19,15 @@ struct TextSelectionView: View {
                 #if !os(macOS)
                 SelectableTextView(text: content)
                 #else
-                Text(content)
+                ScrollView {
+                    Text(content)
+                        .safeAreaPadding()
+                        .multilineTextAlignment(.leading)
+                        .textSelection(.enabled)
+                }
+                .frame(width: 700, height: 700)
                 #endif
-            }
+                }
                 .navigationTitle("Select Text")
                 .toolbarTitleDisplayMode(.inline)
                 .toolbar {

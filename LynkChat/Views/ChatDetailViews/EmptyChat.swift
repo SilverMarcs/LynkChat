@@ -32,13 +32,11 @@ struct EmptyChat: View {
                 .font(.system(size: 25, weight: .semibold))
                 .fontWeight(.bold)
                 .opacity(0.9)
-//                .padding(.bottom, 5)
             
             VStack(alignment: .center) {
                 InputArea(chat: chat)
                     .multilineTextAlignment(.leading)
                     .scaleEffect(1.05)
-//                    .frame(maxHeight: 500)
                 
                 TipView(PlusButtonTip())
                     .fixedSize()

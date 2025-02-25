@@ -11,8 +11,8 @@ class ModelConfig: ObservableObject {
     static let shared = ModelConfig()
     private init() {}
     
-    @AppStorage("defaultModel") var defaultModel: ChatModel = .claude3_5haiku
-    @AppStorage("quickModel") var quickModel: ChatModel = .claude3_5haiku
+    @AppStorage("defaultModel") var defaultModel: ChatModel = .gemini2Flash
+    @AppStorage("quickModel") var quickModel: ChatModel = .gemini2Flash
     
     @AppStorage("enable_claude3_5sonnet") var enable_claude3_5sonnet: Bool = true
     @AppStorage("enable_claude3_5haiku") var enable_claude3_5haiku: Bool = true

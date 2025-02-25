@@ -22,7 +22,7 @@ struct ToolsBarView: View {
             }
         }
         #if os(macOS)
-        .opacity((config.isToolEnabled(.webSearch) || config.isToolEnabled(.scrapeLinks) ? 0.85 : 0.9))
+        .opacity(0.85)
         #endif
         
         toolButton(
@@ -33,9 +33,9 @@ struct ToolsBarView: View {
                 config.toggleTool(.imageGeneration)
             }
         }
-        .scaleEffect(config.isToolEnabled(.imageGeneration) ? 0.95 : 0.9)
+        .scaleEffect(0.95)
         #if os(macOS)
-        .opacity(config.isToolEnabled(.imageGeneration) ? 0.8 : 0.9)
+        .opacity(0.8)
         #endif
     }
     
@@ -48,25 +48,25 @@ struct ToolsBarView: View {
         Button(action: action) {
             Label(tool.shortTitle, systemImage: tool.iconName)
             #if os(macOS)
-                .imageScale(isEnabled ? .medium : .large)
-                .padding(.horizontal, isEnabled ? 7 : 2)
-                .padding(.vertical, isEnabled ? 3 : 0)
+                .imageScale(.medium)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
                 .foregroundStyle(isEnabled ? tool.color : .secondary)
                 .background {
                     RoundedRectangle(cornerRadius: 10, style: .circular)
-                        .fill(isEnabled ? tool.color.opacity(0.10) : .clear)
-                        .stroke(isEnabled ? tool.color.opacity(0.3) : .clear, lineWidth: 1)
+                        .fill(isEnabled ? tool.color.opacity(0.10) : Color.gray.opacity(0.1))
+                        .stroke(isEnabled ? tool.color.opacity(0.3) : Color.gray.opacity(0.3), lineWidth: 1)
                 }
-                .labelStyle(includingText: isEnabled)
                 .contentShape(Rectangle())
             #else
                 .labelStyle(.iconOnly)
                 .foregroundStyle(isEnabled ? tool.color : .secondary)
             #endif
+                .symbolEffect(.bounce, value: isEnabled)
         }
         .buttonStyle(.plain)
         #if os(macOS)
-        .padding(.horizontal, isEnabled ? 2 : 5)
+        .padding(.horizontal, 2)
         #else
         .padding(.horizontal, 5)
         #endif
@@ -85,13 +85,13 @@ struct ToolsBarView: View {
         .frame(height: 94)
 }
 
-extension View {
-    @ViewBuilder
-    func labelStyle(includingText: Bool) -> some View {
-        if includingText {
-            self.labelStyle(.titleAndIcon)
-        } else {
-            self.labelStyle(.iconOnly)
-        }
-    }
-}
+//extension View {
+//    @ViewBuilder
+//    func labelStyle(includingText: Bool) -> some View {
+//        if includingText {
+//            self.labelStyle(.titleAndIcon)
+//        } else {
+//            self.labelStyle(.iconOnly)
+//        }
+//    }
+//}
