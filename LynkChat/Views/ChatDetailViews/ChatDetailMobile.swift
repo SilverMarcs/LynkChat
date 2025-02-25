@@ -64,6 +64,9 @@ struct ChatDetailMobile: View {
     
     var list: some View {
         List {
+            TipView(ContextMenuTip())
+                .frame(maxWidth: 300, alignment: .trailing)
+            
             ForEach(chat.currentThread, id: \.self) { group in
                 MessageView(group: group)
                     .environment(\.chat, chat)
