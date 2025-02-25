@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct ChatDetailMac: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -48,6 +49,9 @@ struct ChatDetailMac: View {
     var list: some View {
         List {
             ForEach(messagesToShow, id: \.self) { group in
+                TipView(ContextMenuTip())
+                    .frame(maxWidth: 300, alignment: .trailing)
+                
                 MessageView(group: group)
                     .environment(\.chat, chat)
                     .environment(\.searchText, chatVM.searchText)

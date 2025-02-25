@@ -27,7 +27,7 @@ class ModelConfig: ObservableObject {
 
     func binding(for model: ChatModel) -> Binding<Bool> {
        switch model {
-       case .claude3_5sonnet:
+       case .claude3_7sonnet:
            Binding(
                get: { self.enable_claude3_5sonnet },
                set: { self.enable_claude3_5sonnet = $0 }
@@ -72,7 +72,7 @@ class ModelConfig: ObservableObject {
 
     func isEnabled(_ model: ChatModel) -> Bool {
        switch model {
-       case .claude3_5sonnet: return enable_claude3_5sonnet
+       case .claude3_7sonnet: return enable_claude3_5sonnet
        case .claude3_5haiku: return enable_claude3_5haiku
        case .gpt4o: return enable_gpt4o
        case .gpt4omini: return enable_gpt4omini
