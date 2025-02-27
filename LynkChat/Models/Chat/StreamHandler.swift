@@ -11,7 +11,8 @@ import SwiftUI
 struct StreamHandler {
     private let chat: Chat
     private var assistant: Message
-
+    private let toolsLock = NSLock() // Add this lock
+    
     init(chat: Chat, assistant: Message) {
         self.chat = chat
         self.assistant = assistant
@@ -42,17 +43,10 @@ struct StreamHandler {
                 updateUIIfNeeded(streamText: streamText, reasoning: reasoning, lastUpdateTime: &lastUIUpdateTime)
                 
             case .toolCall(let toolCallResponse):
-                assistant.tools?.append(.init(
-                    toolCallId: toolCallResponse.toolCallId,
-                    tool: toolCallResponse.tool,
-                    args: toolCallResponse.args,
-                    result: nil
-                ))
+                updateTools(with: toolCallResponse)
                 
             case .toolResult(let toolResultResponse):
-                if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
-                    assistant.tools?[index].result = toolResultResponse.result
-                }
+                updateToolResult(for: toolResultResponse)
                 
             case .finish(let finishResponse):
                 totalTokens = calculateTotalTokens(
@@ -109,5 +103,26 @@ struct StreamHandler {
     func calculateTotalTokens(promptTokens: Int, completionTokens: Int) -> Int {
         // New implementation using direct token values
         return promptTokens + completionTokens // or whatever calculation you need
+    }
+    
+    private func updateTools(with toolCallResponse: ToolCallResponse) {
+        toolsLock.lock()
+        defer { toolsLock.unlock() }
+        
+        assistant.tools?.append(.init(
+            toolCallId: toolCallResponse.toolCallId,
+            tool: toolCallResponse.tool,
+            args: toolCallResponse.args,
+            result: nil
+        ))
+    }
+
+    private func updateToolResult(for toolResultResponse: ToolResultResponse) {
+        toolsLock.lock()
+        defer { toolsLock.unlock() }
+        
+        if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
+            assistant.tools?[index].result = toolResultResponse.result
+        }
     }
 }

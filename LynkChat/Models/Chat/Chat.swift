@@ -65,6 +65,12 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     @MainActor
     func processRequest(message: Message) async {
+        // Cancel any existing task first and wait for it to complete
+        streamingTask?.cancel()
+        if let task = streamingTask {
+            try? await task.value // Wait for the task to finish after cancellation
+        }
+        
         errorMessage = ""
         date = Date()
         streamingTask = Task {
@@ -180,9 +186,19 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
     
+    @MainActor
     func stopStreaming() {
-        streamingTask?.cancel()
+        guard let task = streamingTask else { return }
+        task.cancel()
         streamingTask = nil
+        
+        // Ensure the message is in a clean state before allowing new queries
+        if let lastMessage = currentThread.last?.activeMessage,
+           lastMessage.isReplying {
+           lastMessage.isReplying = false
+           lastMessage.tools = nil
+        }
+        
         errorDeleteLast()
         withAnimation(.easeInOut(duration: 0.5)) {
             AppConfig.shared.expandColor = false
@@ -263,9 +279,11 @@ final class Chat: Equatable, Identifiable, Hashable {
     func deleteAllMessages() {
         rootMessage = nil
         contextResetPoint = nil
-        stopStreaming()
         errorMessage = ""
         totalTokens = 0
+        Task { @MainActor in
+            stopStreaming()
+        }
     }
     
     func copy(from message: Message? = nil) async -> Chat {
