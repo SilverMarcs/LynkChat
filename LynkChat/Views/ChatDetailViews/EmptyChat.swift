@@ -33,7 +33,7 @@ struct EmptyChat: View {
                 .fontWeight(.bold)
                 .opacity(0.9)
             
-            VStack(alignment: .center) {
+            VStack {
                 InputArea(chat: chat)
                     .multilineTextAlignment(.leading)
                     .scaleEffect(1.05)
@@ -76,7 +76,6 @@ struct EmptyChat: View {
             }
             .frame(maxWidth: 750)
             .padding(.horizontal, 90)
-            .padding(.bottom, 80)
             
             Spacer(minLength: 1)
             
@@ -91,8 +90,6 @@ struct EmptyChat: View {
 }
 
 #Preview {
-    @Previewable @Namespace var inputTransition
-    
     EmptyChat(chat: .mockChat)
         .environment(ChatVM())
 }

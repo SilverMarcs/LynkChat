@@ -55,7 +55,7 @@ struct ToolsBarView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 10, style: .circular)
                         .fill(isEnabled ? tool.color.opacity(0.10) : Color.gray.opacity(0.1))
-                        .stroke(isEnabled ? tool.color.opacity(0.3) : Color.gray.opacity(0.3), lineWidth: 1)
+                        .stroke(isEnabled ? tool.color.opacity(0.3) : Color.gray.opacity(0.2), lineWidth: 1)
                 }
                 .contentShape(Rectangle())
             #else
