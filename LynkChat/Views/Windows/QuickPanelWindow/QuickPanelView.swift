@@ -96,6 +96,7 @@ struct QuickPanelView: View {
             .buttonStyle(.plain)
             .contentTransition(.symbolEffect(.replace, options: .speed(2)))
         }
+        .pasteHandler(chat: chat, isQuickPanel: true)
     }
     
     private var bottomView: some View {
