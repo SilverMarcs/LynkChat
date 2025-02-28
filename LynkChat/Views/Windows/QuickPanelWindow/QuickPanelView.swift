@@ -73,22 +73,11 @@ struct QuickPanelView: View {
     @ViewBuilder
     var textfieldView: some View {
         HStack(spacing: 12) {
-            Menu {
-                ModelPicker(selectedModel: $chat.config.model)
-                
-                Menu {
-                    QPToolsConfigView(config: $chat.config)
-                } label: {
-                    Label("Tools", systemImage: "gear")
-                }
-            } label: {
-                Image(systemName: "magnifyingglass")
-                    .resizable()
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                    .frame(width: 24, height: 24)
-            }
-            .buttonStyle(.plain)
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+                .frame(width: 24, height: 24)
             
             TextField("Ask Anything...", text: $chat.inputManager.prompt, axis: .vertical)
                 .allowsTightening(true)
@@ -119,16 +108,7 @@ struct QuickPanelView: View {
                         .imageScale(.medium)
                 }
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
-                
-                Group {
-                    Text(chat.config.model.name)
-                    
-                    ForEach(Array(chat.config.enabledTools)) { tool in
-                        Image(systemName: tool.iconName)
-                    }
-                }
-                .font(.caption)
-                
+
                 Spacer()
                 
                 Button {
@@ -153,7 +133,7 @@ struct QuickPanelView: View {
         
         chat.deleteAllMessages()
 //        chat.inputManager.dataFiles.removeAll()
-        chat.config.model = ModelConfig.shared.quickModel
+        chat.config.model = .small_model
     }
     
     private func addToDB() {

@@ -13,7 +13,7 @@ struct ChatConfig: Identifiable, Codable {
     var temperature: Double = ChatConfigDefaults.shared.temperature
     var maxTokens: MaxTokens = ChatConfigDefaults.shared.maxTokens
     var systemPrompt: String = ChatConfigDefaults.shared.systemPrompt
-    var model: ChatModel = ModelConfig.shared.defaultModel
+    var model: ChatModel = ChatConfigDefaults.shared.defaultModel
     var enabledTools: Set<Tool> = []
     
     // Helper methods to check and modify tool states

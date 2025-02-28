@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct QuickPanelOnboarding: View {
-    @ObservedObject var modelConfig: ModelConfig = .shared
-    
     var body: some View {
         GenericOnboardingView(
             icon: "bolt.fill",
@@ -23,8 +21,6 @@ struct QuickPanelOnboarding: View {
                     } label: {
                         Text("Global shortcut")
                     }
-                    
-                    ModelPicker(selectedModel: $modelConfig.quickModel)
                 }
             },
             footerText: "Access from anywhere in the OS"

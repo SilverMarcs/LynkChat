@@ -11,7 +11,6 @@ import SwiftData
 struct QuickPanelSettings: View {
     @Environment(\.modelContext) var modelContext
     @ObservedObject var config = ChatConfigDefaults.shared
-    @ObservedObject var modelConfig = ModelConfig.shared
     
     var body: some View {
         Form {
@@ -24,8 +23,6 @@ struct QuickPanelSettings: View {
                     Text("Access from anywhere in the OS")
                 }
             }
-                
-            ModelPicker(selectedModel: $modelConfig.quickModel)
                 
             Section("System Prompt") {
                 TextEditor(text: $config.quickSystemPrompt)

@@ -54,7 +54,6 @@
 		084C24482D1FBA0800AC431F /* ChatModelTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24472D1FBA0800AC431F /* ChatModelTable.swift */; };
 		084C244D2D1FBB9500AC431F /* ModelImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244C2D1FBB9500AC431F /* ModelImage.swift */; };
 		084C244F2D1FBBE000AC431F /* ChatServiceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */; };
-		084C24512D1FD9D000AC431F /* ModelGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24502D1FD9D000AC431F /* ModelGroup.swift */; };
 		084C24532D1FDA1F00AC431F /* ModelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084C24522D1FDA1F00AC431F /* ModelPicker.swift */; };
 		084C24662D1FEA6C00AC431F /* default-macOS.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C24592D1FEA6C00AC431F /* default-macOS.css */; };
 		084C24672D1FEA6C00AC431F /* a11y.css in Resources */ = {isa = PBXBuildFile; fileRef = 084C245D2D1FEA6C00AC431F /* a11y.css */; };
@@ -90,7 +89,6 @@
 		085EA4A52C9C4E9600124F83 /* IntegerStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */; };
 		086477492D2468D500969DBA /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477482D2468D500969DBA /* FlowLayout.swift */; };
 		0864774D2D247DB000969DBA /* ChatServiceTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0864774C2D247DB000969DBA /* ChatServiceTab.swift */; };
-		086477552D25237E00969DBA /* ModelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477542D25237E00969DBA /* ModelConfig.swift */; };
 		086477582D2523AD00969DBA /* ModelImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477572D2523AD00969DBA /* ModelImageProvider.swift */; };
 		086477602D2528A000969DBA /* ImageRequest+Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0864775F2D2528A000969DBA /* ImageRequest+Response.swift */; };
 		086477632D252A5200969DBA /* GlobalContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086477622D252A5200969DBA /* GlobalContainer.swift */; };
@@ -266,7 +264,6 @@
 		084C24472D1FBA0800AC431F /* ChatModelTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelTable.swift; sourceTree = "<group>"; };
 		084C244C2D1FBB9500AC431F /* ModelImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImage.swift; sourceTree = "<group>"; };
 		084C244E2D1FBBE000AC431F /* ChatServiceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatServiceSettings.swift; sourceTree = "<group>"; };
-		084C24502D1FD9D000AC431F /* ModelGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelGroup.swift; sourceTree = "<group>"; };
 		084C24522D1FDA1F00AC431F /* ModelPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPicker.swift; sourceTree = "<group>"; };
 		084C24582D1FEA6C00AC431F /* default-iOS.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "default-iOS.css"; sourceTree = "<group>"; };
 		084C24592D1FEA6C00AC431F /* default-macOS.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "default-macOS.css"; sourceTree = "<group>"; };
@@ -300,7 +297,6 @@
 		085EA4A42C9C4E9600124F83 /* IntegerStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerStepper.swift; sourceTree = "<group>"; };
 		086477482D2468D500969DBA /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		0864774C2D247DB000969DBA /* ChatServiceTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatServiceTab.swift; sourceTree = "<group>"; };
-		086477542D25237E00969DBA /* ModelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelConfig.swift; sourceTree = "<group>"; };
 		086477572D2523AD00969DBA /* ModelImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImageProvider.swift; sourceTree = "<group>"; };
 		0864775F2D2528A000969DBA /* ImageRequest+Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRequest+Response.swift"; sourceTree = "<group>"; };
 		086477622D252A5200969DBA /* GlobalContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalContainer.swift; sourceTree = "<group>"; };
@@ -491,13 +487,13 @@
 		08256BF52D1D34F300C54BA1 /* ChatService */ = {
 			isa = PBXGroup;
 			children = (
-				086477612D25299500969DBA /* Model */,
 				0828807F2D1FEF8A00D3A4B0 /* APIMessage.swift */,
 				085C15F02D1DF0BC007245CD /* APIRequest.swift */,
 				08256BF62D1D34FA00C54BA1 /* APIResponse.swift */,
 				084C24432D1F34AD00AC431F /* MaxTokens.swift */,
 				085C15EE2D1DEE02007245CD /* OpenAIService.swift */,
 				087B30932D1C39C200FB135A /* APIService.swift */,
+				084C24392D1EEBDD00AC431F /* ChatModel.swift */,
 			);
 			path = ChatService;
 			sourceTree = "<group>";
@@ -643,16 +639,6 @@
 				08F8152A2C97F5FA00B49355 /* ImageGenerator.swift */,
 			);
 			path = ImageService;
-			sourceTree = "<group>";
-		};
-		086477612D25299500969DBA /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				084C24502D1FD9D000AC431F /* ModelGroup.swift */,
-				084C24392D1EEBDD00AC431F /* ChatModel.swift */,
-				086477542D25237E00969DBA /* ModelConfig.swift */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		087F3F882CDDEEAA001298B3 /* Models */ = {
@@ -1270,7 +1256,6 @@
 				084C244F2D1FBBE000AC431F /* ChatServiceSettings.swift in Sources */,
 				085C15EF2D1DEE02007245CD /* OpenAIService.swift in Sources */,
 				08A222C42C2AC6B300D76C8B /* ChatDetail.swift in Sources */,
-				084C24512D1FD9D000AC431F /* ModelGroup.swift in Sources */,
 				08C800472C36C4ED009581C5 /* UserMessage.swift in Sources */,
 				089825292CE9BA2900980468 /* QuickPanelOnboarding.swift in Sources */,
 				08B8DE1F2C97F3D10041A690 /* AppConfig.swift in Sources */,
@@ -1288,7 +1273,6 @@
 				0886050F2CF61E4200A9657C /* ShortcutSettings.swift in Sources */,
 				081C1D942C3BD33F0078BB24 /* ChatParameterSettings.swift in Sources */,
 				082FE1122D2C71DF00E22D0B /* DebugWebview.swift in Sources */,
-				086477552D25237E00969DBA /* ModelConfig.swift in Sources */,
 				082880872D1FF1F800D3A4B0 /* ImageModelList.swift in Sources */,
 				08B04FB02D6D6F3600E34869 /* ReasoningView.swift in Sources */,
 				086C65CD2CFC5A5000153AD4 /* SecondaryNavigationButtons.swift in Sources */,

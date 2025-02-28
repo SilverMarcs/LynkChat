@@ -9,13 +9,12 @@ import SwiftUI
 
 struct ChatParameterSettings: View {
     @ObservedObject var config = ChatConfigDefaults.shared
-    @ObservedObject var modelConfig = ModelConfig.shared
     @State var expandAdvanced: Bool = true
 
     var body: some View {
         Form {
             Section("Model") {
-                ModelPicker(selectedModel: $modelConfig.defaultModel, label: "Default")
+                ModelPicker(selectedModel: $config.defaultModel, label: "Default")
             }
             
             Section("Basic") {

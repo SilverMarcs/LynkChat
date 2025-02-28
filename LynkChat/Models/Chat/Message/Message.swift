@@ -66,7 +66,7 @@ final class Message: Equatable, Identifiable, Hashable {
         Message(
             role: .user,
             content: content,
-            model: ModelConfig.shared.defaultModel,
+            model: .small_model,
             dataFiles: dataFiles,
             tools: nil,
             isReplying: false,

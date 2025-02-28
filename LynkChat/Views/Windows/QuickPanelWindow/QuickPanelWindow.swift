@@ -52,7 +52,7 @@ class QuickPanelWindow: NSPanel {
         if let available = quickChats.first {
             chat = available
             chat.deleteAllMessages()
-            chat.config.model = ModelConfig.shared.quickModel
+            chat.config.model = ChatModel.small_model
         } else {
             let newChat = Chat()
             newChat.statusId = statusId

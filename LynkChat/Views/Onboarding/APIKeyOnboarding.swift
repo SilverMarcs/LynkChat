@@ -9,19 +9,19 @@ import SwiftUI
 import SwiftData
 
 struct APIKeyOnboarding: View {
-    @ObservedObject var modelConfig: ModelConfig = .shared
+    @ObservedObject var chatConfig: ChatConfigDefaults = .shared
     @ObservedObject var config: AppConfig = .shared
     
     var body: some View {
         GenericOnboardingView(
-            icon: modelConfig.defaultModel.imageName,
+            icon: chatConfig.defaultModel.imageName,
             useSFSymbol: false,
-            iconColor: Color(hex: modelConfig.defaultModel.color),
+            iconColor: Color(hex: chatConfig.defaultModel.color),
             title: "Chat with various LLMs",
             content: {
                 Form {
                     Section {
-                        ModelPicker(selectedModel: $modelConfig.defaultModel)
+                        ModelPicker(selectedModel: $chatConfig.defaultModel)
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))

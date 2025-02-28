@@ -11,6 +11,8 @@ class ChatConfigDefaults: ObservableObject {
     static let shared = ChatConfigDefaults()
     private init() {}
     
+    @AppStorage("defaultModel") var defaultModel: ChatModel = .small_model
+    
     @AppStorage("temperature") var temperature: Double = 0.7
     @AppStorage("maxTokens") var maxTokens: MaxTokens = .t4096
     

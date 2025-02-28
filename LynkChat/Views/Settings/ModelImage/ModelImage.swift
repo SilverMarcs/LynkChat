@@ -28,5 +28,5 @@ struct ModelImage: View {
 }
 
 #Preview {
-    ModelImage(model: ChatModel.gpt4o)
+    ModelImage(model: ChatModel.small_model)
 }

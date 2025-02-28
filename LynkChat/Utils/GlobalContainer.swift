@@ -40,9 +40,10 @@ let globalContainer: ModelContainer = {
         }
         
         let chat = Chat()
-        chat.config.model = .gemini2Flash
+        chat.config.model = .small_model
         chat.title = "Welcome to LynkChat"
-        let group = MessageGroup(message: Message.assistant(model: .gemini2Flash, content: String.onboarding))
+        let group = MessageGroup(message: Message.assistant(model: .small_model, content: String.onboarding))
+        chat.rootMessage = group
         modelContext.insert(chat)
         
         // Image session,

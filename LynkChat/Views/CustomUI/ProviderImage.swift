@@ -32,5 +32,5 @@ struct ListRowImage: View {
 }
 
 #Preview {
-    ListRowImage(model: ChatModel.gpt4o)
+    ListRowImage(model: ChatModel.small_model)
 }

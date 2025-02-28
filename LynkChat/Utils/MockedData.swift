@@ -8,7 +8,7 @@
 import Foundation
 
 extension Message {
-    static let mockAssistantMessage = Message.assistant(model: .claude3_5haiku, content: String.codeBlock)
+    static let mockAssistantMessage = Message.assistant(model: .small_model, content: String.codeBlock)
     
     static let mockUserMessage = Message.user(content: String.shortContent)
 }

@@ -123,16 +123,12 @@ struct ChatList: View {
         
         ToolbarItem {
             Menu {
-                ForEach(Array(ChatModel.groupedEnabledModels().keys), id: \.self) { group in
-                    Section {
-                        ForEach(ChatModel.groupedEnabledModels()[group] ?? []) { model in
-                            Button {
-                                chatVM.createNewChat(model: model)
-                            } label: {
-                                Label(model.name, image: model.imageName)
-                                    .labelStyle(.titleAndIcon)
-                            }
-                        }
+                ForEach(ChatModel.allCases) { model in
+                    Button {
+                        chatVM.createNewChat(model: model)
+                    } label: {
+                        Label(model.name, image: model.imageName)
+                            .labelStyle(.titleAndIcon)
                     }
                 }
             } label: {
