@@ -11,9 +11,8 @@ import SwiftUI
 
 @Observable class ChatVM {
     var selections: Set<Chat> = []
-    
     var statusFilter: ChatStatus = .normal
-    
+
     public var activeChat: Chat? {
         get {
             guard selections.count == 1 else { return nil }
@@ -23,7 +22,7 @@ import SwiftUI
             selections = newValue.map { [$0] } ?? []
         }
     }
-    
+
     @MainActor
     func fork(newChat: Chat) {
         let modelContext = globalContainer.mainContext
@@ -37,22 +36,22 @@ import SwiftUI
         }
         #endif
     }
-    
+
     @MainActor
     @discardableResult
     func createNewChat(model: ChatModel? = nil) -> Chat {
         let newChat = Chat()
-        
+
         if let model = model {
             newChat.config.model = model
         }
-        
+
         globalContainer.mainContext.insert(newChat)
         self.activeChat = newChat
         selections = [newChat]
         return newChat
     }
-    
+
     @MainActor
     func createTemporaryChat() {
         let newChat = Chat()
@@ -60,11 +59,60 @@ import SwiftUI
         globalContainer.mainContext.insert(newChat)
         self.activeChat = newChat
     }
-    
+
     // MARK: - Search
     var searchText: String = ""
     var localSearchText: String = ""
-    
+
     // MARK: - Quick Panel
+    var quickPanelChat: Chat?
     var isQuickPanelPresented: Bool = false
+
+    @MainActor
+    func getOrCreateQuickPanelChat() -> Chat {
+        if let existingChat = quickPanelChat {
+            return existingChat
+        }
+
+        let statusId = ChatStatus.quick.id
+        var descriptor = FetchDescriptor<Chat>(
+            predicate: #Predicate { $0.statusId == statusId }
+        )
+        descriptor.fetchLimit = 1
+        
+        let modelContext = globalContainer.mainContext
+
+        do {
+            let quickChats = try modelContext.fetch(descriptor)
+            if let existingChat = quickChats.first {
+                existingChat.deleteAllMessages() // Clear existing messages
+                existingChat.config.model = ChatModel.small_model
+                return existingChat
+            } else {
+                let newChat = Chat()
+                newChat.statusId = statusId
+                newChat.status = ChatStatus.quick
+                newChat.config.systemPrompt = ChatConfigDefaults.shared.quickSystemPrompt
+                modelContext.insert(newChat)
+                quickPanelChat = newChat
+                return newChat
+            }
+        } catch {
+            print("Error fetching or creating quick panel chat: \(error)")
+            // Handle the error appropriately (e.g., show an alert)
+            // For now, return a new chat to prevent the app from crashing
+            // ideally, this should never happen
+            let newChat = Chat()
+            newChat.statusId = ChatStatus.quick.id
+            newChat.status = ChatStatus.quick
+            newChat.config.systemPrompt = ChatConfigDefaults.shared.quickSystemPrompt
+            modelContext.insert(newChat)  // Insert into SwiftData
+            quickPanelChat = newChat
+            return newChat
+        }
+    }
+
+    func clearQuickPanelChat() {
+        quickPanelChat = nil
+    }
 }

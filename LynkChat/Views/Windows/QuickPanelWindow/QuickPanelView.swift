@@ -13,8 +13,7 @@ struct QuickPanelView: View {
     @Environment(ChatVM.self) private var chatVM
 
     @Bindable var chat: Chat
-    var updateHeight: (CGFloat) -> Void
-    var toggleVisibility: () -> Void
+    var updateHeightState: (QuickPanelHeight) -> Void
 
     @FocusState private var isFocused: Bool
     
@@ -28,9 +27,9 @@ struct QuickPanelView: View {
             if !chat.inputManager.dataFiles.isEmpty {
                 DataFilesView(dataFiles: chat.inputManager.dataFiles) { file in
                     chat.inputManager.dataFiles.removeAll { $0 == file }
+                    updateHeightBasedOnContent()
                 }
                 .safeAreaPadding(.horizontal)
-                .safeAreaPadding(.vertical, 10)
             }
             
             if chat.currentThread.isEmpty {
@@ -44,30 +43,34 @@ struct QuickPanelView: View {
                 bottomView
             }
         }
+        .transaction { $0.animation = nil }
         .frame(width: 650)
         .onChange(of: chatVM.isQuickPanelPresented) {
             if chatVM.isQuickPanelPresented {
                 isFocused = true
-                if !chat.currentThread.isEmpty {
-                    updateHeight(500)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    updateHeight(57)
-                }
+                // Height is determined by the window before showing
             }
         }
-        // MUST NOT DO THIS> IT PREVENTS TEXT SELECTION
-//        .onChange(of: isFocused) {
-//            isFocused = true
-//        }
-        .onChange(of: chat.inputManager.dataFiles.isEmpty) {
-            if chat.inputManager.dataFiles.isEmpty && chat.currentThread.isEmpty {
-                updateHeight(57)
-            } else {
-                updateHeight(500)
-            }
+        .onChange(of: chat.inputManager.dataFiles.count) {
+            updateHeightBasedOnContent()
         }
+        .onChange(of: chat.currentThread.count) {
+            updateHeightBasedOnContent()
+        }
+    }
+    
+    private func updateHeightBasedOnContent() {
+        let newState: QuickPanelHeight
+        
+        if !chat.currentThread.isEmpty {
+            newState = .expanded()
+        } else if !chat.inputManager.dataFiles.isEmpty {
+            newState = .files()
+        } else {
+            newState = .collapsed()
+        }
+        
+        updateHeightState(newState)
     }
     
     @ViewBuilder
@@ -130,11 +133,10 @@ struct QuickPanelView: View {
     }
     
     private func resetChat() {
-        updateHeight(57)
-        
         chat.deleteAllMessages()
-//        chat.inputManager.dataFiles.removeAll()
-        chat.config.model = .small_model
+        chat.inputManager.dataFiles.removeAll()
+        
+        updateHeightState(.collapsed())
     }
     
     private func addToDB() {
@@ -162,11 +164,10 @@ struct QuickPanelView: View {
         Task {
             await chat.sendInput()
         }
-        
-        updateHeight(500)
     }
 }
 
 #Preview {
-    QuickPanelView(chat: .mockChat, updateHeight: { _ in }, toggleVisibility: {})
+    QuickPanelView(chat: .mockChat,
+                   updateHeightState: { _ in })
 }

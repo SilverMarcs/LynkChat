@@ -44,10 +44,7 @@ struct LynkChatApp: App {
         #if os(macOS)
         AppConfig.shared.hideDock = false
 
-        QuickPanelWindow(
-            chatVM: chatVM,
-            modelContext: globalContainer.mainContext
-        )
+        QuickPanelWindow(chatVM: chatVM)
 
         #else
         // TODO: find a way to avoid having chatVM in app delegate
