@@ -45,11 +45,8 @@ struct QuickPanelView: View {
         }
         .transaction { $0.animation = nil }
         .frame(width: 650)
-        .onChange(of: chatVM.isQuickPanelPresented) {
-            if chatVM.isQuickPanelPresented {
-                isFocused = true
-                // Height is determined by the window before showing
-            }
+        .onAppear {
+            isFocused = true
         }
         .onChange(of: chat.inputManager.dataFiles.count) {
             updateHeightBasedOnContent()
@@ -73,7 +70,6 @@ struct QuickPanelView: View {
         updateHeightState(newState)
     }
     
-    @ViewBuilder
     var textfieldView: some View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
@@ -81,6 +77,15 @@ struct QuickPanelView: View {
                 .fontWeight(.semibold)
                 .foregroundStyle(.secondary)
                 .frame(width: 24, height: 24)
+                .overlay(
+                    Button {
+                        resetChat()
+                    } label: {
+                        Color.clear
+                    }
+                    .keyboardShortcut(.delete, modifiers: [.command, .shift])
+                    .opacity(0)
+                )
             
             TextField("Ask Anything...", text: $chat.inputManager.prompt, axis: .vertical)
                 .allowsTightening(true)
@@ -111,7 +116,6 @@ struct QuickPanelView: View {
                     Image(systemName: "delete.left")
                         .imageScale(.medium)
                 }
-                .keyboardShortcut(.delete, modifiers: [.command, .shift])
 
                 Spacer()
                 

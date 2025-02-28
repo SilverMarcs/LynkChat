@@ -25,9 +25,7 @@ struct StreamHandler {
         var lastUIUpdateTime = Date()
         var totalTokens = 0
         
-        if chat.status != .quick {
-            AppConfig.shared.expandColor = true
-        }
+        AppConfig.shared.expandColor = true
         Scroller.scrollToBottom(delay: 0.3)
         
         let apiRequest = await createAPIRequest()

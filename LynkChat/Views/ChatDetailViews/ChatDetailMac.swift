@@ -66,12 +66,10 @@ struct ChatDetailMac: View {
             
             ErrorMessageView(chat: chat)
             
-            if chat.status != .quick {
-                Color.clear
-                    .frame(height: 1)
-                    .modifier(AnimatingCellHeight(height: config.expandColor ? 475 : 1))
-                    .listRowSeparator(.hidden)
-            }
+            Color.clear
+                .frame(height: 1)
+                .modifier(AnimatingCellHeight(height: spacerHeight))
+                .listRowSeparator(.hidden)
                 
             Color.clear
                 .frame(height: 1)
@@ -83,6 +81,14 @@ struct ChatDetailMac: View {
             if chat.status != .quick {
                 InputArea(chat: chat)
             }
+        }
+    }
+    
+    var spacerHeight: CGFloat {
+        if config.expandColor {
+            return chat.status == .quick ? 250 : 475
+        } else {
+            return 1
         }
     }
     
