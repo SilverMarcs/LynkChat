@@ -32,24 +32,24 @@ struct UserMessage: View {
             GroupBox {
                 VStack(alignment: .leading, spacing: 0) {
                     if searchText.isEmpty {
-                        HighlightableTextView(displayedText, highlightedText: chatVM.searchText)
-//                            .textSelection(.enabled)
-//                            .font(.system(size: config.fontSize))
-                            #if os(macOS)
-//                            .lineSpacing(2)
-                            .padding(5)
-                            #endif
+                        #if os(macOS)
+                        AutoHeightTextView(text: displayedText, height: $height)
+                            .fixedSize(horizontal: true, vertical: false)  // This is key - use the intrinsic size horizontally
+                            .frame(height: group.activeMessage.height, alignment: .top)
+                            .padding(4)
+                            .onChange(of: height) {
+                                DispatchQueue.main.async {
+                                    group.activeMessage.height = height
+                                }
+                            }
+                        #else
+                        MDView(content: displayedText)
+                        #endif
                     } else {
                         MDView(content: displayedText)
                     }
 
-//                    AutoHeightTextView(text: displayedText, height: $textViewHeight)
-//                        .frame(height: group.activeMessage.height, alignment: .top)
-//                         .onChange(of: textViewHeight) {
-//                             DispatchQueue.main.async {
-//                                 group.activeMessage.height = textViewHeight
-//                             }
-//                         }
+
                     
                     if shouldShowMoreButton {
                         Button {

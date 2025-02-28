@@ -17,7 +17,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     static var allCases: [ChatModel] {
         AppConfig.shared.showDebugMenu ?
         [
-            .claude3_7sonnet,
+//            .claude3_7sonnet,
             .small_model,
             .large_model,
             .reasoning_model

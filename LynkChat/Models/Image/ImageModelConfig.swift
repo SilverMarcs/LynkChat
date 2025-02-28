@@ -15,6 +15,4 @@ class ImageModelConfig: ObservableObject {
     @AppStorage("saveToPhotos") var saveToPhotos = true
     
     @AppStorage("defaultModel") var defaultModel: ImageModel = .flux_schnell
-    @AppStorage("quickModel") var quickModel: ImageModel = .dall_e_2
-    @AppStorage("titleModel") var titleModel: ImageModel = .dall_e_3
 }
