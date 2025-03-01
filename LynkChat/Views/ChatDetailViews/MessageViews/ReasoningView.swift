@@ -28,7 +28,7 @@ struct ReasoningView: View {
             }
             .padding(.vertical, 8)
             .padding(.horizontal, 10)
-            .background(Color.gray.opacity(0.1))
+            .background(Color.gray.opacity(0.04))
             
             ScrollView {
                 Text(String(reason.dropFirst()))
@@ -40,7 +40,7 @@ struct ReasoningView: View {
         }
         .background {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(Color.gray.opacity(0.05))
+                .fill(Color.gray.opacity(0.03))
                 .strokeBorder(.quaternary, lineWidth: 1)
         }
         .cornerRadius(8)
