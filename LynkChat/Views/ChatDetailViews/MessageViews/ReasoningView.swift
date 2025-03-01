@@ -10,13 +10,10 @@ import SwiftUI
 struct ReasoningView: View {
     let reason: String
     
-    @State private var showingReasoning = false
+    @State private var showingReasoning = true
     
     var body: some View {
-        let trimmedReason = reason.hasPrefix("\n") ? String(reason.dropFirst()) : reason
-        
         VStack(alignment: .leading, spacing: 0) {
-            // This header will be sticky
             HStack {
                 Text("Reasoning")
                     .font(.headline)
@@ -27,30 +24,19 @@ struct ReasoningView: View {
                     showingReasoning.toggle()
                 } label: {
                     Text(showingReasoning ? "Collapse" : "Expand")
-                        .font(.footnote)
                 }
             }
             .padding(.vertical, 8)
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 10)
             .background(Color.gray.opacity(0.1))
-            .zIndex(1) // Ensures it stays on top
             
-            if showingReasoning {
-                ScrollView {
-                    Text(trimmedReason)
-                        .foregroundStyle(.secondary)
-                        .textSelection(.enabled)
-                        .padding(12)
-                        .padding(.top, 0)
-                }
-                .frame(maxHeight: 300)
-            } else {
-                Text(trimmedReason.prefix(500) + (trimmedReason.count > 500 ? "..." : ""))
+            ScrollView {
+                Text(String(reason.dropFirst()))
                     .foregroundStyle(.secondary)
                     .textSelection(.enabled)
-                    .padding(12)
-                    .padding(.top, 0)
+                    .padding(10)
             }
+            .frame(maxHeight: showingReasoning ? 300 : 100)
         }
         .background {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -59,4 +45,8 @@ struct ReasoningView: View {
         }
         .cornerRadius(8)
     }
+}
+
+#Preview {
+    ReasoningView(reason: String.markdownContent)
 }

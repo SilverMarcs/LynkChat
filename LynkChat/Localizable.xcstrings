@@ -23,16 +23,6 @@
     "%@ Visit" : {
 
     },
-    "%lld / %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld / %2$lld"
-          }
-        }
-      }
-    },
     "%lld/%lld" : {
       "localizations" : {
         "en" : {
@@ -127,9 +117,6 @@
     "Cancel Editing" : {
 
     },
-    "Change chat selection to take effect" : {
-
-    },
     "Chat Interaction" : {
 
     },
@@ -152,9 +139,6 @@
 
     },
     "Click on %@ to generate a title based on conversation. Configure auto title generation in settings" : {
-
-    },
-    "Code Block Theme" : {
 
     },
     "Collapse" : {
@@ -218,6 +202,9 @@
 
     },
     "Delete Message" : {
+
+    },
+    "Description" : {
 
     },
     "Done" : {
@@ -397,9 +384,6 @@
     "Previous" : {
 
     },
-    "Price" : {
-
-    },
     "Print debug lines" : {
 
     },
@@ -533,9 +517,6 @@
 
     },
     "Tokens: %@" : {
-
-    },
-    "Tool" : {
 
     },
     "UI Settings" : {

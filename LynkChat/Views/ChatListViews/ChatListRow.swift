@@ -54,10 +54,10 @@ struct ChatListRow: View {
                 .imageScale(.small)
                 .transition(.symbolEffect(.appear))
             
-            Text(chat.config.model.name)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .fontWidth(.compressed)
+//            Text(chat.config.model.name)
+//                .font(.subheadline)
+//                .foregroundStyle(.secondary)
+//                .fontWidth(.compressed)
         }
         .padding(padding)
 //        defaultMinListRowHeight()

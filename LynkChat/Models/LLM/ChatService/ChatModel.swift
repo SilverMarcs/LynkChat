@@ -98,6 +98,19 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
         }
     }
     
+    var description: String {
+        switch self {
+        case .claude3_7sonnet:
+            "Generate sonnets with Claude-3.7S, a model trained on a mix of Shakespeare's sonnets and modern poetry."
+        case .small_model:
+            "Very fast model while maintaining high quality. Uses Gemini-2 Flash"
+        case .large_model:
+            "Advanced model for difficult tasks like coding. Uses Claude-3.7 Sonnet"
+        case .reasoning_model:
+            "Model that thinks before responding. Uses DeepSeek R1"
+        }
+    }
+    
     var price: TokenUsage {
         switch self {
         case .claude3_7sonnet: .init(promptTokens: 4, completionTokens: 10)
