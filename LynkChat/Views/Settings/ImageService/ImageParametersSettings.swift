@@ -11,13 +11,8 @@ struct ImageParametersSettings: View {
     @ObservedObject var imageConfig = ImageModelConfig.shared
     var body: some View {
         Form {
-            Toggle(isOn: $imageConfig.saveToPhotos) {
-                Text("Save to Photos Library")
-                Text("Images will be saved to Downloads folder otherwise")
-            }
-            
-            Section("Models") {
-                Picker("Default", selection: $imageConfig.defaultModel) {
+            Section {
+                Picker("Default Model", selection: $imageConfig.defaultModel) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
@@ -36,6 +31,11 @@ struct ImageParametersSettings: View {
                     step: 1,
                     format: .number
                 )
+            }
+            
+            Toggle(isOn: $imageConfig.saveToPhotos) {
+                Text("Save to Photos Library")
+                Text("Images will be saved to Downloads folder otherwise")
             }
         }
         .formStyle(.grouped)

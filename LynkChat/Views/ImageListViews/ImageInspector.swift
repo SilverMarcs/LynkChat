@@ -32,7 +32,7 @@ struct ImageInspector: View {
                 }
                 
                 Section("Parameters") {
-                    Picker("N", selection: $session.config.numImages) {
+                    Picker("Number of Images", selection: $session.config.numImages) {
                         ForEach(1 ... 4, id: \.self) { num in
                             Text(String(num)).tag(num)
                         }
