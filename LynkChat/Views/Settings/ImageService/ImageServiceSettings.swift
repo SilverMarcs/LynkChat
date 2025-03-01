@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImageServiceSettings: View {
-    @State private var selectedTab: ImageServiceTab = .models
+    @State private var selectedTab: ImageServiceTab = .parameters
     
     var body: some View {
         Group {
@@ -19,6 +19,7 @@ struct ImageServiceSettings: View {
                 ImageParametersSettings()
             }
         }
+        .navigationTitle("Image Service")
         .toolbar {
             ToolbarItem(placement: .principal) {
                 picker

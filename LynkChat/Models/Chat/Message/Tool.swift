@@ -51,6 +51,17 @@ enum Tool: String, Identifiable, CaseIterable, Codable {
         }
     }
     
+    var description: String {
+        switch self {
+        case .webSearch:
+            "Browse the web or check URLs for up-to-date information."
+        case .scrapeLinks, .processFile:
+            "Fetch the contents of a URL"
+        case .imageGeneration:
+            "Generate an image based on a text description"
+        }
+    }
+    
     var toolPrompt: String {
         switch self {
         case .webSearch: 

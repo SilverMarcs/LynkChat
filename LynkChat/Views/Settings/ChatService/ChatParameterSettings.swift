@@ -15,7 +15,7 @@ struct ChatParameterSettings: View {
         Form {
             ModelPicker(selectedModel: $config.defaultModel, label: "Default Model")
             
-            Section("Basic") {
+            Section("Parameters") {
                 Picker("Temperature", selection: $config.temperature) {
                     ForEach(Temperature.allCases, id: \.self) { option in
                         Text(option.name).tag(option)
@@ -26,6 +26,16 @@ struct ChatParameterSettings: View {
                     ForEach(MaxTokens.allCases, id: \.self) { option in
                         Text(option.description)
                             .tag(option)
+                    }
+                }
+            }
+            
+            Section("Plugins") {
+                ForEach([Tool.webSearch, Tool.imageGeneration], id: \.self) { tool in
+                    LabeledContent {
+                        Text(tool.description)
+                    } label: {
+                        Label(tool.title, systemImage: tool.iconName)
                     }
                 }
             }
@@ -45,7 +55,7 @@ struct ChatParameterSettings: View {
                 }
             }
         }
-        .navigationTitle("Parameters")
+        .navigationTitle("Chat Service")
         .toolbarTitleDisplayMode(.inline)
         .formStyle(.grouped)
     }

@@ -36,30 +36,19 @@ struct ImageParametersSettings: View {
                     step: 1,
                     format: .number
                 )
-                
-//                
-//                Picker("Size", selection: $imageConfig.size) {
-//                    ForEach(ImagesQuery.Size.allCases, id: \.self) { size in
-//                        Text(size.rawValue)
-//                    }
-//                }
-//                
-//                Picker("Quality", selection: $imageConfig.quality) {
-//                    ForEach(ImagesQuery.Quality.allCases, id: \.self) { quality in
-//                        Text(quality.rawValue.uppercased())
-//                    }
-//                }
-//                
-//                Picker("Style", selection: $imageConfig.style) {
-//                    ForEach(ImagesQuery.Style.allCases, id: \.self) { style in
-//                        Text(style.rawValue.capitalized)
-//                    }
-//                }
             }
         }
         .formStyle(.grouped)
         .navigationTitle("Image Gen")
         .toolbarTitleDisplayMode(.inline)
+    }
+    
+    var label: String {
+        #if os(macOS)
+        "Number of Images"
+        #else
+        "Number of Images (\(imageConfig.numImages))"
+        #endif
     }
 }
 

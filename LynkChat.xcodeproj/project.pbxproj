@@ -617,13 +617,6 @@
 			path = Appearance;
 			sourceTree = "<group>";
 		};
-		0864775C2D25248C00969DBA /* QuickPanel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = QuickPanel;
-			sourceTree = "<group>";
-		};
 		0864775D2D25274800969DBA /* About */ = {
 			isa = PBXGroup;
 			children = (
@@ -905,7 +898,6 @@
 			children = (
 				082FE1102D2C71C600E22D0B /* Debug */,
 				0864775D2D25274800969DBA /* About */,
-				0864775C2D25248C00969DBA /* QuickPanel */,
 				0864775B2D25244E00969DBA /* Appearance */,
 				086477592D25242A00969DBA /* Shortcut */,
 				086477562D2523AB00969DBA /* ModelImage */,
