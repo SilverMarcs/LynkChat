@@ -38,18 +38,18 @@ struct ChatInputMenu: View {
                 }
                 #endif
                 
-                Button {
-                    showPhotosPicker = true
-                } label: {
-                    Label("Photos Library", systemImage: "photo.on.rectangle.angled")
+                if chat.config.model.supportedTypes.contains(.image) {
+                    Button {
+                        showPhotosPicker = true
+                    } label: {
+                        Label("Photos Library", systemImage: "photo.on.rectangle.angled")
+                    }
                 }
-                .disabled(!chat.config.model.supportedTypes.contains(.image))
                 
                 Button {
                     isFilePickerPresented = true
                 } label: {
-                    Label(
-                        "Attach Files", systemImage: "paperclip")
+                    Label("Attach Files", systemImage: "paperclip")
                 }
             }
             .labelStyle(.titleAndIcon)

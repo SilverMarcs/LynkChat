@@ -44,6 +44,7 @@ struct ReasoningView: View {
                 .strokeBorder(.quaternary, lineWidth: 1)
         }
         .cornerRadius(8)
+        .transaction { $0.animation = nil }
     }
 }
 
