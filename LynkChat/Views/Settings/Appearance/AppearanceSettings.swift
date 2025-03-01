@@ -34,24 +34,24 @@ struct AppearanceSettings: View {
 
             Section("Markdown") {
                 Toggle("Enable Markdown", isOn: $config.isMarkdownEnabled)
-
-                #if os(macOS)
-                if config.isMarkdownEnabled {
-                    Picker(selection: $config.codeBlockTheme) {
-                        ForEach(CodeBlockTheme.allCases, id: \.self) { theme in
-                            Text(theme.name)
-                                .tag(theme)
-                        }
-                    } label: {
-                        Text("Code Block Theme")
-                        Text("Change chat selection to take effect")
-                    }
-                    
-                    MDView(content: String.onlyCodeBlock)
-                        .id(config.codeBlockTheme)
-                        .padding(.bottom, -11)
-                }
-                #endif
+//
+//                #if os(macOS)
+//                if config.isMarkdownEnabled {
+//                    Picker(selection: $config.codeBlockTheme) {
+//                        ForEach(CodeBlockTheme.allCases, id: \.self) { theme in
+//                            Text(theme.name)
+//                                .tag(theme)
+//                        }
+//                    } label: {
+//                        Text("Code Block Theme")
+//                        Text("Change chat selection to take effect")
+//                    }
+//                    
+//                    MDView(content: String.onlyCodeBlock)
+//                        .id(config.codeBlockTheme)
+//                        .padding(.bottom, -11)
+//                }
+//                #endif
             }
         }
         .formStyle(.grouped)
