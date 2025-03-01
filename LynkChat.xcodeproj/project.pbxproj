@@ -15,6 +15,7 @@
 		080F3AB62D2E56DA004168C2 /* IOSWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080F3AB52D2E56DA004168C2 /* IOSWindow.swift */; platformFilters = (ios, xros, ); };
 		0810F5892CEAFB5C002D4ACF /* ContextResetDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0810F5882CEAFB5C002D4ACF /* ContextResetDivider.swift */; };
 		081297522CF5C3FF00440D19 /* AssistantMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081297512CF5C3FF00440D19 /* AssistantMessage.swift */; };
+		081534302D73698000229837 /* Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0815342F2D73698000229837 /* Temperature.swift */; };
 		0818E0362D58D7CD002D5616 /* TitleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818E0352D58D7CD002D5616 /* TitleGenerator.swift */; };
 		081C1D942C3BD33F0078BB24 /* ChatParameterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081C1D932C3BD33F0078BB24 /* ChatParameterSettings.swift */; };
 		081C1D982C3BD8A50078BB24 /* GeneralSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081C1D972C3BD8A50078BB24 /* GeneralSettings.swift */; };
@@ -224,6 +225,7 @@
 		080F3AB52D2E56DA004168C2 /* IOSWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSWindow.swift; sourceTree = "<group>"; };
 		0810F5882CEAFB5C002D4ACF /* ContextResetDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextResetDivider.swift; sourceTree = "<group>"; };
 		081297512CF5C3FF00440D19 /* AssistantMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantMessage.swift; sourceTree = "<group>"; };
+		0815342F2D73698000229837 /* Temperature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Temperature.swift; sourceTree = "<group>"; };
 		0818E0352D58D7CD002D5616 /* TitleGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleGenerator.swift; sourceTree = "<group>"; };
 		081C1D932C3BD33F0078BB24 /* ChatParameterSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatParameterSettings.swift; sourceTree = "<group>"; };
 		081C1D972C3BD8A50078BB24 /* GeneralSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettings.swift; sourceTree = "<group>"; };
@@ -489,6 +491,7 @@
 				085C15F02D1DF0BC007245CD /* APIRequest.swift */,
 				08256BF62D1D34FA00C54BA1 /* APIResponse.swift */,
 				084C24432D1F34AD00AC431F /* MaxTokens.swift */,
+				0815342F2D73698000229837 /* Temperature.swift */,
 				085C15EE2D1DEE02007245CD /* OpenAIService.swift */,
 				087B30932D1C39C200FB135A /* APIService.swift */,
 				084C24392D1EEBDD00AC431F /* ChatModel.swift */,
@@ -1214,6 +1217,7 @@
 				086477492D2468D500969DBA /* FlowLayout.swift in Sources */,
 				084C243A2D1EEBDD00AC431F /* ChatModel.swift in Sources */,
 				082F09DB2CB2715A00B7860A /* Message.swift in Sources */,
+				081534302D73698000229837 /* Temperature.swift in Sources */,
 				085524E82C4ED61F00CBB827 /* ChatToolbar.swift in Sources */,
 				089825312CE9D96A00980468 /* ImageGenOnboarding.swift in Sources */,
 				08436F2E2CDF07C2007A160F /* FocusedField.swift in Sources */,

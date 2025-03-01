@@ -8,8 +8,8 @@
 import Foundation
 
 enum ChatServiceTab: String, CaseIterable {
-    case models = "Models"
     case parameters = "Parameters"
+    case models = "Models"
     
     var imageName: String {
         switch self {

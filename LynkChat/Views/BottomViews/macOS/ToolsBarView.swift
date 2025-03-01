@@ -84,14 +84,3 @@ struct ToolsBarView: View {
         .environment(ChatVM())
         .frame(height: 94)
 }
-
-//extension View {
-//    @ViewBuilder
-//    func labelStyle(includingText: Bool) -> some View {
-//        if includingText {
-//            self.labelStyle(.titleAndIcon)
-//        } else {
-//            self.labelStyle(.iconOnly)
-//        }
-//    }
-//}

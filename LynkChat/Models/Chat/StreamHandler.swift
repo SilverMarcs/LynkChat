@@ -91,7 +91,7 @@ struct StreamHandler {
             userId: "zabir",
             model: AppConfig.shared.sendDebugModel ? "debug" : chat.config.model.id,
             messages: apiMessages,
-            temperature: chat.config.temperature,
+            temperature: chat.config.temperature.value,
             maxTokens: chat.config.maxTokens.rawValue,
             system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
             tools: chat.config.model.supportsTool ? chat.config.enabledTools.map { $0.rawValue } : []

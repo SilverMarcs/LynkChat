@@ -129,6 +129,7 @@ struct ChatList: View {
                     } label: {
                         Label(model.name, image: model.imageName)
                             .labelStyle(.titleAndIcon)
+//                            .labelStyle(.titleOnly)
                     }
                 }
             } label: {

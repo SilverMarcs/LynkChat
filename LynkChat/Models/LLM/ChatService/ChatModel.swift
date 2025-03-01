@@ -59,7 +59,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
         switch self {
             case .claude3_7sonnet: "claude.symbols"
             case .small_model: "gemini.symbols"
-            case .large_model: "openai.symbols"
+            case .large_model: "claude.symbols"
             case .reasoning_model: "deepseek.symbols"
         }
     }
@@ -75,7 +75,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
         switch self {
         case .claude3_7sonnet: "#D6683B"
         case .small_model: "#E64335"
-        case .large_model: "#00947A"
+        case .large_model: "#D6683B"
         case .reasoning_model: "#4F65E9"
         }
     }

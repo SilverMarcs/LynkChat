@@ -13,7 +13,7 @@ class ChatConfigDefaults: ObservableObject {
     
     @AppStorage("defaultModel") var defaultModel: ChatModel = .small_model
     
-    @AppStorage("temperature") var temperature: Double = 0.7
+    @AppStorage("temperature") var temperature: Temperature = .balanced
     @AppStorage("maxTokens") var maxTokens: MaxTokens = .t4096
     
     @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses fairly concise."

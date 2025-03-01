@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChatServiceSettings: View {
-    @State private var selectedTab: ChatServiceTab = .models
+    @State private var selectedTab: ChatServiceTab = .parameters
     
     var body: some View {
         Group {

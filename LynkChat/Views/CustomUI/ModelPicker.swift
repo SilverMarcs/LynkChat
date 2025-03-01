@@ -16,6 +16,7 @@ struct ModelPicker: View {
             ForEach(ChatModel.allCases, id: \.self) { model in
                 Label(model.name, image: model.imageName)
                     .labelStyle(.titleAndIcon)
+//                    .labelStyle(.titleOnly)
                     .tag(model)
             }
         }

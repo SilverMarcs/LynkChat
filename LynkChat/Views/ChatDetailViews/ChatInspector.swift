@@ -40,28 +40,11 @@ struct ChatInspector: View {
                     }
                 }
                 
-                
-                Slider(
-                    value: Binding(
-                        get: { Double(chat.config.temperature) },
-                        set: { chat.config.temperature = Double($0) }
-                    ),
-                    in: 0...2,
-                    step: 0.1,
-                    label: { Text("Temperature") },
-                    minimumValueLabel: {
-                        Text("")
-                            .frame(width: 0)
-                    },
-                    maximumValueLabel: {
-                        Text(String(format: "%.1f", chat.config.temperature))
-                        #if os(macOS)
-                            .frame(width: 17)
-                        #else
-                            .frame(width: 25)
-                        #endif
+                Picker("Temperature", selection: $chat.config.temperature) {
+                    ForEach(Temperature.allCases, id: \.self) { option in
+                        Text(option.name).tag(option)
                     }
-                )
+                }
             }
             
             if chat.config.model.supportsTool {

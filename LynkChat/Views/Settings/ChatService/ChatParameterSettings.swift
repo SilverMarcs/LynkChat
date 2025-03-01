@@ -13,32 +13,14 @@ struct ChatParameterSettings: View {
 
     var body: some View {
         Form {
-            Section("Model") {
-                ModelPicker(selectedModel: $config.defaultModel, label: "Default")
-            }
+            ModelPicker(selectedModel: $config.defaultModel, label: "Default Model")
             
             Section("Basic") {
-                Slider(
-                    value: Binding(
-                        get: { Double(config.temperature) },
-                        set: { config.temperature = Double($0) }
-                    ),
-                    in: 0...2,
-                    step: 0.1,
-                    label: { Text("Temperature") },
-                    minimumValueLabel: {
-                        Text("")
-                            .frame(width: 0)
-                    },
-                    maximumValueLabel: {
-                        Text(String(format: "%.1f", config.temperature))
-                        #if os(macOS)
-                            .frame(width: 17)
-                        #else
-                            .frame(width: 25)
-                        #endif
+                Picker("Temperature", selection: $config.temperature) {
+                    ForEach(Temperature.allCases, id: \.self) { option in
+                        Text(option.name).tag(option)
                     }
-                )
+                }
                 
                 Picker("Max Tokens", selection: $config.maxTokens) {
                     ForEach(MaxTokens.allCases, id: \.self) { option in
