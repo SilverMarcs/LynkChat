@@ -177,7 +177,7 @@
 		08CA42C22CF1F3E70073BB01 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CA42C12CF1F3E70073BB01 /* DeleteButton.swift */; };
 		08CA42C42CF1F3F30073BB01 /* RegenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CA42C32CF1F3F30073BB01 /* RegenButton.swift */; };
 		08CA42C62CF1F3FE0073BB01 /* NavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CA42C52CF1F3FE0073BB01 /* NavigationButtons.swift */; };
-		08CD009B2CBA20E900A96425 /* PasteHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD009A2CBA20E900A96425 /* PasteHandler.swift */; };
+		08CD009B2CBA20E900A96425 /* PasteHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD009A2CBA20E900A96425 /* PasteHandler.swift */; platformFilters = (macos, ); };
 		08CF5B892C68980B0079D5EE /* HighlightableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CF5B882C68980B0079D5EE /* HighlightableTextView.swift */; };
 		08D22A772D20A148007F9F4A /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A762D20A148007F9F4A /* Tool.swift */; };
 		08D22A7B2D212732007F9F4A /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22A7A2D212732007F9F4A /* Logging.swift */; };

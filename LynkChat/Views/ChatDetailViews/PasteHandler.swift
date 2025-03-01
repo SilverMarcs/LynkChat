@@ -5,7 +5,6 @@
 //  Created by Zabir Raihan on 12/10/2024.
 //
 
-#if os(macOS)
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -80,4 +79,3 @@ extension View {
         self.modifier(PasteHandler(chat: chat, isQuickPanel: isQuickPanel))
     }
 }
-#endif
