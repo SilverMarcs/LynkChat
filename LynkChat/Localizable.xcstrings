@@ -46,7 +46,7 @@
     "^[%lld Chat](inflect: true) Selected" : {
 
     },
-    "© 2024 LynkSphere" : {
+    "© 2025 LynkSphere" : {
 
     },
     "⌘ + Enter to send, ⌘ + L to focus on input box, ⌘ + V to paste files" : {
@@ -289,9 +289,6 @@
     "Hide Debug" : {
 
     },
-    "If enabled, chat window will be closed when image window is opened and vice versa" : {
-
-    },
     "Image" : {
 
     },
@@ -491,9 +488,6 @@
 
     },
     "Show Inspector" : {
-
-    },
-    "Show one window at a time" : {
 
     },
     "Show Raw Tool Response" : {

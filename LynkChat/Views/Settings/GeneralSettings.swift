@@ -23,18 +23,10 @@ struct GeneralSettings: View {
             }
             
             Section("Misc") {
-                #if os(macOS)
-                Toggle(isOn: $config.onlyOneWindow) {
-                    Text("Show one window at a time")
-                    Text("If enabled, chat window will be closed when image window is opened and vice versa")
-                }
-                #endif
-                
                 Toggle(isOn: $config.enterToSend) {
                     Text("Enter to send message")
                     Text("Enabling this makes input area laggy and is not recommended")
                 }
-                
             }
             
             Section {

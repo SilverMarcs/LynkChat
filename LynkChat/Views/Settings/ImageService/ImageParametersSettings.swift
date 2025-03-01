@@ -27,7 +27,7 @@ struct ImageParametersSettings: View {
             
             Section(header: Text("Default Parameters")) {
                 Stepper(
-                    "Number of Images (\(imageConfig.numImages))",
+                    label,
                     value: Binding<Double>(
                         get: { Double(imageConfig.numImages) },
                         set: { imageConfig.numImages = Int($0) }

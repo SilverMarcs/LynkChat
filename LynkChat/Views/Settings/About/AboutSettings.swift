@@ -25,7 +25,7 @@ struct AboutSettings: View {
                 Text("Multi-LLM API Service in SwiftUI")
                     .font(.subheadline)
                 
-                Text("© 2024 LynkSphere")
+                Text("© 2025 LynkSphere")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .padding(.bottom, 10)

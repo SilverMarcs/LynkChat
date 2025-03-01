@@ -75,9 +75,7 @@ struct ChatListCards: View {
         case .images:
             #if os(macOS)
             openWindow(id: WindowID.chats)
-            if config.onlyOneWindow {
-                dismissWindow(id: "images")
-            }
+            dismissWindow(id: "images")
             #else
             settingsVM.listState = .chats
             #endif
@@ -99,9 +97,7 @@ struct ChatListCards: View {
     func handleImagePress() {
         #if os(macOS)
         openWindow(id: WindowID.images)
-        if config.onlyOneWindow {
-            dismissWindow(id: "chats")
-        }
+        dismissWindow(id: "chats")
         #else
         settingsVM.listState = .images
         #endif

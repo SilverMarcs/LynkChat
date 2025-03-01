@@ -6,10 +6,6 @@
 //
 
 import SwiftUI
-#if !os(macOS)
-import MarkdownUI
-import HighlightSwift
-#endif
 
 struct MDView: View {
     @Environment(\.searchText) private var searchText
@@ -20,8 +16,8 @@ struct MDView: View {
     var calculatedHeight: Binding<CGFloat>? = nil
 
     var body: some View {
-        if !searchText.isEmpty {
-            // Always use SwiftMarkdownView when there's search text
+        if !searchText.isEmpty || config.isMarkdownEnabled {
+            // Use SwiftMarkdownView when there's search text or markdown is enabled
             SwiftMarkdownView(
                 content,
                 calculatedHeight: calculatedHeight,
@@ -30,47 +26,6 @@ struct MDView: View {
                 baseURL: "LynkChat Web Content",
                 codeBlockTheme: config.codeBlockTheme
             )
-        } else if config.isMarkdownEnabled {
-            #if !os(macOS)
-            Markdown(content)
-                .textSelection(.enabled)
-                .lineSpacing(2)
-                .markdownTextStyle {
-                    FontSize(config.fontSize)
-                }
-                .markdownBlockStyle(\.codeBlock) { configuration in
-                    CodeText(configuration.content)
-                        .codeTextColors(.theme(.atomOne))
-                        .font(.system(size: config.fontSize - 2))
-                        .padding()
-                        .background(.background.secondary.opacity(0.2), in: .rect(cornerRadius: 8))
-                        .background {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(.quaternary, lineWidth: 1)
-                        }
-                        .overlay(alignment: .bottomTrailing) {
-                            Button {
-                                configuration.content.copyToPasteboard()
-                            } label: {
-                                Image(systemName: "document.on.clipboard")
-                                    .foregroundStyle(.secondary)
-                            }
-                            .buttonStyle(.plain)
-                            .padding()
-                        }
-                        .padding(.bottom, 12)
-                }
-            #else
-            SwiftMarkdownView(
-                content,
-                calculatedHeight: calculatedHeight,
-                fontSize: CGFloat(config.fontSize),
-                highlightString: searchText,
-                baseURL: "LynkChat Web Content",
-                codeBlockTheme: config.codeBlockTheme
-            )
-            #endif
-            
         } else {
             Text(content)
                 .textSelection(.enabled)
