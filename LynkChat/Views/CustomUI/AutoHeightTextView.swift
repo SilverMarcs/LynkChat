@@ -1,9 +1,9 @@
-////
-////  AutoHeightTextView.swift
-////  LynkChat
-////
-////  Created by Zabir Raihan on 20/12/2024.
-////
+//
+//  AutoHeightTextView.swift
+//  LynkChat
+//
+//  Created by Zabir Raihan on 20/12/2024.
+//
 //
 
 import SwiftUI
@@ -19,10 +19,6 @@ struct AutoHeightTextView: NSViewRepresentable {
     var containerWidth: CGFloat? = nil
     
     typealias NSViewType = CustomTextView
-    
-    static func == (lhs: AutoHeightTextView, rhs: AutoHeightTextView) -> Bool {
-        return lhs.text == rhs.text && lhs.height == rhs.height && lhs.config.fontSize == rhs.config.fontSize
-    }
     
     func makeNSView(context: Context) -> CustomTextView {
         let textView = CustomTextView()
@@ -54,7 +50,7 @@ struct AutoHeightTextView: NSViewRepresentable {
             nsView.maxWidth = maxWidth
         } else {
             // If no container width provided, calculate based on content
-            let estimatedWidth = estimateTextWidth(text: text, font: NSFont.systemFont(ofSize: config.fontSize))
+            let estimatedWidth = estimateTextWidth(text: text, font: NSFont.systemFont(ofSize: config.fontSize - 1))
             let maxWidth = min(estimatedWidth, 600) // Cap at reasonable max width
             nsView.textContainer?.size = NSSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude)
             nsView.maxWidth = maxWidth
@@ -83,7 +79,7 @@ struct AutoHeightTextView: NSViewRepresentable {
     }
     
     private func updateFontSize(_ textView: NSTextView) {
-        let font = NSFont.systemFont(ofSize: config.fontSize)
+        let font = NSFont.systemFont(ofSize: config.fontSize - 1)
         textView.font = font
         
         let paragraphStyle = NSMutableParagraphStyle()
