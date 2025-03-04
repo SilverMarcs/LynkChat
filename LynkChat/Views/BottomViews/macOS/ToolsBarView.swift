@@ -47,6 +47,7 @@ struct ToolsBarView: View {
     ) -> some View {
         Button(action: action) {
             Label(tool.shortTitle, systemImage: tool.iconName)
+                .symbolEffect(.bounce, value: isEnabled)
             #if os(macOS)
                 .imageScale(.medium)
                 .padding(.horizontal, 7)
@@ -62,7 +63,6 @@ struct ToolsBarView: View {
                 .labelStyle(.iconOnly)
                 .foregroundStyle(isEnabled ? tool.color : .secondary)
             #endif
-                .symbolEffect(.bounce, value: isEnabled)
         }
         .buttonStyle(.plain)
         #if os(macOS)

@@ -50,7 +50,7 @@ struct OnboardingView: View {
             case .welcome:
                 WelcomeOnboarding()
             case .apiKey:
-                APIKeyOnboarding()
+                ModelOnboarding()
             case .plugins:
                 PluginsOnboarding()
             #if os(macOS)

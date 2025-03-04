@@ -1,5 +1,5 @@
 //
-//  APIKeyOnboarding.swift
+//  ModelOnboarding.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 17/11/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct APIKeyOnboarding: View {
+struct ModelOnboarding: View {
     @ObservedObject var chatConfig: ChatConfigDefaults = .shared
     @ObservedObject var config: AppConfig = .shared
     
@@ -30,9 +30,10 @@ struct APIKeyOnboarding: View {
                     Section {
                         Toggle("Enter to send messages", isOn: $config.enterToSend)
                     } footer: {
-                        #if os(macOS)
-                        Text("Keep disabled for better performance.")
-                        #endif
+//                        #if os(macOS)
+//                        Text("Keep disabled for better performance.")
+//                        #endif
+                        SectionFooterView(text: "Keep disabled for better performance.")
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))
@@ -45,6 +46,6 @@ struct APIKeyOnboarding: View {
 }
 
 #Preview {
-    APIKeyOnboarding()
+    ModelOnboarding()
         .frame(width: 500, height: 500)
 }

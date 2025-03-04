@@ -17,6 +17,9 @@
         }
       }
     },
+    "%@ Product" : {
+
+    },
     "%@ Social" : {
 
     },
@@ -36,7 +39,7 @@
     "^[%lld Chat](inflect: true) Selected" : {
 
     },
-    "© 2025 LynkSphere" : {
+    "© %lld LynkSphere" : {
 
     },
     "⌘ + Enter to send, ⌘ + L to focus on input box, ⌘ + V to paste files" : {
@@ -52,6 +55,9 @@
 
     },
     "Access from anywhere in the OS" : {
+
+    },
+    "Access multiple AI models in one place" : {
 
     },
     "Access up-to-date information" : {
@@ -345,9 +351,6 @@
     "More" : {
 
     },
-    "Multi-LLM API Service in SwiftUI" : {
-
-    },
     "N" : {
 
     },
@@ -391,6 +394,9 @@
 
     },
     "Print debug lines" : {
+
+    },
+    "Product Page" : {
 
     },
     "Prompt" : {

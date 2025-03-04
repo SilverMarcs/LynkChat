@@ -31,6 +31,13 @@ struct ImageRow: View {
                 .fontWidth(.compressed)
         }
         .padding(3)
+        .swipeActions {
+            Button(role: .destructive) {
+                modelContext.delete(session)
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
     }
 }
 

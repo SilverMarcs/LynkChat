@@ -117,7 +117,7 @@
 		0893B2022C3955CC00D4D501 /* CustomSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0893B2012C3955CC00D4D501 /* CustomSearchField.swift */; platformFilters = (macos, ); };
 		0893B2062C39810900D4D501 /* ChatConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0893B2052C39810900D4D501 /* ChatConfig.swift */; };
 		089825232CE8F75400980468 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825222CE8F75400980468 /* OnboardingView.swift */; };
-		089825252CE9B62900980468 /* APIKeyOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825242CE9B62900980468 /* APIKeyOnboarding.swift */; };
+		089825252CE9B62900980468 /* ModelOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825242CE9B62900980468 /* ModelOnboarding.swift */; };
 		089825272CE9B67700980468 /* WelcomeOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825262CE9B67700980468 /* WelcomeOnboarding.swift */; };
 		089825292CE9BA2900980468 /* QuickPanelOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089825282CE9BA2900980468 /* QuickPanelOnboarding.swift */; platformFilters = (macos, ); };
 		0898252B2CE9BB1700980468 /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0898252A2CE9BB1700980468 /* OnboardingPage.swift */; };
@@ -325,7 +325,7 @@
 		0893B2012C3955CC00D4D501 /* CustomSearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSearchField.swift; sourceTree = "<group>"; };
 		0893B2052C39810900D4D501 /* ChatConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatConfig.swift; sourceTree = "<group>"; };
 		089825222CE8F75400980468 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		089825242CE9B62900980468 /* APIKeyOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyOnboarding.swift; sourceTree = "<group>"; };
+		089825242CE9B62900980468 /* ModelOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelOnboarding.swift; sourceTree = "<group>"; };
 		089825262CE9B67700980468 /* WelcomeOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeOnboarding.swift; sourceTree = "<group>"; };
 		089825282CE9BA2900980468 /* QuickPanelOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPanelOnboarding.swift; sourceTree = "<group>"; };
 		0898252A2CE9BB1700980468 /* OnboardingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPage.swift; sourceTree = "<group>"; };
@@ -672,7 +672,7 @@
 				089825222CE8F75400980468 /* OnboardingView.swift */,
 				089825342CE9F55B00980468 /* GenericOnboardingView.swift */,
 				089825262CE9B67700980468 /* WelcomeOnboarding.swift */,
-				089825242CE9B62900980468 /* APIKeyOnboarding.swift */,
+				089825242CE9B62900980468 /* ModelOnboarding.swift */,
 				089825322CE9ECF000980468 /* PluginsOnboarding.swift */,
 				089825282CE9BA2900980468 /* QuickPanelOnboarding.swift */,
 				08850D8A2CFE0A99004D944C /* PermissionsOnboarding.swift */,
@@ -1146,7 +1146,7 @@
 				087F99752D26FEFB00D6EDDD /* AnimatingCellHeight.swift in Sources */,
 				080F3AB62D2E56DA004168C2 /* IOSWindow.swift in Sources */,
 				08D22AB02D22F9D3007F9F4A /* InputFileHandler.swift in Sources */,
-				089825252CE9B62900980468 /* APIKeyOnboarding.swift in Sources */,
+				089825252CE9B62900980468 /* ModelOnboarding.swift in Sources */,
 				08C49FD82C502EC90085792F /* FileHelper.swift in Sources */,
 				08D22A7E2D21279F007F9F4A /* Color++.swift in Sources */,
 				086477602D2528A000969DBA /* ImageRequest+Response.swift in Sources */,

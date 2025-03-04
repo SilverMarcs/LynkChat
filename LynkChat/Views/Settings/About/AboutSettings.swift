@@ -22,10 +22,10 @@ struct AboutSettings: View {
                 Text("LynkChat")
                     .font(.title.bold())
                 
-                Text("Multi-LLM API Service in SwiftUI")
+                Text("Access multiple AI models in one place")
                     .font(.subheadline)
                 
-                Text("© 2025 LynkSphere")
+                Text("© \(Calendar.current.component(.year, from: Date())) LynkSphere")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .padding(.bottom, 10)
@@ -33,7 +33,13 @@ struct AboutSettings: View {
             
             Section("Connect") {
                 LabeledContent{
-                    Link("Company Website", destination: URL(string: "https://LynkSphere.com")!)
+                    Link("Product Page", destination: URL(string: "https://lynkSphere.com/products/lynkchat")!)
+                } label: {
+                    Text("\(Image(systemName: "apps.iphone")) Product")
+                }
+                
+                LabeledContent{
+                    Link("Company Website", destination: URL(string: "https://lynkSphere.com")!)
                 } label: {
                     Text("\(Image(systemName: "link")) Visit")
                 }
@@ -71,14 +77,6 @@ struct AboutSettings: View {
         .navigationTitle("About")
         .toolbarTitleDisplayMode(.inline)
     }
-    
-//    func getAppVersion() -> String {
-//        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-//           {
-//            return "Version \(version)"
-//        }
-//        return "Version Unknown"
-//    }
 }
 
 #Preview {
