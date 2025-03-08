@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ListRowImage: View {
     var model: ModelImageProvider
+    #if os(macOS)
     @Environment(\.appearsActive) private var appearsActive
+    #endif
     
     var body: some View {
         ZStack {
@@ -21,7 +23,9 @@ struct ListRowImage: View {
                 .imageScale(.medium)
                 .foregroundStyle(.white)
         }
+        #if os(macOS)
         .opacity(appearsActive ? 1 : 0.7)
+        #endif
     }
     
     var imageSize: CGFloat {

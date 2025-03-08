@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ListCard: View {
     @Environment(\.colorScheme) var colorScheme
+    #if os(macOS)
     @Environment(\.appearsActive) private var appearsActive
+    #endif
     
     var icon: String
     var iconColor: Color
@@ -26,7 +28,9 @@ struct ListCard: View {
                     Image(systemName: icon)
                         .font(.title)
                         .foregroundStyle(.white, iconColor)
+                        #if os(macOS)
                         .opacity(appearsActive ? 1 : 0.7)
+                        #endif
 
                     Spacer()
                     

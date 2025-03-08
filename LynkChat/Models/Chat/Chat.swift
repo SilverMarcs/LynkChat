@@ -194,10 +194,9 @@ final class Chat: Equatable, Identifiable, Hashable {
         streamingTask = nil
         
         // Ensure the message is in a clean state before allowing new queries
-        if let lastMessage = currentThread.last?.activeMessage,
-           lastMessage.isReplying {
-           lastMessage.isReplying = false
-           lastMessage.tools = nil
+        if let lastMessage = currentThread.last?.activeMessage {
+            lastMessage.isReplying = false
+            lastMessage.tools = nil
         }
         
         errorDeleteLast()
@@ -205,10 +204,18 @@ final class Chat: Equatable, Identifiable, Hashable {
             AppConfig.shared.expandColor = false
         }
     }
-    
+
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
-        DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
+        
+        // Immediately clean up the state rather than waiting
+        if let lastMessage = currentThread.last?.activeMessage {
+            lastMessage.isReplying = false
+            lastMessage.tools = nil
+        }
+        
+        // Call stopStreaming directly on the main thread
+        Task { @MainActor in
             self.stopStreaming()
         }
     }

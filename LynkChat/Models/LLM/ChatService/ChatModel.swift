@@ -9,41 +9,42 @@ import Foundation
 import UniformTypeIdentifiers
 
 enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImageProvider {
-    case claude3_7sonnet
     case small_model
     case large_model
+    case gpt_4o
     case reasoning_model
     
     static var allCases: [ChatModel] {
         AppConfig.shared.showDebugMenu ?
         [
-//            .claude3_7sonnet,
             .small_model,
             .large_model,
-            .reasoning_model
+            .gpt_4o,
+            .reasoning_model,
         ] :
         [
             .small_model,
-            .large_model,
-            .reasoning_model
+//            .large_model,
+            .reasoning_model,
+//            .gpt_4o
         ]
     }
     
     var id: String {
         switch self {
-        case .claude3_7sonnet: "claude-3-7-sonnet"
         case .small_model: "small-model"
         case .large_model: "large-model"
         case .reasoning_model: "reasoning-model"
+        case .gpt_4o: "gpt-4o"
         }
     }
     
     var name: String {
         switch self {
-        case .claude3_7sonnet: "Claude-3.7S"
         case .small_model: "Standard"
         case .large_model: "Advanced"
         case .reasoning_model: "Reasoning"
+        case .gpt_4o: "Versatile"
         }
     }
 
@@ -57,10 +58,10 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     
     var imageName: String {
         switch self {
-            case .claude3_7sonnet: "claude.symbols"
             case .small_model: "gemini.symbols"
             case .large_model: "claude.symbols"
             case .reasoning_model: "deepseek.symbols"
+            case .gpt_4o: "openai.symbols"
         }
     }
 
@@ -73,16 +74,16 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     
     var color: String {
         switch self {
-        case .claude3_7sonnet: "#D6683B"
         case .small_model: "#E64335"
         case .large_model: "#D6683B"
         case .reasoning_model: "#4F65E9"
+        case .gpt_4o: "#00947A"
         }
     }
     
     var supportsTool: Bool {
         switch self {
-        case .claude3_7sonnet, .small_model, .large_model:
+        case .small_model, .large_model, .gpt_4o:
             true
         case .reasoning_model:
             false
@@ -91,7 +92,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     
     var supportedTypes: Set<UTType> {
         switch self {
-        case .claude3_7sonnet, .small_model, .large_model:
+        case .small_model, .large_model, .gpt_4o:
             [.text, .pdf, .audio, .image]
         case .reasoning_model:
             [.text, .pdf, .audio]
@@ -100,23 +101,23 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     
     var description: String {
         switch self {
-        case .claude3_7sonnet:
-            "Generate sonnets with Claude-3.7S, a model trained on a mix of Shakespeare's sonnets and modern poetry."
         case .small_model:
             "Very fast model while maintaining high quality. Uses Gemini-2 Flash"
         case .large_model:
             "Advanced model for difficult tasks like coding. Uses Claude-3.7 Sonnet"
         case .reasoning_model:
             "Model that thinks before responding. Uses DeepSeek R1"
+        case .gpt_4o:
+            "OpenAI's leading multimodal model. Uses GPT-4o"
         }
     }
     
     var price: TokenUsage {
         switch self {
-        case .claude3_7sonnet: .init(promptTokens: 4, completionTokens: 10)
         case .small_model: .init(promptTokens: 1, completionTokens: 3)
         case .large_model: .init(promptTokens: 3, completionTokens: 8)
         case .reasoning_model: .init(promptTokens: 2, completionTokens: 4)
+        case .gpt_4o: .init(promptTokens: 3, completionTokens: 6)
         }
     }
 }
