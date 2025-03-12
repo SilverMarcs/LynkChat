@@ -6,122 +6,106 @@
 	objectVersion = 70;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		088D4AFE2D25823100E86706 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 088D4AFD2D25823100E86706 /* Localizable.xcstrings */; };
-		08A222832C2AB4FD00D76C8B /* LynkChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A222822C2AB4FD00D76C8B /* LynkChatApp.swift */; };
-		08A222892C2AB4FE00D76C8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08A222882C2AB4FE00D76C8B /* Assets.xcassets */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
-		088D4AFD2D25823100E86706 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		08A2227F2C2AB4FD00D76C8B /* LynkChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LynkChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		08A222822C2AB4FD00D76C8B /* LynkChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LynkChatApp.swift; sourceTree = "<group>"; };
-		08A222882C2AB4FE00D76C8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		08A2228A2C2AB4FE00D76C8B /* LynkChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LynkChat.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		08B064472D815B6B0020A9E7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		08B068CD2D815C760020A9E7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
-				HotKeyManager.swift = (
+				Utils/HotKeyManager.swift = (
 					macos,
 				);
-			};
-			target = 08A2227E2C2AB4FD00D76C8B /* LynkChat */;
-		};
-		08B066582D815B8F0020A9E7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			platformFiltersByRelativePath = {
-				BottomViews/iOS/BottomBar.swift = (
+				Views/BottomViews/iOS/BottomBar.swift = (
 					ios,
 					xros,
 				);
-				BottomViews/iOS/CameraView.swift = (
+				Views/BottomViews/iOS/CameraView.swift = (
 					ios,
 				);
-				BottomViews/iOS/InputArea.swift = (
-					ios,
-					xros,
-				);
-				BottomViews/iOS/InputEditor.swift = (
+				Views/BottomViews/iOS/InputArea.swift = (
 					ios,
 					xros,
 				);
-				BottomViews/macOS/InputArea.swift = (
-					macos,
-				);
-				BottomViews/macOS/InputEditor.swift = (
-					macos,
-				);
-				ChatDetailViews/ChatDetailMac.swift = (
-					macos,
-				);
-				ChatDetailViews/ChatDetailMobile.swift = (
+				Views/BottomViews/iOS/InputEditor.swift = (
 					ios,
 					xros,
 				);
-				ChatDetailViews/PasteHandler.swift = (
+				Views/BottomViews/macOS/InputArea.swift = (
 					macos,
 				);
-				CustomUI/AutoHeightTextView.swift = (
+				Views/BottomViews/macOS/InputEditor.swift = (
 					macos,
 				);
-				CustomUI/CustomSearchField.swift = (
+				Views/ChatDetailViews/ChatDetailMac.swift = (
 					macos,
 				);
-				Onboarding/PermissionsOnboarding.swift = (
+				Views/ChatDetailViews/ChatDetailMobile.swift = (
 					ios,
 					xros,
 				);
-				Onboarding/QuickPanelOnboarding.swift = (
+				Views/ChatDetailViews/PasteHandler.swift = (
 					macos,
 				);
-				Settings/QuickPanelSettings.swift = (
+				Views/CustomUI/AutoHeightTextView.swift = (
 					macos,
 				);
-				Settings/Shortcut/ShortcutSettings.swift = (
+				Views/CustomUI/CustomSearchField.swift = (
 					macos,
 				);
-				Windows/AboutWindow.swift = (
-					macos,
-				);
-				Windows/AppIconMenu.swift = (
+				Views/Onboarding/PermissionsOnboarding.swift = (
 					ios,
 					xros,
 				);
-				Windows/ChatContentView.swift = (
+				Views/Onboarding/QuickPanelOnboarding.swift = (
 					macos,
 				);
-				Windows/ChatWindow.swift = (
+				Views/Settings/QuickPanelSettings.swift = (
 					macos,
 				);
-				Windows/DebugWebWindow.swift = (
+				Views/Settings/Shortcut/ShortcutSettings.swift = (
 					macos,
 				);
-				Windows/HelpWindow.swift = (
+				Views/Windows/AboutWindow.swift = (
 					macos,
 				);
-				Windows/IOSWindow.swift = (
+				Views/Windows/AppIconMenu.swift = (
 					ios,
 					xros,
 				);
-				Windows/ImageContentView.swift = (
+				Views/Windows/ChatContentView.swift = (
 					macos,
 				);
-				Windows/ImageWindow.swift = (
+				Views/Windows/ChatWindow.swift = (
 					macos,
 				);
-				Windows/QuickPanelWindow/QuickPanelView.swift = (
+				Views/Windows/DebugWebWindow.swift = (
 					macos,
 				);
-				Windows/QuickPanelWindow/QuickPanelWindow.swift = (
+				Views/Windows/HelpWindow.swift = (
 					macos,
 				);
-				Windows/SettingsWindow.swift = (
+				Views/Windows/IOSWindow.swift = (
+					ios,
+					xros,
+				);
+				Views/Windows/ImageContentView.swift = (
 					macos,
 				);
-				Windows/WindowScenesCollection.swift = (
+				Views/Windows/ImageWindow.swift = (
+					macos,
+				);
+				Views/Windows/QuickPanelWindow/QuickPanelView.swift = (
+					macos,
+				);
+				Views/Windows/QuickPanelWindow/QuickPanelWindow.swift = (
+					macos,
+				);
+				Views/Windows/SettingsWindow.swift = (
+					macos,
+				);
+				Views/Windows/WindowScenesCollection.swift = (
 					macos,
 				);
 			};
@@ -130,9 +114,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		08B064322D815B6B0020A9E7 /* Utils */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (08B064472D815B6B0020A9E7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Utils; sourceTree = "<group>"; };
-		08B065C32D815B8F0020A9E7 /* Views */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (08B066582D815B8F0020A9E7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Views; sourceTree = "<group>"; };
-		08B066E52D815BEB0020A9E7 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
+		08B067FF2D815C760020A9E7 /* LynkChat */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (08B068CD2D815C760020A9E7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = LynkChat; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,7 +131,7 @@
 		08A222762C2AB4FD00D76C8B = {
 			isa = PBXGroup;
 			children = (
-				08A222812C2AB4FD00D76C8B /* LynkChat */,
+				08B067FF2D815C760020A9E7 /* LynkChat */,
 				08A222802C2AB4FD00D76C8B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -160,20 +142,6 @@
 				08A2227F2C2AB4FD00D76C8B /* LynkChat.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		08A222812C2AB4FD00D76C8B /* LynkChat */ = {
-			isa = PBXGroup;
-			children = (
-				08B066E52D815BEB0020A9E7 /* Models */,
-				08B065C32D815B8F0020A9E7 /* Views */,
-				08B064322D815B6B0020A9E7 /* Utils */,
-				08A222822C2AB4FD00D76C8B /* LynkChatApp.swift */,
-				08A222882C2AB4FE00D76C8B /* Assets.xcassets */,
-				08A2228A2C2AB4FE00D76C8B /* LynkChat.entitlements */,
-				088D4AFD2D25823100E86706 /* Localizable.xcstrings */,
-			);
-			path = LynkChat;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,9 +160,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				08B064322D815B6B0020A9E7 /* Utils */,
-				08B065C32D815B8F0020A9E7 /* Views */,
-				08B066E52D815BEB0020A9E7 /* Models */,
+				08B067FF2D815C760020A9E7 /* LynkChat */,
 			);
 			name = LynkChat;
 			packageProductDependencies = (
@@ -245,8 +211,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08A222892C2AB4FE00D76C8B /* Assets.xcassets in Resources */,
-				088D4AFE2D25823100E86706 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,7 +221,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08A222832C2AB4FD00D76C8B /* LynkChatApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
