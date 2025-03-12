@@ -31,8 +31,9 @@ struct UserMessage: View {
             
             GroupBox {
                 VStack(alignment: .leading, spacing: 0) {
+                    #if os(macOS)
                     if searchText.isEmpty {
-                        #if os(macOS)
+          
                         AutoHeightTextView(text: displayedText, height: $height)
                             .fixedSize(horizontal: true, vertical: false)  // This is key - use the intrinsic size horizontally
                             .frame(height: group.activeMessage.height, alignment: .top)
@@ -42,12 +43,12 @@ struct UserMessage: View {
                                     group.activeMessage.height = height
                                 }
                             }
-                        #else
-                        MDView(content: displayedText)
-                        #endif
                     } else {
                         MDView(content: displayedText)
                     }
+                    #else
+                    Text(displayedText)
+                    #endif
 
 
                     
