@@ -44,20 +44,15 @@ struct TypedData: Codable, Identifiable, Hashable {
     }
     
     static func processDataFiles(_ dataFiles: [TypedData]) -> [ContentItem] {
-        var contentItems: [ContentItem] = []
-        
-        for data in dataFiles {
+        dataFiles.map { data in
             if data.fileType.conforms(to: .text) {
-                contentItems.append(.text(data.formattedTextContent))
+                return .text(data.formattedTextContent)
             } else if data.fileType.conforms(to: .image) {
-                contentItems.append(.image(mimeType: data.mimeType, data: data.data))
+                return .image(image: data.data, mimeType: data.mimeType)
             } else {
-                // Send non-text, non-image files as raw data
-                contentItems.append(.file(mimeType: data.mimeType, data: data.data, fileName: data.fileName))
+                return .file(data: data.data, mimeType: data.mimeType)
             }
         }
-        
-        return contentItems
     }
 }
 

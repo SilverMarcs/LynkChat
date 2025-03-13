@@ -24,17 +24,11 @@ struct APIMessage: Encodable {
 
 enum ContentItem: Encodable {
     case text(String)
-    case image(mimeType: String, data: Data)
-    case file(mimeType: String, data: Data, fileName: String)
+    case image(image: Data, mimeType: String)
+    case file(data: Data, mimeType: String)
     
     private enum CodingKeys: String, CodingKey {
-        case type, text, image, file, mimeType, fileName
-    }
-    
-    private enum ContentType: String, Encodable {
-        case text
-        case image
-        case file
+        case type, text, image, data, mimeType
     }
     
     func encode(to encoder: Encoder) throws {
@@ -42,17 +36,16 @@ enum ContentItem: Encodable {
         
         switch self {
         case .text(let text):
-            try container.encode(ContentType.text, forKey: .type)
+            try container.encode("text", forKey: .type)
             try container.encode(text, forKey: .text)
-        case .image(let mimeType, let data):
-            try container.encode(ContentType.image, forKey: .type)
-            try container.encode(data, forKey: .image)
+        case .image(let image, let mimeType):
+            try container.encode("image", forKey: .type)
+            try container.encode(image, forKey: .image)
+            try container.encodeIfPresent(mimeType, forKey: .mimeType)
+        case .file(let data, let mimeType):
+            try container.encode("file", forKey: .type)
+            try container.encode(data, forKey: .data)
             try container.encode(mimeType, forKey: .mimeType)
-        case .file(let mimeType, let data, let fileName):
-            try container.encode(ContentType.file, forKey: .type)
-            try container.encode(data, forKey: .file)
-            try container.encode(mimeType, forKey: .mimeType)
-            try container.encode(fileName, forKey: .fileName)
         }
     }
 }

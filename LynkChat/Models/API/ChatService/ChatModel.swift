@@ -92,10 +92,12 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImagePr
     
     var supportedTypes: Set<UTType> {
         switch self {
-        case .small_model, .large_model, .gpt_4o:
+        case .small_model:
             [.text, .pdf, .audio, .image]
+        case .large_model, .gpt_4o:
+            [.text, .image]
         case .reasoning_model:
-            [.text, .pdf, .audio]
+            [.text]
         }
     }
     
