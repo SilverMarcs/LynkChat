@@ -17,7 +17,7 @@ struct ActionButton: View {
                 .font(.title).fontWeight(.semibold)
 //                .font(.system(size: 20, weight: .regular))
         }
-        .foregroundStyle((isStop ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (isStop ? .red : .blue))
+        .foregroundStyle((isStop ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (isStop ? .red : .accentColor))
         .opacity(0.85)
         .buttonStyle(.plain)
         .contentTransition(.symbolEffect(.replace, options: .speed(2)))

@@ -61,7 +61,7 @@ struct UserMessage: View {
                         } label: {
                             Text(isExpanded ? "Less" : "More")
                                 .font(.callout)
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(.accent)
                         }
                         .buttonStyle(.plain)
                         .padding(.leading, 4)
