@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+#if !os(macOS)
+import MarkdownUI
+#endif
 
 struct MDView: View {
     @Environment(\.searchText) private var searchText
@@ -16,6 +19,7 @@ struct MDView: View {
     var calculatedHeight: Binding<CGFloat>? = nil
 
     var body: some View {
+        #if os(macOS)
         if !searchText.isEmpty || config.isMarkdownEnabled {
             // Use SwiftMarkdownView when there's search text or markdown is enabled
             SwiftMarkdownView(
@@ -32,6 +36,11 @@ struct MDView: View {
                 .font(.system(size: config.fontSize))
                 .lineSpacing(2)
         }
+        #else
+        Markdown {
+            content
+        }
+        #endif
     }
 }
 

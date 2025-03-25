@@ -29,7 +29,7 @@ struct RoundedRectangleOverlayModifier: ViewModifier {
                 #elseif os(visionOS)
                     .stroke(Color(.quaternaryLabel), lineWidth: 1)
                 #else
-                    .stroke(colorScheme == .dark ? Color(.tertiarySystemGroupedBackground) : Color(.tertiaryLabel), lineWidth: 1)
+                    .stroke(colorScheme == .dark ? Color(.tertiarySystemGroupedBackground) : Color(.tertiaryLabel), lineWidth: 0.6)
                 #endif
                     .opacity(opacity)
             )
