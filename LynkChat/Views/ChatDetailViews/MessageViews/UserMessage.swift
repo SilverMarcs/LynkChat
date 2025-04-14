@@ -32,20 +32,28 @@ struct UserMessage: View {
             GroupBox {
                 VStack(alignment: .leading, spacing: 0) {
                     #if os(macOS)
-                    if searchText.isEmpty {
-          
-                        AutoHeightTextView(text: displayedText, height: $height)
-                            .fixedSize(horizontal: true, vertical: false)  // This is key - use the intrinsic size horizontally
-                            .frame(height: group.activeMessage.height, alignment: .top)
-                            .padding(4)
-                            .onChange(of: height) {
-                                DispatchQueue.main.async {
-                                    group.activeMessage.height = height
-                                }
-                            }
-                    } else {
-                        MDView(content: displayedText)
-                    }
+//                    if searchText.isEmpty {
+//          
+//                        AutoHeightTextView(text: displayedText, height: $height)
+//                            .fixedSize(horizontal: true, vertical: false)  // This is key - use the intrinsic size horizontally
+//                            .frame(height: group.activeMessage.height, alignment: .top)
+//                            .padding(4)
+//                            .onChange(of: height) {
+//                                DispatchQueue.main.async {
+//                                    group.activeMessage.height = height
+//                                }
+//                            }
+//                    } else {
+////                        MDView(content: displayedText)
+//                        HighlightableTextView(displayedText, highlightedText: searchText)
+//                            .padding(4)
+//                    }
+                    
+                    HighlightableTextView(displayedText, highlightedText: searchText)
+                        .textSelection(.enabled)
+                        .font(.system(size: config.fontSize))
+                        .lineSpacing(2)
+                        .padding(4)
                     #else
                     Text(displayedText)
                     #endif

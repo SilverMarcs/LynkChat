@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AssistantMessage: View {
     @Environment(ChatVM.self) var chatVM
+    @Environment(\.searchText) var searchText
     
     @ObservedObject var config = AppConfig.shared
     var message: Message
@@ -32,25 +33,32 @@ struct AssistantMessage: View {
                 ReasoningView(reason: reason)
             }
             
-            MDView(content: message.content, calculatedHeight: $height)
-                .environment(\.searchText, chatVM.searchText)
-                .environment(\.isReplying, message.isReplying)
-                .transaction { $0.animation = nil }
-            #if os(macOS)
-                .apply { view in
-                    if config.isMarkdownEnabled {
-                        view
-                            .frame(height: message.height, alignment: .top)
-                            .onChange(of: height) {
-                                if height > 0 {
-                                    message.height = height
+            if searchText.isEmpty {
+                MDView(content: message.content, calculatedHeight: $height)
+                    .environment(\.searchText, chatVM.searchText)
+                    .environment(\.isReplying, message.isReplying)
+                    .transaction { $0.animation = nil }
+                    #if os(macOS)
+                    .apply { view in
+                        if config.isMarkdownEnabled {
+                            view
+                                .frame(height: message.height, alignment: .top)
+                                .onChange(of: height) {
+                                    if height > 0 {
+                                        message.height = height
+                                    }
                                 }
-                            }
-                    } else {
-                        view
+                        } else {
+                            view
+                        }
                     }
-                }
-            #endif
+                    #endif
+            } else {
+                HighlightableTextView(message.content, highlightedText: searchText)
+                    .textSelection(.enabled)
+                    .font(.system(size: config.fontSize))
+                    .lineSpacing(2)
+            }
             
             if !message.dataFiles.isEmpty {
                 ForEach(message.dataFiles, id: \.self) { data in

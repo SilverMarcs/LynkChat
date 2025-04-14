@@ -59,7 +59,8 @@ struct ChatInputMenu: View {
 //                 .font(.system(size: 20, weight: .regular))
                 .font(.title).fontWeight(.semibold)
                 #else
-                .font(.system(size: 33, weight: .regular))
+                .font(.system(size: 31, weight: .semibold))
+//                .font(.system(size: 33, weight: .regular))
                 #endif
                 .foregroundStyle(.secondary, .quinary)
             
