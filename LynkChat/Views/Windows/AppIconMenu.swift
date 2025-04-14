@@ -46,7 +46,7 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 Task {
                     if let chatVM = AppDelegate.shared.chatVM {
-                        await chatVM.createNewChat()
+                        chatVM.createNewChat()
                     }
                 }
             }
