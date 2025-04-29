@@ -114,6 +114,9 @@
     "Autogenerate Title" : {
 
     },
+    "Behaviour" : {
+
+    },
     "Camera" : {
 
     },
@@ -511,9 +514,6 @@
 
     },
     "Tab" : {
-
-    },
-    "Temperature" : {
 
     },
     "Temporary Chat" : {

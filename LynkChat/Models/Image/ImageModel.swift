@@ -9,35 +9,37 @@ import Foundation
 
 enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
     case flux_schnell
-    case sdxl
+    case gpt
     
-    static let allCases: [ImageModel] = [.flux_schnell, .sdxl]
+    static let allCases: [ImageModel] = AppConfig.shared.showDebugMenu ?
+    [.flux_schnell, .gpt] :
+    [.flux_schnell]
 
     var id: String {
         switch self {
         case .flux_schnell: "flux"
-        case .sdxl: "sdxl"
+        case .gpt: "gpt"
         }
     }
 
     var name: String {
         switch self {
         case .flux_schnell: "Flux"
-        case .sdxl: "SDXL"
+        case .gpt: "GPT"
         }
     }
 
     var imageName: String {
         switch self {
             case .flux_schnell: "flux.symbols"
-            case .sdxl: "stability.symbols"
+            case .gpt: "openai.symbols"
         }
     }
 
     var color: String {
         switch self {
         case .flux_schnell: "#6431e2"
-        case .sdxl: "d52e1f"
+        case .gpt: "#00947A"
         }
     }
 }

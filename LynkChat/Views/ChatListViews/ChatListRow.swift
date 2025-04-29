@@ -132,9 +132,9 @@ struct ChatListRow: View {
 
                 if chatVM.selections.contains(chat) {
                     chatVM.selections.remove(chat)
+                    modelContext.delete(chat)
                 }
                 
-                modelContext.delete(chat)
             } label: {
                 Label("Delete", systemImage: "trash")
             }

@@ -40,7 +40,7 @@ struct ChatInspector: View {
                     }
                 }
                 
-                Picker("Temperature", selection: $chat.config.temperature) {
+                Picker("Behaviour", selection: $chat.config.temperature) {
                     ForEach(Temperature.allCases, id: \.self) { option in
                         Text(option.name).tag(option)
                     }

@@ -16,7 +16,7 @@ struct ChatParameterSettings: View {
             ModelPicker(selectedModel: $config.defaultModel, label: "Default Model")
             
             Section("Parameters") {
-                Picker("Temperature", selection: $config.temperature) {
+                Picker("Behaviour", selection: $config.temperature) {
                     ForEach(Temperature.allCases, id: \.self) { option in
                         Text(option.name).tag(option)
                     }
