@@ -13,6 +13,7 @@ enum MaxTokens: Int, CaseIterable, Codable {
     case t2048 = 2048
     case t4096 = 4096
     case t8192 = 8192
+    case t16384 = 16384
     
     var description: String {
         return String(self.rawValue)
