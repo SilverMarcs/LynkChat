@@ -12,7 +12,7 @@ import PhotosUI
 extension InputManager {
     // Define constants
     private enum Constants {
-        static let maxFileSizeBytes: Int = 5 * 1024 * 1024 // 5MB in bytes
+        static let maxFileSizeBytes: Int = 10 * 1024 * 1024 // 10MB in bytes
         static let maxTotalFiles: Int = 5
         static let maxAudioFiles: Int = 1
     }

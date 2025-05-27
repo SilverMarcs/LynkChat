@@ -73,9 +73,25 @@ struct StreamHandler {
     private func finaliseStream(streamText: String = "", totalTokens: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
             chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
-            assistant.content = streamText
-            assistant.isReplying = false
-            try? assistant.modelContext?.save()
+            
+            // Check if the message content is empty after streaming completes
+            if streamText.isEmpty {
+                // Handle empty message
+                if let lastGroup = chat.currentThread.last,
+                   lastGroup.allMessages.count > 1 {
+                    // This was likely a regeneration - delete only this message and set previous as active
+                    lastGroup.deleteAndSetPreviousActive()
+                } else {
+                    // This was a new message group - delete the entire last message
+                    chat.errorDeleteLast()
+                }
+            } else {
+                // Normal case - update the content
+                assistant.content = streamText
+                assistant.isReplying = false
+                try? assistant.modelContext?.save()
+            }
+            
             withAnimation(.easeInOut(duration: 0.5)) {
                 AppConfig.shared.expandColor = false
             }
