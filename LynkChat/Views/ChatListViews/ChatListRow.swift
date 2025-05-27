@@ -132,8 +132,12 @@ struct ChatListRow: View {
 
                 if chatVM.selections.contains(chat) {
                     chatVM.selections.remove(chat)
-                    modelContext.delete(chat)
                 }
+                
+                // Clean up all messages and message groups first
+                chat.cleanupMessagesAndGroups()
+                // Then delete the chat itself
+                modelContext.delete(chat)
                 
             } label: {
                 Label("Delete", systemImage: "trash")

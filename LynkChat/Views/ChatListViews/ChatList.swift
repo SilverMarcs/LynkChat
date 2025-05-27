@@ -89,12 +89,11 @@ struct ChatList: View {
                chatVM.selections.remove(chat)
            }
            
-           // Archive if normal, delete if archived
-           if chat.status == .normal {
-               chat.status = .archived
-           } else if chat.status == .archived {
-               modelContext.delete(chat)
-           }
+           // Clean up all messages and message groups first
+           chat.cleanupMessagesAndGroups()
+           
+           // Then delete the chat itself
+           modelContext.delete(chat)
        }
     }
     
