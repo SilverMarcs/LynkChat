@@ -75,7 +75,7 @@ struct InputArea: View {
             }
         }
         .padding(4)
-        .roundedRectangleOverlay(radius: 15, style: .circular)
+//        .roundedRectangleOverlay(radius: 15, style: .circular)
         .pasteHandler(chat: chat)
         .modifier(CommonInputStyling())
     }

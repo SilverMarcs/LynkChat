@@ -13,15 +13,18 @@ struct CommonInputStyling: ViewModifier {
     func body(content: Content) -> some View {
         content
             .fixedSize(horizontal: false, vertical: true)
-            .padding(.horizontal)
-            .padding(.top, verticalPadding - 5)
-            .padding(.bottom, verticalPadding)
+//            .padding(.horizontal)
+//            .padding(.top, verticalPadding - 5)
+//            .padding(.bottom, verticalPadding)
+            .padding(6)
             #if os(macOS) || os(visionOS)
-            .background(.bar)
+//            .background(.bar)
+            .glassEffect(in: RoundedRectangle(cornerRadius: 20))
             #else
             .background(.background)
             #endif
             .ignoresSafeArea()
+            .padding(11)
     }
     
     #if os(macOS)

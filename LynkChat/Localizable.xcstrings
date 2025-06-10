@@ -17,6 +17,16 @@
         }
       }
     },
+    "%@ • %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ • %2$@"
+          }
+        }
+      }
+    },
     "%@ Product" : {
 
     },
@@ -250,6 +260,9 @@
 
     },
     "Export Markdown" : {
+
+    },
+    "First Launch Completed: %@" : {
 
     },
     "Focus" : {
@@ -573,6 +586,9 @@
           }
         }
       }
+    },
+    "Will reset tips on next launch: %@" : {
+
     },
     "Zoom In" : {
 

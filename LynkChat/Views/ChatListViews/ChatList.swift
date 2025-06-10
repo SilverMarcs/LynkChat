@@ -99,7 +99,7 @@ struct ChatList: View {
     
     @ToolbarContentBuilder
     var toolbar: some ToolbarContent {
-        ToolbarItem { Spacer() }
+        ToolbarSpacer()
         
         #if os(macOS)
         ToolbarItem(placement: .keyboard) {
