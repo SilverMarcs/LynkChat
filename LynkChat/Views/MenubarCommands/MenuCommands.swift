@@ -34,11 +34,13 @@ struct MenuCommands: Commands {
             }
         }
         
+        #if os(macOS)
         CommandGroup(before: .appSettings) {
             Button("Settings") {
                 openWindow(id: WindowID.settings)
             }
             .keyboardShortcut(",", modifiers: .command)
         }
+        #endif
     }
 }

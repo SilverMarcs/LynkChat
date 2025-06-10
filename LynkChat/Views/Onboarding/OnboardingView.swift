@@ -35,6 +35,7 @@ struct OnboardingView: View {
                 .matchedGeometryEffect(id: "skipButton", in: skipButtonSpace)
             }
         }
+        .presentationBackground(.background)
         .padding()
         #if os(macOS)
         .frame(width: 500, height: 500)
