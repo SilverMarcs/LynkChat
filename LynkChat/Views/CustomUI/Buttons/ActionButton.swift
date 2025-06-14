@@ -20,7 +20,7 @@ struct ActionButton: View {
         .foregroundStyle((isStop ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (isStop ? .red : .accentColor))
         .opacity(0.85)
         .buttonStyle(.plain)
-        .contentTransition(.symbolEffect(.replace, options: .speed(2)))
+//        .contentTransition(.symbolEffect(.replace, options: .speed(2)))
         .keyboardShortcut(isStop ? "d" : .return)
     }
 }
