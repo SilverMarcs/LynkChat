@@ -21,16 +21,17 @@ struct ChatDetailMobile: View {
     var body: some View {
         ScrollViewReader { proxy in
             content
-                .scrollDismissesKeyboard(.immediately)
+                .scrollDismissesKeyboard(.interactively)
                 .safeAreaInset(edge: .bottom, spacing: 0) {
                     InputArea(chat: chat)
                 }
                 .animation(.bouncy, value: chat.currentThread.isEmpty)
                 .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
                 .toolbarTitleMenu {
-                    Section(chat.title) {
-                        Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
-                    }
+//                    Section(chat.title) {
+//                        Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
+//                    }
+                    ModelPicker(selectedModel: $chat.config.model)
                 }
                 .toolbarTitleDisplayMode(.inline)
                 .listStyle(.plain)

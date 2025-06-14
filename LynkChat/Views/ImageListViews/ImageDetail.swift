@@ -45,7 +45,7 @@ struct ImageDetail: View {
             }
             #else
             #if !os(visionOS)
-            .scrollDismissesKeyboard(.immediately)
+            .scrollDismissesKeyboard(.interactively)
             #endif
             .listStyle(.plain)
             .navigationTitle(session.config.model.name)

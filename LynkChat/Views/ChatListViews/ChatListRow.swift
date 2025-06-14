@@ -59,7 +59,7 @@ struct ChatListRow: View {
 //                .foregroundStyle(.secondary)
 //                .fontWidth(.compressed)
         }
-        .padding(padding)
+//        .padding(padding)
 //        defaultMinListRowHeight()
     }
     
