@@ -22,7 +22,6 @@ struct StreamHandler {
     func handleRequest() async throws {
         var streamText = ""
         var reasoning = ""
-        var lastUIUpdateTime = Date()
         var totalTokens = 0
         
         AppConfig.shared.expandColor = true
@@ -34,11 +33,11 @@ struct StreamHandler {
             switch response {
             case .text(let textResponse):
                 streamText += textResponse.content
-                updateUIIfNeeded(streamText: streamText, reasoning: reasoning, lastUpdateTime: &lastUIUpdateTime)
+                assistant.content = streamText
                 
             case .reasoning(let reasoningResponse):
                 reasoning += reasoningResponse.reasoning
-                updateUIIfNeeded(streamText: streamText, reasoning: reasoning, lastUpdateTime: &lastUIUpdateTime)
+                assistant.reasoning = reasoning
                 
             case .toolCall(let toolCallResponse):
                 updateTools(with: toolCallResponse)
@@ -58,16 +57,6 @@ struct StreamHandler {
         }
         
         finaliseStream(streamText: streamText, totalTokens: totalTokens)
-    }
-    
-    @MainActor
-    private func updateUIIfNeeded(streamText: String, reasoning: String, lastUpdateTime: inout Date) {
-        let currentTime = Date()
-        if currentTime.timeIntervalSince(lastUpdateTime) >= Float.UIIpdateInterval {
-            assistant.content = streamText
-            assistant.reasoning = reasoning
-            lastUpdateTime = currentTime
-        }
     }
     
     private func finaliseStream(streamText: String = "", totalTokens: Int) {
