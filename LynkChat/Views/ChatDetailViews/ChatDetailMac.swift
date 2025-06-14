@@ -24,7 +24,7 @@ struct ChatDetailMac: View {
             content
                 .animation(.bouncy, value: chat.currentThread.isEmpty)
                 .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
-                .navigationSubtitle("\(chat.config.model.name) • \(chat.config.systemPrompt.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines).prefix(69))")
+                .navigationSubtitle("\(chat.config.systemPrompt.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines).prefix(69))")
                 .task {
                     onAppearStuff(proxy: proxy)
                 }

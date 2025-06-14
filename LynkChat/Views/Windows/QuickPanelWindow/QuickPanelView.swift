@@ -100,9 +100,9 @@ struct QuickPanelView: View {
                 Image(systemName: chat.isReplying ? "stop.circle.fill" : "arrow.up.circle.fill")
                     .font(.largeTitle).fontWeight(.semibold)
             }
-            .foregroundStyle((chat.isReplying ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (chat.isReplying ? .red : .accent))
+            .foregroundStyle((chat.isReplying ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (chat.isReplying ? .red : .accentColor))
             .buttonStyle(.plain)
-            .contentTransition(.symbolEffect(.replace, options: .speed(2)))
+//            .contentTransition(.symbolEffect(.replace, options: .speed(2)))
         }
         .pasteHandler(chat: chat, isQuickPanel: true)
     }
