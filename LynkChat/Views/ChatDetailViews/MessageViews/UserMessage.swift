@@ -29,7 +29,7 @@ struct UserMessage: View {
                     .transaction { $0.animation = nil }
             }
             
-            GroupBox {
+//            GroupBox {
                 VStack(alignment: .leading, spacing: 0) {
                     #if os(macOS)
 //                    if searchText.isEmpty {
@@ -76,9 +76,19 @@ struct UserMessage: View {
                         .padding(.bottom, 2)
                     }
                 }
-            }
+                .padding(padding)
+                .background(
+                    RoundedRectangle(
+                        cornerRadius: 12,
+//                        style: .continuous
+                    )
+                    .fill(.background.tertiary)
+                    .stroke(.quaternary, lineWidth: 1)
+
+                )
+//            }
             .transaction { $0.animation = nil }
-            .groupBoxStyle(PlatformGroupBoxStyle())
+//            .groupBoxStyle(PlatformGroupBoxStyle())
             .background(
                 RoundedRectangle(cornerRadius: 5)
                     .fill(chat.inputManager.editingMessage == self.group.activeMessage ? Color.accentColor.opacity(0.2) : .clear)
@@ -100,6 +110,14 @@ struct UserMessage: View {
                 showingTextSelection.toggle()
             }
         }
+    }
+    
+    var padding: CGFloat {
+        #if os(macOS)
+        4
+        #else
+        8
+        #endif
     }
     
     var leadingPadding: CGFloat {

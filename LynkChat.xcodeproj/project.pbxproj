@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		081C27002D8F7F4F00C38508 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, xros, ); productRef = 081C26FF2D8F7F4F00C38508 /* MarkdownUI */; };
+		08AF6F732DFEA57A00C4FC6C /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 08AF6F722DFEA57A00C4FC6C /* MarkdownUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -129,7 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				081C27002D8F7F4F00C38508 /* MarkdownUI in Frameworks */,
+				08AF6F732DFEA57A00C4FC6C /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,7 +172,7 @@
 			);
 			name = LynkChat;
 			packageProductDependencies = (
-				081C26FF2D8F7F4F00C38508 /* MarkdownUI */,
+				08AF6F722DFEA57A00C4FC6C /* MarkdownUI */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -205,7 +205,7 @@
 			);
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
-				081C26FE2D8F7F4F00C38508 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -477,7 +477,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		081C26FE2D8F7F4F00C38508 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+		08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
 			requirement = {
@@ -488,9 +488,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		081C26FF2D8F7F4F00C38508 /* MarkdownUI */ = {
+		08AF6F722DFEA57A00C4FC6C /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 081C26FE2D8F7F4F00C38508 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			package = 08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
 		};
 /* End XCSwiftPackageProductDependency section */
