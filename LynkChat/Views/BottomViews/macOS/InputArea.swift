@@ -25,6 +25,10 @@ struct InputArea: View {
     var body: some View {
         HStack(alignment: .bottom) {
             ChatInputMenu(chat: chat)
+            
+            if chat.inputManager.state == .editing {
+                cancelEditing
+            }
                 
             VStack {
                 if !chat.inputManager.dataFiles.isEmpty {
@@ -53,6 +57,8 @@ struct InputArea: View {
                             }
                         }
                 }
+                .padding(5.5)
+                .glassEffect(in: .rect(cornerRadius: 16))
             }
             
             ActionButton(isStop: chat.isReplying) {
