@@ -21,55 +21,67 @@ struct IOSWindow: Scene {
         @Bindable var settingsVM = settingsVM
         
         WindowGroup("Chats", id: "chats") {
-            NavigationSplitView {
-                Group {
-                    switch settingsVM.listState {
-                    case .chats:
-                        ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
-                            .searchable(text: $chatVM.searchText)
-                            .onSubmit(of: .search) {
-                                if PasswordHelper.verifyPassword(chatVM.searchText) {
-                                    config.showDebugMenu = true
-                                }
+            TabView(selection: $settingsVM.listState) {
+                // Chats Tab
+                NavigationSplitView {
+                    ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
+                        .searchable(text: $chatVM.searchText)
+                        .onSubmit(of: .search) {
+                            if PasswordHelper.verifyPassword(chatVM.searchText) {
+                                config.showDebugMenu = true
                             }
-                    case .images:
-                        ImageList(selection: $selection)
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-//                        Menu {
-                            Button(action: { settingsVM.showSettings.toggle() }) {
-                                Label("Settings", systemImage: "gear")
-                            }
-//                        } label: {
-//                            Label("More", systemImage: "ellipsis.circle")
-//                                .labelStyle(.iconOnly)
-//                        }
-                        .sheet(isPresented: $settingsVM.showSettings) {
-                            SettingsView()
                         }
-                    }
-                }
-            } detail: {
-                switch settingsVM.listState {
-                case .chats:
+                        .toolbar {
+                            toolbar
+                        }
+                } detail: {
                     if let chat = chatVM.activeChat {
                         ChatDetail(chat: chat)
                             .id(chat.id)
                     } else {
                         Text("^[\(chatVM.selections.count) Chat](inflect: true) Selected")
                     }
-                case .images:
+                }
+                .tabItem {
+                    Label("Chats", systemImage: "message")
+                }
+                .tag(ListState.chats)
+                
+                // Images Tab
+                NavigationSplitView {
+                    ImageList(selection: $selection)
+                        .toolbar {
+                            toolbar
+                        }
+                } detail: {
                     if let imageSession = selection {
                         ImageDetail(session: imageSession)
                     } else {
                         Text("Select or create an image session")
                     }
                 }
+                .tabItem {
+                    Label("Images", systemImage: "photo")
+                }
+                .tag(ListState.images)
             }
+            .tabBarMinimizeBehavior(.onScrollDown)
             .fullScreenCover(isPresented: .constant(!config.hasCompletedOnboarding)) {
                 OnboardingView()
+            }
+        }
+    }
+    
+    @ToolbarContentBuilder
+    var toolbar: some ToolbarContent {
+        @Bindable var settingsVM = settingsVM
+        
+        ToolbarItem(placement: .topBarLeading) {
+            Button(action: { settingsVM.showSettings.toggle() }) {
+                Label("Settings", systemImage: "gear")
+            }
+            .sheet(isPresented: $settingsVM.showSettings) {
+                SettingsView()
             }
         }
     }

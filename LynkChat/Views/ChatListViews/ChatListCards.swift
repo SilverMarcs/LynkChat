@@ -24,28 +24,28 @@ struct ChatListCards: View {
     @State private var isFlashing = false
 
     var body: some View {
-        #if os(macOS)
+//        #if os(macOS)
         content
             .listRowInsets(EdgeInsets(top: spacing, leading: -5, bottom: spacing, trailing: -5))
         
         TipView(SwipeActionTip())
             .tipCornerRadius(8)
             .listRowInsets(EdgeInsets(top: -6, leading: -5, bottom: 10, trailing: -5))
-        #else
-        Section {
-            content
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        }
-        .listSectionSpacing(15)
-        
-        Section {
-            TipView(SwipeActionTip())
-                .tipCornerRadius(8)
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            
-        }
-        .listSectionSpacing(15)
-        #endif
+//        #else
+//        Section {
+//            content
+//                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//        }
+//        .listSectionSpacing(15)
+//        
+//        Section {
+//            TipView(SwipeActionTip())
+//                .tipCornerRadius(8)
+//                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//            
+//        }
+//        .listSectionSpacing(15)
+//        #endif
     }
     
     var content: some View {

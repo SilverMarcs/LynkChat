@@ -23,9 +23,9 @@ struct ChatList: View {
         @Bindable var chatVM = chatVM
 
         List(selection: $chatVM.selections) {
+            #if os(macOS)
             ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
 
-            #if os(macOS)
             if isSearching {
                 Text("Press Enter to search")
                     .font(.caption)
@@ -121,9 +121,9 @@ struct ChatList: View {
         }
         #endif
         
-        ToolbarSpacer(placement: .bottomBar)
+        ToolbarSpacer(placement: placement)
         
-        ToolbarItem(placement: .bottomBar) {
+        ToolbarItem(placement: placement) {
             Menu {
                 ForEach(ChatModel.allCases) { model in
                     Button {
@@ -142,6 +142,14 @@ struct ChatList: View {
             .menuIndicator(.hidden)
             .popoverTip(NewChatTip())
         }
+    }
+    
+    var placement: ToolbarItemPlacement {
+        #if os(macOS)
+        return .primaryAction
+        #else
+        return .bottomBar
+        #endif
     }
     
     init(status: ChatStatus, searchText: String) {

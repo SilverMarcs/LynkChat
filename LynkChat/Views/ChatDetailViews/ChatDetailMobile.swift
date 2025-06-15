@@ -54,6 +54,7 @@ struct ChatDetailMobile: View {
                     
                     DefaultToolbarItem(kind: .search, placement: .bottomBar)
                 }
+                .toolbar(.hidden, for: .tabBar)
 //                .tabViewBottomAccessory {
 //                    InputArea(chat: chat)
 //                }
@@ -118,7 +119,7 @@ struct ChatDetailMobile: View {
     // Rest of the helper methods and computed properties
     func onAppearStuff(proxy: ScrollViewProxy) {
         AppConfig.shared.expandColor = false
-        Scroller.scrollToBottom(delay: 0.3)
+        Scroller.scrollToBottom(animated: false)
         config.proxy = proxy
     }
 }
