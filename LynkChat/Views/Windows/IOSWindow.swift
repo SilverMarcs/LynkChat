@@ -37,15 +37,15 @@ struct IOSWindow: Scene {
                     }
                 }
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Menu {
+                    ToolbarItem(placement: .primaryAction) {
+//                        Menu {
                             Button(action: { settingsVM.showSettings.toggle() }) {
                                 Label("Settings", systemImage: "gear")
                             }
-                        } label: {
-                            Label("More", systemImage: "ellipsis.circle")
-                                .labelStyle(.titleOnly)
-                        }
+//                        } label: {
+//                            Label("More", systemImage: "ellipsis.circle")
+//                                .labelStyle(.iconOnly)
+//                        }
                         .sheet(isPresented: $settingsVM.showSettings) {
                             SettingsView()
                         }

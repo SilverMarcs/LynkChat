@@ -51,6 +51,7 @@ struct ChatList: View {
             }
         }
         .navigationTitle("Chats")
+        .toolbarTitleDisplayMode(.inlineLarge)
         .toolbar {
             toolbar
         }
@@ -120,7 +121,9 @@ struct ChatList: View {
         }
         #endif
         
-        ToolbarItem {
+        ToolbarSpacer(placement: .bottomBar)
+        
+        ToolbarItem(placement: .bottomBar) {
             Menu {
                 ForEach(ChatModel.allCases) { model in
                     Button {

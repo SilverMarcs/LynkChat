@@ -22,9 +22,9 @@ struct ChatDetailMobile: View {
         ScrollViewReader { proxy in
             content
                 .scrollDismissesKeyboard(.interactively)
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    InputArea(chat: chat)
-                }
+//                .safeAreaInset(edge: .bottom, spacing: 0) {
+//                    InputArea(chat: chat)
+//                }
                 .animation(.bouncy, value: chat.currentThread.isEmpty)
                 .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
                 .toolbarTitleMenu {
@@ -41,6 +41,30 @@ struct ChatDetailMobile: View {
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
                     Scroller.scrollToBottom(delay: 0.1)
                 }
+                .searchable(text: $chat.inputManager.prompt)
+                .onSubmit(of: .search) {
+                    sendInput()
+                }
+                .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        ChatInputMenu(chat: chat)
+                    }
+                    
+                    ToolbarSpacer(.fixed, placement: .bottomBar)
+                    
+                    DefaultToolbarItem(kind: .search, placement: .bottomBar)
+                }
+//                .tabViewBottomAccessory {
+//                    InputArea(chat: chat)
+//                }
+        }
+    }
+    
+    private func sendInput() {
+//        isFocused = nil // doesn't work
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        Task { @MainActor in
+            await chat.sendInput()
         }
     }
     
