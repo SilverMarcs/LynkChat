@@ -41,7 +41,7 @@ struct ChatDetailMobile: View {
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
                     Scroller.scrollToBottom(delay: 0.1)
                 }
-                .searchable(text: $chat.inputManager.prompt)
+                .searchable(text: $chat.inputManager.prompt, prompt: "Ask Anything")
                 .onSubmit(of: .search) {
                     sendInput()
                 }
