@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
-#if !os(macOS)
 import MarkdownUI
-#endif
 
 struct MDView: View {
     @Environment(\.searchText) private var searchText
     @Environment(\.isReplying) private var isReplying
+    @Environment(ChatVM.self) private var chatVM
     
     @ObservedObject var config = AppConfig.shared
     var content: String
@@ -22,14 +21,16 @@ struct MDView: View {
         #if os(macOS)
         if !searchText.isEmpty || config.isMarkdownEnabled {
             // Use SwiftMarkdownView when there's search text or markdown is enabled
-            SwiftMarkdownView(
-                content,
-                calculatedHeight: calculatedHeight,
-                fontSize: CGFloat(config.fontSize),
-                highlightString: searchText,
-                baseURL: "LynkChat Web Content",
-                codeBlockTheme: config.codeBlockTheme
-            )
+//            SwiftMarkdownView(
+//                content,
+//                calculatedHeight: calculatedHeight,
+//                fontSize: CGFloat(config.fontSize),
+//                highlightString: searchText,
+//                baseURL: "LynkChat Web Content",
+//                codeBlockTheme: config.codeBlockTheme
+//            )
+            MessageMarkdownView(text: content, highlightText: chatVM.searchText)
+                .textSelection(.enabled)
         } else {
             Text(content)
                 .textSelection(.enabled)
