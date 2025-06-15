@@ -22,7 +22,9 @@ struct ImageList: View {
     var body: some View {
         ScrollViewReader { proxy in
             List(selection: $selection) {
+                #if os(macOS)
                 ChatListCards(source: .images, chatCount: "↗", imageSessionsCount: String(sessions.count))
+                #endif
                 
                 ForEach(sessions) { session in
                     ImageRow(session: session)
@@ -48,7 +50,7 @@ struct ImageList: View {
     
     @ToolbarContentBuilder
     var toolbar: some ToolbarContent {
-        ToolbarItem { Spacer() }
+        ToolbarSpacer()
         
         ToolbarItem(placement: .automatic) {
             Button {
