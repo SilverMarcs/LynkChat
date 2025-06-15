@@ -56,8 +56,9 @@ struct ChatInputMenu: View {
         } label: {
             #if os(macOS)
             Image(systemName: "plus.circle.fill")
-                .foregroundStyle(.secondary, .quinary)
-                .font(.title).fontWeight(.semibold)
+                .foregroundStyle(.secondary, .clear)
+                .font(.largeTitle).fontWeight(.semibold)
+                .glassEffect()
             #else
             Image(systemName: "plus")
                 .foregroundStyle(.secondary)

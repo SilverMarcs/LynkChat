@@ -37,6 +37,7 @@ struct ChatToolbar: ToolbarContent {
                 Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
                     .allowsHitTesting(false)
             }
+            
 //            ToolbarItem(placement: .primaryAction) {
 //                ModelPicker(selectedModel: $chat.config.model)
 //            }

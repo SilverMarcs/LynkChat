@@ -68,7 +68,7 @@ struct InputEditor: View {
         }
         
         var placeHolder: String {
-            "Send a prompt"
+            "Ask Anything..."
         }
     }
 }
