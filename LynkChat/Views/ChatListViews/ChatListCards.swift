@@ -79,6 +79,8 @@ struct ChatListCards: View {
             #else
             settingsVM.listState = .chats
             #endif
+        default:
+            break
         }
     }
     

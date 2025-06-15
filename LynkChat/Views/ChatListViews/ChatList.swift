@@ -121,9 +121,9 @@ struct ChatList: View {
         }
         #endif
         
-        ToolbarSpacer(placement: placement)
+        ToolbarSpacer(placement: .primaryAction)
         
-        ToolbarItem(placement: placement) {
+        ToolbarItem(placement: .primaryAction) {
             Menu {
                 ForEach(ChatModel.allCases) { model in
                     Button {
@@ -144,13 +144,13 @@ struct ChatList: View {
         }
     }
     
-    var placement: ToolbarItemPlacement {
-        #if os(macOS)
-        return .primaryAction
-        #else
-        return .bottomBar
-        #endif
-    }
+//    var placement: ToolbarItemPlacement {
+//        #if os(macOS)
+//        return .primaryAction
+//        #else
+//        return .bottomBar
+//        #endif
+//    }
     
     init(status: ChatStatus, searchText: String) {
         let statusId = status.id

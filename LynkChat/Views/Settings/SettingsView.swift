@@ -51,17 +51,11 @@ struct SettingsView: View {
                 }
                          
             }
+            .toolbar(removing: .sidebarToggle)
+            .navigationSplitViewColumnWidth(min: 190, ideal: 190, max: 190)
             #if !os(visionOS)
             .navigationTitle("Settings")
             #endif
-            .toolbar(removing: .sidebarToggle)
-            .toolbar{
-                Spacer()
-                #if !os(macOS)
-                DismissButton()
-                #endif
-            }
-            .navigationSplitViewColumnWidth(min: 190, ideal: 190, max: 190)
         } detail: {
             NavigationStack {
                 switch settingsVM.settingsTab {

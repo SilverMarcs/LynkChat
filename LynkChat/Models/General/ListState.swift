@@ -10,4 +10,6 @@ import Foundation
 enum ListState: String, CaseIterable {
     case chats
     case images
+    case search
+    case settings
 }
