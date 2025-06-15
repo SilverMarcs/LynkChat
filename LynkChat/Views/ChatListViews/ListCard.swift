@@ -46,20 +46,21 @@ struct ListCard: View {
                     .opacity(0.9)
                     .padding(.leading, 2)
             }
-            .padding(.vertical, verticalPadding)
-            .padding(.horizontal, horizontalPadding)
-            #if os(macOS)
-            .background(.quaternary.opacity(0.8))
-            #else
-            .background(colorScheme == .dark
-                        ? isIPadOS()
-                            ? AnyShapeStyle(.background.tertiary)
-                            : AnyShapeStyle(.background.secondary)
-                        : AnyShapeStyle(.background))
-            #endif
-            .cornerRadius(radius)
+//            .padding(.vertical, verticalPadding)
+//            .padding(.horizontal, horizontalPadding)
+//            .glassEffect(.regular.tint(iconColor), in: RoundedRectangle(cornerRadius: radius))
+//            #if os(macOS)
+//            .background(.quaternary.opacity(0.8))
+//            #else
+//            .background(colorScheme == .dark
+//                        ? isIPadOS()
+//                            ? AnyShapeStyle(.background.tertiary)
+//                            : AnyShapeStyle(.background.secondary)
+//                        : AnyShapeStyle(.background))
+//            #endif
+//            .cornerRadius(radius)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.glass)
     }
     
     private var radius: CGFloat {

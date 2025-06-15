@@ -69,7 +69,7 @@ struct DebugSettings: View {
             Section {
                 LabeledContent {
                     Button("Hide Debug") {
-                        config.showDebugMenu = false
+                        config.showDebugMenu.toggle()
                         settingsVM.settingsTab = .general
                     }
                 } label: {

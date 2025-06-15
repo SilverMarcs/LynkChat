@@ -26,7 +26,8 @@ struct ChatListCards: View {
     var body: some View {
 //        #if os(macOS)
         content
-            .listRowInsets(EdgeInsets(top: spacing, leading: -5, bottom: spacing, trailing: -5))
+            .listRowInsets(EdgeInsets(top: 1, leading: -5, bottom: 10, trailing: -5))
+            .padding(.bottom, 7)
         
         TipView(SwipeActionTip())
             .tipCornerRadius(8)

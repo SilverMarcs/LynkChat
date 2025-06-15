@@ -25,7 +25,7 @@ struct ChatInspector: View {
                     title
                     Spacer()
                     generateTitle
-                        .popoverTip(GenerateTitleTip())
+//                        .popoverTip(GenerateTitleTip())
                 }
             }
             
@@ -64,17 +64,16 @@ struct ChatInspector: View {
                 sysPrompt
             }
             
-            Section {
-                VStack {
-                    exportButton
-                    Divider()
-                    deleteAllMessages
-                }
-            }
+//            Section {
+//                VStack {
+//                    exportButton
+//                    Divider()
+//                    deleteAllMessages
+//                }
+//            }
         }
         .formStyle(.grouped)
         #if os(macOS)
-        .frame(width: 400, height: 680)
         .overlay(alignment: .topTrailing) {
             DismissButton()
                 .padding(10)
