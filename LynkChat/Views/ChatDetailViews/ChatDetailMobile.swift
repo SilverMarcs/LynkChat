@@ -22,9 +22,9 @@ struct ChatDetailMobile: View {
         ScrollViewReader { proxy in
             content
                 .scrollDismissesKeyboard(.interactively)
-//                .safeAreaInset(edge: .bottom, spacing: 0) {
-//                    InputArea(chat: chat)
-//                }
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    InputArea(chat: chat)
+                }
                 .animation(.bouncy, value: chat.currentThread.isEmpty)
                 .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
                 .toolbarTitleMenu {

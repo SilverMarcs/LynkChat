@@ -15,6 +15,23 @@ struct InputArea: View {
     var chat: Chat
     
     var body: some View {
+        if chat.inputManager.state == .editing {
+            cancelEditing
+        }
+        
+        if !chat.inputManager.dataFiles.isEmpty {
+            HStack {
+                DataFilesView(dataFiles: chat.inputManager.dataFiles) { file in
+                    withAnimation {
+                        chat.inputManager.dataFiles.removeAll(where: { $0 == file })
+                    }
+                }
+                .padding(5)
+            }
+        }
+    }
+    
+    var bodyOld: some View {
         HStack(alignment: .bottom) {
             VStack(spacing: 5) {
                 if chat.inputManager.state == .editing {
