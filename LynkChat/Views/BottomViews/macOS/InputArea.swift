@@ -30,18 +30,19 @@ struct InputArea: View {
                 cancelEditing
             }
                 
-            VStack {
+            VStack(alignment: .leading) {
                 if !chat.inputManager.dataFiles.isEmpty {
                     DataFilesView(dataFiles: chat.inputManager.dataFiles) { file in
-                        withAnimation {
+                        if chat.inputManager.dataFiles.count == 1 {
                             chat.inputManager.dataFiles.removeAll(where: { $0 == file })
+                        } else {
+                            withAnimation {
+                                chat.inputManager.dataFiles.removeAll(where: { $0 == file })
+                            }
                         }
                     }
                     .padding(.horizontal, 4)
                     .padding(.top, 4)
-                    
-//                    Divider()
-//                        .padding(.vertical, -1)
                 }
                 
                 HStack {
@@ -66,61 +67,7 @@ struct InputArea: View {
             }
         }
         .padding(12)
-        
-//        VStack(alignment: .leading, spacing: 8) {
-//            if !chat.inputManager.dataFiles.isEmpty {
-//                DataFilesView(dataFiles: chat.inputManager.dataFiles) { file in
-//                    withAnimation {
-//                        chat.inputManager.dataFiles.removeAll(where: { $0 == file })
-//                    }
-//                }
-//                .padding(.horizontal, 4)
-//                .padding(.top, 4)
-//                
-//                Divider()
-//                    .padding(.vertical, -1)
-//            }
-//            
-//            InputEditor(chat: chat)
-//                .padding(.horizontal, 5)
-//                .padding(.vertical, 3)
-//                .onChange(of: chat.inputManager.prompt) {
-//                    showExpandButton = chat.inputManager.prompt.contains("\n")
-//                }
-//                .overlay(alignment: .topTrailing) {
-//                    if showExpandButton {
-//                        expandInput
-//                    }
-//                }
-//            
-//            HStack {
-//                ChatInputMenu(chat: chat)
-//                
-//                configInfo
-//                
-//                Spacer()
-//                
-//                if chat.inputManager.state == .editing {
-//                    cancelEditing
-//                }
-////                else {
-////                    Button {
-//////                        chat.startDictation()
-////                    } label: {
-////                        Image(systemName: "mic")
-////                    }
-////                    .foregroundStyle(.secondary)
-////                    .buttonStyle(.plain)
-////                }
-//                
-//                ActionButton(isStop: chat.isReplying) {
-//                    chat.isReplying ? chat.stopStreaming() : sendInput()
-//                }
-//            }
-//        }
-//        .padding(4)
-////        .roundedRectangleOverlay(radius: 15, style: .circular)
-//        .pasteHandler(chat: chat)
+        .pasteHandler(chat: chat)
 //        .modifier(CommonInputStyling())
     }
         

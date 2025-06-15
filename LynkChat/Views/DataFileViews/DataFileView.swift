@@ -34,13 +34,15 @@ struct DataFilesView: View {
                 .padding(.trailing, -8)
             }
             
-            if !nonImageFiles.isEmpty {
-                FlowLayout(spacing: 8) {
-                    ForEach(nonImageFiles) { file in
-                        fileItemView(for: file)
+            GlassEffectContainer {
+                if !nonImageFiles.isEmpty {
+                    FlowLayout(spacing: 8) {
+                        ForEach(nonImageFiles) { file in
+                            fileItemView(for: file)
+                        }
                     }
+                    .padding(.trailing, -8)
                 }
-                .padding(.trailing, -8)
             }
         }
         .quickLookPreview($selectedFileURL)
@@ -56,6 +58,7 @@ struct DataFilesView: View {
                     onDelete(typedData)
                 } label: {
                     Label("Remove", systemImage: "xmark.circle.fill")
+                        .glassEffect()
                         #if !os(macOS)
                         .padding(5)
                         .contentShape(.rect)
@@ -69,19 +72,27 @@ struct DataFilesView: View {
         }
     }
     
+    @ViewBuilder
     func fileView(for typedData: TypedData) -> some View {
-        Button {
-            if let url = FileHelper.createTemporaryURL(for: typedData) {
-                selectedFileURL = url
-            }
-        } label: {
-            if typedData.fileType.conforms(to: .image) {
+        if typedData.fileType.conforms(to: .image) {
+            Button {
+                if let url = FileHelper.createTemporaryURL(for: typedData) {
+                    selectedFileURL = url
+                }
+            } label: {
                 ImageViewer(typedData: typedData)
-            } else {
+            }
+            .buttonStyle(.plain)
+        } else {
+            Button {
+                if let url = FileHelper.createTemporaryURL(for: typedData) {
+                    selectedFileURL = url
+                }
+            } label: {
                 FileViewer(typedData: typedData)
             }
+            .buttonStyle(.glass)
         }
-        .buttonStyle(.plain)
     }
 }
 
