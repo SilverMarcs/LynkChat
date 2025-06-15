@@ -53,8 +53,6 @@ struct InputArea: View {
                             }
                         }
                 }
-                .padding(5.5)
-                .glassEffect(in: .rect(cornerRadius: 16))
             }
             
             ActionButton(isStop: chat.isReplying) {
@@ -141,13 +139,10 @@ struct InputArea: View {
                 chat.inputManager.reset()
             }
         } label: {
-            Text("Cancel Editing")
-                .padding(4)
-                .font(.system(size: 12))
-                .padding(.horizontal, 2)
-                .background(.red.quinary, in: .rect(cornerRadius: 6))
-                .foregroundStyle(.red)
-                .opacity(0.8)
+            Image(systemName: "xmark.circle.fill")
+                .font(.largeTitle).fontWeight(.semibold)
+                .foregroundStyle(.white.opacity(0.7), .clear)
+                .glassEffect(.regular.tint(.red.opacity(0.6)))
         }
         .buttonStyle(.plain)
         .keyboardShortcut(.cancelAction)
