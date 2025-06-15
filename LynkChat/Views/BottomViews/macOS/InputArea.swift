@@ -45,21 +45,19 @@ struct InputArea: View {
                     .padding(.top, 4)
                 }
                 
-                HStack {
-                    InputEditor(chat: chat)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 3)
-                        .onChange(of: chat.inputManager.prompt) {
-                            showExpandButton = chat.inputManager.prompt.contains("\n")
+                InputEditor(chat: chat)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .onChange(of: chat.inputManager.prompt) {
+                        showExpandButton = chat.inputManager.prompt.contains("\n")
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        if showExpandButton {
+                            expandInput
                         }
-                        .overlay(alignment: .topTrailing) {
-                            if showExpandButton {
-                                expandInput
-                            }
-                        }
-                }
-                .padding(5.5)
-                .glassEffect(in: .rect(cornerRadius: 16))
+                    }
+                    .padding(5.5)
+                    .glassEffect(in: .rect(cornerRadius: 16))
             }
             
             ActionButton(isStop: chat.isReplying) {
