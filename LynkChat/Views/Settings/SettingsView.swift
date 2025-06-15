@@ -45,10 +45,10 @@ struct SettingsView: View {
                 Label("About", systemImage: "info.circle")
                     .tag(SettingsTab.about)
                 
-                if config.showDebugMenu {
+//                if config.showDebugMenu {
                     Label("Debug", systemImage: "ladybug")
                         .tag(SettingsTab.debug)
-                }
+//                }
                          
             }
             .toolbar(removing: .sidebarToggle)

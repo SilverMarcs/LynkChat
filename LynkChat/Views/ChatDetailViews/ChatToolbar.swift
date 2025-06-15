@@ -33,13 +33,13 @@ struct ChatToolbar: ToolbarContent {
         }
         
         if horizontalSizeClass == .regular {
-//            ToolbarItem(placement: .primaryAction) {
-//                Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
-//                    .allowsHitTesting(false)
-//            }
             ToolbarItem(placement: .primaryAction) {
-                ModelPicker(selectedModel: $chat.config.model)
+                Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
+                    .allowsHitTesting(false)
             }
+//            ToolbarItem(placement: .primaryAction) {
+//                ModelPicker(selectedModel: $chat.config.model)
+//            }
         }
         
         #if os(macOS)

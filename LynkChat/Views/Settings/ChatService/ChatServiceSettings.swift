@@ -35,6 +35,7 @@ struct ChatServiceSettings: View {
                     .labelStyle(.titleOnly)
             }
         }
+        .controlSize(.large)
         .pickerStyle(.segmented)
         .fixedSize()
     }

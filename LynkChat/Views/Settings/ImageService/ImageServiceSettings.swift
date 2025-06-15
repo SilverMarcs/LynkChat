@@ -35,6 +35,7 @@ struct ImageServiceSettings: View {
                     .labelStyle(.titleOnly)
             }
         }
+        .controlSize(.large)
         .pickerStyle(.segmented)
         .fixedSize()
     }
