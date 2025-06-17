@@ -156,9 +156,6 @@
     "Company Website" : {
 
     },
-    "Config" : {
-
-    },
     "Connect" : {
 
     },
@@ -199,9 +196,6 @@
 
     },
     "Delete All" : {
-
-    },
-    "Delete All Generations" : {
 
     },
     "Delete All Messages" : {
@@ -271,6 +265,9 @@
 
     },
     "General" : {
+
+    },
+    "Generate Images" : {
 
     },
     "Generate images from text" : {

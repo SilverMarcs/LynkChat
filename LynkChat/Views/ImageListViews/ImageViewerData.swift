@@ -14,7 +14,6 @@ struct ImageViewerData: View {
     private let size: CGFloat = 300
     
     @State private var selectedFileURL: URL?
-    @State private var isHovering = true
     @State private var showCheckmark = false
     
     var body: some View {
@@ -25,7 +24,7 @@ struct ImageViewerData: View {
                         .resizable()
                         .scaledToFill()
                         .frame(width: size, height: size)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .clipShape(.rect(cornerRadius: 10))
                 } else {
                     Text("Image Unable to Load")
                         .foregroundStyle(.red)
@@ -35,20 +34,16 @@ struct ImageViewerData: View {
             .quickLookPreview($selectedFileURL)
             .buttonStyle(.plain)
             
-            if isHovering {
-                Button(action: saveImage) {
-                    Image(systemName: showCheckmark ? "checkmark.circle.fill" : "square.and.arrow.up.circle.fill")
-                        .font(.largeTitle)
-                        .rotationEffect(.degrees(showCheckmark ? 0 : 180))
-                }
-                .foregroundStyle(.white, .black.tertiary)
-                .buttonStyle(.plain)
-                .padding(10)
+            Button(action: saveImage) {
+                Image(systemName: showCheckmark ? "checkmark.circle.fill" : "square.and.arrow.up.circle.fill")
+                    .font(.largeTitle)
+                    .rotationEffect(.degrees(showCheckmark ? 0 : 180))
+                    .foregroundStyle(.primary, .clear)
+                    .glassEffect()
             }
+            .buttonStyle(.plain)
+            .padding(10)
         }
-        #if os(macOS)
-        .onHover { isHovering = $0 }
-        #endif
     }
     
     func onTap() {

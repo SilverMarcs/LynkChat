@@ -12,23 +12,25 @@ struct ImageInputView: View {
     @FocusState var isFocused: FocusedField?
     
     var body: some View {
-        HStack(alignment: .center, spacing: 15) {
+        HStack(spacing: 5) {
             TextField("Prompt", text: $session.prompt, axis: .vertical)
                 .onSubmit( { sendInput() } )
                 .textFieldStyle(.plain)
-                .padding(.leading, 8)
+                .padding(.leading, 6)
                 .focused($isFocused, equals: .imageInput)
             
             Button(action: sendInput) {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.title).fontWeight(.semibold)
+                    .foregroundStyle(.white, .clear)
+                    .glassEffect(.regular.tint(.accentColor))
             }
-            .foregroundStyle(.white, .accent)
+            .padding(1)
+            .opacity(0.85)
             .buttonStyle(.plain)
         }
-        .padding(2)
-        .roundedRectangleOverlay(radius: 15, opacity: 1, style: .circular)
         .modifier(CommonInputStyling())
+        .padding(6)
         #if os(macOS)
         .task {
             isFocused = .imageInput

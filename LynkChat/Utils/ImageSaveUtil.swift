@@ -21,14 +21,12 @@ enum ImageSaveUtil {
     
     private static func saveToPhotos(data: Data, completion: @escaping (Bool) -> Void) {
         guard let image = PlatformImage(data: data) else {
-            print("Error creating image from data")
             completion(false)
             return
         }
         
         PHPhotoLibrary.requestAuthorization { status in
             guard status == .authorized else {
-                print("No access to photo library")
                 completion(false)
                 return
             }
@@ -37,10 +35,8 @@ enum ImageSaveUtil {
                 PHAssetChangeRequest.creationRequestForAsset(from: image)
             }) { success, error in
                 if success {
-                    print("Image saved to Photos")
                     completion(true)
                 } else if let error = error {
-                    print("Error saving image to Photos: \(error)")
                     completion(false)
                 }
             }
@@ -49,7 +45,7 @@ enum ImageSaveUtil {
     
     private static func saveToDownloads(data: Data, completion: @escaping (Bool) -> Void) {
         guard let downloadsDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
-            print("Unable to access Downloads directory")
+//            print("Unable to access Downloads directory")
             completion(false)
             return
         }
@@ -59,10 +55,8 @@ enum ImageSaveUtil {
         
         do {
             try data.write(to: fileURL)
-            print("Image saved to \(fileURL.path)")
             completion(true)
         } catch {
-            print("Error saving image: \(error)")
             completion(false)
         }
     }

@@ -30,23 +30,22 @@ struct ImageDetail: View {
                 AppConfig.shared.proxy = proxy
                 Scroller.scrollToBottom()
             }
+            #if os(macOS)
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 ImageInputView(session: session)
             }
-            #if os(macOS)
             .navigationTitle(session.title)
-            .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    Button(action: {} ) {
-                        Image(systemName: "slider.vertical.3")
-                    }
-                    .menuIndicator(.hidden)
+            #else
+            .toolbar(.hidden, for: .tabBar)
+            .searchable(text: $session.prompt, prompt: "Generate Images")
+            .onSubmit(of: .search) {
+                Task { @MainActor in
+                    await session.send()
                 }
             }
-            #else
-            #if !os(visionOS)
-            .scrollDismissesKeyboard(.interactively)
-            #endif
+            .toolbar {
+                DefaultToolbarItem(kind: .search, placement: .bottomBar)
+            }
             .listStyle(.plain)
             .navigationTitle(session.config.model.name)
             .toolbarTitleDisplayMode(.inline)
@@ -64,8 +63,7 @@ struct ImageDetail: View {
             }
             .sheet(isPresented: $showingInspector) {
                 ImageInspector(session: session, showingInspector: $showingInspector)
-                    .presentationDetents(horizontalSizeClass == .compact ? [.medium, .large] : [.large])
-                    .presentationDragIndicator(.hidden)
+                    .presentationDetents(horizontalSizeClass == .compact ? [.medium] : [.large])
             }
             #endif
         }

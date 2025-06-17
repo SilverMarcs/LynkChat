@@ -14,12 +14,7 @@ struct CommonInputStyling: ViewModifier {
         content
             .fixedSize(horizontal: false, vertical: true)
             .padding(4)
-            #if os(macOS) || os(visionOS)
-//            .background(.bar)
             .glassEffect(in: RoundedRectangle(cornerRadius: 20))
-            #else
-            .background(.background)
-            #endif
             .ignoresSafeArea()
             .padding(8)
     }

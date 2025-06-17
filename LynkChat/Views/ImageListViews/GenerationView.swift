@@ -26,29 +26,23 @@ struct GenerationView: View {
                 
                 Text(generation.config.prompt)
                     .textSelection(.enabled)
-                    .padding(.vertical, 7)
-                    .padding(.horizontal, 11)
-                    #if os(macOS)
-                    .background(.background.quinary, in: .rect(cornerRadius: 15))
-                    #else
-                    .background(.background.secondary, in: .rect(cornerRadius: 15))
-                    #endif
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 9)
+                    .background(
+                        RoundedRectangle(
+                            cornerRadius: 15,
+                        )
+                        .fill(.accent)
+                    )
             }
             
             
             VStack(alignment: .leading) {
-//                Text(generation.config.model.name)
-//                    .font(.caption)
-//                    .padding(.leading, 5)
-//                    .foregroundStyle(LinearGradient(
-//                        colors: [.purple, .pink],
-//                        startPoint: .leading,
-//                        endPoint: .trailing
-//                    ))
                 AssistantLabel(model: generation.config.model)
                 
                 if generation.state == .error {
                     Text(generation.errorMessage)
+                        .foregroundStyle(.white)
                         .textSelection(.enabled)
                         .foregroundStyle(.red)
                         .padding(.leading, 5)
@@ -64,6 +58,7 @@ struct GenerationView: View {
                         } else if generation.state == .success {
                             ForEach(generation.images, id: \.self) { image in
                                 ImageViewerData(data: image)
+                                    .backgroundExtensionEffect()
                             }
                         }
                     }

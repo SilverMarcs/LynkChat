@@ -31,16 +31,6 @@ struct ErrorMessageView: View {
                 .opacity(chat.errorMessage.isEmpty ? 0 : 1)
                 .listRowSeparator(.hidden)
                 .transaction { $0.animation = nil }
-                
-//                if let last = chat.currentThread.last {
-//                    Button("Retry") {
-//                        Task { @MainActor in
-//                            await chat.regenerate(message: last)
-//                        }
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    .listRowSeparator(.hidden)
-//                }
             }
         }
     }

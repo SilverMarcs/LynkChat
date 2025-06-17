@@ -55,9 +55,6 @@ struct ChatDetailMobile: View {
                     DefaultToolbarItem(kind: .search, placement: .bottomBar)
                 }
                 .toolbar(.hidden, for: .tabBar)
-//                .tabViewBottomAccessory {
-//                    InputArea(chat: chat)
-//                }
         }
     }
     
