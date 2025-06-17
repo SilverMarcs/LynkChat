@@ -66,8 +66,6 @@ struct ChatListRow: View {
 //                .foregroundStyle(.secondary)
 //                .fontWidth(.compressed)
         }
-//        .padding(padding)
-//        defaultMinListRowHeight()
     }
     
     var font: Font {
@@ -78,13 +76,6 @@ struct ChatListRow: View {
         #endif
     }
     
-    var padding: CGFloat {
-        #if os(macOS)
-        return 3
-        #else
-        return 4
-        #endif
-    }
     
     @ViewBuilder
     var chatStatusMarker: some View {

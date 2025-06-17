@@ -30,8 +30,9 @@ struct ImageList: View {
                     ImageRow(session: session)
                         .environment(\.imageSearchText, searchText)
                         .tag(session)
+                        #if os(macOS)
                         .listRowSeparator(.visible)
-                        .listRowSeparatorTint(Color.gray.opacity(0.2))
+                        #endif
                 }
                 .onDelete(perform: deleteItems)
             }

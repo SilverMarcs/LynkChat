@@ -19,8 +19,7 @@ struct ImageRow: View {
             
             HighlightableTextView(session.title, highlightedText: imageSearchText)
                 .lineLimit(1)
-                .font(.headline)
-                .fontWeight(.regular)
+                .font(font)
                 .opacity(0.9)
             
             Spacer()
@@ -30,7 +29,6 @@ struct ImageRow: View {
                 .foregroundStyle(.secondary)
                 .fontWidth(.compressed)
         }
-        .padding(3)
         .swipeActions {
             Button(role: .destructive) {
                 modelContext.delete(session)
@@ -38,6 +36,14 @@ struct ImageRow: View {
                 Label("Delete", systemImage: "trash")
             }
         }
+    }
+    
+    var font: Font {
+        #if os(macOS)
+        return .headline.weight(.regular)
+        #else
+        return .headline.weight(.medium)
+        #endif
     }
 }
 

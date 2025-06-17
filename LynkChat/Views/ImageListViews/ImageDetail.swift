@@ -28,7 +28,7 @@ struct ImageDetail: View {
             }
             .task {
                 AppConfig.shared.proxy = proxy
-                Scroller.scrollToBottom()
+                Scroller.scrollToBottom(animated: false)
             }
             #if os(macOS)
             .safeAreaInset(edge: .bottom, spacing: 0) {
