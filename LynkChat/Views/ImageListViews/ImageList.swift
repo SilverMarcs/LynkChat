@@ -18,21 +18,45 @@ struct ImageList: View {
     var sessions: [ImageSession]
     
     @State var searchText: String = ""
+    @State var imagePath: NavigationPath = NavigationPath()
     
     var body: some View {
-        ScrollViewReader { proxy in
-            List(selection: $selection) {
-                #if os(macOS)
-                ChatListCards(source: .images, chatCount: "↗", imageSessionsCount: String(sessions.count))
-                #endif
-                
+        list
+        .searchable(text: $searchText, placement: searchPlacement)
+    }
+    
+    @ViewBuilder
+    private var list: some View {
+        #if os(macOS)
+        List(selection: $selection) {
+            ChatListCards(source: .images, chatCount: "↗", imageSessionsCount: String(sessions.count))
+            
+            ForEach(sessions) { session in
+                ImageRow(session: session)
+                    .environment(\.imageSearchText, searchText)
+                    .tag(session)
+                    .listRowSeparator(.visible)
+            }
+            .onDelete(perform: deleteItems)
+        }
+        .toolbar {
+            toolbar
+        }
+        .navigationTitle("Images")
+        .task {
+            if selection == nil, let first = sessions.first, !(horizontalSizeClass == .compact) {
+                selection = first
+            }
+        }
+        #else
+        NavigationStack(path: $imagePath) {
+            List {
                 ForEach(sessions) { session in
-                    ImageRow(session: session)
-                        .environment(\.imageSearchText, searchText)
-                        .tag(session)
-                        #if os(macOS)
-                        .listRowSeparator(.visible)
-                        #endif
+                    NavigationLink(value: session) {
+                        ImageRow(session: session)
+                    }
+                    .environment(\.imageSearchText, searchText)
+                    .tag(session)
                 }
                 .onDelete(perform: deleteItems)
             }
@@ -40,13 +64,12 @@ struct ImageList: View {
                 toolbar
             }
             .navigationTitle("Images")
-            .searchable(text: $searchText, placement: searchPlacement)
-            .task {
-                if selection == nil, let first = sessions.first, !(horizontalSizeClass == .compact) {
-                    selection = first
-                }
+            .toolbarTitleDisplayMode(.inlineLarge)
+            .navigationDestination(for: ImageSession.self) { session in
+                ImageDetail(session: session)
             }
         }
+        #endif
     }
     
     @ToolbarContentBuilder
@@ -58,6 +81,7 @@ struct ImageList: View {
                 let imageSession = ImageSession()
                 modelContext.insert(imageSession)
                 selection = imageSession
+                imagePath.append(imageSession)
             } label: {
                 Label("Add Item", systemImage: "square.and.pencil")
             }

@@ -95,6 +95,9 @@ struct AssistantMessage: View {
             MessageMenu(group: group) {
                 showingTextSelection.toggle()
             }
+        } preview: {
+            Text("Assistant Message")
+                .padding()
         }
     }
     

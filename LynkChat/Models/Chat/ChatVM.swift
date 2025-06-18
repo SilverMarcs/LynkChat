@@ -11,6 +11,7 @@ import SwiftUI
 
 @Observable class ChatVM {
     var selections: Set<Chat> = []
+    var chatPath: NavigationPath = NavigationPath()
 //    var imageSelection: ImageSession?
     
     var statusFilter: ChatStatus = .normal
@@ -49,8 +50,12 @@ import SwiftUI
         }
 
         globalContainer.mainContext.insert(newChat)
+        #if os(macOS)
         self.activeChat = newChat
         selections = [newChat]
+        #else
+        chatPath.append(newChat)
+        #endif
         return newChat
     }
 

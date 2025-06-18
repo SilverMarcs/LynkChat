@@ -20,10 +20,25 @@ struct ChatList: View {
     @Query var chats: [Chat] // see init method below
     
     var body: some View {
-        @Bindable var chatVM = chatVM
+        list
+            .navigationTitle("Chats")
+            .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbar {
+                toolbar
+            }
+            .task {
+                if horizontalSizeClass == .regular, let first = chats.first, chatVM.selections.isEmpty {
+                    chatVM.selections = [first]
+                }
+            }
+    }
 
+    @ViewBuilder
+    private var list: some View {
+        #if os(macOS)
+        @Bindable var chatVM = chatVM
+        
         List(selection: $chatVM.selections) {
-            #if os(macOS)
             ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
 
             if isSearching {
@@ -33,33 +48,19 @@ struct ChatList: View {
                     .bold()
                     .listRowSeparator(.hidden)
             }
-            #endif
             
             if isSearching && chats.isEmpty {
                 ContentUnavailableView.search
             } else {
                 ForEach(chats, id: \.self) { chat in
                     ChatListRow(chat: chat)
-                        .tag(chat)
-                        .deleteDisabled(chat.status == .starred)
-                        #if os(macOS)
-                        .listRowSeparator(.visible)
-                        #endif
+                    .tag(chat)
+                    .deleteDisabled(chat.status == .starred)
+                    .listRowSeparator(.visible)
                 }
                 .onDelete(perform: deleteItems)
             }
         }
-        .navigationTitle("Chats")
-        .toolbarTitleDisplayMode(.inlineLarge)
-        .toolbar {
-            toolbar
-        }
-        .task {
-            if horizontalSizeClass == .regular, let first = chats.first, chatVM.selections.isEmpty {
-                chatVM.selections = [first]
-            }
-        }
-        #if os(macOS)
         .contextMenu(forSelectionType: Chat.self) { item in
             
         } primaryAction: { items in
@@ -68,6 +69,24 @@ struct ChatList: View {
             }
         }
         #else
+        List {
+            if isSearching && chats.isEmpty {
+                ContentUnavailableView.search
+            } else {
+                ForEach(chats, id: \.self) { chat in
+                    NavigationLink(value: chat) {
+                        ChatListRow(chat: chat)
+                    }
+                    .tag(chat)
+                    .deleteDisabled(chat.status == .starred)
+                }
+                .onDelete(perform: deleteItems)
+            }
+        }
+        .navigationDestination(for: Chat.self) { chat in
+            ChatDetail(chat: chat)
+                .id(chat.id)
+        }
         .fullScreenCover(isPresented: $config.showCamera) {
             CameraView(chatVM: chatVM)
                 .ignoresSafeArea()

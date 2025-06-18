@@ -90,6 +90,9 @@
     "API Settings" : {
 
     },
+    "App Settings" : {
+
+    },
     "Appearance" : {
 
     },
@@ -106,6 +109,9 @@
 
     },
     "Ask Anything..." : {
+
+    },
+    "Assistant Message" : {
 
     },
     "Attach Files" : {
@@ -312,6 +318,9 @@
     "Images will be saved to Downloads folder otherwise" : {
 
     },
+    "Info & Troubleshooting" : {
+
+    },
     "Input Box" : {
 
     },
@@ -465,6 +474,9 @@
     "Searching" : {
 
     },
+    "Select a category from the sidebar to view its settings." : {
+
+    },
     "Select or create a chat to get started" : {
 
     },
@@ -478,6 +490,9 @@
 
     },
     "Send debug model" : {
+
+    },
+    "Services" : {
 
     },
     "Settings" : {
@@ -547,6 +562,9 @@
 
     },
     "Used" : {
+
+    },
+    "User Message" : {
 
     },
     "Using %@" : {

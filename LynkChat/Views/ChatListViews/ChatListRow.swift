@@ -54,11 +54,11 @@ struct ChatListRow: View {
                 .imageScale(.small)
                 .transition(.symbolEffect(.appear))
             
-            #if !os(macOS)
-            Image(systemName: "chevron.right")
-                .foregroundStyle(.secondary)
-                .imageScale(.small)
-            #endif
+//            #if !os(macOS)
+//            Image(systemName: "chevron.right")
+//                .foregroundStyle(.secondary)
+//                .imageScale(.small)
+//            #endif
                 
             
 //            Text(chat.config.model.name)

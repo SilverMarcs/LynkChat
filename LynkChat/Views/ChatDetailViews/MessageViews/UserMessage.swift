@@ -79,8 +79,7 @@ struct UserMessage: View {
                 .padding(padding)
                 .background(
                     RoundedRectangle(
-                        cornerRadius: 12,
-//                        style: .continuous
+                        cornerRadius: 18,
                     )
                     .fill(.background.tertiary)
                     .stroke(.quaternary, lineWidth: 1)
@@ -88,7 +87,6 @@ struct UserMessage: View {
                 )
 //            }
             .transaction { $0.animation = nil }
-//            .groupBoxStyle(PlatformGroupBoxStyle())
             .background(
                 RoundedRectangle(cornerRadius: 5)
                     .fill(chat.inputManager.editingMessage == self.group.activeMessage ? Color.accentColor.opacity(0.2) : .clear)
@@ -109,14 +107,17 @@ struct UserMessage: View {
             MessageMenu(group: group) {
                 showingTextSelection.toggle()
             }
+        } preview: {
+            Text("User Message")
+                .padding()
         }
     }
     
     var padding: CGFloat {
         #if os(macOS)
-        4
+        7
         #else
-        8
+        11
         #endif
     }
     

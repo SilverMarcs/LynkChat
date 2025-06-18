@@ -24,7 +24,7 @@ struct IOSWindow: Scene {
             TabView(selection: $settingsVM.listState) {
                 // Chats Tab
                 Tab("Chats", systemImage: "message", value: ListState.chats) {
-                    NavigationSplitView {
+                    NavigationStack(path: $chatVM.chatPath) {
                         ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
                             .searchable(text: $chatVM.searchText)
                             .onSubmit(of: .search) {
@@ -32,27 +32,35 @@ struct IOSWindow: Scene {
                                     config.showDebugMenu = true
                                 }
                             }
-                    } detail: {
-                        if let chat = chatVM.activeChat {
-                            ChatDetail(chat: chat)
-                                .id(chat.id)
-                        } else {
-                            Text("^[\(chatVM.selections.count) Chat](inflect: true) Selected")
-                        }
                     }
+                    
+//                    NavigationSplitView {
+//                        ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
+//                   
+//                    } detail: {
+//                        if let chat = chatVM.activeChat {
+//                            ChatDetail(chat: chat)
+//                                .id(chat.id)
+//                        } else {
+//                            Text("^[\(chatVM.selections.count) Chat](inflect: true) Selected")
+//                        }
+//                    }
                 }
                 
                 // Images Tab
                 Tab("Images", systemImage: "photo.on.rectangle.angled", value: ListState.images) {
-                    NavigationSplitView {
+//                    NavigationStack {
                         ImageList(selection: $selection)
-                    } detail: {
-                        if let imageSession = selection {
-                            ImageDetail(session: imageSession)
-                        } else {
-                            Text("Select or create an image session")
-                        }
-                    }
+//                    }
+//                    NavigationSplitView {
+//                        ImageList(selection: $selection)
+//                    } detail: {
+//                        if let imageSession = selection {
+//                            ImageDetail(session: imageSession)
+//                        } else {
+//                            Text("Select or create an image session")
+//                        }
+//                    }
                 }
                 
                 // Settings Tab
