@@ -60,7 +60,7 @@ struct SettingsView: View {
                 }
             }
             
-            Section("Info & Troubleshooting") {
+            Section("Info") {
                 NavigationLink(destination: AboutSettings()) {
                     Label("About", systemImage: "info.circle")
                 }

@@ -69,19 +69,10 @@ struct ChatDetailMobile: View {
     @ViewBuilder
     var content: some View {
         if chat.currentThread.isEmpty {
-            VStack {
-//                Text("Start a conversation")
-//                    .font(.title)
-//                
-//                HStack(spacing: 15) {
-//                    ToolsBarView(config: $chat.config)
-//                        .scaleEffect(1.4)
-//                }
-//                .padding(.top, 10)
-                
+            VStack {                
                 Image(chat.config.model.imageName)
+                    .font(.largeTitle)
                     .foregroundStyle(Color(hex: chat.config.model.color).gradient)
-                    .imageScale(.large)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()

@@ -90,9 +90,6 @@
     "API Settings" : {
 
     },
-    "App Settings" : {
-
-    },
     "Appearance" : {
 
     },
@@ -160,6 +157,9 @@
 
     },
     "Company Website" : {
+
+    },
+    "Config" : {
 
     },
     "Connect" : {
@@ -318,7 +318,7 @@
     "Images will be saved to Downloads folder otherwise" : {
 
     },
-    "Info & Troubleshooting" : {
+    "Info" : {
 
     },
     "Input Box" : {

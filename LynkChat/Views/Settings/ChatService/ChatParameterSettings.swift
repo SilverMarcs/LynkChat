@@ -32,10 +32,11 @@ struct ChatParameterSettings: View {
             
             Section("Plugins") {
                 ForEach([Tool.webSearch, Tool.imageGeneration], id: \.self) { tool in
-                    LabeledContent {
+                    Label {
+                        Text(tool.title)
                         Text(tool.description)
-                    } label: {
-                        Label(tool.title, systemImage: tool.iconName)
+                    } icon: {
+                        Image(systemName: tool.iconName)
                     }
                 }
             }
