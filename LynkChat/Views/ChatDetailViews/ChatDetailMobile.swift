@@ -17,6 +17,7 @@ struct ChatDetailMobile: View {
     @Bindable var chat: Chat
 
     @State private var colorViewHeight: CGFloat = 0
+    @State private var isFocused: Bool = false
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -41,7 +42,7 @@ struct ChatDetailMobile: View {
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
                     Scroller.scrollToBottom(delay: 0.1)
                 }
-                .searchable(text: $chat.inputManager.prompt, prompt: "Ask Anything")
+                .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
                 .onSubmit(of: .search) {
                     sendInput()
                 }
@@ -59,8 +60,7 @@ struct ChatDetailMobile: View {
     }
     
     private func sendInput() {
-//        isFocused = nil // doesn't work
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        isFocused = false
         Task { @MainActor in
             await chat.sendInput()
         }
