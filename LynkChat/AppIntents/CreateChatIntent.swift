@@ -12,7 +12,7 @@ struct CreateChatIntent: AppIntent {
     static var title: LocalizedStringResource = "Create New Chat"
     static var description = IntentDescription("Create a new chat with your prompt")
     
-    static var openAppWhenRun: Bool = true
+    static var supportedModes: IntentModes = [.foreground(.dynamic)]
     static var isDiscoverable: Bool = true
     
     @Parameter(
@@ -41,6 +41,8 @@ struct CreateChatIntent: AppIntent {
         try? await Task.sleep(for: .seconds(0.1)) // Optional delay for better UX
         
         await newChat.sendInput(prompt: trimmedMessage)
+        
+        try await continueInForeground(alwaysConfirm: false)
         
         return .result()
     }
