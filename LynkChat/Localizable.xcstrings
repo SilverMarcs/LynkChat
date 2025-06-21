@@ -81,6 +81,12 @@
     "AI Can make mistakes. Verify important information." : {
 
     },
+    "AI response" : {
+
+    },
+    "AI Response" : {
+
+    },
     "Allow" : {
 
     },
@@ -189,6 +195,9 @@
     "Copy Prompt" : {
 
     },
+    "Copy Response" : {
+
+    },
     "Create a new chat with your prompt" : {
 
     },
@@ -292,6 +301,9 @@
 
     },
     "Generate Title" : {
+
+    },
+    "Get a quick response from AI without opening the app" : {
 
     },
     "Get Started" : {
@@ -426,10 +438,16 @@
     "Prompt" : {
 
     },
+    "Quick AI Response" : {
+
+    },
     "Quick Panel" : {
 
     },
     "Quick Panel Shortcut" : {
+
+    },
+    "Quick Response Snippet" : {
 
     },
     "Quickly access all available chat models by holding the %@ button. Configure visible models in settings" : {
@@ -611,6 +629,9 @@
 
     },
     "Your prompt to start the chat with" : {
+
+    },
+    "Your question or prompt for AI" : {
 
     },
     "Zoom In" : {

@@ -23,5 +23,17 @@ struct LynkChatShortcuts: AppShortcutsProvider {
             shortTitle: "Ask LynkChat AI",
             systemImageName: "message"
         )
+        
+        AppShortcut(
+            intent: QuickResponseIntent(),
+            phrases: [
+                "Quick response in \(.applicationName)",
+                "Quick AI response in \(.applicationName)",
+                "Ask AI quickly in \(.applicationName)",
+                "Quick question in \(.applicationName)"
+            ],
+            shortTitle: "Quick AI Response",
+            systemImageName: "bolt"
+        )
     }
 }

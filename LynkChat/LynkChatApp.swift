@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import AppIntents
 
 @main
 struct LynkChatApp: App {
@@ -49,5 +50,6 @@ struct LynkChatApp: App {
         #endif
         
         AppDelegate.shared.chatVM = _chatVM.wrappedValue
+        LynkChatShortcuts.updateAppShortcutParameters()
     }
 }

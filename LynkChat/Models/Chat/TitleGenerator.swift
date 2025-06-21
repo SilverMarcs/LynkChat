@@ -69,3 +69,39 @@ struct TitleRequest: Encodable {
 struct TitleResponse: Decodable {
     let title: String
 }
+
+
+extension TitleGenerator {
+    public static func quickResponse(prompt: String) async -> String {
+        let wrappedMessage = """
+    Respond to the following prompt in a concise manner:
+    \(prompt)
+    """
+        
+        do {
+            let request = TitleRequest(prompt: wrappedMessage)
+            
+            guard let url = URL(string: "\(String.apiHost)/chat/quick") else {
+                throw URLError(.badURL)
+            }
+            
+            var urlRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.setValue(AppConfig.shared.myApiKey, forHTTPHeaderField: "x-api-key")
+            urlRequest.httpBody = try JSONEncoder().encode(request)
+            
+            let (data, _) = try await URLSession.shared.data(for: urlRequest)
+            let response = try JSONDecoder().decode(TitleResponse.self, from: data)
+            
+            AppLogger.info(response.title)
+            
+            return response.title.isEmpty ? "No valid response" : response.title
+            
+        } catch {
+            print("Error: \(error)")
+            return "No valid response"
+        }
+    }
+    
+}
