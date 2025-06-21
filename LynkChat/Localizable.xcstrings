@@ -81,9 +81,6 @@
     "AI Can make mistakes. Verify important information." : {
 
     },
-    "AI response" : {
-
-    },
     "AI Response" : {
 
     },
@@ -195,9 +192,6 @@
     "Copy Prompt" : {
 
     },
-    "Copy Response" : {
-
-    },
     "Create a new chat with your prompt" : {
 
     },
@@ -307,6 +301,9 @@
 
     },
     "Get Started" : {
+
+    },
+    "Getting AI response for your question..." : {
 
     },
     "Global shortcut" : {

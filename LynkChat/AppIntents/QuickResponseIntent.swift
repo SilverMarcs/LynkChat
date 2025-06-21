@@ -29,18 +29,16 @@ struct QuickResponseIntent: AppIntent {
             throw QuickResponseError.emptyPrompt
         }
         
-        // Get the AI response directly
-        let response = await TitleGenerator.quickResponse(prompt: trimmedPrompt)
-        
-        // Create dialog for voice-only experiences
+        // Create dialog for voice-only experiences - immediate response
         let dialog = IntentDialog(
-            full: "\(response)",
-            supporting: "AI response"
+            full: "Getting AI response for your question...",
+            supporting: "LynkChat Response"
         )
         
+        // Return immediately with loading snippet - no delay
         return .result(
             dialog: dialog,
-            snippetIntent: QuickResponseSnippetIntent(prompt: trimmedPrompt, response: response)
+            snippetIntent: QuickResponseSnippetIntent(prompt: trimmedPrompt, response: nil)
         )
     }
 }
@@ -50,35 +48,46 @@ struct QuickResponseSnippetIntent: SnippetIntent {
     static let title: LocalizedStringResource = "Quick Response Snippet"
     
     @Parameter var prompt: String
-    @Parameter var response: String
+    @Parameter var response: String?
     
     init() {
         self.prompt = ""
-        self.response = ""
+        self.response = nil
     }
     
-    init(prompt: String, response: String) {
+    init(prompt: String, response: String?) {
         self.prompt = prompt
         self.response = response
     }
     
     func perform() async throws -> some IntentResult & ShowsSnippetView {
-        return .result(
-            view:
-                VStack(alignment: .leading) {
-                    Text(response)
+        // If response is nil, we need to fetch it (loading state)
+        if response == nil {
+            // Get the response and create a new snippet intent with the result
+            let aiResponse = await TitleGenerator.quickResponse(prompt: prompt)
+            
+            // Return updated snippet with the response
+            return .result(
+                view: VStack(alignment: .leading) {
+                    Text(aiResponse)
                         .font(.caption)
-                    
-                    Button {
-                        response.copyToPasteboard()
-                    } label: {
-                        Label("Copy Response", systemImage: "doc.on.doc")
-                            .foregroundStyle(.blue)
-                            .labelStyle(.iconOnly)
-                    }
+                        .frame(alignment: .leading)
                 }
-                .padding(5)
-        )
+//                .padding(4)
+                .padding(.top, 8)
+            )
+        } else {
+            // We already have the response
+            return .result(
+                view: VStack(alignment: .leading) {
+                    Text(response!)
+                        .font(.caption)
+                        .frame(alignment: .leading)
+                }
+//                .padding(4)
+                .padding(.top, 8)
+            )
+        }
     }
 }
 
