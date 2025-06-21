@@ -32,18 +32,23 @@ struct ChatToolbar: ToolbarContent {
             }
         }
         
-        if horizontalSizeClass == .regular {
+        #if os(macOS)
+//            ToolbarItem(placement: .primaryAction) {
+//                Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
+//                    .allowsHitTesting(false)
+//            }
+            
             ToolbarItem(placement: .primaryAction) {
-                Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
-                    .allowsHitTesting(false)
+                SimpleToolsToggleView(config: $chat.config)
             }
             
-//            ToolbarItem(placement: .primaryAction) {
-//                ModelPicker(selectedModel: $chat.config.model)
-//            }
-        }
+            ToolbarSpacer(.fixed)
+            
+            ToolbarItem(placement: .primaryAction) {
+                ModelPicker(selectedModel: $chat.config.model)
+            }
         
-        #if os(macOS)
+        
         if chat.status == .temporary {
             ToolbarItem(placement: .primaryAction) {
                 Button {

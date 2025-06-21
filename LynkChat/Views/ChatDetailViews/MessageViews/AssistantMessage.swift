@@ -38,21 +38,21 @@ struct AssistantMessage: View {
                     .environment(\.searchText, chatVM.searchText)
                     .environment(\.isReplying, message.isReplying)
                     .transaction { $0.animation = nil }
-//                    #if os(macOS)
-//                    .apply { view in
-//                        if config.isMarkdownEnabled {
-//                            view
-//                                .frame(height: message.height, alignment: .top)
-//                                .onChange(of: height) {
-//                                    if height > 0 {
-//                                        message.height = height
-//                                    }
-//                                }
-//                        } else {
-//                            view
-//                        }
-//                    }
-//                    #endif
+                    #if os(macOS)
+                    .apply { view in
+                        if config.isMarkdownEnabled {
+                            view
+                                .frame(height: message.height, alignment: .top)
+                                .onChange(of: height) {
+                                    if height > 0 {
+                                        message.height = height
+                                    }
+                                }
+                        } else {
+                            view
+                        }
+                    }
+                    #endif
             } else {
                 HighlightableTextView(message.content, highlightedText: searchText)
                     .textSelection(.enabled)

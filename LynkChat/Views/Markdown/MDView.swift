@@ -21,16 +21,16 @@ struct MDView: View {
         #if os(macOS)
         if !searchText.isEmpty || config.isMarkdownEnabled {
             // Use SwiftMarkdownView when there's search text or markdown is enabled
-//            SwiftMarkdownView(
-//                content,
-//                calculatedHeight: calculatedHeight,
-//                fontSize: CGFloat(config.fontSize),
-//                highlightString: searchText,
-//                baseURL: "LynkChat Web Content",
-//                codeBlockTheme: config.codeBlockTheme
-//            )
-            MessageMarkdownView(text: content, highlightText: chatVM.searchText)
-                .textSelection(.enabled)
+            SwiftMarkdownView(
+                content,
+                calculatedHeight: calculatedHeight,
+                fontSize: CGFloat(config.fontSize),
+                highlightString: searchText,
+                baseURL: "LynkChat Web Content",
+                codeBlockTheme: config.codeBlockTheme
+            )
+//            MessageMarkdownView(text: content, highlightText: chatVM.searchText)
+//                .textSelection(.enabled)
         } else {
             Text(content)
                 .textSelection(.enabled)
