@@ -25,7 +25,7 @@ struct AboutSettings: View {
                 Text("Access multiple AI models in one place")
                     .font(.subheadline)
                 
-                Text("© \(Calendar.current.component(.year, from: Date())) LynkSphere")
+                Text("© \(String(Calendar.current.component(.year, from: Date()))) LynkSphere")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .padding(.bottom, 10)
