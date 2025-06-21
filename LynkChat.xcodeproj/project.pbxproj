@@ -78,7 +78,7 @@
 				Views/Windows/AboutWindow.swift = (
 					macos,
 				);
-				Views/Windows/AppIconMenu.swift = (
+				Views/Windows/AppDelegate.swift = (
 					ios,
 					xros,
 				);

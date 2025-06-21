@@ -123,8 +123,15 @@ final class Chat: Equatable, Identifiable, Hashable, Sendable {
     
 
     @MainActor
-    func sendInput() async {
-        guard !inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+    func sendInput(prompt: String? = nil) async {
+        var content: String
+        if let prompt = prompt {
+            content = prompt
+        } else {
+            content = inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        
+        guard !content.isEmpty else {
             return
         }
         
@@ -134,7 +141,7 @@ final class Chat: Equatable, Identifiable, Hashable, Sendable {
             await editMessage(editingMessage)
         } else {
             let userMessage = Message.user(
-                content: inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines),
+                content: content,
                 dataFiles: inputManager.dataFiles
             )
             let userGroup = MessageGroup(message: userMessage)

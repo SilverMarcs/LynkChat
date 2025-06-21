@@ -33,16 +33,18 @@ import SwiftUI
         #if os(macOS)
         self.selections = [newChat]
         #else
-        self.selections = []
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.selections = [newChat]
-        }
+//        self.selections = []
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            self.selections = [newChat]
+//        }
+        self.chatPath.removeLast()
+        self.chatPath.append(newChat)
         #endif
     }
 
     @MainActor
     @discardableResult
-    func createNewChat(model: ChatModel? = nil) -> Chat {
+    func createNewChat(model: ChatModel? = nil, delay: Bool = false) -> Chat {
         let newChat = Chat()
 
         if let model = model {
@@ -54,7 +56,13 @@ import SwiftUI
         self.activeChat = newChat
         selections = [newChat]
         #else
-        chatPath.append(newChat)
+        if delay {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.chatPath.append(newChat)
+            }
+        } else {
+            chatPath.append(newChat)
+        }
         #endif
         return newChat
     }

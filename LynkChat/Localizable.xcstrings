@@ -111,6 +111,9 @@
     "Ask Anything..." : {
 
     },
+    "Ask LynkChat AI" : {
+
+    },
     "Assistant Message" : {
 
     },
@@ -184,6 +187,12 @@
 
     },
     "Copy Prompt" : {
+
+    },
+    "Create a new chat with your prompt" : {
+
+    },
+    "Create New Chat" : {
 
     },
     "Debug" : {
@@ -595,7 +604,13 @@
         }
       }
     },
+    "What would you like to ask AI?" : {
+
+    },
     "Will reset tips on next launch: %@" : {
+
+    },
+    "Your prompt to start the chat with" : {
 
     },
     "Zoom In" : {
