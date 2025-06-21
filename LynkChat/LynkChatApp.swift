@@ -14,7 +14,9 @@ struct LynkChatApp: App {
     @State private var chatVM: ChatVM = ChatVM()
     @State private var settingsVM: SettingsVM = SettingsVM()
     
-    #if !os(macOS)
+    #if os(macOS)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #else
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
     
@@ -43,12 +45,9 @@ struct LynkChatApp: App {
 
         #if os(macOS)
         AppConfig.shared.hideDock = false
-
         QuickPanelWindow(chatVM: chatVM)
-
-        #else
-        // TODO: find a way to avoid having chatVM in app delegate
-        AppDelegate.shared.chatVM = _chatVM.wrappedValue
         #endif
+        
+        AppDelegate.shared.chatVM = _chatVM.wrappedValue
     }
 }

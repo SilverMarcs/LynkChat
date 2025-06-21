@@ -78,9 +78,12 @@
 				Views/Windows/AboutWindow.swift = (
 					macos,
 				);
-				Views/Windows/AppDelegate.swift = (
+				Views/Windows/AppDelegate/AppDelegate.swift = (
 					ios,
 					xros,
+				);
+				Views/Windows/AppDelegate/NSAppDelegate.swift = (
+					macos,
 				);
 				Views/Windows/ChatContentView.swift = (
 					macos,
