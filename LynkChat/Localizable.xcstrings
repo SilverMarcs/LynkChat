@@ -81,9 +81,6 @@
     "AI Can make mistakes. Verify important information." : {
 
     },
-    "AI Response" : {
-
-    },
     "Allow" : {
 
     },
@@ -243,9 +240,6 @@
     "Edit Last Message" : {
 
     },
-    "Enable" : {
-
-    },
     "Enable Markdown" : {
 
     },
@@ -364,6 +358,9 @@
 
     },
     "LynkChat Help" : {
+
+    },
+    "LynkChat Response" : {
 
     },
     "Markdown" : {

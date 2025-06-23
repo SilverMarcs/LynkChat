@@ -49,14 +49,15 @@ struct ChatInspector: View {
             
             if chat.config.model.supportsTool {
                 Section("Plugins") {
-                    LabeledContent("Enable") {
-                        ToolsBarView(config: $chat.config)
-                            .padding(.bottom, -7)
-                            #if !os(macOS)
-                            .padding(.top, -5)
-                            #endif
-                    }
-                    .frame(height: 25)
+//                    LabeledContent("Enable") {
+//                        ToolsBarView(config: $chat.config)
+//                            .padding(.bottom, -7)
+//                            #if !os(macOS)
+//                            .padding(.top, -5)
+//                            #endif
+//                    }
+//                    .frame(height: 25)
+                    SimpleToolsToggleView(config: $chat.config)
                 }
             }
             
@@ -73,6 +74,7 @@ struct ChatInspector: View {
 //            }
         }
         .formStyle(.grouped)
+        .presentationDragIndicator(.visible)
         #if os(macOS)
         .overlay(alignment: .topTrailing) {
             DismissButton()

@@ -38,7 +38,7 @@ struct ChatToolbar: ToolbarContent {
 //                    .allowsHitTesting(false)
 //            }
             
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItemGroup(placement: .primaryAction) {
                 SimpleToolsToggleView(config: $chat.config)
             }
             

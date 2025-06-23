@@ -11,7 +11,7 @@ struct SimpleToolsToggleView: View {
     @Binding var config: ChatConfig
     
     var body: some View {
-        ControlGroup {
+//        ControlGroup {
             // Web Search & Scrape Links Toggle
             Toggle(isOn: Binding(
                 get: {
@@ -27,7 +27,7 @@ struct SimpleToolsToggleView: View {
                     }
                 }
             )) {
-                Label(Tool.webSearch.shortTitle, systemImage: Tool.webSearch.iconName)
+                Label(Tool.webSearch.title, systemImage: Tool.webSearch.iconName)
             }
             
             // Image Generation Toggle
@@ -43,9 +43,9 @@ struct SimpleToolsToggleView: View {
                     }
                 }
             )) {
-                Label(Tool.imageGeneration.shortTitle, systemImage: Tool.imageGeneration.iconName)
+                Label(Tool.imageGeneration.title, systemImage: Tool.imageGeneration.iconName)
             }
-        }
+//        }
 //        .controlGroupStyle(.navigation))
     }
 }
