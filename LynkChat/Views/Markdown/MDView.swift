@@ -31,6 +31,14 @@ struct MDView: View {
             )
 //            MessageMarkdownView(text: content, highlightText: chatVM.searchText)
 //                .textSelection(.enabled)
+//            SwiftUIMarkdownView(
+//                content,
+//                calculatedHeight: calculatedHeight,
+//                fontSize: CGFloat(config.fontSize),
+//                highlightString: searchText,
+//                baseURL: "LynkChat Web Content",
+//                codeBlockTheme: config.codeBlockTheme
+//            )
         } else {
             Text(content)
                 .textSelection(.enabled)
