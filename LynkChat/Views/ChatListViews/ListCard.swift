@@ -26,11 +26,9 @@ struct ListCard: View {
             VStack(alignment: .leading, spacing: spacing) {
                 HStack {
                     Image(systemName: icon)
-                        .font(.title)
+                        .font(.title3)
                         .foregroundStyle(.white, iconColor)
-                        #if os(macOS)
                         .opacity(appearsActive ? 1 : 0.7)
-                        #endif
 
                     Spacer()
                     
@@ -38,17 +36,17 @@ struct ListCard: View {
                         .contentTransition(.numericText())
                         .font(.title2)
                         .fontWeight(.semibold)
-//                        .monospaced()
                 }
+                
                 Text(title)
                     .font(.callout)
                     .fontWeight(.semibold)
                     .opacity(0.9)
                     .padding(.leading, 2)
             }
-//            .padding(.vertical, verticalPadding)
-//            .padding(.horizontal, horizontalPadding)
-//            .glassEffect(.regular.tint(iconColor), in: RoundedRectangle(cornerRadius: radius))
+            .padding(.vertical, verticalPadding)
+            .padding(.horizontal, horizontalPadding)
+            .background(iconColor.mix(with: .black, by: 0.1).gradient.opacity(0.7), in: RoundedRectangle(cornerRadius: radius))
 //            #if os(macOS)
 //            .background(.quaternary.opacity(0.8))
 //            #else
@@ -60,7 +58,8 @@ struct ListCard: View {
 //            #endif
 //            .cornerRadius(radius)
         }
-        .buttonStyle(.glass)
+        .buttonStyle(.plain)
+        .foregroundStyle(.white.opacity(appearsActive ? 1 : 0.7))
     }
     
     private var radius: CGFloat {

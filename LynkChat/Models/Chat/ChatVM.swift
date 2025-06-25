@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import Combine
 
 @Observable class ChatVM {
     var selections: Set<Chat> = []
@@ -15,6 +16,26 @@ import SwiftUI
 //    var imageSelection: ImageSession?
     
     var statusFilter: ChatStatus = .normal
+
+    // MARK: - Search with debouncing
+    var searchText: String = ""
+    var debouncedSearchText: String = ""
+    private var searchCancellable: AnyCancellable?
+    private let searchSubject = PassthroughSubject<String, Never>()
+    
+    init() {
+        // Set up debounced search
+        searchCancellable = searchSubject
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .sink { [weak self] searchText in
+                self?.debouncedSearchText = searchText
+            }
+    }
+    
+    func updateSearchText(_ newText: String) {
+        searchText = newText
+        searchSubject.send(newText)
+    }
 
     public var activeChat: Chat? {
         get {
@@ -74,10 +95,6 @@ import SwiftUI
         globalContainer.mainContext.insert(newChat)
         self.activeChat = newChat
     }
-
-    // MARK: - Search
-    var searchText: String = ""
-    var localSearchText: String = ""
 
     // MARK: - Quick Panel
     var quickPanelChat: Chat?

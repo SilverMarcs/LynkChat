@@ -18,10 +18,10 @@ enum ChatStatus: Int, Codable, Identifiable, Equatable, CaseIterable {
     
     var systemImageName: String {
         switch self {
-        case .normal: return "tray.circle.fill"
-        case .starred: return "star.circle.fill"
+        case .normal: return "tray.fill"
+        case .starred: return "star.fill"
         case .quick: return "bolt.fill"
-        case .archived: return "archivebox.circle.fill"
+        case .archived: return "archivebox.fill"
         case .temporary: return "tray.circle"
         }
     }

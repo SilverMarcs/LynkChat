@@ -22,11 +22,11 @@ struct ChatContentView: View {
         @Bindable var chatVM = chatVM
         
         NavigationSplitView {
-            if !chatVM.searchText.isEmpty {
-                MessageGroupList(searchText: chatVM.searchText)
+            if !chatVM.debouncedSearchText.isEmpty {
+                MessageGroupList(searchText: chatVM.debouncedSearchText)
                     .navigationSplitViewColumnWidth(min: 270, ideal: 300, max: 400)
             } else {
-                ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
+                ChatList(status: chatVM.statusFilter, searchText: chatVM.debouncedSearchText)
                     .navigationSplitViewColumnWidth(min: 270, ideal: 300, max: 400)
             }
         } detail: {
@@ -51,24 +51,14 @@ struct ChatContentView: View {
         .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
             OnboardingView()
         }
-        .searchable(text: $chatVM.localSearchText, placement: searchPlacement)
-        .onSubmit(of: .search) {
-            chatVM.searchText = chatVM.localSearchText
+        .searchable(text: $chatVM.searchText, placement: searchPlacement)
+        .searchFocused($isSearchFieldFocused, equals: .searchBox)
+        .onChange(of: chatVM.searchText) {
+            chatVM.updateSearchText(chatVM.searchText)
             
+            // Keep password verification functionality
             if PasswordHelper.verifyPassword(chatVM.searchText) {
                 config.showDebugMenu = true
-            }
-        }
-        .apply {
-            if #available(iOS 18.0, macOS 15.0, *) {
-                $0.searchFocused($isSearchFieldFocused, equals: .searchBox)
-            } else {
-                $0
-            }
-        }
-        .onChange(of: chatVM.localSearchText) {
-            if chatVM.localSearchText.isEmpty {
-                chatVM.searchText = ""
             }
         }
         .toolbar {

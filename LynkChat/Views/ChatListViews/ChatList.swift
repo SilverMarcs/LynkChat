@@ -41,13 +41,13 @@ struct ChatList: View {
         List(selection: $chatVM.selections) {
             ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
 
-            if isSearching {
-                Text("Press Enter to search")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .bold()
-                    .listRowSeparator(.hidden)
-            }
+//            if isSearching {
+//                Text("Press Enter to search")
+//                    .font(.caption)
+//                    .foregroundStyle(.secondary)
+//                    .bold()
+//                    .listRowSeparator(.hidden)
+//            }
             
             if isSearching && chats.isEmpty {
                 ContentUnavailableView.search

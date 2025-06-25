@@ -60,7 +60,7 @@ struct ChatListCards: View {
                 .disabled(isSearching)
             
             ListCard(
-                icon: "photo.circle.fill", iconColor: .indigo, title: "Images",
+                icon: "photo.fill", iconColor: .indigo, title: "Images",
                 count: imageSessionsCount) {
                     handleImagePress()
                 }
