@@ -43,6 +43,11 @@ struct ChatDetailMobile: View {
                     Scroller.scrollToBottom(delay: 0.1)
                 }
                 .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
+                .searchSuggestions {
+                    Button("Send") {
+                        sendInput()
+                    }
+                }
                 .onSubmit(of: .search) {
                     sendInput()
                 }

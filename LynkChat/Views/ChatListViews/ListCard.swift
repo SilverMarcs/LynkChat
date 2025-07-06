@@ -28,7 +28,9 @@ struct ListCard: View {
                     Image(systemName: icon)
                         .font(.title3)
                         .foregroundStyle(.white, iconColor)
+                    #if os(macOS)
                         .opacity(appearsActive ? 1 : 0.7)
+                    #endif
 
                     Spacer()
                     
@@ -59,7 +61,9 @@ struct ListCard: View {
 //            .cornerRadius(radius)
         }
         .buttonStyle(.plain)
+        #if os(macOS)
         .foregroundStyle(.white.opacity(appearsActive ? 1 : 0.7))
+        #endif
     }
     
     private var radius: CGFloat {

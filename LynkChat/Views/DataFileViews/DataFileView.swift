@@ -54,20 +54,15 @@ struct DataFilesView: View {
             fileView(for: typedData)
             
             if let onDelete {
-                Button {
+                Button(role: .destructive) {
                     onDelete(typedData)
                 } label: {
-                    Label("Remove", systemImage: "xmark.circle.fill")
-                        .glassEffect()
-                        #if !os(macOS)
-                        .padding(5)
-                        .contentShape(.rect)
-                        #endif
+                    Label("Remove", systemImage: "xmark")
                 }
-                .padding(3)
-                .buttonStyle(.plain)
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
                 .labelStyle(.iconOnly)
-                .shadow(radius: 5)
+                .padding(3)
             }
         }
     }

@@ -54,7 +54,7 @@ struct ImageDetail: View {
                     Button {
                         showingInspector.toggle()
                     } label: {
-                        Label("Show Inspector", systemImage: "info.circle")
+                        Label("Show Inspector", systemImage: "info")
                     }
                 }
             }

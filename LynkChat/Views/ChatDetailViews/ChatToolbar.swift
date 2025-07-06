@@ -22,7 +22,7 @@ struct ChatToolbar: ToolbarContent {
     var body: some ToolbarContent {
         ToolbarItem(placement: horizontalSizeClass == .compact ? .primaryAction : .navigation) {
             Button(action: toggleInspector) {
-                Label("Shortcuts", systemImage: horizontalSizeClass == .compact ? "info.circle" : "slider.vertical.3")
+                Label("Shortcuts", systemImage: horizontalSizeClass == .compact ? "info" : "slider.vertical.3")
             }
             .keyboardShortcut(".")
             .sheet(isPresented: $showingInspector) {

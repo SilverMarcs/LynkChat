@@ -53,18 +53,6 @@ struct ChatListRow: View {
             chatStatusMarker
                 .imageScale(.small)
                 .transition(.symbolEffect(.appear))
-            
-//            #if !os(macOS)
-//            Image(systemName: "chevron.right")
-//                .foregroundStyle(.secondary)
-//                .imageScale(.small)
-//            #endif
-                
-            
-//            Text(chat.config.model.name)
-//                .font(.subheadline)
-//                .foregroundStyle(.secondary)
-//                .fontWidth(.compressed)
         }
     }
     
@@ -96,6 +84,7 @@ struct ChatListRow: View {
 
     @ViewBuilder
     var swipeActionsLeading: some View {
+        #if os(macOS)
         if chat.status != .starred {
             Button {
                 SwipeActionTip().invalidate(reason: .actionPerformed)
@@ -110,6 +99,7 @@ struct ChatListRow: View {
             }
             .tint(chat.status == .archived ? .blue : .gray)
         }
+        #endif
         
         if chat.status != .archived {
             Button {
