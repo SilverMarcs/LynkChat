@@ -9,20 +9,10 @@ import SwiftUI
 
 struct HelpWindow: Scene {
     var body: some Scene {
-        conditionalAboutWindow()
-    }
-    
-    func conditionalAboutWindow() -> some Scene {
-        if #available(macOS 15.0, *) {
-            return UtilityWindow("Help", id: WindowID.help) {
-                Text(try! AttributedString(markdown: "Visit [Guides](https://lynkchat.com/products/lynkchat) for more information."))
-            }
-            .restorationBehavior(.disabled)
-            .windowIdealSize(.fitToContent)
-        } else {
-            return Window("Help", id: WindowID.help) {
-                Text(try! AttributedString(markdown: "Visit [Guides](https://lynkchat.com/products/lynkchat) for more information."))
-            }
+        UtilityWindow("Help", id: WindowID.help) {
+            Text(try! AttributedString(markdown: "Visit [Guides](https://lynksphere.com/products/lynkchat) for more information."))
         }
+        .restorationBehavior(.disabled)
+        .windowIdealSize(.fitToContent)
     }
 }

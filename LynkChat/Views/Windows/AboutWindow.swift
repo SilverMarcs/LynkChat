@@ -15,10 +15,11 @@ struct AboutWindow: Scene {
                 .padding(.horizontal, 5)
                 .scrollDisabled(true)
                 .scrollContentBackground(.hidden)
-                .frame(minWidth: 325, maxWidth: 325, minHeight: 388, maxHeight: 388)
-//                .windowMinimizeBehavior(.disabled)
+                .frame(minWidth: 325, maxWidth: 325, minHeight: 405, maxHeight: 405)
+                .windowMinimizeBehavior(.disabled)
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
+        .restorationBehavior(.disabled)
     }
 }

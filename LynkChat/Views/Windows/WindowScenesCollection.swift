@@ -10,37 +10,15 @@ import SwiftUI
 struct WindowScenesCollection: Scene {
     var body: some Scene {
         ChatWindow()
+        
         ImageWindow()
-        conditionalSettingsWindow()
+        
+        SettingsWindow()
+        
         AboutWindow()
+        
         HelpWindow()
+        
         DebugWebWindow()
-    }
-    
-    func conditionalSettingsWindow() -> some Scene {
-         if #available(macOS 15.0, *) {
-             return SettingsWindow()
-                     .restorationBehavior(.disabled)
-         } else {
-             return SettingsWindow()
-         }
-     }
-
-    func conditionalAboutWindow() -> some Scene {
-        if #available(macOS 15.0, *) {
-            return AboutWindow()
-                .restorationBehavior(.disabled)
-        } else {
-            return AboutWindow()
-        }
-    }
-
-    func conditionalChatWindow() -> some Scene {
-        if #available(macOS 15.0, *) {
-            return ChatWindow()
-                .restorationBehavior(.disabled)
-        } else {
-            return ChatWindow()
-        }
     }
 }

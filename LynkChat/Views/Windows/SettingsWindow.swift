@@ -13,6 +13,7 @@ struct SettingsWindow: Scene {
             SettingsView()
                 .frame(minWidth: 850, maxWidth: 850, minHeight: 600, maxHeight: 600)
         }
+        .restorationBehavior(.disabled)
         .windowResizability(.contentSize)
     }
 }

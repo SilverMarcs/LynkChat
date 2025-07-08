@@ -11,7 +11,6 @@ import SwiftData
 struct ChatContentView: View {
     @Environment(\.undoManager) var undoManager
     @Environment(\.modelContext) var modelContext
-    @Environment(\.isSearching) private var isSearching
     @Environment(ChatVM.self) var chatVM
     
     @ObservedObject var config = AppConfig.shared
@@ -44,7 +43,6 @@ struct ChatContentView: View {
                     .fullScreenBackground()
             }
         }
-        .background(.background)
         .onChange(of: undoManager, initial: true) {
             modelContext.undoManager = undoManager
         }
