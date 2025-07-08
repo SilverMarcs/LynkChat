@@ -51,7 +51,7 @@ struct ChatContentView: View {
         .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
             OnboardingView()
         }
-        .searchable(text: $chatVM.searchText, placement: searchPlacement)
+        .searchable(text: $chatVM.searchText, placement: .sidebar)
         .searchFocused($isSearchFieldFocused, equals: .searchBox)
         .onChange(of: chatVM.searchText) {
             chatVM.updateSearchText(chatVM.searchText)
@@ -69,14 +69,6 @@ struct ChatContentView: View {
                 .keyboardShortcut("f")
             }
         }
-    }
-    
-    private var searchPlacement: SearchFieldPlacement {
-        #if os(macOS)
-        return .sidebar
-        #else
-        return .automatic
-        #endif
     }
 }
 

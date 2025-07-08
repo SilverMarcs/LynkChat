@@ -76,7 +76,6 @@ struct ChatDetailMac: View {
                 .listRowSeparator(.hidden)
         }
         .contentMargins(.all, 15, for: .scrollContent)
-        .defaultScrollAnchor(.bottom)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if chat.status != .quick {
                 InputArea(chat: chat)
@@ -97,9 +96,9 @@ struct ChatDetailMac: View {
         AppConfig.shared.expandColor = false
         config.proxy = proxy
         
-//        if chatVM.searchText.isEmpty {
-//            Scroller.scrollToBottom(animated: false)
-//        }
+        if chatVM.searchText.isEmpty {
+            Scroller.scrollToBottom(animated: false)
+        }
 //        else {
 //            numberOfMessagesToShow = chat.currentThread.count
 //        }

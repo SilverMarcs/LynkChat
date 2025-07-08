@@ -274,7 +274,9 @@ final class Chat: Equatable, Identifiable, Hashable, Sendable {
             rootMessage = nil
         } else {
             let secondToLastGroup = currentThread[currentThread.count - 2]
-            secondToLastGroup.activeMessage.next = nil
+            withAnimation {
+                secondToLastGroup.activeMessage.next = nil
+            }
         }
         
         Scroller.scrollToBottom()
