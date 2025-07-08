@@ -61,8 +61,6 @@ struct ChatInputMenu: View {
                 .glassEffect()
             #else
             Image(systemName: "plus")
-                .foregroundStyle(.secondary)
-                .fontWeight(.semibold)
             #endif
         }
         .menuStyle(.button)

@@ -43,12 +43,11 @@ struct ChatDetailMobile: View {
                     Scroller.scrollToBottom(delay: 0.1)
                 }
                 .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
-                .searchSuggestions {
-                    Button("Send") {
-                        sendInput()
-                    }
-                }
-                .onSubmit(of: .search) {
+//                .onSubmit(of: .search) {
+//                    print("not")
+//                    sendInput()
+//                }
+                .onReceive(NotificationCenter.default.publisher(for: UISearchTextField.textDidEndEditingNotification)) { notification in
                     sendInput()
                 }
                 .toolbar {
@@ -59,6 +58,19 @@ struct ChatDetailMobile: View {
                     ToolbarSpacer(.fixed, placement: .bottomBar)
                     
                     DefaultToolbarItem(kind: .search, placement: .bottomBar)
+                    
+                    if chat.isReplying {
+                        ToolbarSpacer(.fixed, placement: .bottomBar)
+                        
+                        ToolbarItem(placement: .bottomBar) {
+                            Button(role: .destructive) {
+                                chat.stopStreaming()
+                            } label: {
+                                Image(systemName: "stop.fill")
+                                    .foregroundStyle(.red)
+                            }
+                        }
+                    }
                 }
                 .toolbar(.hidden, for: .tabBar)
         }
