@@ -17,12 +17,10 @@ struct ChatDetailMac: View {
     @Bindable var chat: Chat
     
     @State private var numberOfMessagesToShow = 2
-    @State private var colorViewHeight: CGFloat = 0
     
     var body: some View {
         ScrollViewReader { proxy in
             content
-                .animation(.bouncy, value: chat.currentThread.isEmpty)
                 .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
                 .navigationSubtitle("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))")
                 .task {
@@ -47,19 +45,19 @@ struct ChatDetailMac: View {
     }
     
     var list: some View {
-        List {
-            ForEach(messagesToShow, id: \.self) { group in
+        ScrollView {
+            ForEach(chat.currentThread, id: \.self) { group in
                 TipView(ContextMenuTip())
                     .frame(maxWidth: 300, alignment: .trailing)
                 
                 MessageView(group: group)
                     .environment(\.chat, chat)
                     .environment(\.searchText, chatVM.searchText)
-                    .onAppear {
-                        if group == messagesToShow.first {
-                            loadMoreMessages()
-                        }
-                    }
+//                    .onAppear {
+//                        if group == messagesToShow.first {
+//                            loadMoreMessages()
+//                        }
+//                    }
             }
             .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))
             .listRowSeparator(.hidden)
@@ -77,6 +75,8 @@ struct ChatDetailMac: View {
                 .id(String.bottomID)
                 .listRowSeparator(.hidden)
         }
+        .contentMargins(.all, 15, for: .scrollContent)
+        .defaultScrollAnchor(.bottom)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if chat.status != .quick {
                 InputArea(chat: chat)
@@ -97,26 +97,27 @@ struct ChatDetailMac: View {
         AppConfig.shared.expandColor = false
         config.proxy = proxy
         
-        if chatVM.searchText.isEmpty {
-            Scroller.scrollToBottom(animated: false)
-        } else {
-            numberOfMessagesToShow = chat.currentThread.count
-        }
+//        if chatVM.searchText.isEmpty {
+//            Scroller.scrollToBottom(animated: false)
+//        }
+//        else {
+//            numberOfMessagesToShow = chat.currentThread.count
+//        }
     }
     
-    var messagesToShow: [MessageGroup] {
-        let totalMessages = chat.currentThread.count
-        if numberOfMessagesToShow >= totalMessages {
-            return chat.currentThread
-        } else {
-            return Array(chat.currentThread.suffix(numberOfMessagesToShow))
-        }
-    }
-    
-    private func loadMoreMessages() {
-        let totalMessages = chat.currentThread.count
-        if numberOfMessagesToShow <= totalMessages {
-            numberOfMessagesToShow += 2
-        }
-    }
+//    var messagesToShow: [MessageGroup] {
+//        let totalMessages = chat.currentThread.count
+//        if numberOfMessagesToShow >= totalMessages {
+//            return chat.currentThread
+//        } else {
+//            return Array(chat.currentThread.suffix(numberOfMessagesToShow))
+//        }
+//    }
+//    
+//    private func loadMoreMessages() {
+//        let totalMessages = chat.currentThread.count
+//        if numberOfMessagesToShow <= totalMessages {
+//            numberOfMessagesToShow += 2
+//        }
+//    }
 }

@@ -16,6 +16,7 @@ struct DismissButton: View {
         } label: {
             Image(systemName: "xmark")
         }
+        .controlSize(.large)
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
     }
