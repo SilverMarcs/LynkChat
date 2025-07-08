@@ -16,6 +16,25 @@ enum ChatStatus: Int, Codable, Identifiable, Equatable, CaseIterable {
     
     var id: Int { rawValue }
     
+//    @ViewBuilder
+//    var chatStatusMarker: some View {
+//        switch chat.status {
+//        case .starred:
+//            Image(systemName: "star.fill")
+//                .foregroundStyle(.orange)
+//        case .archived:
+//            Image(systemName: "archivebox.fill")
+//                .foregroundStyle(.gray)
+//        case .quick:
+//            Image(systemName: "bolt.fill")
+//                .foregroundStyle(.yellow)
+//        default:
+//            EmptyView()
+//        }
+//    }
+//    
+//    var foregr
+    
     var systemImageName: String {
         switch self {
         case .normal: return "tray.fill"

@@ -56,6 +56,13 @@
 				Views/ChatDetailViews/PasteHandler.swift = (
 					macos,
 				);
+				Views/ChatListViews/ChatListIos.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatListViews/ChatListMac.swift = (
+					macos,
+				);
 				Views/CustomUI/AutoHeightTextView.swift = (
 					macos,
 				);

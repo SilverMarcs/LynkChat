@@ -19,10 +19,52 @@ struct ChatListRow: View {
     var body: some View {
         row
         .swipeActions(edge: .leading) {
-            swipeActionsLeading
+            #if os(macOS)
+            if chat.status != .starred {
+                Button {
+                    SwipeActionTip().invalidate(reason: .actionPerformed)
+                    
+                    if chatVM.selections.contains(chat) {
+                        chatVM.selections.remove(chat)
+                    }
+                    
+                    chat.status = (chat.status == .archived) ? .normal : .archived
+                } label: {
+                    Label("Archive", systemImage: chat.status == .archived ? "tray.and.arrow.up.fill" : "archivebox")
+                }
+                .tint(chat.status == .archived ? .blue : .gray)
+            }
+            #endif
+
+            if chat.status != .archived {
+                Button {
+                    SwipeActionTip().invalidate(reason: .actionPerformed)
+                    chat.status = chat.status == .starred ? .normal : .starred
+                } label: {
+                    Label(chat.status == .starred ? "Unstar" : "Star", systemImage: chat.status == .starred ? "star.slash" : "star")
+                }
+                .tint(.orange)
+            }
         }
         .swipeActions(edge: .trailing) {
-            swipeActionsTrailing
+            if chat.status != .starred {
+                Button(role: .destructive) {
+                    SwipeActionTip().invalidate(reason: .actionPerformed)
+
+                    if chatVM.selections.contains(chat) {
+                        chatVM.selections.remove(chat)
+                    }
+                    
+                    // Clean up all messages and message groups first
+                    chat.cleanupMessagesAndGroups()
+                    // Then delete the chat itself
+                    modelContext.delete(chat)
+                    
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+                .tint(.red)
+            }
         }
         .contextMenu {
             Button {
@@ -44,93 +86,20 @@ struct ChatListRow: View {
             
             HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
                 .lineLimit(1)
-                .font(font)
+                #if os(macOS)
+                .font(.headline.weight(.regular))
+                #else
+                .font(.headline.weight(.medium))
+                #endif
                 .opacity(0.9)
                 .shimmerWithoutRedact(when: chat.isReplying)
             
             Spacer()
             
-            chatStatusMarker
+            Image(systemName: chat.status.systemImageName)
+                .foregroundStyle(chat.status.iconColor)
                 .imageScale(.small)
                 .transition(.symbolEffect(.appear))
-        }
-    }
-    
-    var font: Font {
-        #if os(macOS)
-        return .headline.weight(.regular)
-        #else
-        return .headline.weight(.medium)
-        #endif
-    }
-    
-    
-    @ViewBuilder
-    var chatStatusMarker: some View {
-        switch chat.status {
-        case .starred:
-            Image(systemName: "star.fill")
-                .foregroundStyle(.orange)
-        case .archived:
-            Image(systemName: "archivebox.fill")
-                .foregroundStyle(.gray)
-        case .quick:
-            Image(systemName: "bolt.fill")
-                .foregroundStyle(.yellow)
-        default:
-            EmptyView()
-        }
-    }
-
-    @ViewBuilder
-    var swipeActionsLeading: some View {
-        #if os(macOS)
-        if chat.status != .starred {
-            Button {
-                SwipeActionTip().invalidate(reason: .actionPerformed)
-                
-                if chatVM.selections.contains(chat) {
-                    chatVM.selections.remove(chat)
-                }
-                
-                chat.status = (chat.status == .archived) ? .normal : .archived
-            } label: {
-                Label("Archive", systemImage: chat.status == .archived ? "tray.and.arrow.up.fill" : "archivebox")
-            }
-            .tint(chat.status == .archived ? .blue : .gray)
-        }
-        #endif
-        
-        if chat.status != .archived {
-            Button {
-                SwipeActionTip().invalidate(reason: .actionPerformed)
-                chat.status = chat.status == .starred ? .normal : .starred
-            } label: {
-                Label(chat.status == .starred ? "Unstar" : "Star", systemImage: chat.status == .starred ? "star.slash" : "star")
-            }
-            .tint(.orange)
-        }
-    }
-    
-    @ViewBuilder
-    var swipeActionsTrailing: some View {
-        if chat.status != .starred {
-            Button(role: .destructive) {
-                SwipeActionTip().invalidate(reason: .actionPerformed)
-
-                if chatVM.selections.contains(chat) {
-                    chatVM.selections.remove(chat)
-                }
-                
-                // Clean up all messages and message groups first
-                chat.cleanupMessagesAndGroups()
-                // Then delete the chat itself
-                modelContext.delete(chat)
-                
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
-            .tint(.red)
         }
     }
 }

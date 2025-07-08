@@ -9,166 +9,54 @@ import SwiftData
 import SwiftUI
 
 struct ChatList: View {
+    @Environment(ChatVM.self) var chatVM
     @Environment(\.openWindow) var openWindow
     @Environment(\.isSearching) private var isSearching
-    @Environment(ChatVM.self) var chatVM
     @Environment(\.modelContext) var modelContext
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     @ObservedObject var config = AppConfig.shared
     
     @Query var chats: [Chat] // see init method below
     
     var body: some View {
-        list
-            .navigationTitle("Chats")
-            .toolbarTitleDisplayMode(.inlineLarge)
-            .toolbar {
-                toolbar
-            }
-            .task {
-                if horizontalSizeClass == .regular, let first = chats.first, chatVM.selections.isEmpty {
-                    chatVM.selections = [first]
-                }
-            }
-    }
-
-    @ViewBuilder
-    private var list: some View {
-        #if os(macOS)
-        @Bindable var chatVM = chatVM
-        
-        List(selection: $chatVM.selections) {
-            ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
-
-//            if isSearching {
-//                Text("Press Enter to search")
-//                    .font(.caption)
-//                    .foregroundStyle(.secondary)
-//                    .bold()
-//                    .listRowSeparator(.hidden)
-//            }
-            
-            if isSearching && chats.isEmpty {
-                ContentUnavailableView.search
-            } else {
-                ForEach(chats, id: \.self) { chat in
-                    ChatListRow(chat: chat)
-                    .tag(chat)
-                    .deleteDisabled(chat.status == .starred)
-                    .listRowSeparator(.visible)
-                }
-                .onDelete(perform: deleteItems)
-            }
+        Group {
+            #if os(macOS)
+            ChatListMac(chats: chats, deleteItems: deleteItems)
+            #else
+            ChatListIos(chats: chats, deleteItems: deleteItems)
+            #endif
         }
-        .contextMenu(forSelectionType: Chat.self) { item in
-            
-        } primaryAction: { items in
-            for item in items {
-                openWindow(value: item.id)
-            }
+        .navigationTitle("Chats")
+        .toolbarTitleDisplayMode(.inlineLarge)
+        .toolbar {
+            ChatListToolbar(
+                chats: chats,
+                deleteItems: deleteItems
+            )
         }
-        #else
-        List {
-            if isSearching && chats.isEmpty {
-                ContentUnavailableView.search
-            } else {
-                ForEach(chats, id: \.self) { chat in
-                    NavigationLink(value: chat) {
-                        ChatListRow(chat: chat)
-                    }
-                    .tag(chat)
-                    .deleteDisabled(chat.status == .starred)
-                }
-                .onDelete(perform: deleteItems)
-            }
-        }
-        .navigationDestination(for: Chat.self) { chat in
-            ChatDetail(chat: chat)
-                .id(chat.id)
-        }
-        .fullScreenCover(isPresented: $config.showCamera) {
-            CameraView(chatVM: chatVM)
-                .ignoresSafeArea()
-        }
-        #endif
     }
 
     private func deleteItems(offsets: IndexSet) {
-       for index in offsets {
-           let chat = chats[index]
-           
-           // Skip starred chats
-           if chat.status == .starred {
-               continue
-           }
-           
-           // Remove from selections if selected
-           if chatVM.selections.contains(chat) {
-               chatVM.selections.remove(chat)
-           }
-           
-           // Clean up all messages and message groups first
-           chat.cleanupMessagesAndGroups()
-           
-           // Then delete the chat itself
-           modelContext.delete(chat)
-       }
-    }
-    
-    @ToolbarContentBuilder
-    var toolbar: some ToolbarContent {
-        ToolbarSpacer()
-        
-        #if os(macOS)
-        ToolbarItem(placement: .keyboard) {
-            Button(action: {
-                // Get the indices of the selected chats
-                let indices = chatVM.selections.compactMap { chat in
-                    chats.firstIndex(of: chat)
-                }
-                // Create an IndexSet from the indices
-                let indexSet = IndexSet(indices)
-                // Perform the delete operation
-                deleteItems(offsets: indexSet)
-            }) {
-                Image(systemName: "trash")
+        for index in offsets {
+            let chat = chats[index]
+            
+            // Skip starred chats
+            if chat.status == .starred {
+                continue
             }
-            .keyboardShortcut(.delete, modifiers: [.command])
-            .disabled(chatVM.selections.count <= 1)
-        }
-        #endif
-        
-        ToolbarSpacer(placement: .primaryAction)
-        
-        ToolbarItem(placement: .primaryAction) {
-            Menu {
-                ForEach(ChatModel.allCases) { model in
-                    Button {
-                        chatVM.createNewChat(model: model)
-                    } label: {
-                        Label(model.name, image: model.imageName)
-                            .labelStyle(.titleAndIcon)
-//                            .labelStyle(.titleOnly)
-                    }
-                }
-            } label: {
-                Label("New Chat", systemImage: "square.and.pencil")
-            } primaryAction: {
-                chatVM.createNewChat()
+            
+            // Remove from selections if selected
+            if chatVM.selections.contains(chat) {
+                chatVM.selections.remove(chat)
             }
-            .menuIndicator(.hidden)
-            .popoverTip(NewChatTip())
+            
+            // Clean up all messages and message groups first
+            chat.cleanupMessagesAndGroups()
+            
+            // Then delete the chat itself
+            modelContext.delete(chat)
         }
     }
-    
-//    var placement: ToolbarItemPlacement {
-//        #if os(macOS)
-//        return .primaryAction
-//        #else
-//        return .bottomBar
-//        #endif
-//    }
     
     init(status: ChatStatus, searchText: String) {
         let statusId = status.id
@@ -208,6 +96,6 @@ struct ChatList: View {
 
 #Preview {
     ChatList(status: .normal, searchText: "")
-    .frame(width: 400)
-    .environment(ChatVM())
+        .frame(width: 400)
+        .environment(ChatVM())
 }

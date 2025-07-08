@@ -31,10 +31,8 @@ struct ChatContentView: View {
         } detail: {
             if let chat = chatVM.activeChat {
                 ChatDetail(chat: chat)
-                #if os(macOS)
-                    .frame(minWidth: 600)
-                #endif
                     .id(chat.id)
+                    .frame(minWidth: 600)
             } else {
                 Text(chatVM.selections.count > 0
                     ? "^[\(chatVM.selections.count) Chat](inflect: true) Selected"
@@ -43,7 +41,7 @@ struct ChatContentView: View {
                     .fullScreenBackground()
             }
         }
-        .onChange(of: undoManager, initial: true) {
+        .onAppear {
             modelContext.undoManager = undoManager
         }
         .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
@@ -51,14 +49,14 @@ struct ChatContentView: View {
         }
         .searchable(text: $chatVM.searchText, placement: .sidebar)
         .searchFocused($isSearchFieldFocused, equals: .searchBox)
-        .onChange(of: chatVM.searchText) {
-            chatVM.updateSearchText(chatVM.searchText)
-            
-            // Keep password verification functionality
-            if PasswordHelper.verifyPassword(chatVM.searchText) {
-                config.showDebugMenu = true
-            }
-        }
+//        .onChange(of: chatVM.searchText) {
+//            chatVM.updateSearchText(chatVM.searchText)
+//            
+//            // Keep password verification functionality
+//            if PasswordHelper.verifyPassword(chatVM.searchText) {
+//                config.showDebugMenu = true
+//            }
+//        }
         .toolbar {
             ToolbarItem(placement: .keyboard) {
                 Button("Search") {

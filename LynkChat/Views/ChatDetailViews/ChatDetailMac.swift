@@ -16,8 +16,6 @@ struct ChatDetailMac: View {
     
     @Bindable var chat: Chat
     
-    @State private var numberOfMessagesToShow = 2
-    
     var body: some View {
         ScrollViewReader { proxy in
             content
@@ -53,11 +51,6 @@ struct ChatDetailMac: View {
                 MessageView(group: group)
                     .environment(\.chat, chat)
                     .environment(\.searchText, chatVM.searchText)
-//                    .onAppear {
-//                        if group == messagesToShow.first {
-//                            loadMoreMessages()
-//                        }
-//                    }
             }
             .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))
             .listRowSeparator(.hidden)
@@ -99,24 +92,5 @@ struct ChatDetailMac: View {
         if chatVM.searchText.isEmpty {
             Scroller.scrollToBottom(animated: false)
         }
-//        else {
-//            numberOfMessagesToShow = chat.currentThread.count
-//        }
     }
-    
-//    var messagesToShow: [MessageGroup] {
-//        let totalMessages = chat.currentThread.count
-//        if numberOfMessagesToShow >= totalMessages {
-//            return chat.currentThread
-//        } else {
-//            return Array(chat.currentThread.suffix(numberOfMessagesToShow))
-//        }
-//    }
-//    
-//    private func loadMoreMessages() {
-//        let totalMessages = chat.currentThread.count
-//        if numberOfMessagesToShow <= totalMessages {
-//            numberOfMessagesToShow += 2
-//        }
-//    }
 }
