@@ -20,7 +20,6 @@ struct UserMessage: View {
 
     @State var isExpanded: Bool = false
     @State var showingTextSelection = false
-    @State var height: CGFloat = 20
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
@@ -32,24 +31,9 @@ struct UserMessage: View {
 //            GroupBox {
                 VStack(alignment: .leading, spacing: 0) {
                     #if os(macOS)
-//                    if searchText.isEmpty {
-//          
-//                        AutoHeightTextView(text: displayedText, height: $height)
-//                            .fixedSize(horizontal: true, vertical: false)  // This is key - use the intrinsic size horizontally
-//                            .frame(height: group.activeMessage.height, alignment: .top)
-//                            .padding(4)
-//                            .onChange(of: height) {
-//                                DispatchQueue.main.async {
-//                                    group.activeMessage.height = height
-//                                }
-//                            }
-//                    } else {
-////                        MDView(content: displayedText)
-//                        HighlightableTextView(displayedText, highlightedText: searchText)
-//                            .padding(4)
-//                    }
                     
-                    HighlightableTextView(displayedText, highlightedText: searchText)
+                    HighlightableTextView(group.content, highlightedText: searchText)
+                        .lineLimit(4)
                         .textSelection(.enabled)
                         .font(.system(size: config.fontSize))
                         .lineSpacing(2)
@@ -60,21 +44,21 @@ struct UserMessage: View {
 
 
                     
-                    if shouldShowMoreButton {
-                        Button {
-                            isExpanded.toggle()
-                            if !isExpanded {
-                                Scroller.scroll(to: .top, of: group)
-                            }
-                        } label: {
-                            Text(isExpanded ? "Less" : "More")
-                                .font(.callout)
-                                .foregroundStyle(.accent)
-                        }
-                        .buttonStyle(.plain)
-                        .padding(.leading, 4)
-                        .padding(.bottom, 2)
-                    }
+//                    if shouldShowMoreButton {
+//                        Button {
+//                            isExpanded.toggle()
+//                            if !isExpanded {
+//                                Scroller.scroll(to: .top, of: group)
+//                            }
+//                        } label: {
+//                            Text(isExpanded ? "Less" : "More")
+//                                .font(.callout)
+//                                .foregroundStyle(.accent)
+//                        }
+//                        .buttonStyle(.plain)
+//                        .padding(.leading, 4)
+//                        .padding(.bottom, 2)
+//                    }
                 }
                 .padding(padding)
                 .background(
@@ -129,18 +113,18 @@ struct UserMessage: View {
         #endif
     }
     
-    private var displayedText: String {
-        let maxCharacters = 400
-        if isExpanded || !chatVM.searchText.isEmpty {
-            return group.content
-        } else {
-            return String(group.content.prefix(maxCharacters))
-        }
-    }
-
-    private var shouldShowMoreButton: Bool {
-        group.content.count > 400 && chatVM.searchText.isEmpty
-    }
+//    private var displayedText: String {
+//        let maxCharacters = 400
+//        if isExpanded || !chatVM.searchText.isEmpty {
+//            return group.content
+//        } else {
+//            return String(group.content.prefix(maxCharacters))
+//        }
+//    }
+//
+//    private var shouldShowMoreButton: Bool {
+//        group.content.count > 400 && chatVM.searchText.isEmpty
+//    }
 }
 
 #Preview {

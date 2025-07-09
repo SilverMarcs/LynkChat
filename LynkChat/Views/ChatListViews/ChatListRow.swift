@@ -17,7 +17,28 @@ struct ChatListRow: View {
     @Bindable var chat: Chat
 
     var body: some View {
-        row
+        HStack {
+            ListRowImage(model: chat.config.model)
+            
+            HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
+                .lineLimit(1)
+                #if os(macOS)
+                .font(.headline.weight(.regular))
+                #else
+                .font(.headline.weight(.medium))
+                #endif
+                .opacity(0.9)
+//                .shimmerWithoutRedact(when: chat.isReplying)
+            
+            Spacer()
+            
+            if chat.status != .normal {
+                Image(systemName: chat.status.systemImageName)
+                    .foregroundStyle(chat.status.iconColor)
+                    .imageScale(.small)
+                    .transition(.symbolEffect(.appear))
+            }
+        }
         .swipeActions(edge: .leading) {
             #if os(macOS)
             if chat.status != .starred {
@@ -76,31 +97,6 @@ struct ChatListRow: View {
             } label: {
                 Label("Fork Chat", systemImage: "arrow.branch")
                     .labelStyle(.titleAndIcon)
-            }
-        }
-    }
-    
-    var row: some View {
-        HStack {
-            ListRowImage(model: chat.config.model)
-            
-            HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
-                .lineLimit(1)
-                #if os(macOS)
-                .font(.headline.weight(.regular))
-                #else
-                .font(.headline.weight(.medium))
-                #endif
-                .opacity(0.9)
-                .shimmerWithoutRedact(when: chat.isReplying)
-            
-            Spacer()
-            
-            if chat.status != .normal {
-                Image(systemName: chat.status.systemImageName)
-                    .foregroundStyle(chat.status.iconColor)
-                    .imageScale(.small)
-                    .transition(.symbolEffect(.appear))
             }
         }
     }
