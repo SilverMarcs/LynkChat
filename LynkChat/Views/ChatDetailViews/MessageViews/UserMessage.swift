@@ -32,7 +32,8 @@ struct UserMessage: View {
                 VStack(alignment: .leading, spacing: 0) {
                     #if os(macOS)
                     
-                    HighlightableTextView(group.content, highlightedText: searchText)
+//                    HighlightableTextView(group.content, highlightedText: searchText)
+                    Text(String(group.content.prefix(400)))
                         .lineLimit(4)
                         .textSelection(.enabled)
                         .font(.system(size: config.fontSize))
@@ -71,17 +72,18 @@ struct UserMessage: View {
                 )
 //            }
             .transaction { $0.animation = nil }
-            .background(
-                RoundedRectangle(cornerRadius: 5)
-                    .fill(chat.inputManager.editingMessage == self.group.activeMessage ? Color.accentColor.opacity(0.2) : .clear)
-            )
-            
+//            .background(
+//                RoundedRectangle(cornerRadius: 5)
+//                    .fill(chat.inputManager.editingMessage == self.group.activeMessage ? Color.accentColor.opacity(0.2) : .clear)
+//            )
+//            
             #if os(macOS)
             if group.allMessages.count > 1 {
                 NavigationButtons(message: group)
             }
             #endif
         }
+        .contentShape(.rect)
         .padding(.leading, leadingPadding)
         .frame(maxWidth: .infinity, alignment: .trailing)
         .sheet(isPresented: $showingTextSelection) {

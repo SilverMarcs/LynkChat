@@ -20,7 +20,8 @@ struct ChatListRow: View {
         HStack {
             ListRowImage(model: chat.config.model)
             
-            HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
+//            HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
+            Text(chat.title)
                 .lineLimit(1)
                 #if os(macOS)
                 .font(.headline.weight(.regular))
