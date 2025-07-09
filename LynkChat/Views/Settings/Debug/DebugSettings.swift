@@ -45,7 +45,7 @@ struct DebugSettings: View {
                         config.finishedInitialSetup = false
                     }
                 } label: {
-                    Text("First Launch Completed: \(config.finishedInitialSetup)")
+                    Text("First Launch Completed: \(String(config.finishedInitialSetup))")
                 }
                 
                 LabeledContent {
@@ -53,7 +53,7 @@ struct DebugSettings: View {
                         config.resetTips.toggle()
                     }
                 } label: {
-                    Text("Will reset tips on next launch: \(config.resetTips)")
+                    Text("Will reset tips on next launch: \(String(config.resetTips))")
                 }
             }
             

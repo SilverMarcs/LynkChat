@@ -33,11 +33,6 @@ struct ChatToolbar: ToolbarContent {
         }
         
         #if os(macOS)
-//            ToolbarItem(placement: .primaryAction) {
-//                Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
-//                    .allowsHitTesting(false)
-//            }
-            
             ToolbarItemGroup(placement: .primaryAction) {
                 SimpleToolsToggleView(config: $chat.config)
             }
@@ -45,7 +40,9 @@ struct ChatToolbar: ToolbarContent {
             ToolbarSpacer(.fixed)
             
             ToolbarItem(placement: .primaryAction) {
-                ModelPicker(selectedModel: $chat.config.model)
+                ModelPopoverPicker(selectedModel: $chat.config.model)
+//                ModelMenuPicker(selectedModel: $chat.config.model)
+//                ModelPicker(selectedModel: $chat.config.model)
             }
         
         
@@ -71,10 +68,9 @@ struct ChatToolbar: ToolbarContent {
                 .disabled(chat.status == .quick || chat.isReplying)
                 
                 Button("Regen Last Message") {
-                    if let last = lastMessage {
-                        Task { @MainActor in
-                            await chat.regenerate(message: last)
-                        }
+                    guard !chat.isReplying, let last = chat.currentThread.last else { return }
+                    Task { @MainActor in
+                        await chat.regenerate(message: last)
                     }
                 }
                 .keyboardShortcut("r")
@@ -82,9 +78,8 @@ struct ChatToolbar: ToolbarContent {
             
             Section {
                 Button("Reset Context") {
-                    if let last = lastMessage {
-                        chat.resetContext(at: last)
-                    }
+                    guard !chat.isReplying, let last = chat.currentThread.last else { return }
+                    chat.resetContext(at: last)
                 }
                 .keyboardShortcut("k")
                 
@@ -106,12 +101,6 @@ struct ChatToolbar: ToolbarContent {
             }
         }
         #endif
-    }
-    
-    private var lastMessage: MessageGroup? {
-        guard !chat.isReplying,
-              let lastMessage = chat.currentThread.last else { return nil }
-        return lastMessage
     }
     
     private func toggleInspector() {

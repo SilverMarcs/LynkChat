@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 @Model
-final class Chat: Equatable, Identifiable, Hashable, Sendable {
+final class Chat: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
     var date: Date = Date()
     var title: String = "New Chat Session"
@@ -232,11 +232,7 @@ final class Chat: Equatable, Identifiable, Hashable, Sendable {
         guard forced || adjustedContext.count <= 2 else { return }
         
         if let newTitle = await TitleGenerator.generateTitle(messages: adjustedContext) {
-            await MainActor.run {
-                withAnimation {
-                    self.title = newTitle
-                }
-            }
+            title = newTitle
         }
     }
 
