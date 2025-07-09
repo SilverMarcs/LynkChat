@@ -96,10 +96,12 @@ struct ChatListRow: View {
             
             Spacer()
             
-            Image(systemName: chat.status.systemImageName)
-                .foregroundStyle(chat.status.iconColor)
-                .imageScale(.small)
-                .transition(.symbolEffect(.appear))
+            if chat.status != .normal {
+                Image(systemName: chat.status.systemImageName)
+                    .foregroundStyle(chat.status.iconColor)
+                    .imageScale(.small)
+                    .transition(.symbolEffect(.appear))
+            }
         }
     }
 }

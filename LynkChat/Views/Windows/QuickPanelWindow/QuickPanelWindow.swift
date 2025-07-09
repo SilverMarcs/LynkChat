@@ -40,6 +40,7 @@ class QuickPanelWindow: NSPanel {
         standardWindowButton(.closeButton)?.isHidden = true
         standardWindowButton(.miniaturizeButton)?.isHidden = true
         standardWindowButton(.zoomButton)?.isHidden = true
+        backgroundColor = .clear
 
         // Get or create the quick panel chat from the ChatVM
         self.chat = chatVM.getOrCreateQuickPanelChat()
@@ -55,24 +56,16 @@ class QuickPanelWindow: NSPanel {
             .environment(chatVM)
         )
 
-        let visualEffectView = NSVisualEffectView(frame: contentRect)
-        visualEffectView.material = .sidebar
-        visualEffectView.blendingMode = .behindWindow
-        visualEffectView.state = .active
-        visualEffectView.autoresizingMask = [.width, .height]
+        // Replace NSVisualEffectView with NSGlassEffectView (macOS 26+)
+        let glassEffectView = NSGlassEffectView()
+//        glassEffectView.cornerRadius = 30 // Example: set a default corner radius
+//        glassEffectView.tintColor = .clear
+        glassEffectView.autoresizingMask = [.width, .height]
+        glassEffectView.contentView = hostingView
 
-        visualEffectView.addSubview(hostingView)
-        hostingView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            hostingView.leadingAnchor.constraint(equalTo: visualEffectView.leadingAnchor),
-            hostingView.trailingAnchor.constraint(equalTo: visualEffectView.trailingAnchor),
-            hostingView.topAnchor.constraint(equalTo: visualEffectView.topAnchor),
-            hostingView.bottomAnchor.constraint(equalTo: visualEffectView.bottomAnchor)
-        ])
+        contentView = glassEffectView
 
-        contentView = visualEffectView
-
-        heightConstraint = visualEffectView.heightAnchor.constraint(equalToConstant: contentRect.height)
+        heightConstraint = glassEffectView.heightAnchor.constraint(equalToConstant: contentRect.height)
         heightConstraint?.isActive = true
         self.contentMinSize = NSSize(width: contentRect.width, height: contentRect.height)
         self.contentMaxSize = NSSize(width: contentRect.width, height: 500)
