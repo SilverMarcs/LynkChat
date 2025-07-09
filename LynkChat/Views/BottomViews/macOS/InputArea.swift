@@ -25,6 +25,7 @@ struct InputArea: View {
     var body: some View {
         HStack(alignment: .bottom) {
             ChatInputMenu(chat: chat)
+                .offset(y: -1)
             
             if chat.inputManager.state == .editing {
                 cancelEditing
@@ -63,6 +64,7 @@ struct InputArea: View {
             ActionButton(isStop: chat.isReplying) {
                 chat.isReplying ? chat.stopStreaming() : sendInput()
             }
+            .offset(y: -2)
         }
         .padding(12)
         .pasteHandler(chat: chat)

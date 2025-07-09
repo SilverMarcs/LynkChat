@@ -54,9 +54,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     @Transient
     var streamingTask: Task<Void, Error>?
     @Transient
-    var isReplying: Bool {
-        currentThread.last?.activeMessage.isReplying ?? false
-    }
+    var isReplying: Bool = false
 
     @Transient
     var inputManager = InputManager()
@@ -199,6 +197,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         guard let task = streamingTask else { return }
         task.cancel()
         streamingTask = nil
+        isReplying = false // Set isReplying to false when stopped manually
         
         // Ensure the message is in a clean state before allowing new queries
         if let lastMessage = currentThread.last?.activeMessage {
@@ -214,6 +213,7 @@ final class Chat: Equatable, Identifiable, Hashable {
 
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
+        isReplying = false // Set isReplying to false on error
         
         // Immediately clean up the state rather than waiting
         if let lastMessage = currentThread.last?.activeMessage {

@@ -14,7 +14,7 @@ struct ActionButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: isStop ? "stop.circle.fill" : "arrow.up.circle.fill")
-                .font(.largeTitle).fontWeight(.semibold)
+                .font(.system(size: 23)).fontWeight(.semibold)
                 .foregroundStyle(.white, .clear)
                 .glassEffect(.regular.tint(isStop ? .red : .accentColor))
 //                .font(.system(size: 20, weight: .regular))

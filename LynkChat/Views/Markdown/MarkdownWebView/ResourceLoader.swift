@@ -24,7 +24,7 @@ class ResourceLoader {
             return ""
         }
         do {
-            return try String(contentsOf: url)
+            return try String(contentsOf: url, encoding: .utf8)
             } catch {
             print("Failed to load resource \(name).\(ext): \(error)")
             return ""

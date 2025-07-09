@@ -20,6 +20,7 @@ struct StreamHandler {
 
     @MainActor
     func handleRequest() async throws {
+        chat.isReplying = true // Set isReplying to true when streaming starts
         var streamText = ""
         var reasoning = ""
         var totalTokens = 0
@@ -61,6 +62,7 @@ struct StreamHandler {
     
     private func finaliseStream(streamText: String = "", totalTokens: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
+            self.chat.isReplying = false // Set isReplying to false when streaming ends
             chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
             
             // Check if the message content is empty after streaming completes

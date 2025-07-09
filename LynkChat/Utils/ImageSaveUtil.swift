@@ -37,6 +37,7 @@ enum ImageSaveUtil {
                 if success {
                     completion(true)
                 } else if let error = error {
+                    print(error.localizedDescription)
                     completion(false)
                 }
             }
