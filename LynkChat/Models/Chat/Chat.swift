@@ -335,35 +335,36 @@ final class Chat: Equatable, Identifiable, Hashable {
     }
     
     func cleanupMessagesAndGroups() {
-        // First get all message groups from the current thread
-        let allGroups = currentThread
-        
-        for group in allGroups {
-            // Delete all messages in the group
-            for message in group.allMessages {
-                // Recursively handle any branching messages
-                if let nextGroup = message.next {
-                    deleteMessageGroupRecursively(nextGroup)
-                }
-                modelContext?.delete(message)
-            }
-            modelContext?.delete(group)
-        }
-        
-        // Clear references
         rootMessage = nil
-        contextResetPoint = nil
+//        // First get all message groups from the current thread
+//        let allGroups = currentThread
+//        
+//        for group in allGroups {
+//            // Delete all messages in the group
+//            for message in group.allMessages {
+//                // Recursively handle any branching messages
+//                if let nextGroup = message.next {
+//                    deleteMessageGroupRecursively(nextGroup)
+//                }
+//                modelContext?.delete(message)
+//            }
+//            modelContext?.delete(group)
+//        }
+//        
+//        // Clear references
+//        rootMessage = nil
+//        contextResetPoint = nil
     }
     
     private func deleteMessageGroupRecursively(_ group: MessageGroup) {
-        for message in group.allMessages {
-            // Recursively delete any branching messages
-            if let nextGroup = message.next {
-                deleteMessageGroupRecursively(nextGroup)
-            }
-            modelContext?.delete(message)
-        }
-        modelContext?.delete(group)
+//        for message in group.allMessages {
+//            // Recursively delete any branching messages
+//            if let nextGroup = message.next {
+//                deleteMessageGroupRecursively(nextGroup)
+//            }
+//            modelContext?.delete(message)
+//        }
+//        modelContext?.delete(group)
     }
 }
 

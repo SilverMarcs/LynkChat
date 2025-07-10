@@ -109,7 +109,7 @@ struct ChatDetailMobile: View {
             
             Color.clear
                 .frame(height: 1)
-                .modifier(AnimatingCellHeight(height: config.expandColor ? 400 : 1))
+                .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1))
                 .listRowSeparator(.hidden)
             
             Color.clear

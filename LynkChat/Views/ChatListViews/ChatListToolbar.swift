@@ -15,24 +15,24 @@ struct ChatListToolbar: ToolbarContent {
     var body: some ToolbarContent {
         ToolbarSpacer()
         
-#if os(macOS)
-        ToolbarItem(placement: .keyboard) {
-            Button(action: {
-                // Get the indices of the selected chats
-                let indices = chatVM.selections.compactMap { chat in
-                    chats.firstIndex(of: chat)
-                }
-                // Create an IndexSet from the indices
-                let indexSet = IndexSet(indices)
-                // Perform the delete operation
-                deleteItems(indexSet)
-            }) {
-                Image(systemName: "trash")
-            }
-            .keyboardShortcut(.delete, modifiers: [.command])
-            .disabled(chatVM.selections.count <= 0)
-        }
-#endif
+//#if os(macOS)
+//        ToolbarItem(placement: .keyboard) {
+//            Button(action: {
+//                // Get the indices of the selected chats
+//                let indices = chatVM.selections.compactMap { chat in
+//                    chats.firstIndex(of: chat)
+//                }
+//                // Create an IndexSet from the indices
+//                let indexSet = IndexSet(indices)
+//                // Perform the delete operation
+//                deleteItems(indexSet)
+//            }) {
+//                Image(systemName: "trash")
+//            }
+//            .keyboardShortcut(.delete, modifiers: [.command])
+//            .disabled(chatVM.selections.count <= 0)
+//        }
+//#endif
         
         ToolbarSpacer(placement: .primaryAction)
         

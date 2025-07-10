@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct IOSWindow: Scene {
-    @Environment(SettingsVM.self) private var settingsVM
     @Environment(ChatVM.self) private var chatVM
     
     @ObservedObject var config = AppConfig.shared
@@ -18,12 +17,11 @@ struct IOSWindow: Scene {
     
     var body: some Scene {
         @Bindable var chatVM = chatVM
-        @Bindable var settingsVM = settingsVM
         
         WindowGroup("Chats", id: "chats") {
-            TabView(selection: $settingsVM.listState) {
+            TabView {
                 // Chats Tab
-                Tab("Chats", systemImage: "message", value: ListState.chats) {
+                Tab("Chats", systemImage: "message") {
                     NavigationStack(path: $chatVM.chatPath) {
                         ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
                             .searchable(text: $chatVM.searchText)
@@ -48,7 +46,7 @@ struct IOSWindow: Scene {
                 }
                 
                 // Images Tab
-                Tab("Images", systemImage: "photo.on.rectangle.angled", value: ListState.images) {
+                Tab("Images", systemImage: "photo.on.rectangle.angled") {
 //                    NavigationStack {
                         ImageList(selection: $selection)
 //                    }
@@ -64,7 +62,7 @@ struct IOSWindow: Scene {
                 }
                 
                 // Settings Tab
-                Tab("Settings", systemImage: "gear", value: ListState.settings) {
+                Tab("Settings", systemImage: "gear") {
                     SettingsView()
                 }
             }
