@@ -23,7 +23,7 @@ enum InputError: LocalizedError {
             return "Unsupported audio format"
         case .unsupportedFileType:
             return "Unsupported file type"
-        case .tooManyFiles(let current, let max):
+        case .tooManyFiles(_, let max):
             return "Cannot add more files. Maximum number of files (\(max)) reached"
         case .tooManyAudioFiles(let max):
             return "Cannot add more audio files. Maximum number of audio files (\(max)) reached"
