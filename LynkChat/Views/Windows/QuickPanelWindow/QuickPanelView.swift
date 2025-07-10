@@ -133,7 +133,7 @@ struct QuickPanelView: View {
             .buttonStyle(.plain)
             .padding(7)
         }
-        .background(.regularMaterial)
+//        .background(.background.opacity(0.5))
     }
     
     private func resetChat() {

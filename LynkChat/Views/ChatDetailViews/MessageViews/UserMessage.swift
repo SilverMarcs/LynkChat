@@ -40,7 +40,7 @@ struct UserMessage: View {
                         .lineSpacing(2)
                         .padding(4)
                     #else
-                    Text(displayedText)
+                    Text(group.content)
                     #endif
 
 

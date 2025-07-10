@@ -29,9 +29,6 @@ struct ChatDetailMobile: View {
                 .animation(.bouncy, value: chat.currentThread.isEmpty)
                 .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
                 .toolbarTitleMenu {
-//                    Section(chat.title) {
-//                        Button("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))") { }
-//                    }
                     ModelPicker(selectedModel: $chat.config.model)
                 }
                 .toolbarTitleDisplayMode(.inline)
@@ -44,7 +41,6 @@ struct ChatDetailMobile: View {
                 }
                 .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
 //                .onSubmit(of: .search) {
-//                    print("not")
 //                    sendInput()
 //                }
                 .onReceive(NotificationCenter.default.publisher(for: UISearchTextField.textDidEndEditingNotification)) { notification in
