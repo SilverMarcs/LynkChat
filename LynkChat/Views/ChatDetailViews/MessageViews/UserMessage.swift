@@ -17,66 +17,36 @@ struct UserMessage: View {
     @ObservedObject var config = AppConfig.shared
     
     var group: MessageGroup
-
-    @State var isExpanded: Bool = false
     @State var showingTextSelection = false
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
+            if chat.inputManager.editingMessage == self.group.activeMessage {
+                Text("Editing")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            
             if !group.dataFiles.isEmpty {
                 DataFilesView(dataFiles: group.dataFiles)
                     .transaction { $0.animation = nil }
             }
             
-//            GroupBox {
-                VStack(alignment: .leading, spacing: 0) {
-                    #if os(macOS)
-                    
-//                    HighlightableTextView(group.content, highlightedText: searchText)
-                    Text(String(group.content.prefix(400)))
-                        .lineLimit(4)
-                        .textSelection(.enabled)
-                        .font(.system(size: config.fontSize))
-                        .lineSpacing(2)
-                        .padding(4)
-                    #else
-                    Text(group.content)
-                    #endif
-
-
-                    
-//                    if shouldShowMoreButton {
-//                        Button {
-//                            isExpanded.toggle()
-//                            if !isExpanded {
-//                                Scroller.scroll(to: .top, of: group)
-//                            }
-//                        } label: {
-//                            Text(isExpanded ? "Less" : "More")
-//                                .font(.callout)
-//                                .foregroundStyle(.accent)
-//                        }
-//                        .buttonStyle(.plain)
-//                        .padding(.leading, 4)
-//                        .padding(.bottom, 2)
-//                    }
-                }
-                .padding(padding)
-                .background(
-                    RoundedRectangle(
-                        cornerRadius: 18,
-                    )
+            Group {
+                #if os(macOS)
+                ExpandableText(text: group.content)
+                #else
+                Text(group.content)
+                #endif
+            }
+            .padding(padding)
+            .background(
+                RoundedRectangle(cornerRadius: 18)
                     .fill(.background.tertiary)
                     .stroke(.quaternary, lineWidth: 1)
-
-                )
-//            }
+            )
             .transaction { $0.animation = nil }
-//            .background(
-//                RoundedRectangle(cornerRadius: 5)
-//                    .fill(chat.inputManager.editingMessage == self.group.activeMessage ? Color.accentColor.opacity(0.2) : .clear)
-//            )
-//            
+            
             #if os(macOS)
             if group.allMessages.count > 1 {
                 NavigationButtons(message: group)
@@ -101,7 +71,7 @@ struct UserMessage: View {
     
     var padding: CGFloat {
         #if os(macOS)
-        7
+        10
         #else
         11
         #endif
@@ -114,22 +84,44 @@ struct UserMessage: View {
         60
         #endif
     }
-    
-//    private var displayedText: String {
-//        let maxCharacters = 400
-//        if isExpanded || !chatVM.searchText.isEmpty {
-//            return group.content
-//        } else {
-//            return String(group.content.prefix(maxCharacters))
-//        }
-//    }
-//
-//    private var shouldShowMoreButton: Bool {
-//        group.content.count > 400 && chatVM.searchText.isEmpty
-//    }
 }
 
-#Preview {
-    UserMessage(group: .mockUserGroup)
-        .frame(width: 500, height: 300)
+struct ExpandableText: View {
+    let text: String
+    let maxCharacters: Int
+    
+    @State private var isExpanded = false
+    private let needsExpansion: Bool
+    
+    init(text: String, maxCharacters: Int = 400) {
+        self.text = text
+        self.maxCharacters = maxCharacters
+        self.needsExpansion = text.count > maxCharacters
+    }
+    
+    var body: some View {
+        VStack(alignment: .trailing) {
+            Text(displayedText)
+                .textSelection(.enabled)
+                .font(.system(size: AppConfig.shared.fontSize))
+                .lineSpacing(2)
+            
+            if needsExpansion {
+                Button {
+                    isExpanded.toggle()
+                } label: {
+                    Text(isExpanded ? "Show Less" : "Show More")
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.capsule)
+            }
+        }
+    }
+    
+    private var displayedText: String {
+        guard needsExpansion && !isExpanded else {
+            return text
+        }
+        return String(text.prefix(maxCharacters))
+    }
 }

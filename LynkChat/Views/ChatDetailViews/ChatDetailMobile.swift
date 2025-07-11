@@ -21,54 +21,77 @@ struct ChatDetailMobile: View {
     
     var body: some View {
         ScrollViewReader { proxy in
-            content
-                .scrollDismissesKeyboard(.interactively)
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    InputArea(chat: chat)
+            List {
+                TipView(ContextMenuTip())
+                    .frame(maxWidth: 300, alignment: .trailing)
+                
+                ForEach(chat.currentThread, id: \.self) { group in
+                    MessageView(group: group)
+                        .environment(\.chat, chat)
                 }
-                .animation(.bouncy, value: chat.currentThread.isEmpty)
-                .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
-                .toolbarTitleMenu {
-                    ModelPicker(selectedModel: $chat.config.model)
-                }
-                .toolbarTitleDisplayMode(.inline)
-                .listStyle(.plain)
-                .task {
-                    onAppearStuff(proxy: proxy)
-                }
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
-                    Scroller.scrollToBottom(delay: 0.1)
-                }
-                .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
+                .listRowSeparator(.hidden)
+                
+                ErrorMessageView(chat: chat)
+                
+                Color.clear
+                    .frame(height: 1)
+                    .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1))
+                    .listRowSeparator(.hidden)
+                
+                Color.clear
+                    .frame(height: 1)
+                    .transaction { $0.animation = nil }
+                    .id(String.bottomID)
+                    .listRowSeparator(.hidden)
+            }
+            .contentMargins(.bottom, -40)
+            .scrollDismissesKeyboard(.interactively)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                InputArea(chat: chat)
+            }
+            .animation(.bouncy, value: chat.currentThread.isEmpty)
+            .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
+            .toolbarTitleMenu {
+                ModelPicker(selectedModel: $chat.config.model)
+            }
+            .toolbarTitleDisplayMode(.inline)
+            .listStyle(.plain)
+            .task {
+                onAppearStuff(proxy: proxy)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)) { _ in
+                Scroller.scrollToBottom(delay: 0.1)
+            }
+            .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
 //                .onSubmit(of: .search) {
 //                    sendInput()
 //                }
-                .onReceive(NotificationCenter.default.publisher(for: UISearchTextField.textDidEndEditingNotification)) { notification in
-                    sendInput()
+            .onReceive(NotificationCenter.default.publisher(for: UISearchTextField.textDidEndEditingNotification)) { notification in
+                sendInput()
+            }
+            .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    ChatInputMenu(chat: chat)
                 }
-                .toolbar {
-                    ToolbarItem(placement: .bottomBar) {
-                        ChatInputMenu(chat: chat)
-                    }
-                    
+                
+                ToolbarSpacer(.fixed, placement: .bottomBar)
+                
+                DefaultToolbarItem(kind: .search, placement: .bottomBar)
+                
+                if chat.isReplying {
                     ToolbarSpacer(.fixed, placement: .bottomBar)
                     
-                    DefaultToolbarItem(kind: .search, placement: .bottomBar)
-                    
-                    if chat.isReplying {
-                        ToolbarSpacer(.fixed, placement: .bottomBar)
-                        
-                        ToolbarItem(placement: .bottomBar) {
-                            Button(role: .destructive) {
-                                chat.stopStreaming()
-                            } label: {
-                                Image(systemName: "stop.fill")
-                                    .foregroundStyle(.red)
-                            }
+                    ToolbarItem(placement: .bottomBar) {
+                        Button(role: .destructive) {
+                            chat.stopStreaming()
+                        } label: {
+                            Image(systemName: "stop.fill")
+                                .foregroundStyle(.red)
                         }
                     }
                 }
-                .toolbar(.hidden, for: .tabBar)
+            }
+            .toolbar(.hidden, for: .tabBar)
         }
     }
     
@@ -79,47 +102,47 @@ struct ChatDetailMobile: View {
         }
     }
     
-    @ViewBuilder
-    var content: some View {
-        if chat.currentThread.isEmpty {
-            VStack {                
-                Image(chat.config.model.imageName)
-                    .font(.largeTitle)
-                    .foregroundStyle(Color(hex: chat.config.model.color).gradient)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding()
-        } else {
-            list
-        }
-    }
-    
-    var list: some View {
-        List {
-            TipView(ContextMenuTip())
-                .frame(maxWidth: 300, alignment: .trailing)
-            
-            ForEach(chat.currentThread, id: \.self) { group in
-                MessageView(group: group)
-                    .environment(\.chat, chat)
-            }
-            .listRowSeparator(.hidden)
-            
-            ErrorMessageView(chat: chat)
-            
-            Color.clear
-                .frame(height: 1)
-                .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1))
-                .listRowSeparator(.hidden)
-            
-            Color.clear
-                .frame(height: 1)
-                .transaction { $0.animation = nil }
-                .id(String.bottomID)
-                .listRowSeparator(.hidden)
-        }
-        .contentMargins(.bottom, -40)
-    }
+//    @ViewBuilder
+//    var content: some View {
+//        if chat.currentThread.isEmpty {
+//            VStack {                
+//                Image(chat.config.model.imageName)
+//                    .font(.largeTitle)
+//                    .foregroundStyle(Color(hex: chat.config.model.color).gradient)
+//            }
+//            .frame(maxWidth: .infinity, maxHeight: .infinity)
+//            .padding()
+//        } else {
+//            list
+//        }
+//    }
+//    
+//    var list: some View {
+//        List {
+//            TipView(ContextMenuTip())
+//                .frame(maxWidth: 300, alignment: .trailing)
+//            
+//            ForEach(chat.currentThread, id: \.self) { group in
+//                MessageView(group: group)
+//                    .environment(\.chat, chat)
+//            }
+//            .listRowSeparator(.hidden)
+//            
+//            ErrorMessageView(chat: chat)
+//            
+//            Color.clear
+//                .frame(height: 1)
+//                .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1))
+//                .listRowSeparator(.hidden)
+//            
+//            Color.clear
+//                .frame(height: 1)
+//                .transaction { $0.animation = nil }
+//                .id(String.bottomID)
+//                .listRowSeparator(.hidden)
+//        }
+//        .contentMargins(.bottom, -40)
+//    }
     
     // Rest of the helper methods and computed properties
     func onAppearStuff(proxy: ScrollViewProxy) {
