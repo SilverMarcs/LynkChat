@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DebugSettings: View {
     @Environment(\.openWindow) var openWindow
-    @Environment(SettingsVM.self) var settingsVM
     @Environment(\.openURL) var openURL
     
     @ObservedObject var config = AppConfig.shared
@@ -19,9 +18,10 @@ struct DebugSettings: View {
         Form {
             Section("API Settings") {
                 TextField("API Key", text: $config.myApiKey)
+                
                 Toggle(isOn: $config.useLocalhost) {
                     Text("Use Localhost")
-                    Text("Using \(String.apiHost)")
+                    Text(String.apiHost.replacingOccurrences(of: "/api", with: ""))
                 }
                 
                 LabeledContent("Opens API Webview") {

@@ -12,9 +12,7 @@ import AppIntents
 
 @main
 struct LynkChatApp: App {
-    #if os(macOS)
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    #else
+    #if !os(macOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
     

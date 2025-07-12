@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct GenericOnboardingView<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     let icon: String
@@ -17,50 +19,57 @@ struct GenericOnboardingView<Content: View>: View {
     let footerText: String
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 20) {
-                Spacer()
-                
-                // Icon and Title
-                VStack(spacing: 10) {
-                    Group {
-                        if useSFSymbol {
-                            Image(systemName: icon)
-                        } else {
-                            Image(icon)
-                                .scaleEffect(1.1)
-                        }
+        VStack(spacing: 20) {
+            Spacer()
+            
+            // Icon and Title
+            VStack(spacing: 16) {
+                Group {
+                    if useSFSymbol {
+                        Image(systemName: icon)
+                            .font(.system(size: 80))
+                    } else {
+                        Image(icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 80)
                     }
-                    .foregroundStyle(iconColor)
-                    .font(.system(size: geometry.size.height * 0.1))
-                    
-                    Text(title)
-                        .font(.title)
-                        .bold()
                 }
-                .frame(height: geometry.size.height * 0.25)
-                .animation(.default, value: icon)
-                .animation(.default, value: iconColor)
-                .multilineTextAlignment(.center)
+                .foregroundStyle(iconColor)
                 
-                // Content
-                content()
-                    .scrollDisabled(true)
-                    .formStyle(.grouped)
-                    #if os(iOS)
-                    .scrollContentBackground(colorScheme == .dark ? .visible : .hidden)
-                    #endif
-                    .frame(height: geometry.size.height * 0.4)
-                
-                Spacer()
-                
-                // Footer
-                Text(footerText)
-                    .italic()
-                    .foregroundStyle(.secondary)
-                
-                Spacer()
+                Text(title)
+                    .font(.title)
+                    .bold()
             }
+            .padding(.bottom)
+            .animation(.default, value: icon)
+            .animation(.default, value: iconColor)
+            .multilineTextAlignment(.center)
+            
+            // Content
+            content()
+                .scrollDisabled(true)
+                .formStyle(.grouped)
+                #if !os(macOS)
+                .scrollContentBackground(colorScheme == .dark ? .visible : .hidden)
+                .padding(-20)
+                #endif
+            
+            Spacer()
+            
+            // Footer
+            Text(footerText)
+                .italic()
+                .foregroundStyle(.secondary)
+                .padding(.bottom)
         }
+        .padding()
+    }
+}
+
+// Helper ViewModifier to limit maximum width
+extension View {
+    func maxWidth(_ width: CGFloat) -> some View {
+        frame(maxWidth: width)
     }
 }

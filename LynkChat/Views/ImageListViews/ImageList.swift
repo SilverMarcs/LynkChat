@@ -29,7 +29,7 @@ struct ImageList: View {
     private var list: some View {
         #if os(macOS)
         List(selection: $selection) {
-            ChatListCards(source: .images, chatCount: "↗", imageSessionsCount: String(sessions.count))
+            ChatListCards(chatCount: "↗", imageSessionsCount: String(sessions.count))
             
             ForEach(sessions) { session in
                 ImageRow(session: session)

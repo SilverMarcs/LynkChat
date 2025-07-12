@@ -18,7 +18,7 @@ struct ChatListMac: View {
     
     var body: some View {
         List(selection: $chatVM.selections) {
-            ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
+            ChatListCards(chatCount: String(chats.count), imageSessionsCount: "↗")
             
             ForEach(chats, id: \.self) { chat in
                 ChatListRow(chat: chat)

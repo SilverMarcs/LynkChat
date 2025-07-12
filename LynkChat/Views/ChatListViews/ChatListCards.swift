@@ -12,10 +12,10 @@ struct ChatListCards: View {
     @Environment(\.isSearching) private var isSearching
     @Environment(\.openWindow) var openWindow
     @Environment(\.dismissWindow) var dismissWindow
+    @Environment(\.windowType) private var windowType
     
     @ObservedObject var config = AppConfig.shared
-    
-    var source: ListState
+
     var chatCount: String
     var imageSessionsCount: String
     
@@ -46,14 +46,12 @@ struct ChatListCards: View {
     }
     
     func handleChatPress() {
-        switch source {
+        switch windowType {
         case .chats:
             cycleChatStatus()
         case .images:
             openWindow(id: WindowID.chats)
             dismissWindow(id: "images")
-        default:
-            break
         }
     }
     
@@ -76,5 +74,11 @@ struct ChatListCards: View {
 }
 
 #Preview {
-    ChatListCards(source: .chats, chatCount: "5", imageSessionsCount: "?")
+    ChatListCards(chatCount: "5", imageSessionsCount: "?")
+        .environment(\.windowType, .chats)
+}
+
+enum WindowType: String, CaseIterable {
+    case chats
+    case images
 }

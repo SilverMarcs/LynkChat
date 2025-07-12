@@ -93,9 +93,6 @@
 					ios,
 					xros,
 				);
-				Views/Windows/AppDelegate/NSAppDelegate.swift = (
-					macos,
-				);
 				Views/Windows/ChatContentView.swift = (
 					macos,
 				);

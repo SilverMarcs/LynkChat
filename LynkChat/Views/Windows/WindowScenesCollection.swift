@@ -10,8 +10,10 @@ import SwiftUI
 struct WindowScenesCollection: Scene {
     var body: some Scene {
         ChatWindow()
+            .environment(\.windowType, .chats)
         
         ImageWindow()
+            .environment(\.windowType, .images)
         
         SettingsWindow()
         
