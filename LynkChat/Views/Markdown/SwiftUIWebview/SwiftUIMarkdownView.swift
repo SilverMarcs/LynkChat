@@ -8,7 +8,6 @@
 import SwiftUI
 import WebKit
 
-@available(iOS 26.0, macOS 26.0, *)
 struct SwiftUIMarkdownView: View {
     var markdownContent: String
     var calculatedHeight: Binding<CGFloat>?
