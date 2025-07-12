@@ -57,7 +57,7 @@ struct ChatDetailMac: View {
             }
             .contentMargins(.all, 15, for: .scrollContent)
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
-            .navigationSubtitle("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))")
+            .navigationSubtitle(unsafe "Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))")
             .task {
                 onAppearStuff(proxy: proxy)
             }

@@ -8,7 +8,7 @@
 import AppKit
 import Carbon
 
-class HotKeyManager {
+@safe class HotKeyManager {
     private var eventHandler: EventHandlerRef?
     private var hotKeyRef: EventHotKeyRef?
     
@@ -27,7 +27,7 @@ class HotKeyManager {
         let hotKeyID = EventHotKeyID(signature: hotKeySignature, id: self.hotKeyID)
         
         // Register Option + Space
-        let registerError = RegisterEventHotKey(
+        let registerError = unsafe RegisterEventHotKey(
             UInt32(kVK_Space), // Space key
             UInt32(optionKey), // Option modifier
             hotKeyID,
@@ -47,11 +47,11 @@ class HotKeyManager {
                          eventKind: UInt32(kEventHotKeyPressed))
         ]
         
-        InstallEventHandler(
+        unsafe InstallEventHandler(
             GetEventDispatcherTarget(),
             { (_, event, _) -> OSStatus in
                 var hotKeyID = EventHotKeyID()
-                let error = GetEventParameter(
+                let error = unsafe GetEventParameter(
                     event,
                     UInt32(kEventParamDirectObject),
                     UInt32(typeEventHotKeyID),
@@ -76,11 +76,11 @@ class HotKeyManager {
     }
     
     deinit {
-        if let hotKeyRef = hotKeyRef {
-            UnregisterEventHotKey(hotKeyRef)
+        if let hotKeyRef = unsafe hotKeyRef {
+            unsafe UnregisterEventHotKey(hotKeyRef)
         }
-        if let eventHandler = eventHandler {
-            RemoveEventHandler(eventHandler)
+        if let eventHandler = unsafe eventHandler {
+            unsafe RemoveEventHandler(eventHandler)
         }
     }
     

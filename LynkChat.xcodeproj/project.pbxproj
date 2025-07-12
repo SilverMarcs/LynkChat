@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0829F56C2DFEAD3600BDA583 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, xros, ); productRef = 0829F56B2DFEAD3600BDA583 /* HighlightSwift */; };
 		08AF6F732DFEA57A00C4FC6C /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, xros, ); productRef = 08AF6F722DFEA57A00C4FC6C /* MarkdownUI */; };
 /* End PBXBuildFile section */
 
@@ -139,7 +138,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				08AF6F732DFEA57A00C4FC6C /* MarkdownUI in Frameworks */,
-				0829F56C2DFEAD3600BDA583 /* HighlightSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,7 +181,6 @@
 			name = LynkChat;
 			packageProductDependencies = (
 				08AF6F722DFEA57A00C4FC6C /* MarkdownUI */,
-				0829F56B2DFEAD3600BDA583 /* HighlightSwift */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -215,7 +212,6 @@
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
 				08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
-				0829F56A2DFEAD3600BDA583 /* XCRemoteSwiftPackageReference "HighlightSwift" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -517,14 +513,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0829F56A2DFEAD3600BDA583 /* XCRemoteSwiftPackageReference "HighlightSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SilverMarcs/HighlightSwift";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
@@ -536,11 +524,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0829F56B2DFEAD3600BDA583 /* HighlightSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0829F56A2DFEAD3600BDA583 /* XCRemoteSwiftPackageReference "HighlightSwift" */;
-			productName = HighlightSwift;
-		};
 		08AF6F722DFEA57A00C4FC6C /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;

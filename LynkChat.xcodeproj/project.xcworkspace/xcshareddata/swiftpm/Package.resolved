@@ -1,15 +1,6 @@
 {
-  "originHash" : "c40b668b16de449cd4f193b1968bdb3854d99c0db9a014a006e305fd2e4f442d",
+  "originHash" : "04d9e4d8045a6310349928a2f8d2e6c6fe1c41e0c952a800e312800fac9624f9",
   "pins" : [
-    {
-      "identity" : "highlightswift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SilverMarcs/HighlightSwift",
-      "state" : {
-        "branch" : "main",
-        "revision" : "0a67074838759f14279113b53b5415152f6373c7"
-      }
-    },
     {
       "identity" : "networkimage",
       "kind" : "remoteSourceControl",

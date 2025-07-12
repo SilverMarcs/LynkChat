@@ -78,7 +78,7 @@ struct SwiftMarkdownView: PlatformViewRepresentable {
 class WebViewContainer: NSView {
     override func rightMouseDown(with event: NSEvent) {
         // Pass the event to the next responder (parent view)
-        superview?.rightMouseDown(with: event)
+        unsafe superview?.rightMouseDown(with: event)
     }
 }
 #endif

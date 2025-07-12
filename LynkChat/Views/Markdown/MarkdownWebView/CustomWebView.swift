@@ -20,7 +20,7 @@ class CustomWebView: WKWebView {
     #if os(macOS)
     override public func scrollWheel(with event: NSEvent) {
         super.scrollWheel(with: event)
-        nextResponder?.scrollWheel(with: event)
+        unsafe nextResponder?.scrollWheel(with: event)
     }
 
     /// Removes "Reload" from the context menu.
@@ -30,7 +30,7 @@ class CustomWebView: WKWebView {
     
     override public func rightMouseDown(with event: NSEvent) {
         // Pass the event to the container view
-        superview?.rightMouseDown(with: event)
+        unsafe superview?.rightMouseDown(with: event)
     }
     #endif
 
