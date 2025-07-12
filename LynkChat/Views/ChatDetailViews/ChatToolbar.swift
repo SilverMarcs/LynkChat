@@ -35,7 +35,7 @@ struct ChatToolbar: ToolbarContent {
         
         #if os(macOS)
         ToolbarItemGroup(placement: .primaryAction) {
-            SimpleToolsToggleView(config: $chat.config)
+            ToolsToggleView(config: $chat.config)
         }
         
         ToolbarSpacer(.fixed)

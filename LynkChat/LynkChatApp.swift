@@ -12,8 +12,6 @@ import AppIntents
 
 @main
 struct LynkChatApp: App {
-    @State private var settingsVM: SettingsVM = SettingsVM()
-    
     #if os(macOS)
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #else
@@ -29,7 +27,6 @@ struct LynkChatApp: App {
             #endif
         }
         .commands { MenuCommands() }
-        .environment(settingsVM)
         .modelContainer(globalContainer)
     }
     

@@ -21,7 +21,6 @@ struct ChatDetailMac: View {
         ScrollViewReader { proxy in
             ScrollView {
                 ForEach(chat.currentThread, id: \.self) { group in
-                    
                     MessageView(group: group)
                         .environment(\.chat, chat)
                 }

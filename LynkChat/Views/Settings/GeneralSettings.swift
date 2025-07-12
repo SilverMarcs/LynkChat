@@ -10,7 +10,6 @@ import SwiftData
 
 struct GeneralSettings: View {
     @Environment(\.modelContext) var modelContext
-    @Environment(SettingsVM.self) private var settingsVM
     
     @ObservedObject var config = AppConfig.shared
 
@@ -32,7 +31,6 @@ struct GeneralSettings: View {
             Section {
                 LabeledContent("Restart Onboarding") {
                     Button("Launch") {
-                        settingsVM.showSettings = false
                         config.hasCompletedOnboarding = false
                     }
                 }

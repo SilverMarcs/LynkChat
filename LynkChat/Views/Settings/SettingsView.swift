@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-    @Environment(SettingsVM.self) private var settingsVM
     @ObservedObject var config = AppConfig.shared
     
     var body: some View {
@@ -72,9 +71,9 @@ struct SettingsView: View {
         }
         .toolbarTitleDisplayMode(.inlineLarge)
         .navigationTitle("Settings")
+        .scrollContentBackground(.visible)
         #if !os(macOS) && !os(visionOS)
         .scrollDismissesKeyboard(.immediately)
         #endif
-        .scrollContentBackground(.visible)
     }
 }

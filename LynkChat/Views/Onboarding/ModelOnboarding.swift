@@ -30,10 +30,7 @@ struct ModelOnboarding: View {
                     Section {
                         Toggle("Enter to send messages", isOn: $config.enterToSend)
                     } footer: {
-//                        #if os(macOS)
-//                        Text("Keep disabled for better performance.")
-//                        #endif
-                        SectionFooterView(text: "Keep disabled for better performance.")
+                        Text("Keep disabled for better performance.")
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))

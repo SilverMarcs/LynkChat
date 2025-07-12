@@ -18,7 +18,5 @@ struct WindowScenesCollection: Scene {
         AboutWindow()
         
         HelpWindow()
-        
-        DebugWebWindow()
     }
 }

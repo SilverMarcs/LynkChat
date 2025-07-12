@@ -8,12 +8,16 @@
 import Foundation
 
 @Observable class SettingsVM {
-    var listState: ListState = .chats
-    var showSettings = false
+    static let shared = SettingsVM()
     
-    #if os(macOS)
-    var settingsTab: SettingsTab? = .general
-    #else
-    var settingsTab: SettingsTab?
-    #endif
+    var listState: ListState = .chats
+    
+    private init() {}
+}
+
+enum ListState: String, CaseIterable {
+    case chats
+    case images
+    case search
+    case settings
 }

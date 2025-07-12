@@ -10,6 +10,7 @@ import SwiftUI
 struct DebugSettings: View {
     @Environment(\.openWindow) var openWindow
     @Environment(SettingsVM.self) var settingsVM
+    @Environment(\.openURL) var openURL
     
     @ObservedObject var config = AppConfig.shared
     @State private var showWebView = false
@@ -25,17 +26,8 @@ struct DebugSettings: View {
                 
                 LabeledContent("Opens API Webview") {
                     Button("Open Window") {
-                        #if os(macOS)
-                        openWindow(id: WindowID.debugWeb)
-                        #else
-                        showWebView = true
-                        #endif
+                        openURL(URL(string: String.apiHost)!, prefersInApp: true)
                     }
-                    #if !os(macOS)
-                    .fullScreenCover(isPresented: $showWebView) {
-                        DebugWebview()
-                    }
-                    #endif
                 }
             }
             
@@ -70,7 +62,6 @@ struct DebugSettings: View {
                 LabeledContent {
                     Button("Hide Debug") {
                         config.showDebugMenu.toggle()
-                        settingsVM.settingsTab = .general
                     }
                 } label: {
                     Text("Controls visibility of this page")

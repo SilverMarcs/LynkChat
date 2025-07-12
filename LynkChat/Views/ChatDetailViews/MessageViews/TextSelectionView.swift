@@ -15,24 +15,12 @@ struct TextSelectionView: View {
 
     var body: some View {
         NavigationStack {
-            Group {
-                #if !os(macOS)
-                SelectableTextView(text: content)
-                #else
-                ScrollView {
-                    Text(content)
-                        .safeAreaPadding()
-                        .multilineTextAlignment(.leading)
-                        .textSelection(.enabled)
-                }
-                .frame(width: 700, height: 700)
-                #endif
-                }
+            SelectableTextView(text: content)
                 .navigationTitle("Select Text")
                 .toolbarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
-                        Button("Done") {
+                        Button(role: .close) {
                             dismiss()
                         }
                     }

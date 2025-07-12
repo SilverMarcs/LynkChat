@@ -12,7 +12,7 @@ struct MessageView: View {
     var group: MessageGroup
     
     var body: some View {
-        VStack(alignment: .center, spacing: 0) {
+        Group {
             switch group.role {
             case .user:
                 UserMessage(group: group)

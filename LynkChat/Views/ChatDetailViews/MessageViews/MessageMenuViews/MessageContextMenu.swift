@@ -1,5 +1,5 @@
 //
-//  MessageMenu.swift
+//  MessageContextMenu.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 04/07/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MessageMenu: View {
+struct MessageContextMenu: View {
     @Environment(\.chat) var chat
     @Bindable var group: MessageGroup
     var toggleTextSelection: (() -> Void)? = nil
@@ -100,8 +100,8 @@ struct MessageMenu: View {
 
 #Preview {
     VStack {
-        MessageMenu(group: .mockUserGroup)
-        MessageMenu(group: .mockAssistantGroup)
+        MessageContextMenu(group: .mockUserGroup)
+        MessageContextMenu(group: .mockAssistantGroup)
     }
     .frame(width: 500)
     .padding()

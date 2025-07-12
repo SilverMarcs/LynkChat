@@ -24,7 +24,6 @@ struct ImageContentView: View {
             } else {
                 Text("Select or create an image session")
                     .font(.title)
-                    .fullScreenBackground()
             }
         }
         .inspector(isPresented: $showingInspector) {

@@ -65,6 +65,7 @@ struct EmptyChat: View {
                                 .frame(height: 20)
                             }
                             .buttonStyle(.glass)
+                            .buttonBorderShape(.capsule)
                         }
                     }
                 }

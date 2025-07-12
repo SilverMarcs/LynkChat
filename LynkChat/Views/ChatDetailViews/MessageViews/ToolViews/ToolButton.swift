@@ -33,7 +33,6 @@ struct ToolButton: View {
                 .padding(3)
                 #endif
             }
-            .groupBoxStyle(PlatformGroupBoxStyle())
         }
         .buttonStyle(.plain)
         .popover(isPresented: $showArguments) {

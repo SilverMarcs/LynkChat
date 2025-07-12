@@ -18,7 +18,6 @@ struct FileProcessingView: View {
                     .padding(3)
                     .transition(.opacity)
             }
-            .groupBoxStyle(PlatformGroupBoxStyle())
             .animation(.easeIn, value: content != nil) // Add animation
 //        }
     }

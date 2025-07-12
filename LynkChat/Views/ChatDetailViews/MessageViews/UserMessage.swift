@@ -52,7 +52,7 @@ struct UserMessage: View {
         .frame(maxWidth: .infinity, alignment: .trailing)
         .contentShape(.rect)
         .contextMenu {
-            MessageMenu(group: group) {
+            MessageContextMenu(group: group) {
                 showingTextSelection.toggle()
             }
         } preview: {
@@ -60,9 +60,11 @@ struct UserMessage: View {
                 .padding()
         }
         .padding(.leading, leadingPadding)
+        #if !os(macOS)
         .sheet(isPresented: $showingTextSelection) {
             TextSelectionView(content: group.content)
         }
+        #endif
     }
     
     var padding: CGFloat {

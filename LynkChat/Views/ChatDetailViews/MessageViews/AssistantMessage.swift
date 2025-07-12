@@ -65,7 +65,7 @@ struct AssistantMessage: View {
         .transaction { $0.animation = nil }
         .frame(maxWidth: .infinity, alignment: .leading)
         .contextMenu {
-            MessageMenu(group: group) {
+            MessageContextMenu(group: group) {
                 showingTextSelection.toggle()
             }
         } preview: {
@@ -74,9 +74,11 @@ struct AssistantMessage: View {
         }
         .padding(.leading, 26)
         .padding(.trailing, 30)
+        #if !os(macOS)
         .sheet(isPresented: $showingTextSelection) {
-            TextSelectionView(content: message.content)
+            TextSelectionView(content: group.content)
         }
+        #endif
     }
 }
 

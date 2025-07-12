@@ -32,7 +32,6 @@ struct ChatContentView: View {
                     ? "^[\(chatVM.selections.count) Chat](inflect: true) Selected"
                     : "Select or create a chat to get started")
                     .font(.title)
-                    .fullScreenBackground()
             }
         }
         .onAppear {

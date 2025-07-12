@@ -7,45 +7,41 @@
 
 import SwiftUI
 
-struct SimpleToolsToggleView: View {
+struct ToolsToggleView: View {
     @Binding var config: ChatConfig
     
     var body: some View {
-//        ControlGroup {
-            // Web Search & Scrape Links Toggle
-            Toggle(isOn: Binding(
-                get: {
-                    config.isToolEnabled(.webSearch) && config.isToolEnabled(.scrapeLinks)
-                },
-                set: { newValue in
-                    if newValue {
-                        config.enableTool(.webSearch)
-                        config.enableTool(.scrapeLinks)
-                    } else {
-                        config.disableTool(.webSearch)
-                        config.disableTool(.scrapeLinks)
-                    }
+        Toggle(isOn: Binding(
+            get: {
+                config.isToolEnabled(.webSearch) && config.isToolEnabled(.scrapeLinks)
+            },
+            set: { newValue in
+                if newValue {
+                    config.enableTool(.webSearch)
+                    config.enableTool(.scrapeLinks)
+                } else {
+                    config.disableTool(.webSearch)
+                    config.disableTool(.scrapeLinks)
                 }
-            )) {
-                Label(Tool.webSearch.title, systemImage: Tool.webSearch.iconName)
             }
-            
-            // Image Generation Toggle
-            Toggle(isOn: Binding(
-                get: {
-                    config.isToolEnabled(.imageGeneration)
-                },
-                set: { newValue in
-                    if newValue {
-                        config.enableTool(.imageGeneration)
-                    } else {
-                        config.disableTool(.imageGeneration)
-                    }
+        )) {
+            Label(Tool.webSearch.title, systemImage: Tool.webSearch.iconName)
+        }
+        
+        // Image Generation Toggle
+        Toggle(isOn: Binding(
+            get: {
+                config.isToolEnabled(.imageGeneration)
+            },
+            set: { newValue in
+                if newValue {
+                    config.enableTool(.imageGeneration)
+                } else {
+                    config.disableTool(.imageGeneration)
                 }
-            )) {
-                Label(Tool.imageGeneration.title, systemImage: Tool.imageGeneration.iconName)
             }
-//        }
-//        .controlGroupStyle(.navigation))
+        )) {
+            Label(Tool.imageGeneration.title, systemImage: Tool.imageGeneration.iconName)
+        }
     }
 }

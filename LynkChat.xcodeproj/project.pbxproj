@@ -25,10 +25,6 @@
 				Utils/HotKeyManager.swift = (
 					macos,
 				);
-				Views/BottomViews/iOS/BottomBar.swift = (
-					ios,
-					xros,
-				);
 				Views/BottomViews/iOS/CameraView.swift = (
 					ios,
 				);
@@ -53,6 +49,10 @@
 					ios,
 					xros,
 				);
+				Views/ChatDetailViews/MessageViews/TextSelectionView.swift = (
+					ios,
+					xros,
+				);
 				Views/ChatDetailViews/PasteHandler.swift = (
 					macos,
 				);
@@ -69,10 +69,7 @@
 				Views/CustomUI/AutoHeightTextView.swift = (
 					macos,
 				);
-				Views/CustomUI/CustomSearchField.swift = (
-					macos,
-				);
-				Views/Markdown/NativeMDView/CodeBlock.swift = (
+				Views/Markdown/NativeMDView/MessageMarkdownView.swift = (
 					ios,
 					xros,
 				);
@@ -103,9 +100,6 @@
 					macos,
 				);
 				Views/Windows/ChatWindow.swift = (
-					macos,
-				);
-				Views/Windows/DebugWebWindow.swift = (
 					macos,
 				);
 				Views/Windows/HelpWindow.swift = (

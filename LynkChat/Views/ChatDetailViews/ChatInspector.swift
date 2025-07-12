@@ -49,15 +49,7 @@ struct ChatInspector: View {
             
             if chat.config.model.supportsTool {
                 Section("Plugins") {
-//                    LabeledContent("Enable") {
-//                        ToolsBarView(config: $chat.config)
-//                            .padding(.bottom, -7)
-//                            #if !os(macOS)
-//                            .padding(.top, -5)
-//                            #endif
-//                    }
-//                    .frame(height: 25)
-                    SimpleToolsToggleView(config: $chat.config)
+                    ToolsToggleView(config: $chat.config)
                 }
             }
             
@@ -69,7 +61,6 @@ struct ChatInspector: View {
 //                VStack {
 //                    exportButton
 //                    Divider()
-//                    deleteAllMessages
 //                }
 //            }
         }
@@ -77,8 +68,15 @@ struct ChatInspector: View {
         .presentationDragIndicator(.visible)
         #if os(macOS)
         .overlay(alignment: .topTrailing) {
-            DismissButton()
-                .padding(10)
+            Button(role: .close) {
+                dismiss()
+            } label: {
+                Image(systemName: "xmark")
+            }
+            .controlSize(.large)
+            .buttonStyle(.glass)
+            .buttonBorderShape(.circle)
+            .padding(10)
         }
         #endif
     }
@@ -115,31 +113,6 @@ struct ChatInspector: View {
         .foregroundStyle(.mint.gradient)
     }
     
-    private var deleteAllMessages: some View {
-        Button(role: .destructive) {
-            if chat.isReplying { return }
-            
-            showingDeleteConfirmation.toggle()
-        } label: {
-            Text("Delete All Messages")
-                .frame(maxWidth: .infinity)
-                .contentShape(Rectangle())
-        }
-        .foregroundStyle(.red)
-        #if os(macOS)
-        .buttonStyle(ClickHighlightButton())
-        #else
-        .buttonStyle(.plain)
-        #endif
-        .confirmationDialog("Are you sure you want to delete all messages?", isPresented: $showingDeleteConfirmation) {
-            Button("Delete All", role: .destructive) {
-                chat.deleteAllMessages()
-                dismiss()
-            }
-            
-            Button("Cancel", role: .cancel) {}
-        }
-    }
     
     private var exportButton: some View {
         Button {
@@ -149,11 +122,6 @@ struct ChatInspector: View {
                 .frame(maxWidth: .infinity)
                 .contentShape(Rectangle())
         }
-        #if os(macOS)
-        .buttonStyle(ClickHighlightButton())
-        #else
-        .buttonStyle(.plain)
-        #endif
         .foregroundStyle(.accent)
         .fileExporter(
             isPresented: $isExportingMarkdown,
