@@ -66,10 +66,3 @@ struct GenericOnboardingView<Content: View>: View {
         .padding()
     }
 }
-
-// Helper ViewModifier to limit maximum width
-extension View {
-    func maxWidth(_ width: CGFloat) -> some View {
-        frame(maxWidth: width)
-    }
-}

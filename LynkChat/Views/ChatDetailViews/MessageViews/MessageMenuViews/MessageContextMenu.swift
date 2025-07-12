@@ -91,7 +91,7 @@ struct MessageContextMenu: View {
             
             if chat.currentThread.last == group {
                 Button(role: .destructive, action: chat.deleteLastMessage) {
-                    Label("Delete Message", systemImage: "minus.circle")
+                    Label("Delete Message", systemImage: "trash")
                 }
             }
         }

@@ -68,9 +68,6 @@ struct AssistantMessage: View {
             MessageContextMenu(group: group) {
                 showingTextSelection.toggle()
             }
-        } preview: {
-            Text(group.content.prefix(200))
-                .padding()
         }
         .padding(.leading, 26)
         .padding(.trailing, 30)
