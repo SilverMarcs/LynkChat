@@ -96,7 +96,7 @@ struct AssistantMessage: View {
                 showingTextSelection.toggle()
             }
         } preview: {
-            Text("Assistant Message")
+            Text(group.content.prefix(200))
                 .padding()
         }
     }

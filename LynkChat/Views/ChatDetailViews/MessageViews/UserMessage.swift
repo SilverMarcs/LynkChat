@@ -53,25 +53,27 @@ struct UserMessage: View {
             }
             #endif
         }
-        .contentShape(.rect)
-        .padding(.leading, leadingPadding)
         .frame(maxWidth: .infinity, alignment: .trailing)
-        .sheet(isPresented: $showingTextSelection) {
-            TextSelectionView(content: group.content)
-        }
+        .contentShape(.rect)
         .contextMenu {
             MessageMenu(group: group) {
                 showingTextSelection.toggle()
             }
         } preview: {
-            Text("User Message")
+            Text(group.content.prefix(200))
                 .padding()
         }
+        .padding(.leading, leadingPadding)
+//        .frame(maxWidth: .infinity, alignment: .trailing)
+        .sheet(isPresented: $showingTextSelection) {
+            TextSelectionView(content: group.content)
+        }
+
     }
     
     var padding: CGFloat {
         #if os(macOS)
-        10
+        7
         #else
         11
         #endif
@@ -105,6 +107,7 @@ struct ExpandableText: View {
                 .textSelection(.enabled)
                 .font(.system(size: AppConfig.shared.fontSize))
                 .lineSpacing(2)
+                .padding(4)
             
             if needsExpansion {
                 Button {

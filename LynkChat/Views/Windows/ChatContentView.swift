@@ -43,6 +43,7 @@ struct ChatContentView: View {
         }
         .onAppear {
             modelContext.undoManager = undoManager
+            isSearchFieldFocused = .textEditor
         }
         .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
             OnboardingView()

@@ -12,17 +12,13 @@ struct AssistantLabel: View {
     var model: ModelImageProvider
     
     var body: some View {
-        #if os(macOS)
         Label {
             text
         } icon: {
             image
         }
-        #else
-        HStack {
-            image
-            text
-        }
+        #if !os(macOS)
+        .labelIconToTitleSpacing(5)
         #endif
     }
     

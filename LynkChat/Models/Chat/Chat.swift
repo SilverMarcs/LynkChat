@@ -261,6 +261,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     func deleteLastMessage() {
         guard let lastGroup = currentThread.last, !lastGroup.isReplying else { return }
+        errorMessage = ""
         
         if lastGroup == contextResetPoint {
             contextResetPoint = nil
@@ -270,9 +271,7 @@ final class Chat: Equatable, Identifiable, Hashable {
             rootMessage = nil
         } else {
             let secondToLastGroup = currentThread[currentThread.count - 2]
-            withAnimation {
-                secondToLastGroup.activeMessage.next = nil
-            }
+            secondToLastGroup.activeMessage.next = nil
         }
         
         Scroller.scrollToBottom()

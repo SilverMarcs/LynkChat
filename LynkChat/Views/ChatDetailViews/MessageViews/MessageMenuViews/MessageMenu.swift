@@ -43,10 +43,9 @@ struct MessageMenu: View {
             ResetContextButton(resetContext: { chat.resetContext(at: group) })
             
             if chat.currentThread.last == group {
-                DeleteButton(deleteLastMessage: {
-                    chat.deleteLastMessage()
-                    chat.errorMessage = ""
-                })
+                Button(role: .destructive, action: chat.deleteLastMessage) {
+                    Label("Delete Message", systemImage: "minus.circle")
+                }
             }
         }
     }
