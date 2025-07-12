@@ -15,7 +15,7 @@ struct MDView: View {
 
     var body: some View {
         #if os(macOS)
-        if config.isMarkdownEnabled {
+//        if config.isMarkdownEnabled {
             // Use SwiftMarkdownView when there's search text or markdown is enabled
             SwiftMarkdownView(
                 content,
@@ -35,12 +35,12 @@ struct MDView: View {
 //                baseURL: "LynkChat Web Content",
 //                codeBlockTheme: config.codeBlockTheme
 //            )
-        } else {
-            Text(content)
-                .textSelection(.enabled)
-                .font(.system(size: config.fontSize))
-                .lineSpacing(2)
-        }
+//        } else {
+//            Text(content)
+//                .textSelection(.enabled)
+//                .font(.system(size: config.fontSize))
+//                .lineSpacing(2)
+//        }
         #else
         Markdown {
             content

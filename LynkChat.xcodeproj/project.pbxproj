@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0829F56C2DFEAD3600BDA583 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0829F56B2DFEAD3600BDA583 /* HighlightSwift */; };
-		08AF6F732DFEA57A00C4FC6C /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 08AF6F722DFEA57A00C4FC6C /* MarkdownUI */; };
+		0829F56C2DFEAD3600BDA583 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, xros, ); productRef = 0829F56B2DFEAD3600BDA583 /* HighlightSwift */; };
+		08AF6F732DFEA57A00C4FC6C /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, xros, ); productRef = 08AF6F722DFEA57A00C4FC6C /* MarkdownUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +71,10 @@
 				);
 				Views/CustomUI/CustomSearchField.swift = (
 					macos,
+				);
+				Views/Markdown/NativeMDView/CodeBlock.swift = (
+					ios,
+					xros,
 				);
 				Views/Onboarding/PermissionsOnboarding.swift = (
 					ios,
