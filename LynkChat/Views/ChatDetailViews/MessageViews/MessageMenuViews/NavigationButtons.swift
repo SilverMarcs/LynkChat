@@ -13,39 +13,45 @@ struct NavigationButtons: View {
     var body: some View {
         if message.allMessages.count > 1 {
             HStack {
+                #if os(macOS)
                 if message.allMessages.count >= 2 && message.role == .assistant {
-                    Button {
-                        message.toggleSplitView()
-                    } label: {
-                        Label(message.isSplitView ? "Exit SplitView" : "SplitView", systemImage: message.isSplitView ? "rectangle.split.2x1.slash" : "square.split.2x1")
+                    ControlGroup {
+                        Button {
+                            message.toggleSplitView()
+                        } label: {
+                            Label(message.isSplitView ? "Exit SplitView" : "SplitView", systemImage: message.isSplitView ? "rectangle.split.2x1.slash" : "square.split.2x1")
+                                
+                        }
                     }
                 }
                 
-                if !message.isSplitView {
-                    Button {
-                        // TODO: go inside and chekc the condition and do that here
-                        message.goToPreviousMessage()
-                    } label: {
-                        Label("Previous", systemImage: "chevron.left")
+                Text("\(message.currentMessageIndex + 1)/\(message.allMessages.count)")
+                    .foregroundColor(.secondary)
+                #endif
+                
+                ControlGroup {
+                    if !message.isSplitView {
+                        Button {
+                            message.goToPreviousMessage()
+                        } label: {
+                            Label("Previous", systemImage: "chevron.left")
+                        }
+                        .disabled(!message.canGoToPrevious)
+                        
+                                 
+                        
+                        Button {
+                            message.goToNextMessage()
+                        } label: {
+                            Label("Next", systemImage: "chevron.right")
+                        }
+                        .disabled(!message.canGoToNext)
                     }
-                    .disabled(!message.canGoToPrevious)
-                    .opacity(message.canGoToPrevious ? 1 : 0.5)
-                    
-                    Text("\(message.currentMessageIndex + 1)/\(message.allMessages.count)")
-                        .foregroundStyle(.secondary)
-                    
-                    Button {
-                        message.goToNextMessage()
-                    } label: {
-                        Label("Next", systemImage: "chevron.right")
-                    }
-                    .disabled(!message.canGoToNext)
-                    .opacity(message.canGoToNext ? 1 : 0.5)
                 }
+                .controlGroupStyle(.navigation)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.glass)
             .labelStyle(.iconOnly)
-            .transaction { $0.animation = nil }
         }
     }
 }

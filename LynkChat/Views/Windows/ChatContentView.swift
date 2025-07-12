@@ -15,8 +15,6 @@ struct ChatContentView: View {
     
     @ObservedObject var config = AppConfig.shared
     
-    @FocusState private var isSearchFieldFocused: FocusedField?
-    
     var body: some View {
         @Bindable var chatVM = chatVM
         
@@ -43,13 +41,12 @@ struct ChatContentView: View {
         }
         .onAppear {
             modelContext.undoManager = undoManager
-            isSearchFieldFocused = .textEditor
         }
         .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
             OnboardingView()
         }
         .searchable(text: $chatVM.searchText, placement: .sidebar)
-        .searchFocused($isSearchFieldFocused, equals: .searchBox)
+//        .searchFocused($isSearchFieldFocused, equals: .searchBox)
 //        .onChange(of: chatVM.searchText) {
 //            chatVM.updateSearchText(chatVM.searchText)
 //            
@@ -58,14 +55,6 @@ struct ChatContentView: View {
 //                config.showDebugMenu = true
 //            }
 //        }
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                Button("Search") {
-                    isSearchFieldFocused = .searchBox
-                }
-                .keyboardShortcut("f")
-            }
-        }
     }
 }
 

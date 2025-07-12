@@ -29,7 +29,6 @@ struct UserMessage: View {
             
             if !group.dataFiles.isEmpty {
                 DataFilesView(dataFiles: group.dataFiles)
-                    .transaction { $0.animation = nil }
             }
             
             Group {
@@ -42,17 +41,16 @@ struct UserMessage: View {
             .padding(padding)
             .background(
                 RoundedRectangle(cornerRadius: 18)
-                    .fill(.background.tertiary)
+                   .fill(.background.tertiary)
+                    // .fill(.accent.gradient.secondary)
                     .stroke(.quaternary, lineWidth: 1)
             )
-            .transaction { $0.animation = nil }
             
-            #if os(macOS)
             if group.allMessages.count > 1 {
                 NavigationButtons(message: group)
             }
-            #endif
         }
+        .transaction { $0.animation = nil }
         .frame(maxWidth: .infinity, alignment: .trailing)
         .contentShape(.rect)
         .contextMenu {
@@ -64,11 +62,9 @@ struct UserMessage: View {
                 .padding()
         }
         .padding(.leading, leadingPadding)
-//        .frame(maxWidth: .infinity, alignment: .trailing)
         .sheet(isPresented: $showingTextSelection) {
             TextSelectionView(content: group.content)
         }
-
     }
     
     var padding: CGFloat {

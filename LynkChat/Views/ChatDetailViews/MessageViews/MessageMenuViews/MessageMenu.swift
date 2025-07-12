@@ -9,38 +9,86 @@ import SwiftUI
 
 struct MessageMenu: View {
     @Environment(\.chat) var chat
+    @Environment(ChatVM.self) var chatVM
     @Bindable var group: MessageGroup
     var toggleTextSelection: (() -> Void)? = nil
 
     var body: some View {
         Section {
             if !group.isSplitView {
-                RegenButton {
-                    await chat.regenerate(message: group)
+                // Regenerate Button
+                Button {
+                    Task {
+                        await chat.regenerate(message: group)
+                    }
+                } label: {
+                    Label("Regenerate", systemImage: "arrow.2.circlepath")
                 }
             }
             
             if group.role == .user {
-                EditButton(setupEditing: { chat.inputManager.setupEditing(message: group) })
+                // Edit Button
+                Button(action: { chat.inputManager.setupEditing(message: group) }) {
+                    Label("Edit", systemImage: "pencil.and.outline")
+                }
+                .help("Edit")
             }
         }
         
         Section {
-            CopyButton(content: group.content, dataFiles: group.dataFiles)
+            // Copy Buttons
+            if !group.dataFiles.isEmpty {
+                Button {
+                    var finalString = group.dataFiles.map { $0.formattedTextContent }.joined()
+                    finalString += group.content
+                    finalString.copyToPasteboard()
+                } label: {
+                    Label("Copy Files", systemImage: "doc.richtext")
+                }
+                .frame(width: 15)
+            }
+            
+            Button {
+                group.content.copyToPasteboard()
+            } label: {
+                Label("Copy", systemImage: "paperclip")
+            }
+            .contentTransition(.symbolEffect(.replace))
+            .frame(width: 15)
         }
 
         Section {
             #if !os(macOS)
             if let toggleTextSelection = toggleTextSelection {
-                SelectTextButton(toggleTextSelection: toggleTextSelection)
+                // Select Text Button
+                Button {
+                    toggleTextSelection()
+                } label: {
+                    Label("Select Text", systemImage: "text.cursor")
+                }
+                .help("Select Text")
             }
             #endif
             
-            ForkButton(copyChat: { await chat.copy(from: group.activeMessage) })
+            // Fork Button
+            Button {
+                Task {
+                    let newChat = await chat.copy(from: group.activeMessage)
+                    newChat.title = "(Ψ) " + newChat.title
+                    chatVM.fork(newChat: newChat)
+                }
+            } label: {
+                Label("Fork Chat", systemImage: "arrow.branch")
+            }
+            .help("Fork Chat")
         }
         
         Section {
-            ResetContextButton(resetContext: { chat.resetContext(at: group) })
+            // Reset Context Button
+            Button(action: { chat.resetContext(at: group) }) {
+                Label("Reset Context", systemImage: "eraser")
+            }
+            .help("Reset Context")
             
             if chat.currentThread.last == group {
                 Button(role: .destructive, action: chat.deleteLastMessage) {

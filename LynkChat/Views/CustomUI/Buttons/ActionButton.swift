@@ -13,14 +13,16 @@ struct ActionButton: View {
     
     var body: some View {
         Button(action: action) {
-            Image(systemName: isStop ? "stop.circle.fill" : "arrow.up.circle.fill")
-                .font(.system(size: 23)).fontWeight(.semibold)
-                .foregroundStyle(.white, .clear)
-                .glassEffect(.regular.tint(isStop ? .red : .accentColor))
+            Image(systemName: isStop ? "stop" : "arrow.up")
+                .font(.system(size: 15)).fontWeight(.semibold)
+//                .foregroundStyle(.white, .clear)
+//                .glassEffect(.regular.tint(isStop ? .red : .accentColor))
 //                .font(.system(size: 20, weight: .regular))
         }
         .opacity(0.85)
-        .buttonStyle(.plain)
+        .controlSize(.large)
+        .buttonStyle(.glassProminent)
+        .buttonBorderShape(.circle)
         .keyboardShortcut(isStop ? "d" : .return)
     }
 }

@@ -75,9 +75,6 @@ struct ChatDetailMac: View {
     func onAppearStuff(proxy: ScrollViewProxy) {
         config.expandColor = false
         config.proxy = proxy
-        
-        if chatVM.searchText.isEmpty {
-            Scroller.scrollToBottom(animated: false)
-        }
+        Scroller.scrollToBottom(animated: false)
     }
 }

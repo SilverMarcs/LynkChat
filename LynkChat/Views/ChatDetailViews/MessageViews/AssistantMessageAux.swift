@@ -13,7 +13,7 @@ struct AssistantMessageAux: View {
     var body: some View {
         #if os(macOS)
         if group.isSplitView {
-            HStack {
+            HStack(alignment: .top) {
                 AssistantMessage(message: group.activeMessage, group: group)
                 
                 Divider()

@@ -17,9 +17,7 @@ struct AssistantLabel: View {
         } icon: {
             image
         }
-        #if !os(macOS)
         .labelIconToTitleSpacing(5)
-        #endif
     }
     
     var image: some View {

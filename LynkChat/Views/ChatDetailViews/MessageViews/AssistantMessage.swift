@@ -22,8 +22,7 @@ struct AssistantMessage: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             AssistantLabel(model: message.model)
-                .transaction { $0.animation = nil }
-                .padding(.leading, labelPadding)
+                .padding(.leading, -25)
             
             if let tools = message.tools, !tools.isEmpty {
                 ChatToolView(tools: tools)
@@ -33,32 +32,17 @@ struct AssistantMessage: View {
                 ReasoningView(reason: reason)
             }
             
-            if searchText.isEmpty {
-                MDView(content: message.content, calculatedHeight: $height)
-                    .environment(\.searchText, chatVM.searchText)
-                    .environment(\.isReplying, message.isReplying)
-                    .transaction { $0.animation = nil }
-                    #if os(macOS)
-                    .apply { view in
-                        if config.isMarkdownEnabled {
-                            view
-                                .frame(height: message.height, alignment: .top)
-                                .onChange(of: height) {
-                                    if height > 0 {
-                                        message.height = height
-                                    }
-                                }
-                        } else {
-                            view
-                        }
+            MDView(content: message.content, calculatedHeight: $height)
+                .transaction { $0.animation = nil }
+                #if os(macOS)
+                .frame(height: message.height, alignment: .top)
+                .onChange(of: height) {
+                    if height > 0 {
+                        message.height = height
                     }
-                    #endif
-            } else {
-                HighlightableTextView(message.content, highlightedText: searchText)
-                    .textSelection(.enabled)
-                    .font(.system(size: config.fontSize))
-                    .lineSpacing(2)
-            }
+                }
+                #endif
+
             
             if !message.dataFiles.isEmpty {
                 ForEach(message.dataFiles, id: \.self) { data in
@@ -71,26 +55,18 @@ struct AssistantMessage: View {
                     .controlSize(.small)
             }
             
-            #if os(macOS)
             if !message.isReplying {
                 if !showMenu {
                     SecondaryNavigationButtons(group: group)
-                    Spacer()
                 } else {
                     if group.allMessages.count > 1 {
                         NavigationButtons(message: group)
-                        Spacer()
                     }
                 }
             }
-            #endif
         }
+        .transaction { $0.animation = nil }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.leading, 25)
-        .padding(.trailing, 30)
-        .sheet(isPresented: $showingTextSelection) {
-            TextSelectionView(content: message.content)
-        }
         .contextMenu {
             MessageMenu(group: group) {
                 showingTextSelection.toggle()
@@ -99,14 +75,11 @@ struct AssistantMessage: View {
             Text(group.content.prefix(200))
                 .padding()
         }
-    }
-    
-    var labelPadding: CGFloat {
-        #if os(macOS)
-        return -22
-        #else
-        return -25
-        #endif
+        .padding(.leading, 26)
+        .padding(.trailing, 30)
+        .sheet(isPresented: $showingTextSelection) {
+            TextSelectionView(content: message.content)
+        }
     }
 }
 

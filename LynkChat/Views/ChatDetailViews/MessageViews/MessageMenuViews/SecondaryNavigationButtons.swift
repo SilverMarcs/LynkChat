@@ -12,28 +12,22 @@ struct SecondaryNavigationButtons: View {
     
     var body: some View {
         if group.secondaryMessages.count > 1 {
-            HStack {
+            ControlGroup {
                 Button {
                     group.previousSecondaryMessage()
                 } label: {
                     Label("Previous", systemImage: "chevron.left")
                 }
-                .buttonStyle(HoverScaleButtonStyle())
                 .disabled(!group.canGoToPreviousSecondary)
-                .opacity(!group.canGoToPreviousSecondary ? 0.5 : 1)
                 
                 Button {
                     group.nextSecondaryMessage()
                 } label: {
                     Label("Next", systemImage: "chevron.right")
                 }
-                .buttonStyle(HoverScaleButtonStyle())
                 .disabled(!group.canGoToNextSecondary)
-                .opacity(!group.canGoToNextSecondary ? 0.5 : 1)
             }
-            .buttonStyle(.plain)
-            .labelStyle(.iconOnly)
-            .transaction { $0.animation = nil }
+            .controlGroupStyle(.navigation)
         }
     }
 }
