@@ -36,7 +36,6 @@ struct ChatDetailMac: View {
                                 : 1
                         )
                     )
-
                     
                 Color.clear
                     .frame(height: 1)
@@ -50,15 +49,15 @@ struct ChatDetailMac: View {
                 }
             }
             .contentMargins(.all, 15, for: .scrollContent)
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                if chat.status != .quick, !chat.currentThread.isEmpty {
-                    InputArea(chat: chat)
-                }
-            }
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
             .navigationSubtitle("Tokens: \(String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))")
             .task {
                 onAppearStuff(proxy: proxy)
+            }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if chat.status != .quick, !chat.currentThread.isEmpty {
+                    InputArea(chat: chat)
+                }
             }
             .onScrollPhaseChange { oldPhase, newPhase in
                 if newPhase == .interacting {

@@ -11,27 +11,24 @@ struct ErrorMessageView: View {
     var chat: Chat
     
     var body: some View {
-        if !chat.errorMessage.isEmpty || !chat.errorMessage.isEmpty {
-            VStack {
-                HStack {
-                    Text(chat.errorMessage)
-                        .textSelection(.enabled)
-                    
-                    Button(role: .destructive) {
-                        withAnimation {
-                            chat.errorMessage = ""
-                        }
-                    } label: {
-                        Image(systemName: "delete.backward")
+        if let errorMessage = chat.errorMessage {
+            HStack {
+                Text(errorMessage)
+                    .textSelection(.enabled)
+                
+                Button(role: .destructive) {
+                    withAnimation {
+                        chat.errorMessage = ""
                     }
-                    .buttonStyle(.plain)
+                } label: {
+                    Image(systemName: "delete.backward")
                 }
-                .frame(maxWidth: .infinity)
-                .foregroundStyle(.red)
-                .opacity(chat.errorMessage.isEmpty ? 0 : 1)
-                .listRowSeparator(.hidden)
-                .transaction { $0.animation = nil }
+                .buttonStyle(.plain)
             }
+            .frame(maxWidth: .infinity)
+            .foregroundStyle(.red)
+            .listRowSeparator(.hidden)
+            .transaction { $0.animation = nil }
         }
     }
 }

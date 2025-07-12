@@ -10,11 +10,7 @@ import SwiftUI
 
 struct ChatList: View {
     @Environment(ChatVM.self) var chatVM
-    @Environment(\.openWindow) var openWindow
-    @Environment(\.isSearching) private var isSearching
     @Environment(\.modelContext) var modelContext
-    
-    @ObservedObject var config = AppConfig.shared
     
     @Query var chats: [Chat] // see init method below
     

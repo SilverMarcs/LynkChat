@@ -33,18 +33,17 @@ struct ChatToolbar: ToolbarContent {
         }
         
         #if os(macOS)
-            ToolbarItemGroup(placement: .primaryAction) {
-                SimpleToolsToggleView(config: $chat.config)
-            }
-            
-            ToolbarSpacer(.fixed)
-            
-            ToolbarItem(placement: .primaryAction) {
-                ModelPopoverPicker(selectedModel: $chat.config.model)
+        ToolbarItemGroup(placement: .primaryAction) {
+            SimpleToolsToggleView(config: $chat.config)
+        }
+        
+        ToolbarSpacer(.fixed)
+        
+        ToolbarItem(placement: .primaryAction) {
+            ModelPopoverPicker(selectedModel: $chat.config.model)
 //                ModelMenuPicker(selectedModel: $chat.config.model)
 //                ModelPicker(selectedModel: $chat.config.model)
-            }
-        
+        }
         
         if chat.status == .temporary {
             ToolbarItem(placement: .primaryAction) {
@@ -90,23 +89,13 @@ struct ChatToolbar: ToolbarContent {
                 .keyboardShortcut(.delete)
             }
         }
-        
-        
-        #else
-        if !chatVM.searchText.isEmpty {
-            ToolbarItem {
-                Button("Clear Search") {
-                    chatVM.searchText = ""
-                }
-            }
-        }
         #endif
     }
     
     private func toggleInspector() {
-        #if !os(macOS)
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        #endif
+//        #if !os(macOS)
+//        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//        #endif
         showingInspector.toggle()
     }
 }

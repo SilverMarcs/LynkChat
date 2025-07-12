@@ -10,9 +10,7 @@ import SwiftData
 
 struct ChatListMac: View {
     @Environment(\.openWindow) var openWindow
-    @Environment(\.isSearching) private var isSearching
     @Environment(ChatVM.self) var chatVM
-    @Environment(\.modelContext) var modelContext
     
     var chats: [Chat]
     var deleteItems: (IndexSet) -> Void
@@ -22,17 +20,14 @@ struct ChatListMac: View {
         
         List(selection: $chatVM.selections) {
             ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
-            if isSearching && chats.isEmpty {
-                ContentUnavailableView.search
-            } else {
-                ForEach(chats, id: \.self) { chat in
-                    ChatListRow(chat: chat)
-                        .tag(chat)
-                        .deleteDisabled(chat.status == .starred)
-                        .listRowSeparator(.visible)
-                }
-                .onDelete(perform: deleteItems)
+            
+            ForEach(chats, id: \.self) { chat in
+                ChatListRow(chat: chat)
+                    .tag(chat)
+                    .deleteDisabled(chat.status == .starred)
+                    .listRowSeparator(.visible)
             }
+            .onDelete(perform: deleteItems)
         }
         .contextMenu(forSelectionType: Chat.self) { item in
             // Add context menu actions if needed

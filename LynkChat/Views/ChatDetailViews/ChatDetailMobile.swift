@@ -38,16 +38,6 @@ struct ChatDetailMobile: View {
                     .transaction { $0.animation = nil }
                     .id(String.bottomID)
                     .listRowSeparator(.hidden)
-
-            }
-            .contentMargins(.bottom, -40)
-            .onScrollPhaseChange { oldPhase, newPhase in
-                if newPhase == .interacting {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        config.expandColor = false
-                    }
-                }
-                return
             }
             .overlay {
                 if chat.currentThread.isEmpty {
@@ -59,6 +49,14 @@ struct ChatDetailMobile: View {
                      .frame(maxWidth: .infinity, maxHeight: .infinity)
                      .padding()
                 }
+            }
+            .onScrollPhaseChange { oldPhase, newPhase in
+                if newPhase == .interacting {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        config.expandColor = false
+                    }
+                }
+                return
             }
             .scrollDismissesKeyboard(.interactively)
             .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -75,7 +73,7 @@ struct ChatDetailMobile: View {
             }
             .onChange(of: isFocused) {
                 if isFocused {
-                    Scroller.scrollToBottom(delay: 0.1)
+                    Scroller.scrollToBottom(delay: 0.2)
                 }
             }
             .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")

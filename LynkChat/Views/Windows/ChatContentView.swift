@@ -19,13 +19,8 @@ struct ChatContentView: View {
         @Bindable var chatVM = chatVM
         
         NavigationSplitView {
-            if !chatVM.debouncedSearchText.isEmpty {
-                MessageGroupList(searchText: chatVM.debouncedSearchText)
-                    .navigationSplitViewColumnWidth(min: 270, ideal: 300, max: 400)
-            } else {
-                ChatList(status: chatVM.statusFilter, searchText: chatVM.debouncedSearchText)
-                    .navigationSplitViewColumnWidth(min: 270, ideal: 300, max: 400)
-            }
+            ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
+                .navigationSplitViewColumnWidth(min: 270, ideal: 300, max: 400)
         } detail: {
             if let chat = chatVM.activeChat {
                 ChatDetail(chat: chat)

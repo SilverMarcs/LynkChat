@@ -29,7 +29,7 @@ struct ChatListRow: View {
                 .font(.headline.weight(.medium))
                 #endif
                 .opacity(0.9)
-//                .shimmerWithoutRedact(when: chat.isReplying)
+                .shimmerWithoutRedact(when: chat.isReplying)
             
             Spacer()
             

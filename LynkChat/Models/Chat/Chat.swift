@@ -13,7 +13,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
     var date: Date = Date()
     var title: String = "New Chat Session"
-    var errorMessage: String = ""
+    var errorMessage: String?
     var totalTokens: Int = 0
     
     var statusId: Int = 1 // normal status

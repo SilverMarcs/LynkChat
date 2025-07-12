@@ -12,7 +12,6 @@ struct ChatCommands: Commands {
     @Environment(ChatVM.self) var chatVM
     @Environment(\.modelContext) var modelContext
     @ObservedObject var config = AppConfig.shared
-    @FocusState var isFocused: FocusedField?
     
     var body: some Commands {
         CommandGroup(replacing: .newItem) {

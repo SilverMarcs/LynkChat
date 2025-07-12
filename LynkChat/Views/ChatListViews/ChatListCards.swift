@@ -13,7 +13,6 @@ struct ChatListCards: View {
     @Environment(\.openWindow) var openWindow
     @Environment(\.dismissWindow) var dismissWindow
     @Environment(ChatVM.self) var chatVM
-    @Environment(SettingsVM.self) private var settingsVM
     
     @ObservedObject var config = AppConfig.shared
     
@@ -24,33 +23,7 @@ struct ChatListCards: View {
     @State private var isFlashing = false
 
     var body: some View {
-//        #if os(macOS)
-        content
-            .listRowInsets(EdgeInsets(top: 1, leading: -5, bottom: 10, trailing: -5))
-            .padding(.bottom, 7)
-        
-        TipView(SwipeActionTip())
-            .tipCornerRadius(8)
-            .listRowInsets(EdgeInsets(top: -6, leading: -5, bottom: 10, trailing: -5))
-//        #else
-//        Section {
-//            content
-//                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//        }
-//        .listSectionSpacing(15)
-//        
-//        Section {
-//            TipView(SwipeActionTip())
-//                .tipCornerRadius(8)
-//                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//            
-//        }
-//        .listSectionSpacing(15)
-//        #endif
-    }
-    
-    var content: some View {
-        HStack(spacing: spacing) {
+        HStack(spacing: 8) {
             ListCard(
                 icon: chatVM.statusFilter.systemImageName, iconColor: chatVM.statusFilter.iconColor, title: isSearching ? "Searching" : chatVM.statusFilter.name,
                 count: chatCount) {
@@ -67,6 +40,8 @@ struct ChatListCards: View {
         }
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets(top: 1, leading: -5, bottom: 10, trailing: -5))
+            .padding(.bottom, 7)
     }
     
     func handleChatPress() {
@@ -74,52 +49,28 @@ struct ChatListCards: View {
         case .chats:
             cycleChatStatus()
         case .images:
-            #if os(macOS)
             openWindow(id: WindowID.chats)
             dismissWindow(id: "images")
-            #else
-            settingsVM.listState = .chats
-            #endif
         default:
             break
         }
     }
     
     func cycleChatStatus() {
-        let statusesToCycle = ChatStatus.allCases.filter { $0 != .quick && $0 != .temporary }
+        let statusesToCycle: [ChatStatus] = ChatStatus.allCases.filter { $0 != .quick && $0 != .temporary }
         
-        guard let currentStatusIndex = statusesToCycle.firstIndex(of: chatVM.statusFilter) else {
+        guard let currentStatusIndex: Int = statusesToCycle.firstIndex(of: chatVM.statusFilter) else {
             return
         }
         
-        let nextStatusIndex = (currentStatusIndex + 1) % statusesToCycle.count
+        let nextStatusIndex: Int = (currentStatusIndex + 1) % statusesToCycle.count
         chatVM.statusFilter = statusesToCycle[nextStatusIndex]
     }
 
     
     func handleImagePress() {
-        #if os(macOS)
         openWindow(id: WindowID.images)
         dismissWindow(id: "chats")
-        #else
-        settingsVM.listState = .images
-        #endif
-    }
-    
-    private var spacing: CGFloat {
-        #if os(macOS)
-        return 8
-        #else
-        return 13
-        #endif
-    }
-    
-    private var radius: CGFloat {
-        #if os(macOS)
-        return 7
-        #else
-        return 10
-        #endif
     }
 }
 

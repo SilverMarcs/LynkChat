@@ -13,29 +13,11 @@ import Combine
 @Observable class ChatVM {
     var selections: Set<Chat> = []
     var chatPath: NavigationPath = NavigationPath()
-//    var imageSelection: ImageSession?
     
     var statusFilter: ChatStatus = .normal
 
     // MARK: - Search with debouncing
     var searchText: String = ""
-    var debouncedSearchText: String = ""
-    private var searchCancellable: AnyCancellable?
-    private let searchSubject = PassthroughSubject<String, Never>()
-    
-    init() {
-        // Set up debounced search
-        searchCancellable = searchSubject
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .sink { [weak self] searchText in
-                self?.debouncedSearchText = searchText
-            }
-    }
-    
-    func updateSearchText(_ newText: String) {
-        searchText = newText
-        searchSubject.send(newText)
-    }
 
     public var activeChat: Chat? {
         get {

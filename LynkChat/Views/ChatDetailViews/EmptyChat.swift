@@ -65,9 +65,6 @@ struct EmptyChat: View {
                                 }
                                 .frame(maxWidth: 175)
                                 .frame(height: 20)
-//                                .padding(4)
-//                                .padding(.horizontal, 1)
-//                                .background(.quinary, in: .rect(cornerRadius: 9, style: .circular))
                             }
                             .buttonStyle(.glass)
                         }
@@ -84,7 +81,6 @@ struct EmptyChat: View {
                 .foregroundStyle(.secondary)
                 .padding()
         }
-        .toolbarBackground(.hidden)
         .frame(maxWidth: .infinity)
     }
 }
