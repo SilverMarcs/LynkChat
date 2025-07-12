@@ -10,7 +10,6 @@ import SwiftData
 
 struct QuickPanelView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(ChatVM.self) private var chatVM
 
     @Bindable var chat: Chat
     var updateHeightState: (QuickPanelHeight) -> Void
@@ -150,7 +149,7 @@ struct QuickPanelView: View {
         Task {
             let newChat = await chat.copy()
             newChat.title = "(↯) " + newChat.title
-            chatVM.fork(newChat: newChat)
+            ChatVM.shared.fork(newChat: newChat)
             resetChat()
             
             if let mainWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == "chats" }) {

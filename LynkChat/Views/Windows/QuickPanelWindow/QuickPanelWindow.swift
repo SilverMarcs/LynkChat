@@ -10,7 +10,7 @@ import SwiftData
 
 class QuickPanelWindow: NSPanel {
     private var heightConstraint: NSLayoutConstraint?
-    var chatVM: ChatVM
+    private let chatVM = ChatVM.shared
     var chat: Chat? // The chat object for the quick panel
     private var currentHeightState: QuickPanelHeight = .collapsed()
 
@@ -18,10 +18,8 @@ class QuickPanelWindow: NSPanel {
     init(
         contentRect: NSRect = NSRect(x: 0, y: 0, width: 650, height: 57),
         backing: NSWindow.BackingStoreType = .buffered,
-        defer flag: Bool = false,
-        chatVM: ChatVM
+        defer flag: Bool = false
     ) {
-        self.chatVM = chatVM
         super.init(contentRect: contentRect,
                    styleMask: [.nonactivatingPanel, .closable, .fullSizeContentView, .titled],
                    backing: backing,
@@ -53,7 +51,6 @@ class QuickPanelWindow: NSPanel {
                 }
             )
             .ignoresSafeArea()
-            .environment(chatVM)
         )
 
         // Replace NSVisualEffectView with NSGlassEffectView (macOS 26+)

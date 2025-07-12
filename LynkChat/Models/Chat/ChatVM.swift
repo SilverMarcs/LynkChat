@@ -11,13 +11,13 @@ import SwiftUI
 import Combine
 
 @Observable class ChatVM {
+    static let shared = ChatVM()
+    
+    private init() {}
     var selections: Set<Chat> = []
     var chatPath: NavigationPath = NavigationPath()
     
     var statusFilter: ChatStatus = .normal
-
-    // MARK: - Search with debouncing
-    var searchText: String = ""
 
     public var activeChat: Chat? {
         get {
@@ -36,10 +36,6 @@ import Combine
         #if os(macOS)
         self.selections = [newChat]
         #else
-//        self.selections = []
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            self.selections = [newChat]
-//        }
         self.chatPath.removeLast()
         self.chatPath.append(newChat)
         #endif

@@ -10,14 +10,13 @@ import SwiftData
 
 struct ChatListMac: View {
     @Environment(\.openWindow) var openWindow
-    @Environment(ChatVM.self) var chatVM
     
     var chats: [Chat]
     var deleteItems: (IndexSet) -> Void
     
+    @Bindable var chatVM = ChatVM.shared
+    
     var body: some View {
-        @Bindable var chatVM = chatVM
-        
         List(selection: $chatVM.selections) {
             ChatListCards(source: .chats, chatCount: String(chats.count), imageSessionsCount: "↗")
             

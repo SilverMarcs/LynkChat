@@ -11,10 +11,11 @@ import TipKit
 struct ChatDetailMac: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.modelContext) var modelContext
-    @Environment(ChatVM.self) private var chatVM
     @ObservedObject var config: AppConfig = AppConfig.shared
     
     @Bindable var chat: Chat
+    
+    private let chatVM = ChatVM.shared
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -23,7 +24,6 @@ struct ChatDetailMac: View {
                     
                     MessageView(group: group)
                         .environment(\.chat, chat)
-                        .environment(\.searchText, chatVM.searchText)
                 }
                 
                 ErrorMessageView(chat: chat)

@@ -9,8 +9,6 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct CameraView: UIViewControllerRepresentable {
-    var chatVM: ChatVM
-    
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let imagePicker = UIImagePickerController()
         #if !os(visionOS)
@@ -26,17 +24,15 @@ struct CameraView: UIViewControllerRepresentable {
     }
 
     func makeCoordinator() -> CameraCoordinator {
-        return Coordinator(picker: self, chatVM: chatVM)
+        return Coordinator(picker: self)
     }
 }
 
 class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     var picker: CameraView
-    var chatVM: ChatVM
     
-    init(picker: CameraView, chatVM: ChatVM) {
+    init(picker: CameraView) {
         self.picker = picker
-        self.chatVM = chatVM
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -45,11 +41,11 @@ class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePicker
         
         Task {
             let chat: Chat
-            if let activeChat = chatVM.activeChat {
+            if let activeChat = ChatVM.shared.activeChat {
                 chat = activeChat
             } else {
                 // TODO: use modelactor here
-                chat = chatVM.createNewChat()
+                chat = ChatVM.shared.createNewChat()
             }
             
             try? await chat.inputManager.processData(

@@ -21,7 +21,6 @@ struct ChatWindow: Scene {
         WindowGroup(for: Chat.ID.self) { $id in
             if let id = id {
                 ChatDetailWrapper(id: id)
-                    .environment(ChatVM())
                     .modelContainer(globalContainer)
             } else {
                 Text("No ID")
@@ -33,10 +32,9 @@ struct ChatWindow: Scene {
 }
 
 struct ChatDetailWrapper: View {
-    @Environment(ChatVM.self) private var chatVM
     @Query private var chats: [Chat]
     let id: Chat.ID
-
+    
     init(id: Chat.ID) {
         self.id = id
         self._chats = Query(filter: #Predicate<Chat> { chat in
@@ -45,12 +43,10 @@ struct ChatDetailWrapper: View {
     }
 
     var body: some View {
-        @Bindable var chatVM = chatVM
-        
         if let chat = chats.first {
             ChatDetail(chat: chat)
                 .background(.background)
-                .searchable(text: $chatVM.searchText)
+//                .searchable(text: $chatVM.searchText)
         } else {
             Text("Chat not found")
         }

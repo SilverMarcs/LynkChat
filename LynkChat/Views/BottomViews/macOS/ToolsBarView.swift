@@ -81,6 +81,5 @@ struct ToolsBarView: View {
     chat.config.enabledTools.insert(.processFile)
     
     return InputArea(chat: chat)
-        .environment(ChatVM())
         .frame(height: 94)
 }

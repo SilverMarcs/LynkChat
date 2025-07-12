@@ -9,7 +9,6 @@ import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     static let shared = AppDelegate()
-    weak var chatVM: ChatVM?
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         let sceneConfig = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
@@ -45,9 +44,7 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
         case "newchat":
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 Task {
-                    if let chatVM = AppDelegate.shared.chatVM {
-                        chatVM.createNewChat()
-                    }
+                    ChatVM.shared.createNewChat()
                 }
             }
         default:

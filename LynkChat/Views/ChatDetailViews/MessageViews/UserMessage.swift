@@ -10,9 +10,7 @@ import TipKit
 
 struct UserMessage: View {
     @Environment(\.chat) var chat
-    @Environment(\.searchText) var searchText
     @Environment(\.colorScheme) var colorScheme
-    @Environment(ChatVM.self) private var chatVM
     
     @ObservedObject var config = AppConfig.shared
     

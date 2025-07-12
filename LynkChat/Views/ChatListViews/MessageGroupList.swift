@@ -9,13 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct MessageGroupList: View {
-    @Environment(ChatVM.self) var chatVM
-    
     @Query var messageGroups: [MessageGroup]
     @Query var chats: [Chat]
     
     var searchText: String
     @State private var selectedGroupID: MessageGroup.ID?
+    
+    private let chatVM = ChatVM.shared
     
     private var matchedGroupsByChat: [Chat: [MessageGroup]] {
         guard !searchText.isEmpty else { return [:] }

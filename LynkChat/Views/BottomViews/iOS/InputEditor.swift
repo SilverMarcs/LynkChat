@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct InputEditor: View {
-    @Environment(ChatVM.self) private var chatVM
     @ObservedObject var config = AppConfig.shared
     
     @Bindable var chat: Chat

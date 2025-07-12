@@ -9,8 +9,6 @@ import SwiftUI
 import MarkdownUI
 
 struct MDView: View {
-    @Environment(ChatVM.self) private var chatVM
-    
     @ObservedObject var config = AppConfig.shared
     var content: String
     var calculatedHeight: Binding<CGFloat>? = nil

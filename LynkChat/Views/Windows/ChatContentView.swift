@@ -11,15 +11,16 @@ import SwiftData
 struct ChatContentView: View {
     @Environment(\.undoManager) var undoManager
     @Environment(\.modelContext) var modelContext
-    @Environment(ChatVM.self) var chatVM
     
     @ObservedObject var config = AppConfig.shared
     
+    @Bindable var chatVM = ChatVM.shared
+    @State var searchText = ""
+    
     var body: some View {
-        @Bindable var chatVM = chatVM
         
         NavigationSplitView {
-            ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
+            ChatList(status: chatVM.statusFilter, searchText: searchText)
                 .navigationSplitViewColumnWidth(min: 270, ideal: 300, max: 400)
         } detail: {
             if let chat = chatVM.activeChat {
@@ -40,7 +41,7 @@ struct ChatContentView: View {
         .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
             OnboardingView()
         }
-        .searchable(text: $chatVM.searchText, placement: .sidebar)
+        .searchable(text: $searchText, placement: .sidebar)
 //        .searchFocused($isSearchFieldFocused, equals: .searchBox)
 //        .onChange(of: chatVM.searchText) {
 //            chatVM.updateSearchText(chatVM.searchText)
@@ -56,5 +57,4 @@ struct ChatContentView: View {
 #Preview {
     ChatContentView()
         .modelContainer(for: Chat.self, inMemory: true)
-        .environment(ChatVM())
 }

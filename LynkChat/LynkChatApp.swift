@@ -12,7 +12,6 @@ import AppIntents
 
 @main
 struct LynkChatApp: App {
-    @State private var chatVM: ChatVM = ChatVM()
     @State private var settingsVM: SettingsVM = SettingsVM()
     
     #if os(macOS)
@@ -30,7 +29,6 @@ struct LynkChatApp: App {
             #endif
         }
         .commands { MenuCommands() }
-        .environment(chatVM)
         .environment(settingsVM)
         .modelContainer(globalContainer)
     }
@@ -46,10 +44,9 @@ struct LynkChatApp: App {
 
         #if os(macOS)
         AppConfig.shared.hideDock = false
-        QuickPanelWindow(chatVM: chatVM)
+        QuickPanelWindow()
         #endif
         
-        AppDelegate.shared.chatVM = _chatVM.wrappedValue
         LynkChatShortcuts.updateAppShortcutParameters()
     }
 }

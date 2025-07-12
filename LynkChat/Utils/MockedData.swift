@@ -45,7 +45,7 @@ extension Generation {
 }
 
 extension ChatVM {
-    static var mockChatVM = ChatVM()
+    static var mockChatVM = ChatVM.shared
 }
 
 extension String {

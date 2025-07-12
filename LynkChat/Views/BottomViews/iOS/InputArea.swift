@@ -103,5 +103,4 @@ struct InputArea: View {
 import SwiftData
 #Preview {
     ChatDetail(chat: .mockChat)
-        .environment(ChatVM())
 }

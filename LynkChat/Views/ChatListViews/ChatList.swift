@@ -9,10 +9,11 @@ import SwiftData
 import SwiftUI
 
 struct ChatList: View {
-    @Environment(ChatVM.self) var chatVM
     @Environment(\.modelContext) var modelContext
     
     @Query var chats: [Chat] // see init method below
+    
+    private let chatVM = ChatVM.shared
     
     var body: some View {
         Group {
@@ -93,5 +94,4 @@ struct ChatList: View {
 #Preview {
     ChatList(status: .normal, searchText: "")
         .frame(width: 400)
-        .environment(ChatVM())
 }

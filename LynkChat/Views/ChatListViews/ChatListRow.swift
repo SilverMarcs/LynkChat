@@ -10,11 +10,12 @@ import SwiftUI
 struct ChatListRow: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.openWindow) var openWindow
-    @Environment(ChatVM.self) private var chatVM
     
     @ObservedObject var config = AppConfig.shared
     
     @Bindable var chat: Chat
+    
+    private let chatVM = ChatVM.shared
 
     var body: some View {
         HStack {
@@ -106,7 +107,6 @@ struct ChatListRow: View {
 #Preview {
     List {
         ChatListRow(chat: .mockChat)
-            .environment(ChatVM())
     }
     .frame(width: 250)
 }

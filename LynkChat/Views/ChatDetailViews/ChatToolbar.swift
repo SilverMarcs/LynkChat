@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ChatToolbar: ToolbarContent {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(ChatVM.self) private var chatVM
     @ObservedObject var config = AppConfig.shared
     
     @Bindable var chat: Chat
@@ -18,6 +17,8 @@ struct ChatToolbar: ToolbarContent {
     @State private var currentSearchIndex: Int = 0
     
     @FocusState private var isFocused: FocusedField?
+    
+    private let chatVM = ChatVM.shared
     
     var body: some ToolbarContent {
         ToolbarItem(placement: horizontalSizeClass == .compact ? .primaryAction : .navigation) {
@@ -84,7 +85,7 @@ struct ChatToolbar: ToolbarContent {
                 
                 Button("Delete Last Message", role: .destructive) {
                     chat.deleteLastMessage()
-                    chat.errorMessage = ""
+                    chat.errorMessage = nil
                 }
                 .keyboardShortcut(.delete)
             }

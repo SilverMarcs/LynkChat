@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct AssistantMessage: View {
-    @Environment(ChatVM.self) var chatVM
-    @Environment(\.searchText) var searchText
-    
     @ObservedObject var config = AppConfig.shared
     var message: Message
     var group: MessageGroup
@@ -85,6 +82,5 @@ struct AssistantMessage: View {
 
 #Preview {
     AssistantMessage(message: .mockAssistantMessage, group: .mockAssistantGroup)
-        .environment(ChatVM())
         .frame(width: 600, height: 300)
 }

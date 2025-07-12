@@ -9,13 +9,14 @@ import SwiftUI
 import TipKit
 
 struct ChatDetailMobile: View {
-    @Environment(ChatVM.self) private var chatVM
     @ObservedObject var config: AppConfig = AppConfig.shared
     
     @Bindable var chat: Chat
 
     @State private var colorViewHeight: CGFloat = 0
     @State private var isFocused: Bool = false
+    
+    private let chatVM = ChatVM.shared
     
     var body: some View {
         ScrollViewReader { proxy in

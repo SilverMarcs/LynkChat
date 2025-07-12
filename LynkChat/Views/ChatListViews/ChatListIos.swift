@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct ChatListIos: View {
-    @Environment(ChatVM.self) var chatVM
     @ObservedObject var config = AppConfig.shared
     @Environment(\.modelContext) var modelContext
     
@@ -36,7 +35,7 @@ struct ChatListIos: View {
                 .id(chat.id)
         }
         .fullScreenCover(isPresented: $config.showCamera) {
-            CameraView(chatVM: chatVM)
+            CameraView()
                 .ignoresSafeArea()
         }
     }

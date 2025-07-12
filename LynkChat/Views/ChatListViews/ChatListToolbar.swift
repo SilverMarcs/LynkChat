@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ChatListToolbar: ToolbarContent {
-    @Environment(ChatVM.self) var chatVM
     let chats: [Chat]
     let deleteItems: (IndexSet) -> Void
     
@@ -40,7 +39,7 @@ struct ChatListToolbar: ToolbarContent {
             Menu {
                 ForEach(ChatModel.allCases) { model in
                     Button {
-                        chatVM.createNewChat(model: model)
+                        ChatVM.shared.createNewChat(model: model)
                     } label: {
                         Label(model.name, image: model.imageName)
                             .labelStyle(.titleAndIcon)
@@ -49,7 +48,7 @@ struct ChatListToolbar: ToolbarContent {
             } label: {
                 Label("New Chat", systemImage: "square.and.pencil")
             } primaryAction: {
-                chatVM.createNewChat()
+                ChatVM.shared.createNewChat()
             }
             .menuIndicator(.hidden)
             .popoverTip(NewChatTip())

@@ -9,7 +9,6 @@ import AppKit
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     static let shared = AppDelegate()
-    weak var chatVM: ChatVM?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         // App finished launching

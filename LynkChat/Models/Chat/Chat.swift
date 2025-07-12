@@ -13,7 +13,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
     var date: Date = Date()
     var title: String = "New Chat Session"
-    var errorMessage: String?
+    var errorMessage: String? = nil
     var totalTokens: Int = 0
     
     var statusId: Int = 1 // normal status
@@ -69,7 +69,7 @@ final class Chat: Equatable, Identifiable, Hashable {
             try? await task.value // Wait for the task to finish after cancellation
         }
         
-        errorMessage = ""
+        errorMessage = nil
         date = Date()
         streamingTask = Task {
             let streamer = StreamHandler(chat: self, assistant: message)
@@ -133,7 +133,7 @@ final class Chat: Equatable, Identifiable, Hashable {
             return
         }
         
-        errorMessage = ""
+        errorMessage = nil
         
         if let editingMessage = inputManager.editingMessage {
             await editMessage(editingMessage)
@@ -261,7 +261,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     func deleteLastMessage() {
         guard let lastGroup = currentThread.last, !lastGroup.isReplying else { return }
-        errorMessage = ""
+        errorMessage = nil
         
         if lastGroup == contextResetPoint {
             contextResetPoint = nil
@@ -293,7 +293,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     func deleteAllMessages() {
         rootMessage = nil
         contextResetPoint = nil
-        errorMessage = ""
+        errorMessage = nil
         totalTokens = 0
         Task { @MainActor in
             stopStreaming()

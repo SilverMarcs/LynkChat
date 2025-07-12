@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct InputEditor: View {
-    @Environment(ChatVM.self) private var chatVM
     @ObservedObject var config = AppConfig.shared
     
     @Bindable var chat: Chat
@@ -53,7 +52,6 @@ struct InputEditor: View {
         .font(.body)
         .focused($isFocused, equals: .textEditor)
         .task {
-            guard chatVM.selections.count == 1 else { return }
             isFocused = .textEditor
         }
         .toolbar {

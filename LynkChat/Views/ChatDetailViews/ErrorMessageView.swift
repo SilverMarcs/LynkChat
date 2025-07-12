@@ -18,7 +18,7 @@ struct ErrorMessageView: View {
                 
                 Button(role: .destructive) {
                     withAnimation {
-                        chat.errorMessage = ""
+                        chat.errorMessage = nil
                     }
                 } label: {
                     Image(systemName: "delete.backward")

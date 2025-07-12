@@ -30,13 +30,8 @@ struct CreateChatIntent: AppIntent {
             throw CreateChatError.emptyMessage
         }
         
-        // Get or create ChatVM instance
-        guard let chatVM = AppDelegate.shared.chatVM else {
-            throw CreateChatError.chatVMNotAvailable
-        }
-        
         // Create new chat
-        let newChat = chatVM.createNewChat(delay: true)
+        let newChat = ChatVM.shared.createNewChat(delay: true)
         
         try? await Task.sleep(for: .seconds(0.1)) // Optional delay for better UX
         

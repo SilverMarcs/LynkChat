@@ -10,8 +10,6 @@ import SwiftData
 import TipKit
 
 struct EmptyChat: View {
-    @Environment(ChatVM.self) private var chatVM
-    
     @Bindable var chat: Chat
     @Query(filter: #Predicate<Chat> { chat in
         chat.statusId == 1 || chat.statusId == 2
@@ -55,7 +53,7 @@ struct EmptyChat: View {
                     HStack(alignment: .center) {
                         ForEach(chats.dropFirst().prefix(4)) { chat in
                             Button {
-                                chatVM.selections = [chat]
+                                ChatVM.shared.selections = [chat]
                             } label: {
                                 Label {
                                     Text(chat.title)
@@ -87,5 +85,4 @@ struct EmptyChat: View {
 
 #Preview {
     EmptyChat(chat: .mockChat)
-        .environment(ChatVM())
 }

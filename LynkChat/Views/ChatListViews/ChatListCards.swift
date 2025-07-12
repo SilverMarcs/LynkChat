@@ -12,7 +12,6 @@ struct ChatListCards: View {
     @Environment(\.isSearching) private var isSearching
     @Environment(\.openWindow) var openWindow
     @Environment(\.dismissWindow) var dismissWindow
-    @Environment(ChatVM.self) var chatVM
     
     @ObservedObject var config = AppConfig.shared
     
@@ -21,6 +20,8 @@ struct ChatListCards: View {
     var imageSessionsCount: String
     
     @State private var isFlashing = false
+    
+    private let chatVM = ChatVM.shared
 
     var body: some View {
         HStack(spacing: 8) {
@@ -76,5 +77,4 @@ struct ChatListCards: View {
 
 #Preview {
     ChatListCards(source: .chats, chatCount: "5", imageSessionsCount: "?")
-        .environment(ChatVM())
 }

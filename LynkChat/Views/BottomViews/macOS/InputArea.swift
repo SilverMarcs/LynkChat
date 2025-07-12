@@ -10,7 +10,6 @@ import SwiftData
 import TipKit
 
 struct InputArea: View {
-    @Environment(ChatVM.self) private var chatVM
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @ObservedObject var config = AppConfig.shared
@@ -121,7 +120,6 @@ struct InputArea: View {
     }
     
     private func sendInput() {
-        chatVM.searchText = ""
         Task { @MainActor in
             await chat.sendInput()
         }
@@ -131,6 +129,5 @@ struct InputArea: View {
 import SwiftData
 #Preview {
     ChatDetail(chat: .mockChat)
-        .environment(ChatVM())
         .frame(width: 450)
 }

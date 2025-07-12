@@ -32,8 +32,3 @@ struct ChatDetail: View {
         }
     }
 }
-
-#Preview {
-    ChatDetail(chat: .mockChat)
-        .environment(ChatVM.mockChatVM)
-}

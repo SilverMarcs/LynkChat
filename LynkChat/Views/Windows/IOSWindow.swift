@@ -9,24 +9,24 @@ import SwiftUI
 import SwiftData
 
 struct IOSWindow: Scene {
-    @Environment(ChatVM.self) private var chatVM
-    
     @ObservedObject var config = AppConfig.shared
     
     @State var selection: ImageSession?
+    @State var searchText: String = ""
+    
+    @Bindable var chatVM = ChatVM.shared
     
     var body: some Scene {
-        @Bindable var chatVM = chatVM
-        
+
         WindowGroup("Chats", id: "chats") {
             TabView {
                 // Chats Tab
                 Tab("Chats", systemImage: "message") {
                     NavigationStack(path: $chatVM.chatPath) {
                         ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
-                            .searchable(text: $chatVM.searchText)
+                            .searchable(text: $searchText)
                             .onSubmit(of: .search) {
-                                if PasswordHelper.verifyPassword(chatVM.searchText) {
+                                if PasswordHelper.verifyPassword(searchText) {
                                     config.showDebugMenu = true
                                 }
                             }
