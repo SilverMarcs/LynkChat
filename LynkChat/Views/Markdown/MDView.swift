@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+#if !os(macOS)
+import MarkdownUI
+#endif
 
 struct MDView: View {
     @ObservedObject var config = AppConfig.shared

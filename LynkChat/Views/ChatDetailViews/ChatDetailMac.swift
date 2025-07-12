@@ -6,21 +6,27 @@
 //
 
 import SwiftUI
-import TipKit
 
 struct ChatDetailMac: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.modelContext) var modelContext
     @ObservedObject var config: AppConfig = AppConfig.shared
     
-    @Bindable var chat: Chat
+    var chat: Chat
+    @State private var showAllMessages = false
     
-    private let chatVM = ChatVM.shared
+    private var visibleMessages: [MessageGroup] {
+        if showAllMessages {
+            return chat.currentThread
+        } else {
+            return []
+        }
+    }
     
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                ForEach(chat.currentThread, id: \.self) { group in
+                ForEach(visibleMessages, id: \.self) { group in
                     MessageView(group: group)
                         .environment(\.chat, chat)
                 }
@@ -31,8 +37,8 @@ struct ChatDetailMac: View {
                     .frame(height: 1)
                     .modifier(
                         AnimatingCellHeight(height: config.expandColor
-                                ? (chat.status == .quick ? 250 : 475)
-                                : 1
+                            ? (chat.status == .quick ? 250 : 475)
+                            : 1
                         )
                     )
                     
@@ -45,6 +51,8 @@ struct ChatDetailMac: View {
                 if chat.currentThread.isEmpty {
                     EmptyChat(chat: chat)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if !showAllMessages {
+                    ProgressView()
                 }
             }
             .contentMargins(.all, 15, for: .scrollContent)
@@ -69,10 +77,10 @@ struct ChatDetailMac: View {
         }
     }
     
-    // Rest of the helper methods and computed properties
     func onAppearStuff(proxy: ScrollViewProxy) {
         config.expandColor = false
         config.proxy = proxy
+        showAllMessages = true
         Scroller.scrollToBottom(animated: false)
     }
 }

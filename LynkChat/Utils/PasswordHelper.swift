@@ -16,7 +16,7 @@ enum PasswordHelper {
     static func generateHash(from input: String) -> String {
         let inputData = Data(input.utf8)
         let hashed = Insecure.MD5.hash(data: inputData)
-        return hashed.map { String(format: "%02x", $0) }.joined()
+        return hashed.map { unsafe String(format: "%02x", $0) }.joined()
     }
     
     // Function to verify password

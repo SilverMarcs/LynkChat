@@ -15,3 +15,8 @@ extension EnvironmentValues {
     @Entry var imageSearchText: String = ""
     @Entry var chatSearchText: String = "" // not used atm
 }
+
+enum WindowType: String, CaseIterable {
+    case chats
+    case images
+}

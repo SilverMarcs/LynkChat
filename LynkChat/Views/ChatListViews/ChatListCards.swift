@@ -77,8 +77,3 @@ struct ChatListCards: View {
     ChatListCards(chatCount: "5", imageSessionsCount: "?")
         .environment(\.windowType, .chats)
 }
-
-enum WindowType: String, CaseIterable {
-    case chats
-    case images
-}
