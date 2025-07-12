@@ -18,7 +18,6 @@ struct StreamHandler {
         self.assistant = assistant
     }
 
-    @MainActor
     func handleRequest() async throws {
         chat.isReplying = true // Set isReplying to true when streaming starts
         var streamText = ""
@@ -61,37 +60,35 @@ struct StreamHandler {
     }
     
     private func finaliseStream(streamText: String = "", totalTokens: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + Float.UIIpdateInterval) {
-            self.chat.isReplying = false // Set isReplying to false when streaming ends
-            chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
-            
-            // Check if the message content is empty after streaming completes
-            if streamText.isEmpty {
-                // Handle empty message
-                if let lastGroup = chat.currentThread.last,
-                   lastGroup.allMessages.count > 1 {
-                    // This was likely a regeneration - delete only this message and set previous as active
-                    lastGroup.deleteAndSetPreviousActive()
-                } else {
-                    // This was a new message group - delete the entire last message
-                    chat.errorDeleteLast()
-                }
+        self.chat.isReplying = false // Set isReplying to false when streaming ends
+        chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
+        
+        // Check if the message content is empty after streaming completes
+        if streamText.isEmpty {
+            // Handle empty message
+            if let lastGroup = chat.currentThread.last,
+               lastGroup.allMessages.count > 1 {
+                // This was likely a regeneration - delete only this message and set previous as active
+                lastGroup.deleteAndSetPreviousActive()
             } else {
-                // Normal case - update the content
-                assistant.content = streamText
-                assistant.isReplying = false
-                try? assistant.modelContext?.save()
+                // This was a new message group - delete the entire last message
+                chat.errorDeleteLast()
             }
-            
-            withAnimation(.easeInOut(duration: 0.5)) {
-                AppConfig.shared.expandColor = false
-            }
+        } else {
+            // Normal case - update the content
+            assistant.content = streamText
+            assistant.isReplying = false
+            try? assistant.modelContext?.save()
+        }
+        
+        withAnimation(.easeInOut(duration: 0.5)) {
+            AppConfig.shared.expandColor = false
         }
     }
     
     private func createAPIRequest() async -> APIRequest {
         let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
-        let apiMessages = await adjustedContext.asyncMap { $0.toAPIMessage() }
+        let apiMessages = adjustedContext.map { $0.toAPIMessage() }
         let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
         
         return APIRequest(

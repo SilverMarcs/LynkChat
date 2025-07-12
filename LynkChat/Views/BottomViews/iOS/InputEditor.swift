@@ -22,7 +22,7 @@ struct InputEditor: View {
             .onSubmit {
                 if config.enterToSend {
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    Task { @MainActor in
+                    Task {
                         await chat.sendInput()
                     }
                 } else {

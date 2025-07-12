@@ -39,7 +39,7 @@ struct ImageDetail: View {
             .toolbar(.hidden, for: .tabBar)
             .searchable(text: $session.prompt, prompt: "Generate Images")
             .onSubmit(of: .search) {
-                Task { @MainActor in
+                Task {
                     await session.send()
                 }
             }

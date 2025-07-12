@@ -120,7 +120,7 @@ struct InputArea: View {
     }
     
     private func sendInput() {
-        Task { @MainActor in
+        Task {
             await chat.sendInput()
         }
     }

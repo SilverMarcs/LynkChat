@@ -36,7 +36,6 @@ class Generation {
         self.state = .generating
     }
     
-    @MainActor
     func send() async {
         state = .generating
 
@@ -75,7 +74,6 @@ class Generation {
         Scroller.scrollToBottom(delay: 0.2)
     }
     
-    @MainActor
     func stopGenerating() {
         generatingTask?.cancel()
         state = .error

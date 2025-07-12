@@ -112,7 +112,7 @@ struct ChatDetailMobile: View {
     
     private func sendInput() {
         isFocused = false
-        Task { @MainActor in
+        Task {
             await chat.sendInput()
         }
     }

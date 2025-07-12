@@ -23,7 +23,7 @@ struct IOSWindow: Scene {
                 // Chats Tab
                 Tab("Chats", systemImage: "message") {
                     NavigationStack(path: $chatVM.chatPath) {
-                        ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
+                        ChatList(status: chatVM.statusFilter, searchText: searchText)
                             .searchable(text: $searchText)
                             .onSubmit(of: .search) {
                                 if PasswordHelper.verifyPassword(searchText) {

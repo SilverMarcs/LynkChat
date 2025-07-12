@@ -61,7 +61,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     init() { }
     
-    @MainActor
     func processRequest(message: Message) async {
         // Cancel any existing task first and wait for it to complete
         streamingTask?.cancel()
@@ -102,7 +101,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
 
-    @MainActor
     func editMessage(_ message: Message) async {
         guard let userGroup = currentThread.first(where: { $0.activeMessage == message }) else { return }
         
@@ -120,7 +118,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     }
     
 
-    @MainActor
     func sendInput(prompt: String? = nil) async {
         var content: String
         if let prompt = prompt {
@@ -162,7 +159,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         inputManager.reset()
     }
 
-    @MainActor
     func regenerate(message: MessageGroup) async {
         guard let index = currentThread.firstIndex(where: { $0 == message }) else { return }
        
@@ -192,7 +188,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
     
-    @MainActor
     func stopStreaming() {
         guard let task = streamingTask else { return }
         task.cancel()
@@ -222,9 +217,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         // Call stopStreaming directly on the main thread
-        Task { @MainActor in
-            self.stopStreaming()
-        }
+        self.stopStreaming()
     }
     
     func generateTitle(forced: Bool = false) async {
@@ -295,9 +288,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         contextResetPoint = nil
         errorMessage = nil
         totalTokens = 0
-        Task { @MainActor in
-            stopStreaming()
-        }
+        stopStreaming()
     }
     
     func copy(from message: Message? = nil) async -> Chat {

@@ -47,6 +47,8 @@ struct ChatToolbar: ToolbarContent {
         }
         
         if chat.status == .temporary {
+            ToolbarSpacer(.fixed)
+            
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     chat.status = .normal
@@ -69,7 +71,7 @@ struct ChatToolbar: ToolbarContent {
                 
                 Button("Regen Last Message") {
                     guard !chat.isReplying, let last = chat.currentThread.last else { return }
-                    Task { @MainActor in
+                    Task {
                         await chat.regenerate(message: last)
                     }
                 }

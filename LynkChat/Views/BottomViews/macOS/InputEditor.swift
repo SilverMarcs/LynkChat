@@ -38,7 +38,7 @@ struct InputEditor: View {
                                 if hasNewlineAtEnd && !isDeleting {
                                     chat.inputManager.prompt.removeLast()
                                     isFocused = nil
-                                    Task { @MainActor in
+                                    Task {
                                         await chat.sendInput()
                                     }
                                 }

@@ -46,15 +46,13 @@ extension InputManager {
             }
         }
         
-        await MainActor.run {
-            // Remove existing file with the same name, if any
-            if let existingIndex = self.dataFiles.firstIndex(where: { $0.fileName == fileName }) {
-                self.dataFiles.remove(at: existingIndex)
-            }
-            
-            withAnimation {
-                self.dataFiles.insert(typedData, at: 0)
-            }
+        // Remove existing file with the same name, if any
+        if let existingIndex = self.dataFiles.firstIndex(where: { $0.fileName == fileName }) {
+            self.dataFiles.remove(at: existingIndex)
+        }
+        
+        withAnimation {
+            self.dataFiles.insert(typedData, at: 0)
         }
     }
     

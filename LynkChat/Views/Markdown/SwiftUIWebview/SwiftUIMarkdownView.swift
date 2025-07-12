@@ -108,9 +108,7 @@ struct SwiftUIMarkdownView: View {
             while webPage.isLoading {
                 try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
             }
-            await MainActor.run {
-                updateContent()
-            }
+            updateContent()
         }
     }
     
@@ -119,9 +117,7 @@ struct SwiftUIMarkdownView: View {
             // If still loading, retry after a short delay
             Task {
                 try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
-                await MainActor.run {
-                    updateContent()
-                }
+                updateContent()
             }
             return
         }
@@ -155,12 +151,10 @@ struct SwiftUIMarkdownView: View {
         do {
             let result = try await webPage.callJavaScript("document.body.scrollHeight", arguments: [:])
             if let height = result as? Double {
-                await MainActor.run {
-                    let newHeight = CGFloat(height)
-                    if newHeight != contentHeight {
-                        contentHeight = newHeight
-                        calculatedHeight?.wrappedValue = newHeight
-                    }
+                let newHeight = CGFloat(height)
+                if newHeight != contentHeight {
+                    contentHeight = newHeight
+                    calculatedHeight?.wrappedValue = newHeight
                 }
             }
         } catch {

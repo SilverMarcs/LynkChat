@@ -38,21 +38,14 @@ struct ToolImageView: View {
                 .frame(width: 300, height: 300)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 
-                if isHovering {
-                    Button(action: saveImage) {
-                        Image(systemName: showCheckmark ? "checkmark.circle.fill" : "square.and.arrow.up.circle.fill")
-                            .font(.largeTitle)
-                            .rotationEffect(.degrees(showCheckmark ? 0 : 180))
-                        
-                    }
-                    .foregroundStyle(.white, .black.tertiary)
-                    .buttonStyle(.plain)
-                    .padding(10)
+                Button(action: saveImage) {
+                    Image(systemName: showCheckmark ? "checkmark" : "square.and.arrow.down")
                 }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+                .controlSize(.extraLarge)
+                .padding(10)
             }
-            #if os(macOS)
-            .onHover { isHovering = $0 }
-            #endif
         } else {
             ToolImagePlaceholderView()
         }

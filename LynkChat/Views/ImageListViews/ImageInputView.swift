@@ -52,7 +52,7 @@ struct ImageInputView: View {
         #if !os(macOS)
         isFocused = nil
         #endif
-        Task { @MainActor in
+        Task {
             await session.send()
         }
     }

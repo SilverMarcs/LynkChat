@@ -22,7 +22,6 @@ struct CreateChatIntent: AppIntent {
     )
     var message: String
     
-    @MainActor
     func perform() async throws -> some IntentResult {
         // Ensure we have a valid message
         let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)

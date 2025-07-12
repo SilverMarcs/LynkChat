@@ -53,10 +53,8 @@ class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePicker
                 fileType: .image,
                 fileName: "Camera_\(UUID().uuidString)"
             )
-            
-            await MainActor.run {
-                AppConfig.shared.showCamera = false
-            }
+        
+            AppConfig.shared.showCamera = false
         }
     }
     

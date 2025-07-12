@@ -25,7 +25,6 @@ class ImageSession {
 
     init() { }
     
-    @MainActor
     func send() async {        
         guard !prompt.isEmpty else { return }
         

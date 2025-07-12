@@ -41,7 +41,10 @@ struct ToolSearchResultView: View {
     
     private func pillContent(text: String, url: String?) -> some View {
         Link(destination: URL(string: url ?? "") ?? URL(string: "https://www.google.com")!) {
-            HStack(spacing: 6) {
+            Label {
+                Text(text.prefix(20) + (text.count > 20 ? "..." : ""))
+                    .lineLimit(1)
+            } icon: {
                 if let url = url, let faviconURL = getFaviconURL(from: url) {
                     AsyncImage(url: URL(string: faviconURL)) { phase in
                         switch phase {
@@ -61,23 +64,13 @@ struct ToolSearchResultView: View {
                         .frame(width: 15, height: 15)
                         .foregroundStyle(.accent)
                 }
-                
-                Text(text.prefix(20) + (text.count > 20 ? "..." : ""))
-                    .font(.subheadline)
-                    .lineLimit(1)
             }
+            .padding(2)
             .shimmer(when: searchString == nil)
             .disabled(searchString == nil)
-            .padding(.horizontal, padding)
-            .padding(.vertical, padding - 2)
-            .background(.quinary.opacity(0.6))
-            .background {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(.quaternary, lineWidth: 1)
-            }
-            .clipShape(.rect(cornerRadius: 12, style: .circular))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.glass)
+        .buttonBorderShape(.capsule)
     }
     
     private func getFaviconURL(from url: String) -> String? {

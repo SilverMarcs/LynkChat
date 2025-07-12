@@ -29,7 +29,6 @@ import Combine
         }
     }
 
-    @MainActor
     func fork(newChat: Chat) {
         let modelContext = globalContainer.mainContext
         modelContext.insert(newChat)
@@ -41,7 +40,6 @@ import Combine
         #endif
     }
 
-    @MainActor
     @discardableResult
     func createNewChat(model: ChatModel? = nil, delay: Bool = false) -> Chat {
         let newChat = Chat()
@@ -66,7 +64,6 @@ import Combine
         return newChat
     }
 
-    @MainActor
     func createTemporaryChat() {
         let newChat = Chat()
         newChat.status = .temporary
@@ -78,7 +75,6 @@ import Combine
     var quickPanelChat: Chat?
     var isQuickPanelPresented: Bool = false
 
-    @MainActor
     func getOrCreateQuickPanelChat() -> Chat {
         if let existingChat = quickPanelChat {
             return existingChat

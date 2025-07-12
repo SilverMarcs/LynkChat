@@ -8,7 +8,6 @@
 import SwiftData
 import Foundation
 
-@MainActor
 let globalContainer: ModelContainer = {
     print((URL.applicationSupportDirectory.path(percentEncoded: false)))
     let schema = Schema([
