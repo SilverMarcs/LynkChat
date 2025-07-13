@@ -50,7 +50,8 @@ enum InputState {
     
     func setupEditing(message: MessageGroup) {
         withAnimation {
-            state = .editing
+            self.state = .editing
+        } completion: {
             Scroller.scroll(to: .top, of: message, animated: true)
         }
         

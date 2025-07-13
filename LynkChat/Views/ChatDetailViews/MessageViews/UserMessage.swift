@@ -19,12 +19,6 @@ struct UserMessage: View {
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
-            if chat.inputManager.editingMessage == self.group.activeMessage {
-                Text("Editing")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            
             if !group.dataFiles.isEmpty {
                 DataFilesView(dataFiles: group.dataFiles)
             }
@@ -46,6 +40,12 @@ struct UserMessage: View {
             
             if group.allMessages.count > 1 {
                 NavigationButtons(message: group)
+            }
+            
+            if chat.inputManager.editingMessage == self.group.activeMessage {
+                Text("Editing")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .transaction { $0.animation = nil }
@@ -104,7 +104,7 @@ struct ExpandableText: View {
                 .textSelection(.enabled)
                 .font(.system(size: AppConfig.shared.fontSize))
                 .lineSpacing(2)
-                .padding(4)
+                .padding([.horizontal, .top], 4)
             
             if needsExpansion {
                 Button {

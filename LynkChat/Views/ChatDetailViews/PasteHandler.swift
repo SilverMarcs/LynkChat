@@ -44,7 +44,7 @@ struct PasteHandler: ViewModifier {
             return keyWindow.identifier?.rawValue == "quickPanel"
         } else {
             // For regular windows, check if this view's window is the key window
-            guard let hostingView = hostingView, let viewWindow = hostingView.window else {
+            guard let hostingView = hostingView, let viewWindow = unsafe hostingView.window else {
                 return false
             }
             
