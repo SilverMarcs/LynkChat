@@ -28,12 +28,13 @@ struct InputArea: View {
                     }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.largeTitle).fontWeight(.semibold)
+                        .font(.title).fontWeight(.semibold)
                         .foregroundStyle(.white.opacity(0.7), .clear)
                         .glassEffect(.regular.tint(.red.opacity(0.6)))
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut(.cancelAction)
+                .offset(y: -3)
             }
                 
             VStack(alignment: .leading) {
