@@ -33,7 +33,7 @@ enum AppLogger {
     }
     
     static func error(_ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.error("\(message)")
     }
     
@@ -43,12 +43,12 @@ enum AppLogger {
     }
     
     static func critical(_ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.critical("\(message)")
     }
     
     static func fault(_ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.fault("\(message)")
     }
     

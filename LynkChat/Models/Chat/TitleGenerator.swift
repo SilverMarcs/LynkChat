@@ -103,5 +103,4 @@ extension TitleGenerator {
             return "No valid response"
         }
     }
-    
 }

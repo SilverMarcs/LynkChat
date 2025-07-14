@@ -22,7 +22,12 @@ struct ImageList: View {
     
     var body: some View {
         list
-        .searchable(text: $searchText, placement: searchPlacement)
+            .toolbar {
+                toolbar
+            }
+            .navigationTitle("Images")
+            .toolbarTitleDisplayMode(.inlineLarge)
+            .searchable(text: $searchText, placement: searchPlacement)
     }
     
     @ViewBuilder
@@ -39,10 +44,6 @@ struct ImageList: View {
             }
             .onDelete(perform: deleteItems)
         }
-        .toolbar {
-            toolbar
-        }
-        .navigationTitle("Images")
         .task {
             if selection == nil, let first = sessions.first, !(horizontalSizeClass == .compact) {
                 selection = first
@@ -60,11 +61,6 @@ struct ImageList: View {
                 }
                 .onDelete(perform: deleteItems)
             }
-            .toolbar {
-                toolbar
-            }
-            .navigationTitle("Images")
-            .toolbarTitleDisplayMode(.inlineLarge)
             .navigationDestination(for: ImageSession.self) { session in
                 ImageDetail(session: session)
             }
@@ -74,9 +70,9 @@ struct ImageList: View {
     
     @ToolbarContentBuilder
     var toolbar: some ToolbarContent {
-        ToolbarSpacer()
+        ToolbarSpacer(placement: .primaryAction)
         
-        ToolbarItem(placement: .automatic) {
+        ToolbarItem(placement: .primaryAction) {
             Button {
                 let imageSession = ImageSession()
                 modelContext.insert(imageSession)
@@ -99,9 +95,6 @@ struct ImageList: View {
 
     private func deleteItems(offsets: IndexSet) {
         for index in offsets {
-//            if imageVM.selections.contains(sessions[index]) {
-//                imageVM.selections.remove(sessions[index])
-//            }
             let session = sessions[index]
             if selection == session {
                 selection = nil

@@ -13,25 +13,17 @@ struct AssistantLabel: View {
     
     var body: some View {
         Label {
-            text
+            Text(model.name)
+                .font(.subheadline)
+                .bold()
+                .foregroundStyle(.secondary)
+                .foregroundStyle(Color(hex: model.color))
+                .brightness(colorScheme == .dark ? 1.1 : -0.5)
         } icon: {
-            image
+            Image(model.imageName)
+                .imageScale(.large)
+                .foregroundStyle(Color(hex: model.color).gradient)
         }
         .labelIconToTitleSpacing(5)
-    }
-    
-    var image: some View {
-        Image(model.imageName)
-            .imageScale(.large)
-            .foregroundStyle(Color(hex: model.color).gradient)
-    }
-    
-    var text: some View {
-        Text(model.name)
-            .font(.subheadline)
-            .bold()
-            .foregroundStyle(.secondary)
-            .foregroundStyle(Color(hex: model.color))
-            .brightness(colorScheme == .dark ? 1.1 : -0.5)
     }
 }

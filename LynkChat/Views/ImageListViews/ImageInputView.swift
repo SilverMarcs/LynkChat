@@ -20,17 +20,18 @@ struct ImageInputView: View {
                 .focused($isFocused, equals: .imageInput)
             
             Button(action: sendInput) {
-                Image(systemName: "arrow.up.circle.fill")
-                    .font(.title).fontWeight(.semibold)
-                    .foregroundStyle(.white, .clear)
-                    .glassEffect(.regular.tint(.accentColor))
+                Image(systemName: "arrow.up")
             }
-            .padding(1)
-            .opacity(0.85)
-            .buttonStyle(.plain)
+            .controlSize(.large)
+            .fontWeight(.bold)
+            .buttonStyle(.glassProminent)
+            .buttonBorderShape(.circle)
         }
-        .modifier(CommonInputStyling())
-        .padding(6)
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(4)
+        .glassEffect(in: .rect(cornerRadius: 20))
+        .ignoresSafeArea()
+        .padding(11)
         #if os(macOS)
         .task {
             isFocused = .imageInput

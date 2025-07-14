@@ -14,7 +14,6 @@ struct InputEditor: View {
     @FocusState var isFocused: FocusedField?
     
     var body: some View {
-        // TODO: split into diff view pehraps inloen with multine singlelineviews
         TextField("Send a prompt", text: $chat.inputManager.prompt, axis: .vertical)
             .padding(.leading, 6)
             .focused($isFocused, equals: .textEditor)

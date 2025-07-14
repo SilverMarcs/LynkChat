@@ -70,6 +70,7 @@ extension InputManager {
     }
 }
 
+// MARK: - Dropping
 extension InputManager {
     func handleDrop(_ providers: [NSItemProvider]) throws -> Bool {
         guard !providers.isEmpty else { return false }
@@ -124,6 +125,7 @@ extension InputManager {
     }
 }
 
+// MARK: - Pasting
 #if os(macOS)
 extension InputManager {
     func handlePaste(pasteboardItem: NSPasteboardItem, supportedTypes: Set<UTType>) {

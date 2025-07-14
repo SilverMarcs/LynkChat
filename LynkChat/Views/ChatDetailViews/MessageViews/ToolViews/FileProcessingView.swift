@@ -11,15 +11,14 @@ struct FileProcessingView: View {
     var content: String?
     
     var body: some View {
-            GroupBox {
-                Text(content ?? String.mockTranscription)
-                    .shimmer(when: content == nil)
-                    .textSelection(.enabled)
-                    .padding(3)
-                    .transition(.opacity)
-            }
-            .animation(.easeIn, value: content != nil) // Add animation
-//        }
+        GroupBox {
+            Text(content ?? String.mockTranscription)
+                .shimmer(when: content == nil)
+                .textSelection(.enabled)
+                .padding(3)
+                .transition(.opacity)
+        }
+        .animation(.easeIn, value: content != nil) // Add animation
     }
 }
 

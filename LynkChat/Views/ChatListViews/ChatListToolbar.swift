@@ -51,7 +51,7 @@ struct ChatListToolbar: ToolbarContent {
                 ChatVM.shared.createNewChat()
             }
             .menuIndicator(.hidden)
-            .popoverTip(NewChatTip())
+//            .popoverTip(NewChatTip())
         }
     }
 }

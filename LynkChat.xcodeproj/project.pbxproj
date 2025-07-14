@@ -65,9 +65,6 @@
 				Views/ChatListViews/ChatListMac.swift = (
 					macos,
 				);
-				Views/CustomUI/AutoHeightTextView.swift = (
-					macos,
-				);
 				Views/Markdown/NativeMDView/MessageMarkdownView.swift = (
 					ios,
 					xros,

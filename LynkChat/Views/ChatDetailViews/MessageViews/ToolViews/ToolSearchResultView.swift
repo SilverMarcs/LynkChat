@@ -91,38 +91,3 @@ struct ToolSearchResultView: View {
         #endif
     }
 }
-
-struct SearchResult: Codable {
-    let query: String
-    let followUpQuestions: String?
-    let answer: String?
-    let images: [String]  // Changed from [ImageResult]
-    let results: [Result]
-    let responseTime: Double
-    
-    // Define coding keys to match JSON keys
-    enum CodingKeys: String, CodingKey {
-        case query
-        case followUpQuestions = "follow_up_questions"
-        case answer
-        case images
-        case results
-        case responseTime = "response_time"
-    }
-    
-    struct Result: Codable {
-        let title: String
-        let url: String
-        let content: String
-        let score: Double
-        let rawContent: String?
-        
-        enum CodingKeys: String, CodingKey {
-            case title
-            case url
-            case content
-            case score
-            case rawContent = "raw_content"
-        }
-    }
-}
