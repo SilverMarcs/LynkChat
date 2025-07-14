@@ -60,7 +60,7 @@ struct ChatDetailMobile: View {
                 return
             }
             .scrollDismissesKeyboard(.interactively)
-            .safeAreaInset(edge: .bottom, spacing: 0) {
+            .safeAreaBar(edge: .bottom) {
                 InputArea(chat: chat)
             }
             .navigationTitle(chat.config.model.name)
@@ -75,6 +75,11 @@ struct ChatDetailMobile: View {
             .onChange(of: isFocused) {
                 if isFocused {
                     Scroller.scrollToBottom(delay: 0.2)
+                }
+            }
+            .onChange(of: chat.inputManager.state) {
+                if chat.inputManager.state == .editing {
+                    isFocused = true
                 }
             }
             .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")

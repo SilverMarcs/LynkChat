@@ -15,20 +15,27 @@ struct InputArea: View {
     var chat: Chat
     
     var body: some View {
-        if chat.inputManager.state == .editing {
-            cancelEditing
-        }
-        
-        if !chat.inputManager.dataFiles.isEmpty {
-            HStack {
-                DataFilesView(dataFiles: chat.inputManager.dataFiles) { file in
-                    withAnimation {
-                        chat.inputManager.dataFiles.removeAll(where: { $0 == file })
+        HStack {
+            VStack(alignment: .leading) {
+                if chat.inputManager.state == .editing {
+                    cancelEditing
+                }
+                
+                if !chat.inputManager.dataFiles.isEmpty {
+                    HStack {
+                        DataFilesView(dataFiles: chat.inputManager.dataFiles) { file in
+                            withAnimation {
+                                chat.inputManager.dataFiles.removeAll(where: { $0 == file })
+                            }
+                        }
+                        .padding(.horizontal, 5)
                     }
                 }
-                .padding(5)
             }
+            
+            Spacer()
         }
+        .padding()
     }
     
     var bodyOld: some View {
@@ -81,18 +88,14 @@ struct InputArea: View {
                 chat.inputManager.reset()
             }
         } label: {
-            Image(systemName: "xmark.circle.fill")
-                .font(.system(size: 31, weight: .semibold))
-                .foregroundStyle(.red)
+            Label("Cancel Editing", systemImage: "xmark")
         }
-        .transition(.symbolEffect(.appear))
-        .buttonStyle(.plain)
+        .buttonStyle(.glass)
         .keyboardShortcut(.cancelAction)
     }
     
     
     private func sendInput() {
-//        isFocused = nil // doesn't work
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         Task {
             await chat.sendInput()
