@@ -56,7 +56,6 @@ extension InputManager {
         }
     }
     
-    
     func processFile(at url: URL) async throws {
         // Check file size before loading data
         let fileAttributes = try FileManager.default.attributesOfItem(atPath: url.path)
