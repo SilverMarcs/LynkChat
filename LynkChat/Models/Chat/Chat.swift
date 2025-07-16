@@ -74,16 +74,16 @@ final class Chat: Equatable, Identifiable, Hashable {
             let streamer = StreamHandler(chat: self, assistant: message)
             
             // Request background task before starting network operations
-            #if !os(macOS)
-            let backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
-                self?.streamingTask?.cancel()
-            }
-            
-            defer {
-                // Ensure we end the background task when done
-                UIApplication.shared.endBackgroundTask(backgroundTaskId)
-            }
-            #endif
+//            #if !os(macOS)
+//            let backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
+//                self?.streamingTask?.cancel()
+//            }
+//            
+//            defer {
+//                // Ensure we end the background task when done
+//                UIApplication.shared.endBackgroundTask(backgroundTaskId)
+//            }
+//            #endif
             
             do {
                 try await streamer.handleRequest()
