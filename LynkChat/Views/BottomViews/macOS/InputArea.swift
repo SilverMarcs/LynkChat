@@ -35,6 +35,7 @@ struct InputArea: View {
                 .buttonStyle(.plain)
                 .keyboardShortcut(.cancelAction)
                 .offset(y: -3)
+                .scaleEffect(1.1)
             }
                 
             VStack(alignment: .leading) {
