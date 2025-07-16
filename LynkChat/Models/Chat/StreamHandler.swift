@@ -9,15 +9,10 @@ import Foundation
 import SwiftUI
 
 struct StreamHandler {
-    private let chat: Chat
-    private var assistant: Message
-    private let toolsLock = NSLock() // Add this lock
+    let chat: Chat
+    let assistant: Message
+//    private let toolsLock = NSLock() // Add this lock
     
-    init(chat: Chat, assistant: Message) {
-        self.chat = chat
-        self.assistant = assistant
-    }
-
     func handleRequest() async throws {
         chat.isReplying = true // Set isReplying to true when streaming starts
         var streamText = ""
@@ -108,8 +103,8 @@ struct StreamHandler {
     }
     
     private func updateTools(with toolCallResponse: ToolCallResponse) {
-        toolsLock.lock()
-        defer { toolsLock.unlock() }
+//        toolsLock.lock()
+//        defer { toolsLock.unlock() }
         
         assistant.tools?.append(.init(
             toolCallId: toolCallResponse.toolCallId,
@@ -120,8 +115,8 @@ struct StreamHandler {
     }
 
     private func updateToolResult(for toolResultResponse: ToolResultResponse) {
-        toolsLock.lock()
-        defer { toolsLock.unlock() }
+//        toolsLock.lock()
+//        defer { toolsLock.unlock() }
         
         if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
             assistant.tools?[index].result = toolResultResponse.result

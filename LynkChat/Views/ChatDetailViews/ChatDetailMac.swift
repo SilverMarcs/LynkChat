@@ -61,7 +61,7 @@ struct ChatDetailMac: View {
             .task {
                 onAppearStuff(proxy: proxy)
             }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
+            .safeAreaBar(edge: .bottom, spacing: 0) {
                 if chat.status != .quick, !chat.currentThread.isEmpty {
                     InputArea(chat: chat)
                 }
