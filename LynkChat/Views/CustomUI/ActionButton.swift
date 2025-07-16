@@ -14,7 +14,7 @@ struct ActionButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: isStop ? "stop.fill" : "arrow.up")
-                .font(.system(size: 15)).fontWeight(.semibold)
+                .font(.system(size: 15)).fontWeight(.bold)
         }
         .opacity(0.85)
         .controlSize(.large)

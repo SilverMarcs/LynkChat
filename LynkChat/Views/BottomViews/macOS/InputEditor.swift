@@ -26,7 +26,6 @@ struct InputEditor: View {
                 .frame(maxHeight: 300)
                 .fixedSize(horizontal: false, vertical: true)
                 .scrollContentBackground(.hidden)
-                .scrollDisabled(chat.inputManager.prompt.isEmpty)
                 .apply {
                     if config.enterToSend {
                         $0.onChange(of: chat.inputManager.prompt) { oldValue, newValue in

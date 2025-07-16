@@ -47,6 +47,11 @@ struct ChatDetailMac: View {
                     .transaction { $0.animation = nil }
                     .id(String.bottomID)
             }
+//            .onScrollPhaseChange { _, newPhase in
+//                if newPhase != .idle {
+//                    AppConfig.shared.expandColor = false
+//                }
+//            }
             .overlay {
                 if chat.currentThread.isEmpty {
                     EmptyChat(chat: chat)

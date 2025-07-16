@@ -55,7 +55,7 @@ struct InputArea: View {
                 InputEditor(chat: chat)
                     .padding(.horizontal, 7)
                     .padding(.vertical, 3)
-                    .padding(5.5)
+                    .padding(6)
                     .glassEffect(in: .rect(cornerRadius: 16))
             }
             
