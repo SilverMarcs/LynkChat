@@ -70,9 +70,9 @@ struct UserMessage: View {
     
     var padding: CGFloat {
         #if os(macOS)
-        7
-        #else
         11
+        #else
+        14
         #endif
     }
     
@@ -99,12 +99,11 @@ struct ExpandableText: View {
     }
     
     var body: some View {
-        VStack(alignment: .trailing) {
+        VStack(alignment: .trailing, spacing: 3) {
             Text(displayedText)
                 .textSelection(.enabled)
                 .font(.system(size: AppConfig.shared.fontSize))
                 .lineSpacing(2)
-                .padding([.horizontal, .top], 4)
             
             if needsExpansion {
                 Button {
@@ -112,7 +111,6 @@ struct ExpandableText: View {
                 } label: {
                     Text(isExpanded ? "Show Less" : "Show More")
                 }
-                .buttonStyle(.glass)
                 .buttonBorderShape(.capsule)
             }
         }
