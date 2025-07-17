@@ -22,11 +22,6 @@ struct ImageList: View {
     
     var body: some View {
         list
-            .toolbar {
-                toolbar
-            }
-            .navigationTitle("Images")
-            .toolbarTitleDisplayMode(.inlineLarge)
             .searchable(text: $searchText, placement: searchPlacement)
     }
     
@@ -44,6 +39,11 @@ struct ImageList: View {
             }
             .onDelete(perform: deleteItems)
         }
+        .navigationTitle("Images")
+        .toolbarTitleDisplayMode(.inlineLarge)
+        .toolbar {
+            toolbar
+        }
         .task {
             if selection == nil, let first = sessions.first, !(horizontalSizeClass == .compact) {
                 selection = first
@@ -60,6 +60,11 @@ struct ImageList: View {
                     .tag(session)
                 }
                 .onDelete(perform: deleteItems)
+            }
+            .toolbarTitleDisplayMode(.inlineLarge)
+            .navigationTitle("Images")
+            .toolbar {
+                toolbar
             }
             .navigationDestination(for: ImageSession.self) { session in
                 ImageDetail(session: session)
