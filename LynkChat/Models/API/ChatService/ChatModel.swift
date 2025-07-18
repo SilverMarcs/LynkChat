@@ -9,115 +9,95 @@ import Foundation
 import UniformTypeIdentifiers
 
 enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, ModelImageProvider {
-    case small_model
-    case large_model
-    case gpt_4o
-    case reasoning_model
+    case gpt_4_1
+    case o4_mini
+    case gemini_2_5_flash
+    case claude_sonnet_4
+    case claude_opus_4
     
     static var allCases: [ChatModel] {
-        AppConfig.shared.showDebugMenu ?
         [
-            .small_model,
-            .large_model,
-            .gpt_4o,
-            .reasoning_model,
-        ] :
-        [
-            .small_model,
-//            .large_model,
-//            .reasoning_model,
-//            .gpt_4o
+            .gemini_2_5_flash,
+            .gpt_4_1,
+            .o4_mini,
+            .claude_sonnet_4,
+            .claude_opus_4,
         ]
     }
     
     var id: String {
         switch self {
-        case .small_model: "small-model"
-        case .large_model: "large-model"
-        case .reasoning_model: "reasoning-model"
-        case .gpt_4o: "gpt-4o"
+        case .gpt_4_1: "gpt-4.1"
+        case .o4_mini: "o4-mini"
+        case .gemini_2_5_flash: "gemini-2.5-flash"
+        case .claude_sonnet_4: "claude-sonnet-4"
+        case .claude_opus_4: "claude-opus-4"
         }
     }
     
     var name: String {
         switch self {
-        case .small_model: "Standard"
-        case .large_model: "Advanced"
-        case .reasoning_model: "Reasoning"
-        case .gpt_4o: "Versatile"
+        case .gpt_4_1: "GPT-4.1"
+        case .o4_mini: "o4-Mini"
+        case .gemini_2_5_flash: "Gemini-2.5F"
+        case .claude_sonnet_4: "Claude-4S"
+        case .claude_opus_4: "Claude-4O"
         }
     }
-
-    
-//    case .claude3_7sonnet, .claude3_5haiku: "claude.symbols"
-//    case .gpt4o, .gpt4omini: "openai.symbols"
-//    case .gemini2Flash: "gemini.symbols"
-//    case .deepseek_v3: "deepseek.symbols"
-//    case .deepseek_r1: "deepseek.symbols"
-//    case .llama3_70: "meta.symbols"
     
     var imageName: String {
         switch self {
-            case .small_model: "gemini.symbols"
-            case .large_model: "claude.symbols"
-            case .reasoning_model: "deepseek.symbols"
-            case .gpt_4o: "openai.symbols"
+        case .gpt_4_1, .o4_mini: "openai.symbols"
+        case .gemini_2_5_flash: "gemini.symbols"
+        case .claude_sonnet_4, .claude_opus_4: "claude.symbols"
         }
     }
-
-//    case .claude3_7sonnet, .claude3_5haiku: "#E6784B"
-//    case .gpt4o, .gpt4omini: "#00947A"
-//    case .gemini2Flash: "#E64335"
-//    case .deepseek_v3: "#4F65E9"
-//    case .deepseek_r1: "#4F65E9"
-//    case .llama3_70: "#2B66D9"
     
     var color: String {
         switch self {
-        case .small_model: "#E64335"
-        case .large_model: "#D6683B"
-        case .reasoning_model: "#4F65E9"
-        case .gpt_4o: "#00947A"
+        case .gpt_4_1: "#00947A"
+        case .o4_mini: "#00947A"
+        case .gemini_2_5_flash: "#E64335"
+        case .claude_sonnet_4: "#D6683B"
+        case .claude_opus_4: "#D6683B"
         }
     }
     
     var supportsTool: Bool {
-        switch self {
-        case .small_model, .large_model, .gpt_4o, .reasoning_model:
-            true
-        }
+        true
     }
     
     var supportedTypes: Set<UTType> {
         switch self {
-        case .small_model, .reasoning_model:
-            [.text, .pdf, .audio, .image, .video]
-        case .large_model, .gpt_4o:
+        case .gemini_2_5_flash:
+            [.text, .image, .pdf, .audio, .video]
+        case .gpt_4_1, .o4_mini, .claude_sonnet_4, .claude_opus_4:
             [.text, .image]
-//        case .reasoning_model:
-//            [.text]
         }
     }
     
     var description: String {
         switch self {
-        case .small_model:
-            "Very fast model while maintaining high quality. Uses Gemini-2 Flash"
-        case .large_model:
-            "Advanced model for difficult tasks like coding. Uses Claude-3.7 Sonnet"
-        case .reasoning_model:
-            "Model that thinks before responding. Uses DeepSeek R1"
-        case .gpt_4o:
-            "OpenAI's leading multimodal model. Uses GPT-4o"
+        case .gpt_4_1:
+            "OpenAI GPT-4.1: Latest generation, versatile and powerful."
+        case .o4_mini:
+            "OpenAI O4 Mini: Lightweight, fast, and efficient."
+        case .gemini_2_5_flash:
+            "Google Gemini 2.5 Flash: Fast and high quality."
+        case .claude_sonnet_4:
+            "Anthropic Claude Sonnet 4: Advanced for coding and reasoning."
+        case .claude_opus_4:
+            "Anthropic Claude Opus 4: Most capable Claude model."
         }
     }
     
     var price: TokenUsage {
         switch self {
-        case .small_model: .init(promptTokens: 1, completionTokens: 3)
-        case .large_model: .init(promptTokens: 3, completionTokens: 8)
-        case .reasoning_model: .init(promptTokens: 2, completionTokens: 4)
-        case .gpt_4o: .init(promptTokens: 3, completionTokens: 6)
+        case .gpt_4_1: .init(promptTokens: 3, completionTokens: 6)
+        case .o4_mini: .init(promptTokens: 2, completionTokens: 4)
+        case .gemini_2_5_flash: .init(promptTokens: 1, completionTokens: 3)
+        case .claude_sonnet_4: .init(promptTokens: 3, completionTokens: 8)
+        case .claude_opus_4: .init(promptTokens: 4, completionTokens: 10)
         }
     }
 }

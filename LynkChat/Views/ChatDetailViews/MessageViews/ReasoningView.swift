@@ -26,24 +26,23 @@ struct ReasoningView: View {
                     Text(showingReasoning ? "Collapse" : "Expand")
                 }
             }
-            .padding(.vertical, 8)
-            .padding(.horizontal, 10)
-            .background(Color.gray.opacity(0.04))
+            .padding(8)
+            .background(.background.tertiary.opacity(0.6))
             
             ScrollView {
-                Text(String(reason.dropFirst()))
+                Text(String(reason))
                     .foregroundStyle(.secondary)
                     .textSelection(.enabled)
                     .padding(10)
             }
             .frame(maxHeight: showingReasoning ? 300 : 100)
         }
-        .background {
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(Color.gray.opacity(0.03))
-                .strokeBorder(.quaternary, lineWidth: 1)
-        }
+        .background(.background.secondary)
         .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(.quaternary, lineWidth: 1)
+        )
         .transaction { $0.animation = nil }
     }
 }

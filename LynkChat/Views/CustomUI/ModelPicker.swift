@@ -12,13 +12,15 @@ struct ModelPicker: View {
     var label: String = "Model"
     
     var body: some View {
-        Picker(label, selection: $selectedModel) {
+        Picker(selection: $selectedModel) {
             ForEach(ChatModel.allCases, id: \.self) { model in
                 Label(model.name, image: model.imageName)
                     .labelStyle(.titleAndIcon)
-//                    .labelStyle(.titleOnly)
                     .tag(model)
             }
+        } label: {
+            Label("Model", image: selectedModel.imageName)
+                .labelStyle(.titleAndIcon)
         }
         .menuOrder(.fixed)
     }

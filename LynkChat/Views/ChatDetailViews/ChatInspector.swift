@@ -34,16 +34,28 @@ struct ChatInspector: View {
             }
             
             Section("Parameters") {
-                Picker("Max Tokens", selection: $chat.config.maxTokens) {
-                    ForEach(MaxTokens.allCases, id: \.self) { option in
-                        Text(option.description).tag(option)
+//                Picker("Max Tokens", selection: $chat.config.maxTokens) {
+//                    ForEach(MaxTokens.allCases, id: \.self) { option in
+//                        Text(option.description).tag(option)
+//                    }
+//                }
+                
+                Picker(selection: $chat.config.thinkingBudget) {
+                    ForEach(ThinkingBudget.allCases, id: \.self) { budget in
+                        Label(budget.displayName, systemImage: budget.systemImage)
+                            .labelStyle(.titleOnly)
+                            .tag(budget)
                     }
+                } label: {
+                    Label("Thinking Budget", systemImage: "timer")
                 }
                 
-                Picker("Behaviour", selection: $chat.config.temperature) {
+                Picker(selection: $chat.config.temperature) {
                     ForEach(Temperature.allCases, id: \.self) { option in
                         Text(option.name).tag(option)
                     }
+                } label: {
+                    Label("Behaviour", systemImage: "brain")
                 }
             }
             

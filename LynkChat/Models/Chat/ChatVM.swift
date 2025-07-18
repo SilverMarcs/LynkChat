@@ -92,7 +92,7 @@ import Combine
             let quickChats = try modelContext.fetch(descriptor)
             if let existingChat = quickChats.first {
                 existingChat.deleteAllMessages() // Clear existing messages
-                existingChat.config.model = ChatModel.small_model
+                existingChat.config.model = ChatModel.gemini_2_5_flash
                 return existingChat
             } else {
                 let newChat = Chat()

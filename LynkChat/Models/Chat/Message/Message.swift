@@ -66,7 +66,7 @@ final class Message: Equatable, Identifiable, Hashable {
         Message(
             role: .user,
             content: content,
-            model: .small_model,
+            model: .gemini_2_5_flash,
             dataFiles: dataFiles,
             tools: nil,
             isReplying: false,

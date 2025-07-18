@@ -11,10 +11,12 @@ class ChatConfigDefaults: ObservableObject {
     static let shared = ChatConfigDefaults()
     private init() {}
     
-    @AppStorage("defaultModel") var defaultModel: ChatModel = .small_model
+    @AppStorage("defaultModel") var defaultModel: ChatModel = .gemini_2_5_flash
     
     @AppStorage("temperature") var temperature: Temperature = .balanced
     @AppStorage("maxTokens") var maxTokens: MaxTokens = .t4096
+    
+    @AppStorage("thinkingBudget") var thinkingBudget: ThinkingBudget = .none
     
     @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses fairly concise."
     #if os(macOS)

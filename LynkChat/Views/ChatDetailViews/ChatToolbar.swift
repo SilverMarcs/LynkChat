@@ -41,6 +41,21 @@ struct ChatToolbar: ToolbarContent {
         ToolbarSpacer(.fixed)
         
         ToolbarItem(placement: .primaryAction) {
+            Picker(selection: $chat.config.thinkingBudget) {
+                ForEach(ThinkingBudget.allCases, id: \.self) { budget in
+                    Label(budget.displayName, systemImage: budget.systemImage)
+                        .tag(budget)
+                }
+            } label: {
+                Label("Thinking Budget", systemImage: "timer")
+            }
+            .labelsHidden()
+            .pickerStyle(.segmented)
+        }
+        
+        ToolbarSpacer(.fixed)
+        
+        ToolbarItem(placement: .primaryAction) {
             ModelPopoverPicker(selectedModel: $chat.config.model)
 //                ModelMenuPicker(selectedModel: $chat.config.model)
 //                ModelPicker(selectedModel: $chat.config.model)

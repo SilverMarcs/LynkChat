@@ -22,12 +22,12 @@ struct ChatParameterSettings: View {
                     }
                 }
                 
-                Picker("Max Tokens", selection: $config.maxTokens) {
-                    ForEach(MaxTokens.allCases, id: \.self) { option in
-                        Text(option.description)
-                            .tag(option)
-                    }
-                }
+//                Picker("Max Tokens", selection: $config.maxTokens) {
+//                    ForEach(MaxTokens.allCases, id: \.self) { option in
+//                        Text(option.description)
+//                            .tag(option)
+//                    }
+//                }
             }
             
             Section("Plugins") {
