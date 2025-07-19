@@ -39,6 +39,7 @@ struct GenerationView: View {
             
             VStack(alignment: .leading) {
                 AssistantLabel(model: generation.config.model)
+                    .padding(.bottom, 4)
                 
                 if generation.state == .error {
                     Text(generation.errorMessage)
@@ -47,6 +48,7 @@ struct GenerationView: View {
                         .foregroundStyle(.red)
                         .padding(.leading, 5)
                         .padding(.top, 1)
+
                 } else {
                     LazyVGrid(columns: gridColumns, alignment: .leading, spacing: spacing) {
                         if generation.state == .generating {

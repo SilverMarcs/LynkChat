@@ -32,7 +32,7 @@ struct UserMessage: View {
             }
             .padding(padding)
             .background(
-                RoundedRectangle(cornerRadius: 18)
+                RoundedRectangle(cornerRadius: 20)
                    .fill(.background.tertiary)
                     // .fill(.accent.gradient.secondary)
                     .stroke(.quaternary, lineWidth: 1)
@@ -72,7 +72,7 @@ struct UserMessage: View {
         #if os(macOS)
         11
         #else
-        14
+        11
         #endif
     }
     

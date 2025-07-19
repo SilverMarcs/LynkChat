@@ -31,6 +31,7 @@ struct ChatInspector: View {
             
             Section("Model") {
                 ModelPicker(selectedModel: $chat.config.model)
+//                    .labelStyle(.titleOnly)
             }
             
             Section("Parameters") {

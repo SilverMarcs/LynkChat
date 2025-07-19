@@ -38,7 +38,12 @@ struct ImageDetail: View {
             #else
             .toolbar(.hidden, for: .tabBar)
             .searchable(text: $session.prompt, prompt: "Generate Images")
-            .onSubmit(of: .search) {
+//            .onSubmit(of: .search) {
+//                Task {
+//                    await session.send()
+//                }
+//            }
+            .onReceive(NotificationCenter.default.publisher(for: UISearchTextField.textDidEndEditingNotification)) { notification in
                 Task {
                     await session.send()
                 }
