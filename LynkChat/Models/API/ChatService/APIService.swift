@@ -92,13 +92,3 @@ enum APIService {
         return request
     }
 }
-
-extension String {
-    static var apiHost: String {
-        if AppConfig.shared.useLocalhost {
-            "http://localhost:3000/api"
-        } else {
-            "https://api-server-gray.vercel.app/api"
-        }
-    }
-}
