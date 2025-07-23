@@ -18,38 +18,43 @@ struct StreamHandler {
         var streamText = ""
         var reasoning = ""
         var totalTokens = 0
-        
-        AppConfig.shared.expandColor = true
-        Scroller.scrollToBottom(delay: 0.2)
+        var hasReceivedFirstResponse = false
         
         let apiRequest = await createAPIRequest()
         
         for try await response in APIService.streamResponse(from: apiRequest) {
-            switch response {
-            case .text(let textResponse):
-                streamText += textResponse.content
-                assistant.content = streamText
-                
-            case .reasoning(let reasoningResponse):
-                reasoning += reasoningResponse.reasoning
-                assistant.reasoning = reasoning
-                
-            case .toolCall(let toolCallResponse):
-                updateTools(with: toolCallResponse)
-                
-            case .toolResult(let toolResultResponse):
-                updateToolResult(for: toolResultResponse)
-                
-            case .finish(let finishResponse):
-                totalTokens = calculateTotalTokens(
-                    promptTokens: finishResponse.promptTokens,
-                    completionTokens: finishResponse.completionTokens
-                )
-                
-            case .error(let errorResponse):
-                throw RuntimeError(errorResponse.content)
-            }
-        }
+               // Execute these lines only on first response
+               if !hasReceivedFirstResponse {
+                   AppConfig.shared.expandColor = true
+                   Scroller.scrollToBottom()
+                   hasReceivedFirstResponse = true
+               }
+               
+               switch response {
+               case .text(let textResponse):
+                   streamText += textResponse.content
+                   assistant.content = streamText
+                   
+               case .reasoning(let reasoningResponse):
+                   reasoning += reasoningResponse.reasoning
+                   assistant.reasoning = reasoning
+                   
+               case .toolCall(let toolCallResponse):
+                   updateTools(with: toolCallResponse)
+                   
+               case .toolResult(let toolResultResponse):
+                   updateToolResult(for: toolResultResponse)
+                   
+               case .finish(let finishResponse):
+                   totalTokens = calculateTotalTokens(
+                       promptTokens: finishResponse.promptTokens,
+                       completionTokens: finishResponse.completionTokens
+                   )
+                   
+               case .error(let errorResponse):
+                   throw RuntimeError(errorResponse.content)
+               }
+           }
         
         finaliseStream(streamText: streamText, totalTokens: totalTokens)
     }
@@ -76,7 +81,7 @@ struct StreamHandler {
             try? assistant.modelContext?.save()
         }
         
-        withAnimation(.easeInOut(duration: 0.5)) {
+        withAnimation(.easeInOut(duration: 1)) {
             AppConfig.shared.expandColor = false
         }
     }

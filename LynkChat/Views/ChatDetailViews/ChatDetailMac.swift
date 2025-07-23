@@ -38,7 +38,6 @@ struct ChatDetailMac: View {
                            ? (chat.status == .quick ? 250 : 475)
                            : 1)
                     
-                
                 Color.clear
                     .frame(height: 1)
                     .transaction { $0.animation = nil }
