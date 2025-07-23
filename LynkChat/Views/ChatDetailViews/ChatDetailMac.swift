@@ -34,19 +34,17 @@ struct ChatDetailMac: View {
                 ErrorMessageView(chat: chat)
                 
                 Color.clear
-                    .frame(height: 1)
-                    .modifier(
-                        AnimatingCellHeight(height: config.expandColor
-                            ? (chat.status == .quick ? 250 : 475)
-                            : 1
-                        )
-                    )
+                    .frame(height: config.expandColor
+                           ? (chat.status == .quick ? 250 : 475)
+                           : 1)
                     
+                
                 Color.clear
                     .frame(height: 1)
                     .transaction { $0.animation = nil }
                     .id(String.bottomID)
             }
+            // causes so much lag
 //            .onScrollPhaseChange { _, newPhase in
 //                if newPhase != .idle {
 //                    AppConfig.shared.expandColor = false
