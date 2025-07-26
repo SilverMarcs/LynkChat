@@ -35,7 +35,7 @@ struct ChatDetailMac: View {
                 
                 Color.clear
                     .frame(height: config.expandColor
-                           ? (chat.status == .quick ? 250 : 300)
+                           ? (chat.status == .quick ? 250 : 475)
                            : 1)
                     .id(String.bottomID)
             }

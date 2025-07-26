@@ -22,12 +22,14 @@ struct StreamHandler {
         let apiRequest = await createAPIRequest()
         
         Scroller.scrollToBottom()
+        try await Task.sleep(nanoseconds: 250_000_000)
         
         for try await response in APIService.streamResponse(from: apiRequest) {
             // Execute these lines only on first response
             if !hasReceivedFirstResponse {
                 AppConfig.shared.expandColor = true
                 Scroller.scrollToBottom()
+                try await Task.sleep(nanoseconds: 250_000_000)
                 hasReceivedFirstResponse = true
             }
             
