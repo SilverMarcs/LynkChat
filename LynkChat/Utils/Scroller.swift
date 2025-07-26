@@ -10,7 +10,7 @@ import SwiftUI
 enum Scroller<ID: Hashable> {
     static func scroll(to anchor: UnitPoint, of id: ID, animated: Bool = true, delay: TimeInterval = 0.0) {
         let action = {
-            if let proxy = AppConfig.shared.proxy {
+            if let proxy = AppSettings.shared.proxy {
                 if animated {
                     withAnimation {
                         proxy.scrollTo(id, anchor: anchor)

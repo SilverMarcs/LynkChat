@@ -17,22 +17,14 @@ struct StreamHandler {
         var streamText = ""
         var reasoning = ""
         var totalTokens = 0
-        var hasReceivedFirstResponse = false
         
         let apiRequest = await createAPIRequest()
         
+        AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
-        try await Task.sleep(nanoseconds: 250_000_000)
+        
         
         for try await response in APIService.streamResponse(from: apiRequest) {
-            // Execute these lines only on first response
-            if !hasReceivedFirstResponse {
-                AppConfig.shared.expandColor = true
-                Scroller.scrollToBottom()
-                try await Task.sleep(nanoseconds: 250_000_000)
-                hasReceivedFirstResponse = true
-            }
-            
             switch response {
             case .text(let textResponse):
                streamText += textResponse.content
@@ -82,7 +74,7 @@ struct StreamHandler {
         }
         
         withAnimation(.easeInOut(duration: 1)) {
-            AppConfig.shared.expandColor = false
+            AppSettings.shared.expandColor = false
         }
     }
     

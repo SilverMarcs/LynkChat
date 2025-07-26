@@ -7,14 +7,19 @@
 
 import SwiftUI
 
+@Observable class AppSettings {
+    static let shared = AppSettings()
+    private init() {}
+    
+    @ObservationIgnored var proxy: ScrollViewProxy?
+    var expandColor = false
+    var showCamera = false
+}
+
 class AppConfig: ObservableObject {
     static let shared = AppConfig()
     private init() {}
-    
-    var proxy: ScrollViewProxy?
-    @Published var expandColor = false
-    @Published var showCamera = false
-    
+
     @AppStorage("finishedInitialSetup") var finishedInitialSetup = false
     
     // Appearance

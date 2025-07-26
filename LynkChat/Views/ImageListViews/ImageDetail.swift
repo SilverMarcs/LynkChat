@@ -28,7 +28,7 @@ struct ImageDetail: View {
                     .listRowSeparator(.hidden)
             }
             .task {
-                AppConfig.shared.proxy = proxy
+                AppSettings.shared.proxy = proxy
                 Scroller.scrollToBottom(animated: false)
             }
             #if os(macOS)

@@ -202,7 +202,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         errorDeleteLast()
         withAnimation(.easeInOut(duration: 0.5)) {
-            AppConfig.shared.expandColor = false
+            AppSettings.shared.expandColor = false
         }
     }
 

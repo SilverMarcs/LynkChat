@@ -10,7 +10,7 @@ import SwiftUI
 struct ChatDetailMac: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.modelContext) var modelContext
-    @ObservedObject var config: AppConfig = AppConfig.shared
+    var config: AppSettings = AppSettings.shared
     
     var chat: Chat
     @State private var showAllMessages = false
