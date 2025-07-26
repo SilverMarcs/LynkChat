@@ -30,19 +30,12 @@ struct ChatDetailMobile: View {
                 ErrorMessageView(chat: chat)
                 
                 Color.clear
-                    .frame(height: 1)
+                    .frame(height: config.expandColor ? 375 : 1)
                     .listRowInsets(.init())
-                    .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1))
                     .listRowSeparator(.hidden)
-                
-                Color.clear
-                    .frame(height: 1)
-                    .listRowInsets(.init())
-                    .transaction { $0.animation = nil }
                     .id(String.bottomID)
-                    .listRowSeparator(.hidden)
             }
-            .environment(\.defaultMinListRowHeight, 0)
+            .environment(\.defaultMinListRowHeight, 1)
             .overlay {
                 if chat.currentThread.isEmpty {
                     VStack {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension String {
-    static let bottomID = "bottomID"
+    nonisolated static let bottomID = "bottomID"
     static let testPrompt = "Respond with just the word Test"
     
     static var apiHost: String {

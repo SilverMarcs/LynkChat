@@ -24,35 +24,35 @@ struct StreamHandler {
         Scroller.scrollToBottom()
         
         for try await response in APIService.streamResponse(from: apiRequest) {
-               // Execute these lines only on first response
-               if !hasReceivedFirstResponse {
-                   AppConfig.shared.expandColor = true
-                   Scroller.scrollToBottom()
-                   hasReceivedFirstResponse = true
-               }
+            // Execute these lines only on first response
+            if !hasReceivedFirstResponse {
+                AppConfig.shared.expandColor = true
+                Scroller.scrollToBottom()
+                hasReceivedFirstResponse = true
+            }
+            
+            switch response {
+            case .text(let textResponse):
+               streamText += textResponse.content
+               assistant.content = streamText
                
-               switch response {
-               case .text(let textResponse):
-                   streamText += textResponse.content
-                   assistant.content = streamText
-                   
-               case .reasoning(let reasoningResponse):
-                   reasoning += reasoningResponse.reasoning
-                   assistant.reasoning = reasoning
-                   
-               case .toolCall(let toolCallResponse):
-                   updateTools(with: toolCallResponse)
-                   
-               case .toolResult(let toolResultResponse):
-                   updateToolResult(for: toolResultResponse)
-                   
-               case .finish(let finishResponse):
-                   totalTokens = finishResponse.promptTokens + finishResponse.completionTokens
-                   
-               case .error(let errorResponse):
-                   throw RuntimeError(errorResponse.content)
-               }
-           }
+            case .reasoning(let reasoningResponse):
+               reasoning += reasoningResponse.reasoning
+               assistant.reasoning = reasoning
+               
+            case .toolCall(let toolCallResponse):
+               updateTools(with: toolCallResponse)
+               
+            case .toolResult(let toolResultResponse):
+               updateToolResult(for: toolResultResponse)
+               
+            case .finish(let finishResponse):
+               totalTokens = finishResponse.promptTokens + finishResponse.completionTokens
+               
+            case .error(let errorResponse):
+               throw RuntimeError(errorResponse.content)
+            }
+        }
         
         finaliseStream(streamText: streamText, totalTokens: totalTokens)
     }

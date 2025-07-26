@@ -35,12 +35,8 @@ struct ChatDetailMac: View {
                 
                 Color.clear
                     .frame(height: config.expandColor
-                           ? (chat.status == .quick ? 250 : 475)
+                           ? (chat.status == .quick ? 250 : 300)
                            : 1)
-                    
-                Color.clear
-                    .frame(height: 1)
-                    .transaction { $0.animation = nil }
                     .id(String.bottomID)
             }
             // causes so much lag

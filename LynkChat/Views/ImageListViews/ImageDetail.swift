@@ -12,6 +12,7 @@ struct ImageDetail: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Bindable var session: ImageSession
     @State private var showingInspector: Bool = false
+    @State private var isFocused: Bool = false
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -37,12 +38,17 @@ struct ImageDetail: View {
             .navigationTitle(session.title)
             #else
             .toolbar(.hidden, for: .tabBar)
-            .searchable(text: $session.prompt, prompt: "Generate Images")
+            .searchable(text: $session.prompt, isPresented: $isFocused, prompt: "Generate Images")
 //            .onSubmit(of: .search) {
 //                Task {
 //                    await session.send()
 //                }
 //            }
+            .onChange(of: isFocused) {
+                if isFocused {
+                    Scroller.scrollToBottom(delay: 0.2)
+                }
+            }
             .onReceive(NotificationCenter.default.publisher(for: UISearchTextField.textDidEndEditingNotification)) { notification in
                 Task {
                     await session.send()
@@ -62,9 +68,6 @@ struct ImageDetail: View {
                         Label("Show Inspector", systemImage: "info")
                     }
                 }
-            }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardDidShowNotification)) { _ in
-                Scroller.scrollToBottom()
             }
             .sheet(isPresented: $showingInspector) {
                 ImageInspector(session: session, showingInspector: $showingInspector)
