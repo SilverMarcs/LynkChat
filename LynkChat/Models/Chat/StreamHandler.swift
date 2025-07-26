@@ -11,7 +11,6 @@ import SwiftUI
 struct StreamHandler {
     let chat: Chat
     let assistant: Message
-//    private let toolsLock = NSLock() // Add this lock
     
     func handleRequest() async throws {
         chat.isReplying = true // Set isReplying to true when streaming starts
@@ -21,6 +20,8 @@ struct StreamHandler {
         var hasReceivedFirstResponse = false
         
         let apiRequest = await createAPIRequest()
+        
+        Scroller.scrollToBottom()
         
         for try await response in APIService.streamResponse(from: apiRequest) {
                // Execute these lines only on first response
@@ -46,10 +47,7 @@ struct StreamHandler {
                    updateToolResult(for: toolResultResponse)
                    
                case .finish(let finishResponse):
-                   totalTokens = calculateTotalTokens(
-                       promptTokens: finishResponse.promptTokens,
-                       completionTokens: finishResponse.completionTokens
-                   )
+                   totalTokens = finishResponse.promptTokens + finishResponse.completionTokens
                    
                case .error(let errorResponse):
                    throw RuntimeError(errorResponse.content)
@@ -103,15 +101,7 @@ struct StreamHandler {
         )
     }
     
-    func calculateTotalTokens(promptTokens: Int, completionTokens: Int) -> Int {
-        // New implementation using direct token values
-        return promptTokens + completionTokens // or whatever calculation you need
-    }
-    
     private func updateTools(with toolCallResponse: ToolCallResponse) {
-//        toolsLock.lock()
-//        defer { toolsLock.unlock() }
-        
         assistant.tools?.append(.init(
             toolCallId: toolCallResponse.toolCallId,
             tool: toolCallResponse.tool,
@@ -121,9 +111,6 @@ struct StreamHandler {
     }
 
     private func updateToolResult(for toolResultResponse: ToolResultResponse) {
-//        toolsLock.lock()
-//        defer { toolsLock.unlock() }
-        
         if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
             assistant.tools?[index].result = toolResultResponse.result
         }
