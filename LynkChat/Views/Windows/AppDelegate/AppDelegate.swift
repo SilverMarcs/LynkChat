@@ -39,7 +39,7 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
         switch shortcutItem.type {
         case "camera":
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                AppConfig.shared.showCamera = true
+                AppSettings.shared.showCamera = true
             }
         case "newchat":
             ChatVM.shared.createNewChat()

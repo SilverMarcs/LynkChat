@@ -54,11 +54,11 @@ class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePicker
                 fileName: "Camera_\(UUID().uuidString)"
             )
         
-            AppConfig.shared.showCamera = false
+            AppSettings.shared.showCamera = false
         }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        AppConfig.shared.showCamera = false
+        AppSettings.shared.showCamera = false
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ChatListIos: View {
-    @ObservedObject var config = AppConfig.shared
+    @Bindable var config = AppSettings.shared
     @Environment(\.modelContext) var modelContext
     
     var chats: [Chat]

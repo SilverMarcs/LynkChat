@@ -11,7 +11,7 @@ import PhotosUI
 struct ChatInputMenu: View {
     @Bindable var chat: Chat
     
-    @ObservedObject var config = AppConfig.shared
+    var config = AppSettings.shared
     
     @State private var isFilePickerPresented: Bool = false
     @State private var showPhotosPicker = false

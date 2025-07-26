@@ -9,7 +9,7 @@ import SwiftUI
 import TipKit
 
 struct ChatDetailMobile: View {
-    @ObservedObject var config: AppConfig = AppConfig.shared
+    var config: AppSettings = AppSettings.shared
     
     @Bindable var chat: Chat
 
@@ -30,8 +30,9 @@ struct ChatDetailMobile: View {
                 ErrorMessageView(chat: chat)
                 
                 Color.clear
-                    .frame(height: config.expandColor ? 375 : 1)
+                    .frame(height: 1)
                     .listRowInsets(.init())
+                    .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1))
                     .listRowSeparator(.hidden)
                     .id(String.bottomID)
             }
