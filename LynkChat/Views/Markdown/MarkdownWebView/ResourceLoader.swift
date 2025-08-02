@@ -9,13 +9,17 @@ import Foundation
 
 class ResourceLoader {
     static let shared = ResourceLoader()
-    private init() {}
+    private init() {
+        // Pre-process templates at initialization
+        preProcessTemplates()
+    }
 
     lazy var templateString: String = Self.loadResource(named: "template", withExtension: "html")
     lazy var clipboardScript: String = Self.loadResource(named: "script", withExtension: "js")
     lazy var defaultStyle: String = Self.loadResource(named: Self.styleSheetFileName, withExtension: "css")
 
-    private var cachedHTMLString: String?
+    // Pre-processed templates cache
+    private var preProcessedTemplates: [String: String] = [:]
     private var cachedCustomStyles: [CodeBlockTheme: String] = [:]
 
     private static func loadResource(named name: String, withExtension ext: String) -> String {
@@ -25,27 +29,48 @@ class ResourceLoader {
         }
         do {
             return try String(contentsOf: url, encoding: .utf8)
-            } catch {
+        } catch {
             print("Failed to load resource \(name).\(ext): \(error)")
             return ""
         }
     }
-
-    func getCachedHTMLString(with customTheme: CodeBlockTheme?) -> String {
-        let customStyle = customTheme.map { getCustomStyle(for: $0) } ?? "atom"
-        let combinedStyle = defaultStyle + "\n" + customStyle
-
-        let replacements = [
-            "PLACEHOLDER_SCRIPT": clipboardScript, // TODO: rename this variable it should not be clipboardScript
-            "PLACEHOLDER_STYLESHEET": combinedStyle
-        ]
-
-        var htmlString = templateString
-        for (placeholder, replacement) in replacements {
-            htmlString = htmlString.replacingOccurrences(of: placeholder, with: replacement)
+    
+    private func preProcessTemplates() {
+        // Pre-process templates for all themes
+        for theme in CodeBlockTheme.allCases {
+            let customStyle = getCustomStyle(for: theme)
+            let combinedStyle = defaultStyle + "\n" + customStyle
+            
+            let replacements = [
+                "PLACEHOLDER_SCRIPT": clipboardScript,
+                "PLACEHOLDER_STYLESHEET": combinedStyle
+            ]
+            
+            var htmlString = templateString
+            for (placeholder, replacement) in replacements {
+                htmlString = htmlString.replacingOccurrences(of: placeholder, with: replacement)
+            }
+            
+            preProcessedTemplates[theme.rawValue] = htmlString
         }
         
-        return htmlString
+        // Also create a default template without custom theme
+        let defaultCombinedStyle = defaultStyle + "\n" + getCustomStyle(for: .atom) // Use atom as default
+        let defaultReplacements = [
+            "PLACEHOLDER_SCRIPT": clipboardScript,
+            "PLACEHOLDER_STYLESHEET": defaultCombinedStyle
+        ]
+        
+        var defaultHtmlString = templateString
+        for (placeholder, replacement) in defaultReplacements {
+            defaultHtmlString = defaultHtmlString.replacingOccurrences(of: placeholder, with: replacement)
+        }
+        preProcessedTemplates["default"] = defaultHtmlString
+    }
+
+    func getCachedHTMLString(with customTheme: CodeBlockTheme?) -> String {
+        let themeKey = customTheme?.rawValue ?? "default"
+        return preProcessedTemplates[themeKey] ?? ""
     }
 
     func getCustomStyle(for theme: CodeBlockTheme) -> String {

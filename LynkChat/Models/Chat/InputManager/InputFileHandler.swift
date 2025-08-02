@@ -13,7 +13,7 @@ extension InputManager {
     // Define constants
     private enum Constants {
         static let maxFileSizeBytes: Int = 10 * 1024 * 1024 // 10MB in bytes
-        static let maxTotalFiles: Int = 5
+        static let maxTotalFiles: Int = 15
         static let maxAudioFiles: Int = 1
     }
     

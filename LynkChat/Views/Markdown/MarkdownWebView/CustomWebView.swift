@@ -12,6 +12,10 @@ class CustomWebView: WKWebView {
     var contentHeight: CGFloat = 0
     weak var coordinator: Coordinator?
     
+    // Add caching for height calculation
+    private var lastContentHash: Int = 0
+    private var cachedHeight: CGFloat = 0
+    
     override public var intrinsicContentSize: CGSize {
         .init(width: super.intrinsicContentSize.width, height: contentHeight)
     }
@@ -35,6 +39,10 @@ class CustomWebView: WKWebView {
     #endif
 
     func updateMarkdownContent(_ markdownContent: String, highlightString: String, fontSize: CGFloat, codeBlockTheme: CodeBlockTheme, enableMarkdown: Bool) {
+        // Create a hash of the content that affects height
+        let contentForHashing = "\(markdownContent)\(fontSize)\(enableMarkdown)"
+        let currentContentHash = contentForHashing.hashValue
+        
         let data: [String: Any] = [
             "markdownContent": markdownContent,
             "highlightString": highlightString,
@@ -52,11 +60,21 @@ class CustomWebView: WKWebView {
             print("Error converting to JSON: \(error)")
         }
         
-        evaluateJavaScript("document.body.scrollHeight", in: nil, in: .page) { result in
-            guard let contentHeight = try? result.get() as? Double else { return }
-            self.contentHeight = contentHeight
-            self.invalidateIntrinsicContentSize()
-            self.coordinator?.updateCalculatedHeight(self.contentHeight)
+        // Only recalculate height if content that affects height has changed
+        if currentContentHash != lastContentHash {
+            evaluateJavaScript("document.body.scrollHeight", in: nil, in: .page) { result in
+                guard let newHeight = try? result.get() as? Double else { return }
+                let newHeightCGFloat = CGFloat(newHeight)
+                
+                // Only update if height actually changed
+                if abs(newHeightCGFloat - self.cachedHeight) > 1.0 { // 1pt tolerance
+                    self.cachedHeight = newHeightCGFloat
+                    self.contentHeight = newHeightCGFloat
+                    self.invalidateIntrinsicContentSize()
+                    self.coordinator?.updateCalculatedHeight(self.contentHeight)
+                }
+            }
+            lastContentHash = currentContentHash
         }
     }
 }
