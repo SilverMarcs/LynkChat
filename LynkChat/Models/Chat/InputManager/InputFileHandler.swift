@@ -18,19 +18,31 @@ extension InputManager {
     }
     
     func processData(_ data: Data, fileType: UTType? = nil, fileName: String? = nil, url: URL? = nil) async throws {
-        // Check file size first
-        guard data.count <= Constants.maxFileSizeBytes else {
-            throw InputError.fileTooLarge(size: data.count, maxSize: Constants.maxFileSizeBytes)
-        }
-        
         let fileURL = url ?? URL(fileURLWithPath: fileName ?? "Unknown")
         let fileType = fileType ?? (try? fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier).flatMap { UTType($0) } ?? .data
-        let fileName = fileName ?? fileURL.deletingPathExtension().lastPathComponent + "." + fileType.fileExtension
+        let fileName = fileName ?? fileURL.deletingPathExtension().lastPathComponent + "." + (fileType.preferredFilenameExtension ?? "")
+
+        var processedData = data
+        var processedFileType = fileType
+        var processedFileName = fileName
+        
+        // Process images for compression if needed
+        if fileType.conforms(to: .image) {
+            let result = try ImageProcessor.processImageData(data, fileType: fileType, fileName: fileName)
+            processedData = result.0
+            processedFileType = result.1
+            processedFileName = result.2
+        }
+        
+        // Check file size after processing
+        guard processedData.count <= Constants.maxFileSizeBytes else {
+            throw InputError.fileTooLarge(size: processedData.count, maxSize: Constants.maxFileSizeBytes)
+        }
 
         let typedData = TypedData(
-            data: data,
-            fileType: fileType,
-            fileName: fileName
+            data: processedData,
+            fileType: processedFileType,
+            fileName: processedFileName
         )
         
         // Check total file limit
@@ -39,7 +51,7 @@ extension InputManager {
         }
         
         // Check audio file limit
-        if fileType.conforms(to: .audio) {
+        if processedFileType.conforms(to: .audio) {
             let existingAudioFiles = dataFiles.filter { $0.fileType.conforms(to: .audio) }
             if existingAudioFiles.count >= Constants.maxAudioFiles {
                 throw InputError.tooManyAudioFiles(max: Constants.maxAudioFiles)
@@ -47,7 +59,7 @@ extension InputManager {
         }
         
         // Remove existing file with the same name, if any
-        if let existingIndex = self.dataFiles.firstIndex(where: { $0.fileName == fileName }) {
+        if let existingIndex = self.dataFiles.firstIndex(where: { $0.fileName == processedFileName }) {
             self.dataFiles.remove(at: existingIndex)
         }
         
@@ -84,7 +96,7 @@ extension InputManager {
                 guard let fileAttributes = try? FileManager.default.attributesOfItem(atPath: url.path),
                       let fileSize = fileAttributes[.size] as? Int,
                       fileSize <= Constants.maxFileSizeBytes else {
-                    print("File size exceeds 5MB limit")
+                    print("File size exceeds maximum limit")
                     return
                 }
                 
@@ -112,11 +124,6 @@ extension InputManager {
         for photo in selectedPhotos {
             guard let data = try? await photo.loadTransferable(type: Data.self) else {
                 throw RuntimeError("Failed to load photo data")
-            }
-            
-            // Check file size
-            guard data.count <= Constants.maxFileSizeBytes else {
-                throw InputError.fileTooLarge(size: data.count, maxSize: Constants.maxFileSizeBytes)
             }
             
             let fileName = "photo_\(UUID().uuidString).jpg"
@@ -154,8 +161,8 @@ extension InputManager {
                           throw InputError.imageNotSupported
                       }
                       
-                      // Existing size check...
-                      try await processData(imageData, fileType: .png, fileName: "Pasted_Image_\(UUID().uuidString).png")
+                      let fileType: UTType = pasteboardItem.data(forType: .png) != nil ? .png : .tiff
+                      try await processData(imageData, fileType: fileType, fileName: "Pasted_Image_\(UUID().uuidString).\(fileType.preferredFilenameExtension ?? "png")")
                   }
             } catch {
                 print("Error processing paste: \(error)")

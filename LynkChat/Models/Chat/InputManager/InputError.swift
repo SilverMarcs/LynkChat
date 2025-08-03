@@ -14,6 +14,7 @@ enum InputError: LocalizedError {
     case tooManyFiles(current: Int, max: Int)
     case tooManyAudioFiles(max: Int)
     case imageNotSupported
+    case imageCompressionFailed
     
     var errorDescription: String? {
         switch self {
@@ -29,6 +30,8 @@ enum InputError: LocalizedError {
             return "Cannot add more audio files. Maximum number of audio files (\(max)) reached"
         case .imageNotSupported:
             return "Images are not supported in this context"
+        case .imageCompressionFailed:
+            return "Failed to compress image. Please try a different image."
         }
     }
     
