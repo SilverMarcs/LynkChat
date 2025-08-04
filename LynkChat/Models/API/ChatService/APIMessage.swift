@@ -28,7 +28,7 @@ enum ContentItem: Encodable {
     case file(data: Data, mimeType: String)
     
     private enum CodingKeys: String, CodingKey {
-        case type, text, image, data, mimeType
+        case type, text, image, data, mimeType, mediaType
     }
     
     func encode(to encoder: Encoder) throws {
@@ -38,14 +38,20 @@ enum ContentItem: Encodable {
         case .text(let text):
             try container.encode("text", forKey: .type)
             try container.encode(text, forKey: .text)
-        case .image(let image, let mimeType):
+            
+        case .image(let imageData, let mimeType):
             try container.encode("image", forKey: .type)
-            try container.encode(image, forKey: .image)
-            try container.encodeIfPresent(mimeType, forKey: .mimeType)
-        case .file(let data, let mimeType):
+            // Convert Data to base64 string
+            let base64String = imageData.base64EncodedString()
+            try container.encode(base64String, forKey: .image)
+            try container.encodeIfPresent(mimeType, forKey: .mediaType)
+            
+        case .file(let fileData, let mimeType):
             try container.encode("file", forKey: .type)
-            try container.encode(data, forKey: .data)
-            try container.encode(mimeType, forKey: .mimeType)
+            // Convert Data to base64 string
+            let base64String = fileData.base64EncodedString()
+            try container.encode(base64String, forKey: .data)
+            try container.encode(mimeType, forKey: .mediaType)
         }
     }
 }
