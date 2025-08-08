@@ -31,6 +31,7 @@ struct UserMessage: View {
                 Text(group.content)
                 #endif
             }
+            .groupBoxStyle(PlatformGroupBox())
 
             if group.allMessages.count > 1 {
                 NavigationButtons(message: group)
@@ -109,3 +110,6 @@ struct ExpandableText: View {
         return String(text.prefix(maxCharacters))
     }
 }
+
+
+

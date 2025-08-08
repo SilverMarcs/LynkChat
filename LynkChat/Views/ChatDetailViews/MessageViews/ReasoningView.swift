@@ -17,7 +17,7 @@ struct ReasoningView: View {
             VStack {
                 HStack {
                     Text("Reasoning")
-                        .font(.title3.bold())
+                        .font(.headline)
                     
                     Spacer()
                     
@@ -40,6 +40,7 @@ struct ReasoningView: View {
             }
             .padding(5)
         }
+        .groupBoxStyle(PlatformGroupBox(radius: 15))
         .transaction { $0.animation = nil }
     }
 }
