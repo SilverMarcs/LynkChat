@@ -10,39 +10,36 @@ import SwiftUI
 struct ReasoningView: View {
     let reason: String
     
-    @State private var showingReasoning = true
+    @State private var showingReasoning = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text("Reasoning")
-                    .font(.headline)
+        GroupBox {
+            VStack {
+                HStack {
+                    Text("Reasoning")
+                        .font(.title3.bold())
+                    
+                    Spacer()
+                    
+                    Button {
+                        showingReasoning.toggle()
+                    } label: {
+                        Text(showingReasoning ? "Collapse" : "Expand")
+                    }
+                }
                 
-                Spacer()
-                
-                Button {
-                    showingReasoning.toggle()
-                } label: {
-                    Text(showingReasoning ? "Collapse" : "Expand")
+                if showingReasoning {
+                    Divider()
+                    
+                    ScrollView {
+                        Text(LocalizedStringKey(reason))
+                            .foregroundStyle(.secondary)
+                            .textSelection(.enabled)
+                    }
                 }
             }
-            .padding(8)
-            .background(.background.tertiary.opacity(0.6))
-            
-            ScrollView {
-                Text(String(reason))
-                    .foregroundStyle(.secondary)
-                    .textSelection(.enabled)
-                    .padding(10)
-            }
-            .frame(maxHeight: showingReasoning ? 300 : 100)
+            .padding(5)
         }
-        .background(.background.secondary)
-        .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .stroke(.quaternary, lineWidth: 1)
-        )
         .transaction { $0.animation = nil }
     }
 }
