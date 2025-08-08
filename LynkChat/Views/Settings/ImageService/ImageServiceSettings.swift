@@ -11,33 +11,33 @@ struct ImageServiceSettings: View {
     @State private var selectedTab: ImageServiceTab = .parameters
     
     var body: some View {
-        Group {
-            switch selectedTab {
-            case .models:
-                ImageModelList()
-            case .parameters:
-                ImageParametersSettings()
+        tabView
+            .toolbarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Picker("Tab", selection: $selectedTab) {
+                        ForEach(ImageServiceTab.allCases, id: \.self) { tab in
+                            Label(tab.rawValue, systemImage: tab.imageName)
+                                .tag(tab)
+                                .labelStyle(.titleOnly)
+                        }
+                    }
+                    #if !os(macOS)
+                    .controlSize(.large)
+                    #endif
+                    .pickerStyle(.segmented)
+                }
             }
-        }
-        .navigationTitle("Image Service")
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                picker
-            }
-        }
     }
     
-    var picker: some View {
-        Picker("Tab", selection: $selectedTab) {
-            ForEach(ImageServiceTab.allCases, id: \.self) { tab in
-                Label(tab.rawValue, systemImage: tab.imageName)
-                    .tag(tab)
-                    .labelStyle(.titleOnly)
-            }
+    @ViewBuilder
+    var tabView: some View {
+        switch selectedTab {
+        case .models:
+            ImageModelList()
+        case .parameters:
+            ImageParametersSettings()
         }
-        .controlSize(.large)
-        .pickerStyle(.segmented)
-        .fixedSize()
     }
 }
 

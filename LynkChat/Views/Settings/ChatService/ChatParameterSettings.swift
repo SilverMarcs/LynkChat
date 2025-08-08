@@ -56,8 +56,7 @@ struct ChatParameterSettings: View {
                 }
             }
         }
-        .navigationTitle("Chat Service")
-        .toolbarTitleDisplayMode(.inline)
+        .navigationTitle("Chat Parameters")
         .formStyle(.grouped)
     }
     

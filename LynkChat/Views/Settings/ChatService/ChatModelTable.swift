@@ -10,7 +10,7 @@ import SwiftUI
 struct ChatModelTable: View {
     
     var body: some View {
-        List {
+        Form {
             Section("Models") {
                 ForEach(ChatModel.allCases) { model in
                     HStack {
@@ -22,6 +22,8 @@ struct ChatModelTable: View {
                 }
             }
         }
+        .formStyle(.grouped)
+        .navigationTitle("Chat Models")
     }
 }
 

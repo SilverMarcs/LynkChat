@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ImageParametersSettings: View {
     @ObservedObject var imageConfig = ImageModelConfig.shared
+    
     var body: some View {
         Form {
             Section {
@@ -39,8 +40,7 @@ struct ImageParametersSettings: View {
             }
         }
         .formStyle(.grouped)
-        .navigationTitle("Image Gen")
-        .toolbarTitleDisplayMode(.inline)
+        .navigationTitle("Image Parameters")
     }
     
     var label: String {

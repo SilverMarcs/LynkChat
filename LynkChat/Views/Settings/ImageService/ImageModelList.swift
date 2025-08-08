@@ -21,7 +21,7 @@ struct ImageModelList: View {
             }
         }
         .formStyle(.grouped)
-        .toolbarTitleDisplayMode(.inline)
+        .navigationTitle("Image Models")
     }
 }
 
