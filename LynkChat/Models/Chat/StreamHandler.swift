@@ -13,7 +13,9 @@ struct StreamHandler {
     let assistant: Message
     
     func handleRequest() async throws {
-        chat.isReplying = true // Set isReplying to true when streaming starts
+        await MainActor.run {
+            chat.isReplying = true // Set isReplying to true when streaming starts
+        }
         var streamText = ""
         var reasoning = ""
         var totalTokens = 0
@@ -48,11 +50,13 @@ struct StreamHandler {
             }
         }
         
+        await MainActor.run {
+            chat.isReplying = false
+        }
         finaliseStream(streamText: streamText, totalTokens: totalTokens)
     }
     
     private func finaliseStream(streamText: String = "", totalTokens: Int) {
-        self.chat.isReplying = false // Set isReplying to false when streaming ends
         chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
         
         // Check if the message content is empty after streaming completes

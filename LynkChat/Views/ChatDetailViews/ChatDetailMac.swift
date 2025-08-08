@@ -39,12 +39,6 @@ struct ChatDetailMac: View {
                            : 1)
                     .id(String.bottomID)
             }
-            // causes so much lag
-//            .onScrollPhaseChange { _, newPhase in
-//                if newPhase != .idle {
-//                    AppConfig.shared.expandColor = false
-//                }
-//            }
             .overlay {
                 if chat.currentThread.isEmpty {
                     EmptyChat(chat: chat)

@@ -8,51 +8,8 @@
 import SwiftUI
 
 struct ChatModelTable: View {
-    @State private var selection: ChatModel.ID?
     
     var body: some View {
-        Group {
-#if os(macOS)
-            macOS
-#else
-            iOS
-#endif
-        }
-        // TODO: Toolbar info icon for extra info
-    }
-    
-    var macOS: some View {
-//        ModelCatalogView()
-        Form {
-            Section {
-                Table(ChatModel.allCases, selection: $selection) {
-                    TableColumn("Model") { model in
-                        HStack {
-                            ModelImage(model: model)
-                            Text(model.name)
-                        }
-                    }
-                    .width(100)
-
-                    TableColumn("Description") { model in
-                        Text(model.description)
-                    }
-
-//                    TableColumn("Price") { model in
-//                        Text("\(model.price.promptTokens) / \(model.price.completionTokens)")
-//                    }
-//                    .alignment(.trailing)
-                }
-            } footer: {
-                Text("Prices are for per million input or output tokens")
-            }
-        }
-        .formStyle(.grouped)
-        .toolbarTitleDisplayMode(.inline)
-    }
-        
-    
-    var iOS: some View {
         List {
             Section("Models") {
                 ForEach(ChatModel.allCases) { model in

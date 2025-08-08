@@ -39,7 +39,7 @@ class Generation {
     func send() async {
         state = .generating
 
-        generatingTask = Task {
+        generatingTask = Task { @MainActor in
             do {
                 let dataObjects = try await ImageGenerator.generateImages(config: config)
                 
@@ -71,7 +71,7 @@ class Generation {
             state = .error
         }
     
-        Scroller.scrollToBottom(delay: 0.2)
+        await Scroller.scrollToBottom(delay: 0.2)
     }
     
     func stopGenerating() {

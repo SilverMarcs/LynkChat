@@ -89,7 +89,7 @@ final class Chat: Equatable, Identifiable, Hashable {
                 try await streamer.handleRequest()
                 
                 // Generate title after streaming is complete
-                if AppConfig.shared.autogenTitle {
+                if await AppConfig.shared.autogenTitle {
                     await generateTitle()
                 }
             } catch {
@@ -106,7 +106,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         unsetContextResetPointIfNeeded(for: userGroup)
         
-        let newUserMessage = Message.user(content: inputManager.prompt, dataFiles: inputManager.dataFiles)
+        let newUserMessage = await Message.user(content: inputManager.prompt, dataFiles: inputManager.dataFiles)
         userGroup.addMessage(newUserMessage)
         
         let newAssistantMessage = Message.assistant(model: config.model)
@@ -123,7 +123,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         if let prompt = prompt {
             content = prompt
         } else {
-            content = inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+            content = await inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         
         guard !content.isEmpty else {
@@ -156,7 +156,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         // Reset inputManager after everything is done
-        inputManager.reset()
+        await inputManager.reset()
     }
 
     func regenerate(message: MessageGroup) async {

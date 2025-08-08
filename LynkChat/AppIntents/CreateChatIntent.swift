@@ -30,7 +30,7 @@ struct CreateChatIntent: AppIntent {
         }
         
         // Create new chat
-        let newChat = ChatVM.shared.createNewChat(delay: true)
+        let newChat = await ChatVM.shared.createNewChat(delay: true)
         
         try? await Task.sleep(for: .seconds(0.1)) // Optional delay for better UX
         

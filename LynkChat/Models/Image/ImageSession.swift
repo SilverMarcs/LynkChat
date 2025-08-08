@@ -33,7 +33,7 @@ class ImageSession {
 
         imageGenerations.append(generation)
         
-        Scroller.scrollToBottom(delay: 0.2)
+        await Scroller.scrollToBottom(delay: 0.2)
 
         await generation.send()
     }

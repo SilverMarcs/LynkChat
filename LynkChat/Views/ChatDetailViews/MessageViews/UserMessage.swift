@@ -23,21 +23,15 @@ struct UserMessage: View {
                 DataFilesView(dataFiles: group.dataFiles)
             }
             
-            Group {
+            GroupBox {
                 #if os(macOS)
                 ExpandableText(text: group.content)
+                    .padding(5)
                 #else
                 Text(group.content)
                 #endif
             }
-            .padding(padding)
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                   .fill(.background.tertiary)
-                    // .fill(.accent.gradient.secondary)
-                    .stroke(.quaternary, lineWidth: 1)
-            )
-            
+
             if group.allMessages.count > 1 {
                 NavigationButtons(message: group)
             }
@@ -65,14 +59,6 @@ struct UserMessage: View {
         .sheet(isPresented: $showingTextSelection) {
             TextSelectionView(content: group.content)
         }
-        #endif
-    }
-    
-    var padding: CGFloat {
-        #if os(macOS)
-        11
-        #else
-        11
         #endif
     }
     
