@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-struct ChatConfig: Identifiable, Codable {
+struct ChatConfig: Identifiable, Codable, Sendable {
     var id = UUID()
     var temperature: Temperature = ChatConfigDefaults.shared.temperature
     var thinkingBudget: ThinkingBudget = ChatConfigDefaults.shared.thinkingBudget

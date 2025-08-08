@@ -85,7 +85,7 @@ class Generation {
     }
 }
 
-nonisolated enum GenerationState: Codable {
+enum GenerationState: Codable, Sendable {
     case generating
     case success
     case error
