@@ -10,6 +10,7 @@ import SwiftUI
 struct ChatListRow: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.openWindow) var openWindow
+    @Environment(\.colorScheme) var colorScheme
     
     @ObservedObject var config = AppConfig.shared
     
@@ -23,6 +24,7 @@ struct ChatListRow: View {
             
 //            HighlightableTextView(chat.title, highlightedText: chatVM.searchText)
             Text(chat.title)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .lineLimit(1)
                 #if os(macOS)
                 .font(.headline.weight(.regular))

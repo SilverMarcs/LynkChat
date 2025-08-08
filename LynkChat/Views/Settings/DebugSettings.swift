@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DebugSettings: View {
     @Environment(\.openWindow) var openWindow
-    @Environment(\.openURL) var openURL
     
     @ObservedObject var config = AppConfig.shared
     @State private var showWebView = false
@@ -22,12 +21,6 @@ struct DebugSettings: View {
                 Toggle(isOn: $config.useLocalhost) {
                     Text("Use Localhost")
                     Text(String.apiHost.replacingOccurrences(of: "/api", with: ""))
-                }
-                
-                LabeledContent("Opens API Webview") {
-                    Button("Open Window") {
-                        openURL(URL(string: String.apiHost)!, prefersInApp: true)
-                    }
                 }
             }
             

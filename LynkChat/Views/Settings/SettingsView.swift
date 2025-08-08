@@ -10,6 +10,7 @@ import SwiftData
 
 struct SettingsView: View {
     @ObservedObject var config = AppConfig.shared
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         #if os(macOS)
@@ -69,6 +70,7 @@ struct SettingsView: View {
                 }
             }
         }
+        .foregroundStyle(colorScheme == .dark ? .white : .black)
         .toolbarTitleDisplayMode(.inlineLarge)
         .navigationTitle("Settings")
         .scrollContentBackground(.visible)
