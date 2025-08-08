@@ -118,12 +118,13 @@ final class Chat: Equatable, Identifiable, Hashable {
     }
     
 
+    @MainActor
     func sendInput(prompt: String? = nil) async {
         var content: String
         if let prompt = prompt {
             content = prompt
         } else {
-            content = await inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+            content = inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         
         guard !content.isEmpty else {
@@ -156,7 +157,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         // Reset inputManager after everything is done
-        await inputManager.reset()
+        inputManager.reset()
     }
 
     func regenerate(message: MessageGroup) async {

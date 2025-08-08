@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImageConfig: Identifiable, Codable {
+struct ImageConfig: Identifiable, Codable, Sendable {
     var id: UUID = UUID()
     var model: ImageModel = ImageModel.flux_schnell
     
