@@ -53,7 +53,8 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     @Transient
     var streamingTask: Task<Void, Error>?
-    @Transient
+    
+    @Attribute(.ephemeral)
     var isReplying: Bool = false
 
     @Transient
