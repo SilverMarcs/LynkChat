@@ -67,8 +67,3 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         }
     }
 }
-
-struct TokenUsage: Codable {
-    var promptTokens: Int
-    var completionTokens: Int
-}

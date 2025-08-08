@@ -11,14 +11,14 @@ enum ThinkingBudget: String, CaseIterable, Codable {
     case none
     case low
     case medium
-    case hight
+    case high
     
     var displayName: String {
         switch self {
         case .none: "None"
         case .low: "Low"
         case .medium: "Medium"
-        case .hight: "High"
+        case .high: "High"
         }
     }
     
@@ -27,11 +27,7 @@ enum ThinkingBudget: String, CaseIterable, Codable {
         case .none: "minus.circle"
         case .low: "gauge.low"
         case .medium: "gauge.medium"
-        case .hight: "gauge.high"
+        case .high: "gauge.high"
         }
-    }
-    
-    var description: String {
-        return String(self.rawValue)
     }
 }

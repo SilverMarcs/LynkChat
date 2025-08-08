@@ -41,7 +41,7 @@ struct StreamHandler {
                updateToolResult(for: toolResultResponse)
                
             case .finish(let finishResponse):
-               totalTokens = finishResponse.promptTokens + finishResponse.completionTokens
+               totalTokens = finishResponse.totalTokens
                
             case .error(let errorResponse):
                throw RuntimeError(errorResponse.content)
