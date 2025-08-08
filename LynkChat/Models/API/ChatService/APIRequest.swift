@@ -13,8 +13,7 @@ struct APIRequest: Encodable {
     let model: String
     let messages: [APIMessage]
     let temperature: Double
-    let thinkingBudget: Int
-//    let maxTokens: Int
+    let thinkingBudget: String
     let system: String?
     let tools: [String]
 }

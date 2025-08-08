@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum ThinkingBudget: Int, CaseIterable, Codable {
-    case none = 0
-    case low = 1024
-    case medium = 4096
-    case hight = 8192
+enum ThinkingBudget: String, CaseIterable, Codable {
+    case none
+    case low
+    case medium
+    case hight
     
     var displayName: String {
         switch self {
