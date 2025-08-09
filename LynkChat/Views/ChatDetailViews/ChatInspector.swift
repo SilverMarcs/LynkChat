@@ -10,6 +10,7 @@ import SwiftData
 
 struct ChatInspector: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
     
     @Bindable var chat: Chat
     
@@ -31,16 +32,9 @@ struct ChatInspector: View {
             
             Section("Model") {
                 ModelPicker(selectedModel: $chat.config.model)
-//                    .labelStyle(.titleOnly)
             }
             
             Section("Parameters") {
-//                Picker("Max Tokens", selection: $chat.config.maxTokens) {
-//                    ForEach(MaxTokens.allCases, id: \.self) { option in
-//                        Text(option.description).tag(option)
-//                    }
-//                }
-                
                 Picker(selection: $chat.config.thinkingBudget) {
                     ForEach(ThinkingBudget.allCases, id: \.self) { budget in
                         Label(budget.displayName, systemImage: budget.systemImage)
@@ -70,12 +64,9 @@ struct ChatInspector: View {
                 sysPrompt
             }
             
-//            Section {
-//                VStack {
-//                    exportButton
-//                    Divider()
-//                }
-//            }
+            Section {
+                exportButton
+            }
         }
         .formStyle(.grouped)
         .presentationDragIndicator(.visible)
@@ -85,6 +76,7 @@ struct ChatInspector: View {
                 dismiss()
             } label: {
                 Image(systemName: "xmark")
+                    .foregroundStyle(colorScheme == .dark ? .white : .black)
             }
             .controlSize(.large)
             .buttonStyle(.glass)
@@ -133,9 +125,9 @@ struct ChatInspector: View {
         } label: {
             Text("Export Markdown")
                 .frame(maxWidth: .infinity)
-                .contentShape(Rectangle())
         }
         .foregroundStyle(.accent)
+        .buttonStyle(.borderless)
         .fileExporter(
             isPresented: $isExportingMarkdown,
             document: MarkdownBackup(chat: chat),
