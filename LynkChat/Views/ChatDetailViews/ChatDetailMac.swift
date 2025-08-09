@@ -25,19 +25,22 @@ struct ChatDetailMac: View {
     
     var body: some View {
         ScrollViewReader { proxy in
-            ScrollView {
+            List {
                 ForEach(visibleMessages, id: \.self) { group in
                     MessageView(group: group)
                         .environment(\.chat, chat)
+                        .listRowSeparator(.hidden)
                 }
                 
                 ErrorMessageView(chat: chat)
+                    .listRowSeparator(.hidden)
                 
                 Color.clear
                     .frame(height: config.expandColor
                            ? (chat.status == .quick ? 250 : 475)
                            : 1)
                     .id(String.bottomID)
+                    .listRowSeparator(.hidden)
             }
             .overlay {
                 if chat.currentThread.isEmpty {
@@ -58,14 +61,19 @@ struct ChatDetailMac: View {
                     InputArea(chat: chat)
                 }
             }
-            .onScrollPhaseChange { oldPhase, newPhase in
-                if newPhase == .interacting {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        config.expandColor = false
-                    }
-                }
-                return
-            }
+//            .onReceive(NotificationCenter.default.publisher(for: NSScrollView.willStartLiveScrollNotification)) { _ in
+//                withAnimation(.easeInOut(duration: 0.5)) {
+//                    config.expandColor = false
+//                }
+//              }
+//            .onScrollPhaseChange { oldPhase, newPhase in
+//                if newPhase == .interacting {
+//                    withAnimation(.easeInOut(duration: 0.5)) {
+//                        config.expandColor = false
+//                    }
+//                }
+//                return
+//            }
         }
     }
     

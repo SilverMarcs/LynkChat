@@ -56,6 +56,8 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     @Attribute(.ephemeral)
     var isReplying: Bool = false
+    @Attribute(.ephemeral)
+    var isReasoning: Bool = false
 
     @Transient
     var inputManager = InputManager()
@@ -74,20 +76,20 @@ final class Chat: Equatable, Identifiable, Hashable {
         streamingTask = Task {
             let streamer = StreamHandler(chat: self, assistant: message)
             
-            // Request background task before starting network operations
-//            #if !os(macOS)
-//            let backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
-//                self?.streamingTask?.cancel()
-//            }
-//            
-//            defer {
-//                // Ensure we end the background task when done
-//                UIApplication.shared.endBackgroundTask(backgroundTaskId)
-//            }
-//            #endif
-            
+            // TODO: see this might not work on mobile
             do {
                 try await streamer.handleRequest()
+                
+                #if !os(macOS)
+                let backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
+                    self?.streamingTask?.cancel()
+                }
+
+                defer {
+                    // Ensure we end the background task when done
+                    UIApplication.shared.endBackgroundTask(backgroundTaskId)
+                }
+                #endif
                 
                 // Generate title after streaming is complete
                 if await AppConfig.shared.autogenTitle {

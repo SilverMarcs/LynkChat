@@ -19,6 +19,10 @@ struct ReasoningResponse: Decodable {
     let reasoning: String
 }
 
+struct ReasoningEndResponse: Decodable {
+    let type: String
+}
+
 struct FinishResponse: Decodable {
     let type: String
     let totalTokens: Int
@@ -47,18 +51,21 @@ struct ToolResultResponse: Decodable {
 enum ResponseType: Decodable {
     case text(TextResponse)
     case reasoning(ReasoningResponse)
+    case reasoningEnd(ReasoningEndResponse)
     case finish(FinishResponse)
     case error(ErrorResponse)
     case toolCall(ToolCallResponse)
     case toolResult(ToolResultResponse)
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        
+
         if let textResponse = try? container.decode(TextResponse.self) {
             self = .text(textResponse)
         } else if let reasoningResponse = try? container.decode(ReasoningResponse.self) {
             self = .reasoning(reasoningResponse)
+        } else if let reasoningEndResponse = try? container.decode(ReasoningEndResponse.self) {
+            self = .reasoningEnd(reasoningEndResponse)
         } else if let finishResponse = try? container.decode(FinishResponse.self) {
             self = .finish(finishResponse)
         } else if let errorResponse = try? container.decode(ErrorResponse.self) {

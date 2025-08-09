@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ReasoningView: View {
+    @Environment(\.chat) var chat
     let reason: String
     
     @State private var showingReasoning = false
@@ -18,6 +19,8 @@ struct ReasoningView: View {
                 HStack {
                     Text("Reasoning")
                         .font(.headline)
+                        .shimmerWithoutRedact(when: chat.isReasoning)
+                        .padding(.leading, 3)
                     
                     Spacer()
                     
@@ -38,7 +41,7 @@ struct ReasoningView: View {
                     }
                 }
             }
-            .padding(5)
+//            .padding(2)
         }
         .groupBoxStyle(PlatformGroupBox(radius: 15))
         .transaction { $0.animation = nil }

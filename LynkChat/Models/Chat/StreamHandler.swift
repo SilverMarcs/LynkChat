@@ -27,24 +27,28 @@ struct StreamHandler {
         for try await response in APIService.streamResponse(from: apiRequest) {
             switch response {
             case .text(let textResponse):
-               streamText += textResponse.content
-               assistant.content = streamText
-               
+                streamText += textResponse.content
+                assistant.content = streamText
+
             case .reasoning(let reasoningResponse):
-               reasoning += reasoningResponse.reasoning
-               assistant.reasoning = reasoning
-               
+                chat.isReasoning = true
+                reasoning += reasoningResponse.reasoning
+                assistant.reasoning = reasoning
+
+            case .reasoningEnd(_):
+                chat.isReasoning = false
+
             case .toolCall(let toolCallResponse):
-               updateTools(with: toolCallResponse)
-               
+                updateTools(with: toolCallResponse)
+
             case .toolResult(let toolResultResponse):
-               updateToolResult(for: toolResultResponse)
-               
+                updateToolResult(for: toolResultResponse)
+
             case .finish(let finishResponse):
-               totalTokens = finishResponse.totalTokens
-               
+                totalTokens = finishResponse.totalTokens
+
             case .error(let errorResponse):
-               throw RuntimeError(errorResponse.content)
+                throw RuntimeError(errorResponse.content)
             }
         }
         
