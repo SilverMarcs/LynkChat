@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ThinkingBudget: String, CaseIterable, Codable {
+enum ThinkingBudget: String, CaseIterable, Codable, Sendable {
     case none
     case low
     case medium

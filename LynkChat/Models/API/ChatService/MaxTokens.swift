@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MaxTokens: Int, CaseIterable, Codable {
+enum MaxTokens: Int, CaseIterable, Codable, Sendable {
     case t512 = 512
     case t1024 = 1024
     case t2048 = 2048

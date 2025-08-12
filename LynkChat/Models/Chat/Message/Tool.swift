@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum Tool: String, Identifiable, CaseIterable, Codable {
+enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
     case webSearch
     case scrapeLinks
     case imageGeneration

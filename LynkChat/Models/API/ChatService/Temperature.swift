@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Temperature: String, CaseIterable, Codable {
+enum Temperature: String, CaseIterable, Codable, Sendable {
     case precise
     case balanced
     case creative

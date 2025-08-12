@@ -33,7 +33,6 @@ struct ChatDetailMac: View {
                     }
                     
                     ErrorMessageView(chat: chat)
-                        .listRowSeparator(.hidden)
                     
                     Color.clear
                         .frame(height: config.expandColor
@@ -41,7 +40,7 @@ struct ChatDetailMac: View {
                                : 1)
                         .id(String.bottomID)
                 }
-                .overlay {
+                .overlay(alignment: .center) {
                     if chat.currentThread.isEmpty {
                         EmptyChat(chat: chat)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -66,14 +65,14 @@ struct ChatDetailMac: View {
 //                    config.expandColor = false
 //                }
 //              }
-            .onScrollPhaseChange { oldPhase, newPhase in
-                if newPhase == .interacting {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        config.expandColor = false
-                    }
-                }
-                return
-            }
+//            .onScrollPhaseChange { oldPhase, newPhase in
+//                if newPhase == .interacting {
+//                    withAnimation(.easeInOut(duration: 0.5)) {
+//                        config.expandColor = false
+//                    }
+//                }
+//                return
+//            }
         }
     }
     

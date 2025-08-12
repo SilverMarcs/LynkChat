@@ -8,7 +8,7 @@
 import Foundation
 import UniformTypeIdentifiers
 
-enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
+enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, Sendable, ModelImageProvider {
     case gpt_5
     case gpt_5_mini
     case gpt_5_nano
