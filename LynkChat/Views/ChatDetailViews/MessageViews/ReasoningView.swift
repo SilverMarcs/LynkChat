@@ -15,7 +15,7 @@ struct ReasoningView: View {
     
     var body: some View {
         GroupBox {
-            VStack {
+            VStack(alignment: .leading) {
                 HStack {
                     Text("Reasoning")
                         .font(.headline)
@@ -31,6 +31,7 @@ struct ReasoningView: View {
                     }
                 }
                 
+                
                 if showingReasoning {
                     Divider()
                     
@@ -39,9 +40,10 @@ struct ReasoningView: View {
                             .foregroundStyle(.secondary)
                             .textSelection(.enabled)
                     }
+                    .frame(maxHeight: 500)
+                    .contentMargins(5)
                 }
             }
-//            .padding(2)
         }
         .groupBoxStyle(PlatformGroupBox(radius: 15))
         .transaction { $0.animation = nil }

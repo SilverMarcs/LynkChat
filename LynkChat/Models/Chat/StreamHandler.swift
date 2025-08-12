@@ -11,19 +11,34 @@ import SwiftUI
 struct StreamHandler {
     let chat: Chat
     let assistant: Message
-    
+    private static var chainedFollowUpIds = Set<UUID>() // track assistant messages already chained
+
     func handleRequest() async throws {
-        chat.isReplying = true // Set isReplying to true when streaming starts
-        var streamText = ""
-        var reasoning = ""
-        var totalTokens = 0
-        
-        let apiRequest = await createAPIRequest()
-        
+        chat.isReplying = true
         AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
         
-        for try await response in APIService.streamResponse(from: apiRequest) {
+        let apiRequest = await createAPIRequest()
+        try await processStream(from: apiRequest)
+        
+        // Attempt chained follow-up once (web search tool result -> second call)
+        if let followUp = extractWebSearchFollowUp(), !Self.chainedFollowUpIds.contains(assistant.id) {
+            Self.chainedFollowUpIds.insert(assistant.id)
+            assistant.isReplying = true
+            chat.isReplying = true
+            try await streamFollowUp(followUpPrompt: followUp)
+        }
+        
+        finishResponse()
+    }
+    
+    // MARK: - Stream Processing
+    
+    private func processStream(from request: APIRequest) async throws {
+        var streamText = assistant.content // preserve existing content for follow-ups
+        var reasoning = assistant.reasoning ?? ""
+        
+        for try await response in APIService.streamResponse(from: request) {
             switch response {
             case .text(let textResponse):
                 streamText += textResponse.content
@@ -44,61 +59,54 @@ struct StreamHandler {
                 updateToolResult(for: toolResultResponse)
 
             case .finish(let finishResponse):
-                totalTokens = finishResponse.totalTokens
+                chat.totalTokens = finishResponse.totalTokens
 
             case .error(let errorResponse):
                 throw RuntimeError(errorResponse.content)
             }
         }
-        
-        finaliseStream(streamText: streamText, totalTokens: totalTokens)
     }
     
-    private func finaliseStream(streamText: String = "", totalTokens: Int) {
-        chat.isReplying = false
-        chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
+    private func streamFollowUp(followUpPrompt: String) async throws {
+        let baseContext = chat.adjustedContext // full context including last assistant
+        var apiMessages = baseContext.map { $0.toAPIMessage() }
+        // Inject virtual user message with the follow-up prompt
+        apiMessages.append(APIMessage(role: .assistant, content: [.text(followUpPrompt)]))
         
-        // Check if the message should be kept - either has text content or has tools with results
-        let hasValidTools = assistant.tools?.contains { $0.result != nil } ?? false
-        let shouldKeepMessage = !streamText.isEmpty || hasValidTools
-        
-        if shouldKeepMessage {
-            // Normal case - update the content and keep the message
-            assistant.content = streamText
-            assistant.isReplying = false
-            try? assistant.modelContext?.save()
-        } else {
-            // Handle empty message with no tool results
-            if let lastGroup = chat.currentThread.last,
-               lastGroup.allMessages.count > 1 {
-                // This was likely a regeneration - delete only this message and set previous as active
-                lastGroup.deleteAndSetPreviousActive()
-            } else {
-                // This was a new message group - delete the entire last message
-                chat.errorDeleteLast()
-            }
-        }
-        
-        withAnimation(.easeInOut(duration: 1)) {
-            AppSettings.shared.expandColor = false
-        }
+        let request = createAPIRequest(with: apiMessages)
+        try await processStream(from: request)
     }
+    
+    // MARK: - Helper Methods
     
     private func createAPIRequest() async -> APIRequest {
-        let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
+        let adjustedContext = chat.adjustedContext.dropLast() // removing last assistant msg
         let apiMessages = adjustedContext.map { $0.toAPIMessage() }
+        return createAPIRequest(with: apiMessages)
+    }
+    
+    private func createAPIRequest(with messages: [APIMessage]) -> APIRequest {
         let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
         
         return APIRequest(
             userId: "zabir",
             model: AppConfig.shared.sendDebugModel ? "debug" : chat.config.model.id,
-            messages: apiMessages,
+            messages: messages,
             temperature: chat.config.temperature.value,
             thinkingBudget: chat.config.thinkingBudget.rawValue,
-//            maxTokens: chat.config.maxTokens.rawValue,
             system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
             tools: chat.config.model.supportsTool ? chat.config.enabledTools.map { $0.rawValue } : []
         )
+    }
+
+    // Determine if a web search tool result should be auto-sent as a follow-up.
+    private func extractWebSearchFollowUp() -> String? {
+        guard let tools = assistant.tools,
+              let webSearchTool = tools.first(where: { $0.tool == .webSearch }),
+              let toolResult = webSearchTool.result, !toolResult.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
+        return toolResult
     }
     
     private func updateTools(with toolCallResponse: ToolCallResponse) {
@@ -114,5 +122,12 @@ struct StreamHandler {
         if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
             assistant.tools?[index].result = toolResultResponse.result
         }
+    }
+    
+    private func finishResponse() {
+        assistant.isReplying = false
+        assistant.reasoning = assistant.reasoning?.trimmingCharacters(in: .whitespacesAndNewlines)
+        chat.isReplying = false
+        withAnimation(.easeInOut(duration: 1)) { AppSettings.shared.expandColor = false }
     }
 }

@@ -73,10 +73,9 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         errorMessage = nil
         date = Date()
-        streamingTask = Task {
+        streamingTask = Task { [weak self] in
+            guard let self else { return }
             let streamer = StreamHandler(chat: self, assistant: message)
-            
-            // TODO: see this might not work on mobile
             do {
                 try await streamer.handleRequest()
                 
