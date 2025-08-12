@@ -31,7 +31,6 @@ struct ChatDetailMac: View {
                                : 1)
                         .id(String.bottomID)
                 }
-
             }
             .overlay(alignment: .center) {
                 if chat.currentThread.isEmpty {

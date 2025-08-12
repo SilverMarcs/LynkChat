@@ -15,6 +15,7 @@ struct ChatToolbar: ToolbarContent {
     
     @State private var showingInspector: Bool = false
     @State private var currentSearchIndex: Int = 0
+    @State private var showToolbarItems: Bool = false // Add this state
     
     @FocusState private var isFocused: FocusedField?
     
@@ -33,98 +34,98 @@ struct ChatToolbar: ToolbarContent {
             }
         }
         
-        #if os(macOS)
-        ToolbarItemGroup(placement: .primaryAction) {
-            ToolsToggleView(config: $chat.config)
-        }
-        
-        ToolbarSpacer(.fixed)
-        
+        // Invisible toolbar item to handle the delay
         ToolbarItem(placement: .primaryAction) {
-            Picker(selection: $chat.config.thinkingBudget) {
-                ForEach(ThinkingBudget.allCases, id: \.self) { budget in
-                    Label(budget.displayName, systemImage: budget.systemImage)
-                        .tag(budget)
+            Color.clear
+                .frame(width: 0, height: 0)
+                .task {
+                    try? await Task.sleep(for: .seconds(0.2))
+                    showToolbarItems = true
                 }
-            } label: {
-                Label("Thinking Budget", systemImage: "timer")
-            }
-            .labelsHidden()
-            .pickerStyle(.segmented)
         }
         
         ToolbarSpacer(.fixed)
         
-        ToolbarItem(placement: .primaryAction) {
-//            ModelPopoverPicker(selectedModel: $chat.config.model)
-                ModelMenuPicker(selectedModel: $chat.config.model)
-//                ModelPicker(selectedModel: $chat.config.model)
-        }
-        
-        if chat.status == .temporary {
+        #if os(macOS)
+        if showToolbarItems {
+            ToolbarItemGroup(placement: .primaryAction) {
+                ToolsToggleView(config: $chat.config)
+            }
+            
             ToolbarSpacer(.fixed)
             
             ToolbarItem(placement: .primaryAction) {
-                Button {
-                    chat.status = .normal
-                } label: {
-                    Label("Save", systemImage: "square.and.arrow.down")
-                }
-                .popoverTip(TemporaryChatTip())
-            }
-        }
-        
-        ToolbarItemGroup(placement: .keyboard) {
-            Section {
-                Button("Edit Last Message") {
-                    guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }
-                    isFocused = .textEditor // this isnt doing anything (on macos at least)
-                    chat.inputManager.setupEditing(message: lastUserMessage)
-                }
-                .keyboardShortcut("e")
-                .disabled(chat.status == .quick || chat.isReplying)
-                
-                Button("Regen Last Message") {
-                    guard !chat.isReplying, let last = chat.currentThread.last else { return }
-                    Task {
-                        await chat.regenerate(message: last)
+                Picker(selection: $chat.config.thinkingBudget) {
+                    ForEach(ThinkingBudget.allCases, id: \.self) { budget in
+                        Label(budget.displayName, systemImage: budget.systemImage)
+                            .tag(budget)
                     }
+                } label: {
+                    Label("Thinking Budget", systemImage: "timer")
                 }
-                .keyboardShortcut("r")
+                .labelsHidden()
+                .pickerStyle(.segmented)
             }
             
-            Section {
-                Button("Reset Context") {
-                    guard !chat.isReplying, let last = chat.currentThread.last else { return }
-                    chat.resetContext(at: last)
-                }
-                .keyboardShortcut("k")
+            ToolbarSpacer(.fixed)
+            
+            ToolbarItem(placement: .primaryAction) {
+                ModelMenuPicker(selectedModel: $chat.config.model)
+            }
+            
+            
+            if chat.status == .temporary {
+                ToolbarSpacer(.fixed)
                 
-                Button("Delete Last Message", role: .destructive) {
-                    chat.deleteLastMessage()
-                    chat.errorMessage = nil
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        chat.status = .normal
+                    } label: {
+                        Label("Save", systemImage: "square.and.arrow.down")
+                    }
+                    .popoverTip(TemporaryChatTip())
                 }
-                .keyboardShortcut(.delete)
+            }
+            
+            ToolbarItemGroup(placement: .keyboard) {
+                Section {
+                    Button("Edit Last Message") {
+                        guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }
+                        isFocused = .textEditor // this isnt doing anything (on macos at least)
+                        chat.inputManager.setupEditing(message: lastUserMessage)
+                    }
+                    .keyboardShortcut("e")
+                    .disabled(chat.status == .quick || chat.isReplying)
+                    
+                    Button("Regen Last Message") {
+                        guard !chat.isReplying, let last = chat.currentThread.last else { return }
+                        Task {
+                            await chat.regenerate(message: last)
+                        }
+                    }
+                    .keyboardShortcut("r")
+                }
+                
+                Section {
+                    Button("Reset Context") {
+                        guard !chat.isReplying, let last = chat.currentThread.last else { return }
+                        chat.resetContext(at: last)
+                    }
+                    .keyboardShortcut("k")
+                    
+                    Button("Delete Last Message", role: .destructive) {
+                        chat.deleteLastMessage()
+                        chat.errorMessage = nil
+                    }
+                    .keyboardShortcut(.delete)
+                }
             }
         }
         #endif
     }
     
     private func toggleInspector() {
-//        #if !os(macOS)
-//        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//        #endif
         showingInspector.toggle()
-    }
-}
-
-#Preview {
-    VStack {
-        Text("Hello, World!")
-    }
-    .frame(width: 700, height: 300)
-    .toolbar {
-        ChatToolbar(chat: .mockChat)
     }
 }
 
