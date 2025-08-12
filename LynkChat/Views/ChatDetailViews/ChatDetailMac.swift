@@ -25,29 +25,29 @@ struct ChatDetailMac: View {
     
     var body: some View {
         ScrollViewReader { proxy in
-            List {
-                ForEach(visibleMessages, id: \.self) { group in
-                    MessageView(group: group)
-                        .environment(\.chat, chat)
+            ScrollView {
+                VStack {
+                    ForEach(visibleMessages, id: \.self) { group in
+                        MessageView(group: group)
+                            .environment(\.chat, chat)
+                    }
+                    
+                    ErrorMessageView(chat: chat)
                         .listRowSeparator(.hidden)
+                    
+                    Color.clear
+                        .frame(height: config.expandColor
+                               ? (chat.status == .quick ? 250 : 475)
+                               : 1)
+                        .id(String.bottomID)
                 }
-                
-                ErrorMessageView(chat: chat)
-                    .listRowSeparator(.hidden)
-                
-                Color.clear
-                    .frame(height: config.expandColor
-                           ? (chat.status == .quick ? 250 : 475)
-                           : 1)
-                    .id(String.bottomID)
-                    .listRowSeparator(.hidden)
-            }
-            .overlay {
-                if chat.currentThread.isEmpty {
-                    EmptyChat(chat: chat)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if !showAllMessages {
-                    ProgressView()
+                .overlay {
+                    if chat.currentThread.isEmpty {
+                        EmptyChat(chat: chat)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else if !showAllMessages {
+                        ProgressView()
+                    }
                 }
             }
             .contentMargins(.all, 15, for: .scrollContent)
@@ -66,14 +66,14 @@ struct ChatDetailMac: View {
 //                    config.expandColor = false
 //                }
 //              }
-//            .onScrollPhaseChange { oldPhase, newPhase in
-//                if newPhase == .interacting {
-//                    withAnimation(.easeInOut(duration: 0.5)) {
-//                        config.expandColor = false
-//                    }
-//                }
-//                return
-//            }
+            .onScrollPhaseChange { oldPhase, newPhase in
+                if newPhase == .interacting {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        config.expandColor = false
+                    }
+                }
+                return
+            }
         }
     }
     

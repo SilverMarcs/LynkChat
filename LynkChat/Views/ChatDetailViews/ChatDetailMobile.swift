@@ -80,10 +80,7 @@ struct ChatDetailMobile: View {
                 }
             }
             .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
-//            .onSubmit(of: .search) {
-//                sendInput()
-//            }
-            .onReceive(NotificationCenter.default.publisher(for: UISearchTextField.textDidEndEditingNotification)) { notification in
+            .onSubmit(of: .search) {
                 sendInput()
             }
             .toolbar {

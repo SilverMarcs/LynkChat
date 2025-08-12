@@ -10,7 +10,6 @@ import TipKit
 
 struct UserMessage: View {
     @Environment(\.chat) var chat
-    @Environment(\.colorScheme) var colorScheme
     
     @ObservedObject var config = AppConfig.shared
     

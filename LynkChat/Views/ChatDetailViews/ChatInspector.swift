@@ -10,7 +10,6 @@ import SwiftData
 
 struct ChatInspector: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colorScheme
     
     @Bindable var chat: Chat
     
@@ -76,7 +75,6 @@ struct ChatInspector: View {
                 dismiss()
             } label: {
                 Image(systemName: "xmark")
-                    .foregroundStyle(colorScheme == .dark ? .white : .black)
             }
             .controlSize(.large)
             .buttonStyle(.glass)

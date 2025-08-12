@@ -10,8 +10,6 @@ import SwiftData
 import TipKit
 
 struct EmptyChat: View {
-    @Environment(\.colorScheme) var colorScheme
-    
     @Bindable var chat: Chat
     @Query(filter: #Predicate<Chat> { chat in
         chat.statusId == 1 || chat.statusId == 2
@@ -59,7 +57,6 @@ struct EmptyChat: View {
                             } label: {
                                 Label {
                                     Text(chat.title)
-                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
                                 } icon: {
                                     Image(chat.config.model.imageName)
                                         .foregroundStyle(Color(hex: chat.config.model.color))

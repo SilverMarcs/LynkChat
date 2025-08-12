@@ -9,7 +9,6 @@ import SwiftUI
 import TipKit
 
 struct InputArea: View {
-    @Environment(\.colorScheme) var colorScheme
     @ObservedObject var config = AppConfig.shared
     
     var chat: Chat

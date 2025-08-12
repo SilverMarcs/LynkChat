@@ -8,11 +8,6 @@
 import SwiftUI
 
 struct ListCard: View {
-    @Environment(\.colorScheme) var colorScheme
-    #if os(macOS)
-    @Environment(\.appearsActive) private var appearsActive
-    #endif
-    
     var icon: String
     var iconColor: Color
     var title: String
@@ -23,79 +18,31 @@ struct ListCard: View {
         Button {
             action()
         } label: {
-            VStack(alignment: .leading, spacing: spacing) {
-                HStack {
-                    Image(systemName: icon)
-                        .font(.title3)
-                        .foregroundStyle(.white, iconColor)
-                    #if os(macOS)
-                        .opacity(appearsActive ? 1 : 0.7)
-                    #endif
+            GroupBox {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Image(systemName: icon)
+                            .font(.title3)
 
-                    Spacer()
+                        Spacer()
+                        
+                        Text(count)
+                            .contentTransition(.numericText())
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                    }
                     
-                    Text(count)
-                        .contentTransition(.numericText())
-                        .font(.title2)
+                    Text(title)
+                        .font(.callout)
                         .fontWeight(.semibold)
+                        .opacity(0.9)
+                        .padding(.leading, 2)
                 }
-                
-                Text(title)
-                    .font(.callout)
-                    .fontWeight(.semibold)
-                    .opacity(0.9)
-                    .padding(.leading, 2)
+                .padding(2)
             }
-            .padding(.vertical, verticalPadding)
-            .padding(.horizontal, horizontalPadding)
-            .background(iconColor.mix(with: .black, by: 0.1).gradient.opacity(0.7), in: RoundedRectangle(cornerRadius: radius))
-//            #if os(macOS)
-//            .background(.quaternary.opacity(0.8))
-//            #else
-//            .background(colorScheme == .dark
-//                        ? isIPadOS()
-//                            ? AnyShapeStyle(.background.tertiary)
-//                            : AnyShapeStyle(.background.secondary)
-//                        : AnyShapeStyle(.background))
-//            #endif
-//            .cornerRadius(radius)
+            .background(iconColor.mix(with: .black, by: 0.1).gradient.opacity(0.7), in: RoundedRectangle(cornerRadius: 7))
         }
         .buttonStyle(.plain)
-        #if os(macOS)
-        .foregroundStyle(.white.opacity(appearsActive ? 1 : 0.7))
-        #endif
-    }
-    
-    private var radius: CGFloat {
-    #if os(macOS)
-        return 7
-    #else
-        return 10
-    #endif
-    }
-    
-    private var verticalPadding: CGFloat {
-        #if os(macOS)
-        return 5
-        #else
-        return 7
-        #endif
-    }
-    
-    private var horizontalPadding: CGFloat {
-        #if os(macOS)
-        return 8
-        #else
-        return 10
-        #endif
-    }
-    
-    private var spacing: CGFloat {
-        #if os(macOS)
-        return 6
-        #else
-        return 10
-        #endif
     }
 }
 
