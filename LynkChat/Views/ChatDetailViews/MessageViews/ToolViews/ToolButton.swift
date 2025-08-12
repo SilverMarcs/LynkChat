@@ -16,25 +16,21 @@ struct ToolButton: View {
         Button {
             showArguments.toggle()
         } label: {
-            GroupBox {
-                HStack(spacing: 4) {
-                    Text("Used")
-                        #if os(macOS)
-                        .foregroundStyle(.secondary)
-                        #endif
+            HStack(spacing: 4) {
+                Text("Used")
+                    #if os(macOS)
+                    .foregroundStyle(.secondary)
+                    #endif
 
-                    Text("\(chatTool.tool.title) \(Image(systemName: chatTool.tool.iconName))")
-                        .fontWeight(.semibold)
-                        .foregroundStyle(chatTool.tool.color)
-                        .opacity(0.9)
-                        
-                }
-                #if os(macOS)
-                .padding(3)
-                #endif
+                Text("\(chatTool.tool.title) \(Image(systemName: chatTool.tool.iconName))")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(chatTool.tool.color)
+                    .opacity(0.9)
+                    
             }
         }
-        .buttonStyle(.plain)
+        .controlSize(.large)
+        .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
             ScrollView {
                 if let prettyJSON = prettyPrintJSON(chatTool.args) {

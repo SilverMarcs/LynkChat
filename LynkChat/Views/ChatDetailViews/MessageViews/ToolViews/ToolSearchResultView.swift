@@ -14,23 +14,24 @@ struct ToolSearchResultView: View {
     @State private var parsedResults: SearchResult?
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                if let searchString {
-                    if let parsed = try? JSONDecoder().decode(SearchResult.self, from: searchString.data(using: .utf8) ?? Data()) {
+        if let searchString {
+            if let parsed = try? JSONDecoder().decode(SearchResult.self, from: searchString.data(using: .utf8) ?? Data()) {
+                // Show parsed results in horizontal scroll
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
                         ForEach(parsed.results, id: \.url) { result in
                             pillContent(text: result.title, url: result.url)
                         }
-                    } else {
-                        // Show raw text if parsing fails
-                        Text(searchString)
-                            .padding(.horizontal, padding)
-                            .padding(.vertical, padding - 2)
-                            .background(.quaternary.opacity(0.6))
-                            .clipShape(.rect(cornerRadius: 12, style: .circular))
                     }
-                } else {
-                    // Placeholder state
+                }
+            } else {
+                Text(searchString)
+                    .textSelection(.enabled)
+            }
+        } else {
+            // Placeholder state in horizontal scroll
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
                     ForEach(0..<5, id: \.self) { _ in
                         pillContent(text: "com.example.com", url: nil)
                     }
@@ -65,11 +66,10 @@ struct ToolSearchResultView: View {
                         .foregroundStyle(.accent)
                 }
             }
-            .padding(2)
             .shimmer(when: searchString == nil)
             .disabled(searchString == nil)
         }
-        .buttonStyle(.glass)
+        .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)
     }
     
