@@ -25,7 +25,6 @@ struct ChatContentView: View {
         } detail: {
             if let chat = chatVM.activeChat {
                 ChatDetail(chat: chat)
-                    .id(chat.id)
                     .frame(minWidth: 600)
             } else {
                 Text(chatVM.selections.count > 0

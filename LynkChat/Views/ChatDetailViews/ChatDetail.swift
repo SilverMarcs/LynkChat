@@ -19,6 +19,7 @@ struct ChatDetail: View {
             ChatDetailMobile(chat: chat)
             #endif
         }
+        .id(chat.id)
         .toolbar {
             ChatToolbar(chat: chat)
         }
