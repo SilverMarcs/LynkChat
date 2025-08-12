@@ -23,7 +23,6 @@ struct StreamHandler {
         AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
         
-        
         for try await response in APIService.streamResponse(from: apiRequest) {
             switch response {
             case .text(let textResponse):
@@ -59,9 +58,17 @@ struct StreamHandler {
         chat.isReplying = false
         chat.totalTokens = totalTokens > 0 ? totalTokens : chat.totalTokens
         
-        // Check if the message content is empty after streaming completes
-        if streamText.isEmpty {
-            // Handle empty message
+        // Check if the message should be kept - either has text content or has tools with results
+        let hasValidTools = assistant.tools?.contains { $0.result != nil } ?? false
+        let shouldKeepMessage = !streamText.isEmpty || hasValidTools
+        
+        if shouldKeepMessage {
+            // Normal case - update the content and keep the message
+            assistant.content = streamText
+            assistant.isReplying = false
+            try? assistant.modelContext?.save()
+        } else {
+            // Handle empty message with no tool results
             if let lastGroup = chat.currentThread.last,
                lastGroup.allMessages.count > 1 {
                 // This was likely a regeneration - delete only this message and set previous as active
@@ -70,11 +77,6 @@ struct StreamHandler {
                 // This was a new message group - delete the entire last message
                 chat.errorDeleteLast()
             }
-        } else {
-            // Normal case - update the content
-            assistant.content = streamText
-            assistant.isReplying = false
-            try? assistant.modelContext?.save()
         }
         
         withAnimation(.easeInOut(duration: 1)) {

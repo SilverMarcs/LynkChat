@@ -21,6 +21,7 @@ struct ReasoningResponse: Decodable {
 
 struct ReasoningEndResponse: Decodable {
     let type: String
+    let stub: String
 }
 
 struct FinishResponse: Decodable {
