@@ -13,8 +13,8 @@ struct ChatDetailMobile: View {
     
     @Bindable var chat: Chat
 
-    @State private var colorViewHeight: CGFloat = 0
     @State private var isFocused: Bool = false
+    @State private var showingInspector: Bool = false
     
     private let chatVM = ChatVM.shared
     
@@ -83,7 +83,20 @@ struct ChatDetailMobile: View {
             .onSubmit(of: .search) {
                 sendInput()
             }
+            .sheet(isPresented: $showingInspector) {
+                ChatInspector(chat: chat)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.hidden)
+            }
             .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingInspector.toggle()
+                    } label: {
+                        Label("Shortcuts", systemImage: "info")
+                    }
+                }
+                
                 ToolbarItem(placement: .bottomBar) {
                     ChatInputMenu(chat: chat)
                 }

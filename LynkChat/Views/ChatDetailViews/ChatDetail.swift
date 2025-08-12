@@ -20,9 +20,6 @@ struct ChatDetail: View {
             #endif
         }
         .id(chat.id)
-        .toolbar {
-            ChatToolbar(chat: chat)
-        }
         .onDrop(of: Array(chat.config.model.supportedTypes), isTargeted: nil) { providers in
             do {
                 return try chat.inputManager.handleDrop(providers)

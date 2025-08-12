@@ -9,10 +9,10 @@ import Foundation
 import UniformTypeIdentifiers
 
 enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, Sendable, ModelImageProvider {
+    case gemini_2_5_flash
     case gpt_5
     case gpt_5_mini
     case gpt_5_nano
-    case gemini_2_5_flash
     case claude_sonnet_4
     case claude_opus_4
     

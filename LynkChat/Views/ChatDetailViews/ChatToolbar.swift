@@ -13,28 +13,14 @@ struct ChatToolbar: ToolbarContent {
     
     @Bindable var chat: Chat
     
-    @State private var showingInspector: Bool = false
-    @State private var currentSearchIndex: Int = 0
-    @State private var showToolbarItems: Bool = false // Add this state
+    @State private var showToolbarItems: Bool = false
     
     @FocusState private var isFocused: FocusedField?
     
     private let chatVM = ChatVM.shared
     
     var body: some ToolbarContent {
-        ToolbarItem(placement: horizontalSizeClass == .compact ? .primaryAction : .navigation) {
-            Button(action: toggleInspector) {
-                Label("Shortcuts", systemImage: horizontalSizeClass == .compact ? "info" : "slider.vertical.3")
-            }
-            .keyboardShortcut(".")
-            .sheet(isPresented: $showingInspector) {
-                ChatInspector(chat: chat)
-                    .presentationDetents(horizontalSizeClass == .compact ? [.medium, .large] : [.large])
-                    .presentationDragIndicator(.hidden)
-            }
-        }
-        
-        // Invisible toolbar item to handle the delay
+
         ToolbarItem(placement: .primaryAction) {
             Color.clear
                 .frame(width: 0, height: 0)
@@ -46,7 +32,6 @@ struct ChatToolbar: ToolbarContent {
         
         ToolbarSpacer(.fixed)
         
-        #if os(macOS)
         if showToolbarItems {
             ToolbarItemGroup(placement: .primaryAction) {
                 ToolsToggleView(config: $chat.config)
@@ -121,16 +106,10 @@ struct ChatToolbar: ToolbarContent {
                 }
             }
         }
-        #endif
-    }
-    
-    private func toggleInspector() {
-        showingInspector.toggle()
     }
 }
 
-#if os(macOS)
 extension ToolbarItemPlacement {
     static let searchPanel = accessoryBar(id: "com.SilverMarcs.LynkChat.searchPanel")
 }
-#endif
+    

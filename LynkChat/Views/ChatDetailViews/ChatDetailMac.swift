@@ -59,6 +59,9 @@ struct ChatDetailMac: View {
                 }
                 return
             }
+            .toolbar {
+                ChatToolbar(chat: chat)
+            }
         }
     }
 }
