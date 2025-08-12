@@ -103,9 +103,17 @@ struct StreamHandler {
     private func extractWebSearchFollowUp() -> String? {
         guard let tools = assistant.tools,
               let webSearchTool = tools.first(where: { $0.tool == .webSearch }),
-              let toolResult = webSearchTool.result, !toolResult.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+              let toolResult = webSearchTool.result,
+              !toolResult.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return nil
         }
+        
+        // Try to decode the tool result as SearchResult
+        guard let data = toolResult.data(using: .utf8),
+              let _ = try? JSONDecoder().decode(SearchResult.self, from: data) else {
+            return nil // Don't follow up if result cannot be decoded as SearchResult
+        }
+        
         return toolResult
     }
     
