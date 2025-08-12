@@ -16,18 +16,9 @@ struct ToolButton: View {
         Button {
             showArguments.toggle()
         } label: {
-            HStack(spacing: 4) {
-                Text("Used")
-                    #if os(macOS)
-                    .foregroundStyle(.secondary)
-                    #endif
-
-                Text("\(chatTool.tool.title) \(Image(systemName: chatTool.tool.iconName))")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(chatTool.tool.color)
-                    .opacity(0.9)
-                    
-            }
+            Label(chatTool.tool.title, systemImage: chatTool.tool.iconName)
+                .fontWeight(.semibold)
+                .foregroundStyle(chatTool.tool.color)
         }
         .controlSize(.large)
         .buttonBorderShape(.roundedRectangle)

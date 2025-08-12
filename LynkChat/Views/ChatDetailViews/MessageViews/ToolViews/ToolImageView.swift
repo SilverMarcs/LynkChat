@@ -15,31 +15,32 @@ struct ToolImageView: View {
     
     var body: some View {
         if let urlStr = urlStr {
-            ZStack(alignment: .topTrailing) {
-                AsyncImage(url: URL(string: urlStr)) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                            .popoverTip(ImageGenToolTip())
-                    } else if phase.error != nil {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(.red.quinary)
+            AsyncImage(url: URL(string: urlStr)) { phase in
+                if let image = phase.image {
+                    image
+                        .resizable()
+                        .popoverTip(ImageGenToolTip())
+                } else if phase.error != nil {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(.red.quinary)
+                        .overlay {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundStyle(.red)
                                 .frame(width: 75, height: 75)
                         }
-                    } else {
-                        ToolImagePlaceholderView()
-                    }
+                } else {
+                    ToolImagePlaceholderView()
                 }
-                .frame(width: 300, height: 300)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                
+            }
+            .frame(width: 300, height: 300)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(alignment: .topTrailing) {
                 Button(action: saveImage) {
                     Image(systemName: showCheckmark ? "checkmark" : "square.and.arrow.down")
+                        .resizable()
+                        .frame(width: 15, height: 15)
                 }
                 .buttonStyle(.glass)
                 .buttonBorderShape(.circle)
@@ -68,20 +69,26 @@ struct ToolImageView: View {
             }
             
             ImageSaveUtil.saveImage(data: data) { success in
-                DispatchQueue.main.async {
-                    if success {
-                        showCheckmark = true
-                        
-                        // Revert back to the original icon after 2 seconds
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            showCheckmark = false
-                        }
+                if success {
+                    showCheckmark = true
+                    
+                    // Revert back to the original icon after 2 seconds
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        showCheckmark = false
                     }
                 }
             }
         }
         
         task.resume()
+    }
+}
+
+struct ToolImagePlaceholderView: View {
+    var body: some View {
+        ProgressView()
+            .frame(width: 300, height: 300)
+            .background(.background.secondary, in: .rect(cornerRadius: 10))
     }
 }
 

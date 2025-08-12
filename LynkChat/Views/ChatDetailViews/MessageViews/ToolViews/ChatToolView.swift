@@ -14,7 +14,6 @@ struct ChatToolView: View {
         FlowLayout {
             ForEach(tools) { chatTool in
                 ToolButton(chatTool: chatTool)
-                    .transaction { $0.animation = nil }
             }
         }
         .padding(.trailing, -8)
@@ -22,7 +21,6 @@ struct ChatToolView: View {
         
         ForEach(tools) { chatTool in
             ToolResultView(chatTool: chatTool)
-                .transaction { $0.animation = nil }
         }
     }
 }

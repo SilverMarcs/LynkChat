@@ -10,6 +10,7 @@ import SwiftUI
 // Main view
 struct ToolSearchResultView: View {
     let searchString: String?
+    @ObservedObject var config = AppConfig.shared
     
     @State private var parsedResults: SearchResult?
     
@@ -27,6 +28,8 @@ struct ToolSearchResultView: View {
             } else {
                 Text(searchString)
                     .textSelection(.enabled)
+                    .lineSpacing(4)
+                    .font(.system(size: config.fontSize + 0.5))
             }
         } else {
             // Placeholder state in horizontal scroll

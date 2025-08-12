@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ListCard: View {
+    @Environment(\.appearsActive) var appearsActive
+    
     var icon: String
     var iconColor: Color
     var title: String
@@ -40,6 +42,8 @@ struct ListCard: View {
                 }
                 .padding(2)
             }
+            .foregroundStyle(.white)
+            .opacity(appearsActive ? 1 : 0.5)
             .background(iconColor.mix(with: .black, by: 0.1).gradient.opacity(0.7), in: RoundedRectangle(cornerRadius: 7))
         }
         .buttonStyle(.plain)

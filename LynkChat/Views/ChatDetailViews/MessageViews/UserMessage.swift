@@ -11,8 +11,6 @@ import TipKit
 struct UserMessage: View {
     @Environment(\.chat) var chat
     
-    @ObservedObject var config = AppConfig.shared
-    
     var group: MessageGroup
     @State var showingTextSelection = false
     
@@ -78,6 +76,8 @@ struct ExpandableText: View {
     @State private var isExpanded = false
     private let needsExpansion: Bool
     
+    @ObservedObject var config = AppConfig.shared
+    
     init(text: String, maxCharacters: Int = 400) {
         self.text = text
         self.maxCharacters = maxCharacters
@@ -88,7 +88,7 @@ struct ExpandableText: View {
         VStack(alignment: .trailing, spacing: 3) {
             Text(displayedText)
                 .textSelection(.enabled)
-                .font(.system(size: AppConfig.shared.fontSize))
+                .font(.system(size: config.fontSize))
                 .lineSpacing(2)
             
             if needsExpansion {

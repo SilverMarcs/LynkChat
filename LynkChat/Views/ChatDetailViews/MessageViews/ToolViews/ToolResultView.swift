@@ -16,7 +16,6 @@ struct ToolResultView: View {
             Text(chatTool.result ?? "No result available")
                 .textSelection(.enabled)
         } else {
-            // Show specialized views when config is false
             switch chatTool.tool {
             case .scrapeLinks:
                 EmptyView()
