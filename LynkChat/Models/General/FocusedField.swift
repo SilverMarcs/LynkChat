@@ -9,6 +9,7 @@ import Foundation
 
 enum FocusedField {
     case textEditor
+    case expandedTextEditor
     case imageInput
     case searchBox
 }

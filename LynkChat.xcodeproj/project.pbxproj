@@ -24,23 +24,6 @@
 				Utils/HotKeyManager.swift = (
 					macos,
 				);
-				Views/BottomViews/iOS/CameraView.swift = (
-					ios,
-				);
-				Views/BottomViews/iOS/InputArea.swift = (
-					ios,
-					xros,
-				);
-				Views/BottomViews/iOS/InputEditor.swift = (
-					ios,
-					xros,
-				);
-				Views/BottomViews/macOS/InputArea.swift = (
-					macos,
-				);
-				Views/BottomViews/macOS/InputEditor.swift = (
-					macos,
-				);
 				Views/ChatDetailViews/ChatDetailMac.swift = (
 					macos,
 				);
@@ -66,6 +49,27 @@
 					xros,
 				);
 				Views/ChatListViews/ChatListMac.swift = (
+					macos,
+				);
+				Views/InputViews/iOS/CameraView.swift = (
+					ios,
+				);
+				Views/InputViews/iOS/ExpandedSearchView.swift = (
+					ios,
+					xros,
+				);
+				Views/InputViews/iOS/InputArea.swift = (
+					ios,
+					xros,
+				);
+				Views/InputViews/iOS/InputEditor.swift = (
+					ios,
+					xros,
+				);
+				Views/InputViews/macOS/InputArea.swift = (
+					macos,
+				);
+				Views/InputViews/macOS/InputEditor.swift = (
 					macos,
 				);
 				Views/Markdown/NativeMDView/MessageMarkdownView.swift = (

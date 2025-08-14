@@ -15,6 +15,8 @@ struct ChatDetailMobile: View {
 
     @State private var isFocused: Bool = false
     @State private var showingInspector: Bool = false
+    @State private var searchScope: SearchScope = .regular
+    @State private var showingExpandedSearch: Bool = false
     
     private let chatVM = ChatVM.shared
     
@@ -79,7 +81,16 @@ struct ChatDetailMobile: View {
                     isFocused = true
                 }
             }
+            .onChange(of: searchScope) {
+                if searchScope == .expanded {
+                    showingExpandedSearch = true
+                }
+            }
             .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
+            .searchScopes($searchScope, activation: .onSearchPresentation) {
+                Text("Regular").tag(SearchScope.regular)
+                Text("Expanded").tag(SearchScope.expanded)
+            }
             .onSubmit(of: .search) {
                 sendInput()
             }
@@ -87,6 +98,12 @@ struct ChatDetailMobile: View {
                 ChatInspector(chat: chat)
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.hidden)
+            }
+            .sheet(isPresented: $showingExpandedSearch) {
+                ExpandedSearchView(chat: chat, isSearchFocused: $isFocused)
+                    .onDisappear {
+                        searchScope = .regular
+                    }
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -135,4 +152,9 @@ struct ChatDetailMobile: View {
         config.proxy = proxy
         Scroller.scrollToBottom(animated: false)
     }
+}
+
+enum SearchScope: String, CaseIterable, Hashable {
+    case regular = "Regular"
+    case expanded = "Expanded"
 }
