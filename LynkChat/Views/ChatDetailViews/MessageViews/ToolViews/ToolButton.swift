@@ -22,7 +22,9 @@ struct ToolButton: View {
                 .foregroundStyle(chatTool.tool.color)
         }
         .buttonStyle(.bordered)
+        #if os(macOS)
         .controlSize(.large)
+        #endif
         .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
             ScrollView {
@@ -39,6 +41,7 @@ struct ToolButton: View {
                     }
                 }
             }
+            .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
             .frame(maxWidth: 400)
         }
