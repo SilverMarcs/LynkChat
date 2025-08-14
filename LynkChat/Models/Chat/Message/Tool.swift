@@ -13,8 +13,9 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
     case scrapeLinks
     case imageGeneration
     case processFile
+    case reasoning
     
-    var  id: Self { self }
+    var id: Self { self }
     
     var title: String {
         switch self {
@@ -22,6 +23,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .scrapeLinks: "Fetch URL"
         case .imageGeneration: "Generate Image"
         case .processFile: "File Analysis"
+        case .reasoning: "Reasoning"
         }
     }
     
@@ -31,6 +33,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .scrapeLinks: "URL"
         case .imageGeneration: "Image"
         case .processFile: "File"
+        case .reasoning: "Think"
         }
     }
     
@@ -40,6 +43,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .scrapeLinks: "link"
         case .imageGeneration: "photo.stack"
         case .processFile: "doc.text"
+        case .reasoning: "circle.hexagonpath"
         }
     }
     
@@ -47,7 +51,8 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         switch self {
         case .webSearch, .scrapeLinks: .cyan
         case .imageGeneration: .mint
-        case .processFile: .orange
+        case .processFile: .purple
+        case .reasoning: .orange
         }
     }
     
@@ -59,6 +64,8 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
             "Fetch the contents of a URL"
         case .imageGeneration:
             "Generate an image based on a text description"
+        case .reasoning:
+            "Use advanced reasoning capabilities for complex problem solving"
         }
     }
     
@@ -72,6 +79,8 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
             "If a user desires to generate an image or want to see something, you may use the imageGeneration tool that uses AI for image generation. Craft a text description related to the user's request and pass to the Image gen AI but do not enahnce it so mudh that relevance to the user's request is lost. Do not enhance if the user specifically provides a prompt of their own. Do not reference links generated as part of image generation tool usage. Dont provide links for images in chat, it will be provided by tool anyway"
         case .processFile:
             "File Analysis"
+        case .reasoning:
+            "Reasoning"
         }
     }
 }

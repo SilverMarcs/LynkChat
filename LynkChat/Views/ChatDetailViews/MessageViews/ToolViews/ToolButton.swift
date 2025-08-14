@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ToolButton: View {
     var chatTool: ChatTool
+    var skipPrettyPrinting: Bool = true
     
     @State private var showArguments = false
     
@@ -20,19 +21,25 @@ struct ToolButton: View {
                 .fontWeight(.semibold)
                 .foregroundStyle(chatTool.tool.color)
         }
+        .buttonStyle(.bordered)
         .controlSize(.large)
         .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
             ScrollView {
-                if let prettyJSON = prettyPrintJSON(chatTool.args) {
-                    Text(prettyJSON)
+                if skipPrettyPrinting {
+                    Text(LocalizedStringKey(chatTool.args))
                         .textSelection(.enabled)
                 } else {
-                    Text(chatTool.args)
-                        .textSelection(.enabled)
+                    if let prettyJSON = prettyPrintJSON(chatTool.args) {
+                        Text(prettyJSON)
+                            .textSelection(.enabled)
+                    } else {
+                        Text(chatTool.args)
+                            .textSelection(.enabled)
+                    }
                 }
             }
-            .safeAreaPadding()
+            .contentMargins(20, for: .scrollContent)
             .frame(maxWidth: 400)
         }
     }

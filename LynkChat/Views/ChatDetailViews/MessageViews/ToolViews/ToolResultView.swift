@@ -23,7 +23,7 @@ struct ToolResultView: View {
                 ToolImageView(urlStr: chatTool.result)
             case .webSearch:
                 ToolSearchResultView(searchString: chatTool.result)
-            case .processFile:
+            case .processFile, .reasoning:
                 FileProcessingView(content: chatTool.result)
             }
         }
