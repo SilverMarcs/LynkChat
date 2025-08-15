@@ -65,6 +65,7 @@ struct ChatListRow: View {
                     chat.status = chat.status == .starred ? .normal : .starred
                 } label: {
                     Label(chat.status == .starred ? "Unstar" : "Star", systemImage: chat.status == .starred ? "star.slash" : "star")
+                        .labelStyle(.iconOnly)
                 }
                 .tint(.orange)
             }
@@ -85,6 +86,7 @@ struct ChatListRow: View {
                     
                 } label: {
                     Label("Delete", systemImage: "trash")
+                        .labelStyle(.iconOnly)
                 }
                 .tint(.red)
             }
