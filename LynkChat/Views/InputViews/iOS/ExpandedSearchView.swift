@@ -16,11 +16,10 @@ struct ExpandedSearchView: View {
     var body: some View {
         NavigationStack{
             Form {
-                TextEditor(text: $chat.inputManager.prompt)
-                    .frame(minHeight: 300)
-                    .focused($isFocused, equals: .expandedTextEditor)     
+                TextField("Ask Anything", text: $chat.inputManager.prompt, axis: .vertical)
+                    .focused($isFocused, equals: .expandedTextEditor)
             }
-            .contentMargins(.top, 5)
+            .contentMargins(.top, 10)
             .navigationTitle("Prompt")
             .toolbarTitleDisplayMode(.inline)
             .toolbar {

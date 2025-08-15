@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PlatformGroupBox: GroupBoxStyle {
+    @Environment(\.colorScheme) var colorScheme
     let radius: CGFloat
     
     init(radius: CGFloat = 24) {
@@ -28,7 +29,7 @@ struct PlatformGroupBox: GroupBoxStyle {
         }
         .background(
             RoundedRectangle(cornerRadius: radius)
-                .fill(.background.secondary)
+                .fill(colorScheme == .dark ? AnyShapeStyle(.background.secondary) : AnyShapeStyle(.background.tertiary))
         )
         #endif
     }
