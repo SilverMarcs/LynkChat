@@ -46,7 +46,9 @@ struct ToolButton: View {
                 }
             }
             .presentationDragIndicator(.visible)
+            #if !os(macOS)
             .navigationTransition(.zoom(sourceID: "toolbutton-popover", in: transition))
+            #endif
             .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
             .frame(maxWidth: 500)

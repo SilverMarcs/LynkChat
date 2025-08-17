@@ -20,52 +20,49 @@ struct AssistantMessage: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             AssistantLabel(model: message.model)
-            #if os(macOS)
-                .padding(.leading, -25)
-            #endif
             
-            if let tools = message.tools, !tools.isEmpty {
-                ChatToolView(tools: tools)
-            }
+            VStack(alignment: .leading, spacing: 8) {
+                if let tools = message.tools, !tools.isEmpty {
+                    ChatToolView(tools: tools)
+                }
+                
+                if let reason = message.reasoning, !reason.isEmpty {
+                    ReasoningView(reason: reason)
+                }
             
-            if let reason = message.reasoning, !reason.isEmpty {
-                ReasoningView(reason: reason)
-            }
-            
-            MDView(content: message.content, calculatedHeight: $height)
-                .transaction { $0.animation = nil }
-                #if os(macOS)
-                .frame(height: message.height, alignment: .top)
-                .onChange(of: height) {
-                    if height > 0 {
-                        message.height = height
+                MDView(content: message.content, calculatedHeight: $height)
+                    .transaction { $0.animation = nil }
+                    #if os(macOS)
+                    .frame(height: message.height, alignment: .top)
+                    .onChange(of: height) {
+                        if height > 0 {
+                            message.height = height
+                        }
+                    }
+                    #endif
+                
+                if !message.dataFiles.isEmpty {
+                    ForEach(message.dataFiles, id: \.self) { data in
+                        ImageViewerData(data: data.data)
                     }
                 }
-                #else
-                .padding(.leading, 5)
-                #endif
-
-            
-            if !message.dataFiles.isEmpty {
-                ForEach(message.dataFiles, id: \.self) { data in
-                    ImageViewerData(data: data.data)
+                
+                if message.isReplying {
+                    ProgressView()
+                        .controlSize(.small)
                 }
-            }
-            
-            if message.isReplying {
-                ProgressView()
-                    .controlSize(.small)
-            }
-            
-            if !message.isReplying {
-                if !showMenu {
-                    SecondaryNavigationButtons(group: group)
-                } else {
-                    if group.allMessages.count > 1 {
-                        NavigationButtons(message: group)
+                
+                if !message.isReplying {
+                    if !showMenu {
+                        SecondaryNavigationButtons(group: group)
+                    } else {
+                        if group.allMessages.count > 1 {
+                            NavigationButtons(message: group)
+                        }
                     }
                 }
             }
+                .padding(.leading, 25)
         }
         .transaction { $0.animation = nil }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -75,7 +72,7 @@ struct AssistantMessage: View {
             }
         }
         .matchedTransitionSource(id: "assistant-text-selection", in: transition)
-        .padding(.leading, 26)
+        .padding(.leading, 5)
         .padding(.trailing, 30)
         #if !os(macOS)
         .sheet(isPresented: $showingTextSelection) {
