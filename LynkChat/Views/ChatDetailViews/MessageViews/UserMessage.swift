@@ -13,6 +13,7 @@ struct UserMessage: View {
     
     var group: MessageGroup
     @State var showingTextSelection = false
+    @Namespace private var transition
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
@@ -29,6 +30,7 @@ struct UserMessage: View {
                 #endif
             }
             .groupBoxStyle(PlatformGroupBox())
+            .matchedTransitionSource(id: "text-selection", in: transition)
 
             if group.allMessages.count > 1 {
                 NavigationButtons(message: group)
@@ -56,6 +58,7 @@ struct UserMessage: View {
         #if !os(macOS)
         .sheet(isPresented: $showingTextSelection) {
             TextSelectionView(content: group.content)
+                .navigationTransition(.zoom(sourceID: "text-selection", in: transition))
         }
         #endif
     }

@@ -13,6 +13,7 @@ struct ImageDetail: View {
     @Bindable var session: ImageSession
     @State private var showingInspector: Bool = false
     @State private var isFocused: Bool = false
+    @Namespace private var transition
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -68,9 +69,11 @@ struct ImageDetail: View {
                         Label("Show Inspector", systemImage: "info")
                     }
                 }
+                .matchedTransitionSource(id: "image-inspector-button", in: transition)
             }
             .sheet(isPresented: $showingInspector) {
                 ImageInspector(session: session, showingInspector: $showingInspector)
+                    .navigationTransition(.zoom(sourceID: "image-inspector-button", in: transition))
                     .presentationDetents(horizontalSizeClass == .compact ? [.medium] : [.large])
             }
             #endif

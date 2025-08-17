@@ -41,6 +41,7 @@ struct ToolButton: View {
                     }
                 }
             }
+            .presentationDragIndicator(.visible)
             .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
             .frame(maxWidth: 400)

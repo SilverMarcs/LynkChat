@@ -15,11 +15,14 @@ struct AssistantMessage: View {
     
     @State var height: CGFloat = 0
     @State private var showingTextSelection = false
+    @Namespace private var transition
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             AssistantLabel(model: message.model)
+            #if os(macOS)
                 .padding(.leading, -25)
+            #endif
             
             if let tools = message.tools, !tools.isEmpty {
                 ChatToolView(tools: tools)
@@ -38,6 +41,8 @@ struct AssistantMessage: View {
                         message.height = height
                     }
                 }
+                #else
+                .padding(.leading, 5)
                 #endif
 
             
@@ -69,11 +74,13 @@ struct AssistantMessage: View {
                 showingTextSelection.toggle()
             }
         }
+        .matchedTransitionSource(id: "assistant-text-selection", in: transition)
         .padding(.leading, 26)
         .padding(.trailing, 30)
         #if !os(macOS)
         .sheet(isPresented: $showingTextSelection) {
             TextSelectionView(content: group.content)
+                .navigationTransition(.zoom(sourceID: "assistant-text-selection", in: transition))
         }
         #endif
     }

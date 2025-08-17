@@ -15,6 +15,7 @@ struct ChatDetailMobile: View {
 
     @State private var isFocused: Bool = false
     @State private var showingInspector: Bool = false
+    @Namespace private var transition
     @State private var searchScope: SearchScope = .regular
     @State private var showingExpandedSearch: Bool = false
     
@@ -96,6 +97,7 @@ struct ChatDetailMobile: View {
             }
             .sheet(isPresented: $showingInspector) {
                 ChatInspector(chat: chat)
+                    .navigationTransition(.zoom(sourceID: "shortcuts-button", in: transition))
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.hidden)
             }
@@ -113,6 +115,7 @@ struct ChatDetailMobile: View {
                         Label("Shortcuts", systemImage: "info")
                     }
                 }
+                .matchedTransitionSource(id: "shortcuts-button", in: transition)
                 
                 ToolbarItem(placement: .bottomBar) {
                     ChatInputMenu(chat: chat)

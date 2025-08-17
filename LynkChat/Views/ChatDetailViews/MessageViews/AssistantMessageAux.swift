@@ -26,6 +26,7 @@ struct AssistantMessageAux: View {
         }
         #else
         AssistantMessage(message: group.activeMessage, group: group)
+            .listRowInsets(.leading, 1)
         #endif
     }
 }

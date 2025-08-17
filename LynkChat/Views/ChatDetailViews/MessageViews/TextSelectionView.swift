@@ -29,7 +29,6 @@ struct TextSelectionView: View {
     }
 }
 
-#if !os(macOS)
 struct SelectableTextView: UIViewRepresentable {
     let text: String
     
@@ -51,4 +50,3 @@ struct SelectableTextView: UIViewRepresentable {
         uiView.sizeToFit()
     }
 }
-#endif
