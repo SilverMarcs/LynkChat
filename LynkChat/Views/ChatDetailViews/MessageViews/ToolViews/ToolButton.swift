@@ -11,6 +11,8 @@ struct ToolButton: View {
     var chatTool: ChatTool
     var skipPrettyPrinting: Bool = true
     
+    @Environment(\.chat) var chat
+    
     @State private var showArguments = false
     @Namespace private var transition
     
@@ -21,6 +23,7 @@ struct ToolButton: View {
             Label(chatTool.tool.title, systemImage: chatTool.tool.iconName)
                 .fontWeight(.semibold)
                 .foregroundStyle(chatTool.tool.color)
+                .shimmerWithoutRedact(when: chat.isReasoning)
         }
         .buttonStyle(.bordered)
         #if os(macOS)
@@ -46,7 +49,7 @@ struct ToolButton: View {
             .navigationTransition(.zoom(sourceID: "toolbutton-popover", in: transition))
             .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
-            .frame(maxWidth: 400)
+            .frame(maxWidth: 500)
         }
         .matchedTransitionSource(id: "toolbutton-popover", in: transition)
     }
