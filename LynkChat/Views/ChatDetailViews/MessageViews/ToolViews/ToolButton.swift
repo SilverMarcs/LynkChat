@@ -12,6 +12,7 @@ struct ToolButton: View {
     var skipPrettyPrinting: Bool = true
     
     @State private var showArguments = false
+    @Namespace private var transition
     
     var body: some View {
         Button {
@@ -42,10 +43,12 @@ struct ToolButton: View {
                 }
             }
             .presentationDragIndicator(.visible)
+            .navigationTransition(.zoom(sourceID: "toolbutton-popover", in: transition))
             .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
             .frame(maxWidth: 400)
         }
+        .matchedTransitionSource(id: "toolbutton-popover", in: transition)
     }
     
     func prettyPrintJSON(_ jsonString: String) -> String? {
