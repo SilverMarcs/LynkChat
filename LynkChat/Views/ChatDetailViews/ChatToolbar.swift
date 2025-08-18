@@ -14,13 +14,13 @@ struct ChatToolbar: ToolbarContent {
     @Bindable var chat: Chat
     
     @State private var showToolbarItems: Bool = false
+    @State private var showingInspector: Bool = false
     
     @FocusState private var isFocused: FocusedField?
     
     private let chatVM = ChatVM.shared
     
     var body: some ToolbarContent {
-
         ToolbarItem(placement: .primaryAction) {
             Color.clear
                 .frame(width: 0, height: 0)
@@ -33,6 +33,18 @@ struct ChatToolbar: ToolbarContent {
         ToolbarSpacer(.fixed)
         
         if showToolbarItems {
+            ToolbarItem(placement: .navigation) {
+                Button {
+                    showingInspector.toggle()
+                } label: {
+                    Label("Inspector", systemImage: "slider.vertical.3")
+                }
+                .keyboardShortcut(".")
+                .sheet(isPresented: $showingInspector) {
+                    ChatInspector(chat: chat)
+                }
+            }
+            
             ToolbarItemGroup(placement: .primaryAction) {
                 ToolsToggleView(config: $chat.config)
             }
