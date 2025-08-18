@@ -10,6 +10,7 @@ import SwiftData
 
 struct IOSWindow: Scene {
     @ObservedObject var config = AppConfig.shared
+    @Bindable var settings = AppSettings.shared
     
     @State var selection: ImageSession?
     @State var searchText: String = ""
@@ -17,10 +18,8 @@ struct IOSWindow: Scene {
     @Bindable var chatVM = ChatVM.shared
     
     var body: some Scene {
-
         WindowGroup("Chats", id: "chats") {
             TabView {
-                // Chats Tab
                 Tab("Chats", systemImage: "message") {
                     NavigationStack(path: $chatVM.chatPath) {
                         ChatList(status: chatVM.statusFilter, searchText: searchText)
@@ -30,35 +29,23 @@ struct IOSWindow: Scene {
                                     config.showDebugMenu = true
                                 }
                             }
+                            .onAppear {
+                                // Clear current chat when back at chat list
+                                if chatVM.chatPath.isEmpty {
+                                    chatVM.currentChat = nil
+                                }
+                            }
                     }
-                    
-//                    NavigationSplitView {
-//                        ChatList(status: chatVM.statusFilter, searchText: chatVM.searchText)
-//                   
-//                    } detail: {
-//                        if let chat = chatVM.activeChat {
-//                            ChatDetail(chat: chat)
-//                                .id(chat.id)
-//                        } else {
-//                            Text("^[\(chatVM.selections.count) Chat](inflect: true) Selected")
-//                        }
-//                    }
+                    .onChange(of: chatVM.chatPath) {
+                        // Clear current chat when path becomes empty
+                        if chatVM.chatPath.isEmpty {
+                            chatVM.currentChat = nil
+                        }
+                    }
                 }
                 
-                // Images Tab
                 Tab("Images", systemImage: "photo.on.rectangle.angled") {
-//                    NavigationStack {
-                        ImageList(selection: $selection)
-//                    }
-//                    NavigationSplitView {
-//                        ImageList(selection: $selection)
-//                    } detail: {
-//                        if let imageSession = selection {
-//                            ImageDetail(session: imageSession)
-//                        } else {
-//                            Text("Select or create an image session")
-//                        }
-//                    }
+                    ImageList(selection: $selection)
                 }
                 
                 // Settings Tab
@@ -66,9 +53,12 @@ struct IOSWindow: Scene {
                     SettingsView()
                 }
             }
-//            .tabBarMinimizeBehavior(.onScrollDown)
             .fullScreenCover(isPresented: .constant(!config.hasCompletedOnboarding)) {
                 OnboardingView()
+            }
+            .fullScreenCover(isPresented: $settings.showCamera) {
+                CameraView()
+                    .ignoresSafeArea()
             }
         }
     }

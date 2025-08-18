@@ -42,7 +42,7 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
                 AppSettings.shared.showCamera = true
             }
         case "newchat":
-            ChatVM.shared.createNewChat()
+            ChatVM.shared.createNewChat(delay: true)
         default:
             break
         }

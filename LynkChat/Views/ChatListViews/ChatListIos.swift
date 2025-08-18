@@ -34,9 +34,5 @@ struct ChatListIos: View {
             ChatDetail(chat: chat)
                 .id(chat.id)
         }
-        .fullScreenCover(isPresented: $config.showCamera) {
-            CameraView()
-                .ignoresSafeArea()
-        }
     }
 }

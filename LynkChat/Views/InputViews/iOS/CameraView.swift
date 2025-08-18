@@ -41,12 +41,7 @@ class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePicker
         
         Task {
             let chat: Chat
-            if let activeChat = ChatVM.shared.activeChat {
-                chat = activeChat
-            } else {
-                // TODO: use modelactor here
-                chat = ChatVM.shared.createNewChat()
-            }
+            chat = ChatVM.shared.createNewChat(delay: true)
             
             try? await chat.inputManager.processData(
                 imageData,
@@ -54,11 +49,17 @@ class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePicker
                 fileName: "Camera_\(UUID().uuidString)"
             )
         
-            AppSettings.shared.showCamera = false
+            await MainActor.run {
+                AppSettings.shared.showCamera = false
+            }
         }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        AppSettings.shared.showCamera = false
+        Task {
+            await MainActor.run {
+                AppSettings.shared.showCamera = false
+            }
+        }
     }
 }

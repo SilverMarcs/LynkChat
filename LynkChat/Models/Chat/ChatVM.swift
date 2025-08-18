@@ -18,14 +18,24 @@ import Combine
     var chatPath: NavigationPath = NavigationPath()
     
     var statusFilter: ChatStatus = .normal
+    
+    var currentChat: Chat?
 
     public var activeChat: Chat? {
         get {
+            #if os(macOS)
             guard selections.count == 1 else { return nil }
             return selections.first
+            #else
+            return currentChat
+            #endif
         }
         set {
+            #if os(macOS)
             selections = newValue.map { [$0] } ?? []
+            #else
+            currentChat = newValue
+            #endif
         }
     }
 
@@ -53,6 +63,9 @@ import Combine
         self.activeChat = newChat
         selections = [newChat]
         #else
+        if !chatPath.isEmpty {
+            chatPath.removeLast()
+        }
         if delay {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.chatPath.append(newChat)
