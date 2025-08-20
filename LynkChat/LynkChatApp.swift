@@ -38,7 +38,6 @@ struct LynkChatApp: App {
         try? Tips.configure()
 
         #if os(macOS)
-        AppConfig.shared.hideDock = false
         QuickPanelWindow()
         #endif
         

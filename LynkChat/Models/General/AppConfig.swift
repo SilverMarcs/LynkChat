@@ -7,15 +7,6 @@
 
 import SwiftUI
 
-@Observable class AppSettings {
-    static let shared = AppSettings()
-    private init() {}
-    
-    @ObservationIgnored var proxy: ScrollViewProxy?
-    var expandColor = false
-    var showCamera = false
-}
-
 class AppConfig: ObservableObject {
     static let shared = AppConfig()
     private init() {}
@@ -23,8 +14,6 @@ class AppConfig: ObservableObject {
     @AppStorage("finishedInitialSetup") var finishedInitialSetup = false
     
     // Appearance
-    @AppStorage("codeBlockTheme") var codeBlockTheme: CodeBlockTheme = .atom
-    @AppStorage("isMarkdownEnabled") var isMarkdownEnabled: Bool = true
     #if os(macOS)
     @AppStorage("fontSize") var fontSize: Double = 13
     #else
@@ -33,7 +22,6 @@ class AppConfig: ObservableObject {
     
     // General
     @AppStorage("autogenTitle") var autogenTitle: Bool = true
-    @AppStorage("hideDock") var hideDock = false
     
     // Onboarding
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
@@ -49,7 +37,6 @@ class AppConfig: ObservableObject {
     // DEBUG
     @AppStorage("myApiKey") var myApiKey: String = ""
     @AppStorage("reseTips") var resetTips = false
-    @AppStorage("showUrlParsingResult") var showUrlParsingResult = false
     @AppStorage("useLocalhost") var useLocalhost = false
     @AppStorage("printDebgLogs") var printDebgLogs = false
     @AppStorage("sendDebugModel") var sendDebugModel = false

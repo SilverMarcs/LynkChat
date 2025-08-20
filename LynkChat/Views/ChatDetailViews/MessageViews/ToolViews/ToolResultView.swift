@@ -12,20 +12,15 @@ struct ToolResultView: View {
     @ObservedObject var config = AppConfig.shared
     
     var body: some View {
-        if config.showUrlParsingResult {
-            Text(chatTool.result ?? "No result available")
-                .textSelection(.enabled)
-        } else {
-            switch chatTool.tool {
-            case .scrapeLinks:
-                EmptyView()
-            case .imageGeneration:
-                ToolImageView(urlStr: chatTool.result)
-            case .webSearch:
-                ToolSearchResultView(searchString: chatTool.result)
-            case .processFile, .reasoning:
-                FileProcessingView(content: chatTool.result)
-            }
+        switch chatTool.tool {
+        case .scrapeLinks:
+            EmptyView()
+        case .imageGeneration:
+            ToolImageView(urlStr: chatTool.result)
+        case .webSearch:
+            ToolSearchResultView(searchString: chatTool.result)
+        case .processFile, .reasoning:
+            FileProcessingView(content: chatTool.result)
         }
     }
 }
