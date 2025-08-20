@@ -40,22 +40,34 @@ struct ImageDetail: View {
             #else
             .toolbar(.hidden, for: .tabBar)
             .searchable(text: $session.prompt, isPresented: $isFocused, prompt: "Generate Images")
-//            .onSubmit(of: .search) {
-//                Task {
-//                    await session.send()
-//                }
-//            }
+            .onSubmit(of: .search) {
+                Task {
+                    await session.send()
+                }
+            }
             .onChange(of: isFocused) {
                 if isFocused {
                     Scroller.scrollToBottom(delay: 0.2)
                 }
             }
-            .onReceive(NotificationCenter.default.publisher(for: UISearchTextField.textDidEndEditingNotification)) { notification in
-                Task {
-                    await session.send()
-                }
-            }
             .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button {
+                        Task {
+                            // Get the most recent generation's prompt (if any) and regenerate
+                            if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
+                                // copy prompt from the generation's config to session prompt
+                                await session.send(latest.config.prompt)
+                            }
+                        }
+                    } label: {
+                        Label("Regenerate", systemImage: "arrow.clockwise")
+                    }
+                    .disabled(session.imageGenerations.isEmpty)
+                }
+                
+                ToolbarSpacer(.fixed, placement: .bottomBar)
+                
                 DefaultToolbarItem(kind: .search, placement: .bottomBar)
             }
             .listStyle(.plain)

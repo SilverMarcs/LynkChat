@@ -24,16 +24,11 @@ struct GenerationView: View {
                     }
                 }
                 
-                Text(generation.config.prompt)
-                    .textSelection(.enabled)
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 9)
-                    .background(
-                        RoundedRectangle(
-                            cornerRadius: 15,
-                        )
-                        .fill(.accent)
-                    )
+                GroupBox {
+                    Text(generation.config.prompt)
+                        .textSelection(.enabled)
+                }
+                .groupBoxStyle(PlatformGroupBox())
             }
             
             
@@ -55,7 +50,7 @@ struct GenerationView: View {
                             ForEach(1 ... generation.config.numImages, id: \.self) { image in
                                 ProgressView()
                                     .frame(width: size, height: size)
-                                    .background(.background.quinary, in: .rect(cornerRadius: 15))
+                                    .background(.background.secondary, in: .rect(cornerRadius: 15))
                             }
                         } else if generation.state == .success {
                             ForEach(generation.images, id: \.self) { image in

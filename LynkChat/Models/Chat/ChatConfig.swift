@@ -38,3 +38,16 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         }
     }
 }
+
+extension ChatConfig {
+    func copy() -> ChatConfig {
+        var newConfig = ChatConfig()
+        newConfig.temperature = self.temperature
+        newConfig.thinkingBudget = self.thinkingBudget
+        newConfig.maxTokens = self.maxTokens
+        newConfig.systemPrompt = self.systemPrompt
+        newConfig.model = self.model
+        newConfig.enabledTools = self.enabledTools
+        return newConfig
+    }
+}

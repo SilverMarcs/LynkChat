@@ -25,7 +25,7 @@ struct MDView: View {
                 fontSize: CGFloat(config.fontSize),
 //                highlightString: searchText,
                 baseURL: "LynkChat Web Content",
-                codeBlockTheme: config.codeBlockTheme
+//                codeBlockTheme: config.codeBlockTheme
             )
 //            MessageMarkdownView(text: content, highlightText: chatVM.searchText)
 //                .textSelection(.enabled)

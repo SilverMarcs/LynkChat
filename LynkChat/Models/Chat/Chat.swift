@@ -296,7 +296,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     func copy(from message: Message? = nil) async -> Chat {
         let newChat = Chat()
-        newChat.config.model = self.config.model
+        newChat.config = await self.config.copy()
         newChat.totalTokens = self.totalTokens
         
         var threadToCopy: [MessageGroup] = []

@@ -25,16 +25,18 @@ class ImageSession {
 
     init() { }
     
-    func send() async {        
-        guard !prompt.isEmpty else { return }
+    func send(_ customPrompt: String? = nil) async {
+        let promptToUse = customPrompt ?? prompt
+        
+        guard !promptToUse.isEmpty else { return }
         
         let generation = Generation(config: config, session: self)
-        generation.config.prompt = prompt
-
+        generation.config.prompt = promptToUse
+        
         imageGenerations.append(generation)
         
         await Scroller.scrollToBottom(delay: 0.2)
-
+        
         await generation.send()
     }
     

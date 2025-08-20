@@ -20,7 +20,7 @@ struct SwiftMarkdownView: PlatformViewRepresentable {
         fontSize: CGFloat = 16,
         highlightString: String = "",
         baseURL: String = "",
-        codeBlockTheme: CodeBlockTheme = .github
+        codeBlockTheme: CodeBlockTheme = .atom
     ) {
         self.markdownContent = markdownContent
         self.calculatedHeight = calculatedHeight
