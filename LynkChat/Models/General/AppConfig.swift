@@ -33,7 +33,6 @@ class AppConfig: ObservableObject {
     
     // General
     @AppStorage("autogenTitle") var autogenTitle: Bool = true
-    @AppStorage("enterToSend") var enterToSend: Bool = false
     @AppStorage("hideDock") var hideDock = false
     
     // Onboarding

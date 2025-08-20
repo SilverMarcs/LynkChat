@@ -18,15 +18,15 @@ struct InputEditor: View {
             .padding(.leading, 6)
             .focused($isFocused, equals: .textEditor)
             .lineLimit(10, reservesSpace: false)
-            .onSubmit {
-                if config.enterToSend {
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    Task {
-                        await chat.sendInput()
-                    }
-                } else {
-                    chat.inputManager.prompt += "\n"
-                }
-            }
+//            .onSubmit {
+//                if config.enterToSend {
+//                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//                    Task {
+//                        await chat.sendInput()
+//                    }
+//                } else {
+//                    chat.inputManager.prompt += "\n"
+//                }
+//            }
     }
 }

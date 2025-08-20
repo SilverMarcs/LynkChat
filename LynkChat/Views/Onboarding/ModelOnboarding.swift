@@ -26,15 +26,6 @@ struct ModelOnboarding: View {
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))
                     #endif
-                    
-                    Section {
-                        Toggle("Enter to send messages", isOn: $config.enterToSend)
-                    } footer: {
-                        Text("Keep disabled for better performance.")
-                    }
-                    #if os(iOS)
-                    .listRowBackground(Color(.secondarySystemBackground))
-                    #endif
                 }
             },
             footerText: "Configure other models in Settings."

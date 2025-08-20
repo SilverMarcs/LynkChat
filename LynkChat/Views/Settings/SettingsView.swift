@@ -34,10 +34,6 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
                 
-                NavigationLink(destination: AppearanceSettings()) {
-                    Label("Appearance", systemImage: "paintbrush")
-                }
-                
                 #if os(macOS)
                 NavigationLink(destination: QuickPanelSettings()) {
                     Label("Quick Panel", systemImage: "bolt.fill")

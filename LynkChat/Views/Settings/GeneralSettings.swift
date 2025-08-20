@@ -21,18 +21,28 @@ struct GeneralSettings: View {
                 }
             }
             
-            Section("Misc") {
-                Toggle(isOn: $config.enterToSend) {
-                    Text("Enter to send message")
-                    Text("Enabling this makes input area laggy and is not recommended")
-                }
-            }
-            
-            Section {
+            Section("Behaviour") {
                 LabeledContent("Restart Onboarding") {
                     Button("Launch") {
                         config.hasCompletedOnboarding = false
                     }
+                }
+            }
+            
+            Section("Appearance") {
+                Slider(value: $config.fontSize, in: 8...25, step: 1) {
+                    Text("Font Size")
+                } minimumValueLabel: {
+                    Text("")
+                        .monospacedDigit()
+                } maximumValueLabel: {
+                    Text("\(Int(config.fontSize))")
+                        .monospacedDigit()
+                }
+            }
+            .sectionActions {
+                Button("Reset") {
+                    config.resetFontSize()
                 }
             }
         }
