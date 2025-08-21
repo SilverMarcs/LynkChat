@@ -14,7 +14,8 @@ struct CameraView: UIViewControllerRepresentable {
         #if !os(visionOS)
         imagePicker.sourceType = .camera
         #endif
-        imagePicker.allowsEditing = false
+//        imagePicker.allowsEditing = true
+        imagePicker.showsCameraControls = true
         imagePicker.delegate = context.coordinator
         return imagePicker
     }
@@ -41,7 +42,13 @@ class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePicker
         
         Task {
             let chat: Chat
-            chat = ChatVM.shared.createNewChat(delay: true)
+            
+            // Use existing active chat if available, otherwise create a new one
+            if let activeChat = ChatVM.shared.activeChat {
+                chat = activeChat
+            } else {
+                chat = ChatVM.shared.createNewChat(delay: true)
+            }
             
             try? await chat.inputManager.processData(
                 imageData,

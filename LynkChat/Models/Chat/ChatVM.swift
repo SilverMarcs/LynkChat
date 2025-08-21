@@ -20,8 +20,7 @@ import Combine
     var statusFilter: ChatStatus = .normal
     
     var currentChat: Chat?
-
-    public var activeChat: Chat? {
+    var activeChat: Chat? {
         get {
             #if os(macOS)
             guard selections.count == 1 else { return nil }

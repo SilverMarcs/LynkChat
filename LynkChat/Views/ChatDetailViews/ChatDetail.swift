@@ -20,11 +20,6 @@ struct ChatDetail: View {
             #endif
         }
         .id(chat.id)
-        .onAppear {
-            #if !os(macOS)
-            ChatVM.shared.currentChat = chat
-            #endif
-        }
         .onDrop(of: Array(chat.config.model.supportedTypes), isTargeted: nil) { providers in
             do {
                 return try chat.inputManager.handleDrop(providers)

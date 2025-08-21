@@ -32,14 +32,14 @@ struct IOSWindow: Scene {
                             .onAppear {
                                 // Clear current chat when back at chat list
                                 if chatVM.chatPath.isEmpty {
-                                    chatVM.currentChat = nil
+                                    chatVM.activeChat = nil
                                 }
                             }
                     }
                     .onChange(of: chatVM.chatPath) {
                         // Clear current chat when path becomes empty
                         if chatVM.chatPath.isEmpty {
-                            chatVM.currentChat = nil
+                            chatVM.activeChat = nil
                         }
                     }
                 }

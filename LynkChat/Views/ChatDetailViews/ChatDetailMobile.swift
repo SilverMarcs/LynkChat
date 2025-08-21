@@ -151,6 +151,7 @@ struct ChatDetailMobile: View {
     
     // Rest of the helper methods and computed properties
     func onAppearStuff(proxy: ScrollViewProxy) {
+        ChatVM.shared.activeChat = chat
         config.expandColor = false
         config.proxy = proxy
         Scroller.scrollToBottom(animated: false)
