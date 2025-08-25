@@ -33,7 +33,7 @@ struct ImageDetail: View {
                 Scroller.scrollToBottom(animated: false)
             }
             #if os(macOS)
-            .safeAreaInset(edge: .bottom, spacing: 0) {
+            .safeAreaBar(edge: .bottom) {
                 ImageInputView(session: session)
             }
             .navigationTitle(session.title)

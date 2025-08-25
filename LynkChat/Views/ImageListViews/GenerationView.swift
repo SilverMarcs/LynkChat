@@ -27,6 +27,9 @@ struct GenerationView: View {
                 GroupBox {
                     Text(generation.config.prompt)
                         .textSelection(.enabled)
+                        #if os(macOS)
+                        .padding(5)
+                        #endif
                 }
                 .groupBoxStyle(PlatformGroupBox())
             }

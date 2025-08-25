@@ -71,7 +71,7 @@ class Generation {
             state = .error
         }
     
-        await Scroller.scrollToBottom(delay: 0.2)
+        await Scroller.scrollToBottom(delay: 0.1)
     }
     
     func stopGenerating() {

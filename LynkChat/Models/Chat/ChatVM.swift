@@ -104,13 +104,16 @@ import Combine
             let quickChats = try modelContext.fetch(descriptor)
             if let existingChat = quickChats.first {
                 existingChat.deleteAllMessages() // Clear existing messages
-                existingChat.config.model = ChatModel.gemini_2_5_flash
+//                existingChat.config.enableTool(.scrapeLinks)
+//                existingChat.config.enableTool(.webSearch)
                 return existingChat
             } else {
                 let newChat = Chat()
                 newChat.statusId = statusId
                 newChat.status = ChatStatus.quick
                 newChat.config.systemPrompt = ChatConfigDefaults.shared.quickSystemPrompt
+//                newChat.config.enableTool(.scrapeLinks)
+//                newChat.config.enableTool(.webSearch)
                 modelContext.insert(newChat)
                 quickPanelChat = newChat
                 return newChat

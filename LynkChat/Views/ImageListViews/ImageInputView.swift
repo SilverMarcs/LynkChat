@@ -13,6 +13,24 @@ struct ImageInputView: View {
     
     var body: some View {
         HStack(spacing: 5) {
+            Button {
+                Task {
+                    // Get the most recent generation's prompt (if any) and regenerate
+                    if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
+                        // copy prompt from the generation's config to session prompt
+                        await session.send(latest.config.prompt)
+                    }
+                }
+            } label: {
+                Label("Regenerate", systemImage: "arrow.clockwise")
+                    .labelStyle(.iconOnly)
+                    .tint(.white)
+            }
+            .disabled(session.imageGenerations.isEmpty)
+            .controlSize(.large)
+            .fontWeight(.bold)
+            .buttonBorderShape(.circle)
+            
             TextField("Prompt", text: $session.prompt, axis: .vertical)
                 .onSubmit( { sendInput() } )
                 .textFieldStyle(.plain)

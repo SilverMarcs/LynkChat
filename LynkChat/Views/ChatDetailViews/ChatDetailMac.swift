@@ -46,7 +46,7 @@ struct ChatDetailMac: View {
                 config.proxy = proxy
                 Scroller.scrollToBottom(animated: false)
             }
-            .safeAreaBar(edge: .bottom, spacing: 0) {
+            .safeAreaBar(edge: .bottom) {
                 if chat.status != .quick, !chat.currentThread.isEmpty {
                     InputArea(chat: chat)
                 }
