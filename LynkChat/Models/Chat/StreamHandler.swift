@@ -95,7 +95,7 @@ struct StreamHandler {
             temperature: chat.config.temperature.value,
             thinkingBudget: chat.config.thinkingBudget.rawValue,
             system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
-            tools: chat.config.model.supportsTool ? chat.config.enabledTools.map { $0.rawValue } : []
+            tools: chat.config.enabledTools.map { $0.rawValue }
         )
     }
 

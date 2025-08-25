@@ -13,7 +13,6 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     case gemini_2_5_pro
     case gpt_5
     case gpt_5_mini
-    case gpt_5_nano
     case claude_sonnet_4
     case claude_opus_4
     
@@ -23,7 +22,6 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gemini_2_5_pro: "gemini-2.5-pro"
         case .gpt_5: "gpt-5"
         case .gpt_5_mini: "gpt-5-mini"
-        case .gpt_5_nano: "gpt-5-nano"
         case .claude_sonnet_4: "claude-sonnet-4"
         case .claude_opus_4: "claude-opus-4"
         }
@@ -35,7 +33,6 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gemini_2_5_pro:"Gemini 2.5 Pro"
         case .gpt_5: "GPT-5"
         case .gpt_5_mini: "GPT-5 Mini"
-        case .gpt_5_nano: "GPT-5 Nano"
         case .claude_sonnet_4: "Claude 4 Sonnet"
         case .claude_opus_4: "Claude 4 Opus"
         }
@@ -43,7 +40,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     
     var imageName: String {
         switch self {
-        case .gpt_5, .gpt_5_mini, .gpt_5_nano: "openai.symbols"
+        case .gpt_5, .gpt_5_mini: "openai.symbols"
         case .gemini_2_5_flash, .gemini_2_5_pro: "gemini.symbols"
         case .claude_sonnet_4, .claude_opus_4: "claude.symbols"
         }
@@ -51,21 +48,17 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     
     var color: String {
         switch self {
-        case .gpt_5, .gpt_5_mini, .gpt_5_nano: "#00947A"
+        case .gpt_5, .gpt_5_mini: "#00947A"
         case .gemini_2_5_flash, .gemini_2_5_pro: "#E64335"
         case .claude_sonnet_4, .claude_opus_4: "#D6683B"
         }
-    }
-    
-    var supportsTool: Bool {
-        true
     }
     
     var supportedTypes: Set<UTType> {
         switch self {
         case .gemini_2_5_flash, .gemini_2_5_pro:
             [.text, .image, .pdf, .audio, .video]
-        case .gpt_5, .gpt_5_mini, .gpt_5_nano, .claude_sonnet_4, .claude_opus_4:
+        case .gpt_5, .gpt_5_mini, .claude_sonnet_4, .claude_opus_4:
             [.text, .image]
         }
     }

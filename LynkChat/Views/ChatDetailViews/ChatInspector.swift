@@ -53,10 +53,8 @@ struct ChatInspector: View {
                 }
             }
             
-            if chat.config.model.supportsTool {
-                Section("Plugins") {
-                    ToolsToggleView(config: $chat.config)
-                }
+            Section("Plugins") {
+                ToolsToggleView(config: $chat.config)
             }
             
             Section("System Prompt") {
