@@ -8,36 +8,48 @@
 import SwiftUI
 
 struct ImageServiceSettings: View {
-    @State private var selectedTab: ImageServiceTab = .parameters
+    @ObservedObject var imageConfig = ImageModelConfig.shared
     
     var body: some View {
-        tabView
-            .toolbarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Picker("Tab", selection: $selectedTab) {
-                        ForEach(ImageServiceTab.allCases, id: \.self) { tab in
-                            Label(tab.rawValue, systemImage: tab.imageName)
-                                .tag(tab)
-                                .labelStyle(.titleOnly)
-                        }
+        Form {
+            Section {
+                Picker("Default Model", selection: $imageConfig.defaultModel) {
+                    ForEach(ImageModel.allCases) { model in
+                        Label(model.name, image: model.imageName)
+                            .tag(model)
                     }
-                    #if !os(macOS)
-                    .controlSize(.large)
-                    #endif
-                    .pickerStyle(.segmented)
                 }
             }
+            
+            Section(header: Text("Default Parameters")) {
+                Stepper(
+                    label,
+                    value: Binding<Double>(
+                        get: { Double(imageConfig.numImages) },
+                        set: { imageConfig.numImages = Int($0) }
+                    ),
+                    in: 1...4,
+                    step: 1,
+                    format: .number
+                )
+            }
+            
+            Toggle(isOn: $imageConfig.saveToPhotos) {
+                Text("Save to Photos Library")
+                Text("Images will be saved to Downloads folder otherwise")
+            }
+        }
+        .formStyle(.grouped)
+        .navigationTitle("Image Parameters")
+        .toolbarTitleDisplayMode(.inline)
     }
     
-    @ViewBuilder
-    var tabView: some View {
-        switch selectedTab {
-        case .models:
-            ImageModelList()
-        case .parameters:
-            ImageParametersSettings()
-        }
+    var label: String {
+        #if os(macOS)
+        "Number of Images"
+        #else
+        "Number of Images (\(imageConfig.numImages))"
+        #endif
     }
 }
 
