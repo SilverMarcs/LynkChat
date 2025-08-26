@@ -19,6 +19,8 @@ struct ToolResultView: View {
             ToolImageView(urlStr: chatTool.result)
         case .webSearch:
             ToolSearchResultView(searchString: chatTool.result)
+        case .rag:
+            Text(chatTool.result ?? "No Content")
         case .processFile, .reasoning:
             FileProcessingView(content: chatTool.result)
         }
