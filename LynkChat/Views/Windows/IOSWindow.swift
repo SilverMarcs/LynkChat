@@ -60,6 +60,15 @@ struct IOSWindow: Scene {
                 CameraView()
                     .ignoresSafeArea()
             }
+//            .onAppIntentExecution(CreateChatIntent.self) { intent in
+//                print("hiii")
+//                let trimmedMessage = intent.target.trimmingCharacters(in: .whitespacesAndNewlines)
+//                let newChat = ChatVM.shared.createNewChat(delay: true)
+//                
+//                Task {
+//                    await newChat.sendInput(prompt: trimmedMessage)
+//                }
+//            }
         }
     }
 }

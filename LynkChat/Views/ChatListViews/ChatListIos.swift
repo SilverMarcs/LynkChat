@@ -31,14 +31,6 @@ struct ChatListIos: View {
                 .onDelete(perform: deleteItems)
             }
         }
-        .onAppIntentExecution(CreateChatIntent.self) { intent in
-            Task {
-                let trimmedMessage = intent.message.trimmingCharacters(in: .whitespacesAndNewlines)
-                
-                let newChat = await ChatVM.shared.createNewChat(delay: true)
-                await newChat.sendInput(prompt: trimmedMessage)
-            }
-        }
         .navigationDestination(for: Chat.self) { chat in
             ChatDetail(chat: chat)
                 .id(chat.id)
