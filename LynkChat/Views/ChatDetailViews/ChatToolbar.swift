@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ChatToolbar: ToolbarContent {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @ObservedObject var config = AppConfig.shared
     
     @Bindable var chat: Chat
     

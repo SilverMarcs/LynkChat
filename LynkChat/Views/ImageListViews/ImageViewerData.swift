@@ -9,7 +9,6 @@ import SwiftUI
 import Photos
 
 struct ImageViewerData: View {
-    @ObservedObject var imageConfig = ImageModelConfig.shared
     let data: Data
     private let size: CGFloat = 300
     

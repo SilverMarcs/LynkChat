@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AssistantMessage: View {
-    @ObservedObject var config = AppConfig.shared
     var message: Message
     var group: MessageGroup
     var showMenu: Bool = true

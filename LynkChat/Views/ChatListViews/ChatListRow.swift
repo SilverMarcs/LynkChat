@@ -11,8 +11,6 @@ struct ChatListRow: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.openWindow) var openWindow
     
-    @ObservedObject var config = AppConfig.shared
-    
     @Bindable var chat: Chat
     
     private let chatVM = ChatVM.shared

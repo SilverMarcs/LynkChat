@@ -10,8 +10,6 @@ import SwiftData
 import TipKit
 
 struct InputArea: View {
-    @ObservedObject var config = AppConfig.shared
-    
     @Bindable var chat: Chat
 
     @FocusState var isFocused: FocusedField?

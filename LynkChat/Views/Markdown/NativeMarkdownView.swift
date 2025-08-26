@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct NativeMarkdownView: View {
-    @ObservedObject private var config = AppConfig.shared
     var attributed: NSAttributedString
 
     var body: some View {

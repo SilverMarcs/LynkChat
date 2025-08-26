@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ToolResultView: View {
     let chatTool: ChatTool
-    @ObservedObject var config = AppConfig.shared
     
     var body: some View {
         switch chatTool.tool {

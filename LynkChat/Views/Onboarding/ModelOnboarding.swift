@@ -10,7 +10,6 @@ import SwiftData
 
 struct ModelOnboarding: View {
     @ObservedObject var chatConfig: ChatConfigDefaults = .shared
-    @ObservedObject var config: AppConfig = .shared
     
     var body: some View {
         GenericOnboardingView(

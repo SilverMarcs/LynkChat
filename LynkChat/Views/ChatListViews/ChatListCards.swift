@@ -13,8 +13,6 @@ struct ChatListCards: View {
     @Environment(\.openWindow) var openWindow
     @Environment(\.dismissWindow) var dismissWindow
     @Environment(\.windowType) private var windowType
-    
-    @ObservedObject var config = AppConfig.shared
 
     var chatCount: String
     var imageSessionsCount: String

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TextSelectionView: View {
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var config = AppConfig.shared
     
     var content: String
 

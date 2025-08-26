@@ -9,8 +9,6 @@ import SwiftUI
 import TipKit
 
 struct InputArea: View {
-    @ObservedObject var config = AppConfig.shared
-    
     var chat: Chat
     
     var body: some View {

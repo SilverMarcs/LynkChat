@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ImageGenOnboarding: View {
+    // TODO: add new models here
     @ObservedObject var imageConfig = ImageModelConfig.shared
     
     var body: some View {

@@ -9,8 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-    @ObservedObject var config = AppConfig.shared
-    
     var body: some View {
         #if os(macOS)
         NavigationSplitView {
