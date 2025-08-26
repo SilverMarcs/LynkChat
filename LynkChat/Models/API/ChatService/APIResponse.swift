@@ -103,3 +103,24 @@ struct FileUploadResponse: Decodable {
 struct TitleResponse: Decodable {
     let title: String
 }
+
+// MARK: - RAG List Response
+struct RAGResource: Decodable {
+    let id: Int
+    let filename: String
+    let mimeType: String
+    let createdAt: String
+    let updatedAt: String
+}
+
+struct RAGListResponse: Decodable {
+    let success: Bool
+    let data: [RAGResource]
+    let count: Int
+}
+
+// MARK: - RAG Delete Response
+struct RAGDeleteResponse: Decodable {
+    let success: Bool
+    let message: String
+}

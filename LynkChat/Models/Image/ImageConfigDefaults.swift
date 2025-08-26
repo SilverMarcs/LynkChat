@@ -7,10 +7,7 @@
 
 import SwiftUI
 
-class ImageModelConfig: ObservableObject {
-    static let shared = ImageModelConfig()
-    private init() {}
-    
+struct ImageConfigDefaults {
     @AppStorage("numImages") var numImages: Int = 1
     @AppStorage("saveToPhotos") var saveToPhotos = true
     

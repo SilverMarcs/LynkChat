@@ -9,8 +9,18 @@ import Foundation
 
 struct ImageConfig: Identifiable, Codable, Sendable {
     var id: UUID = UUID()
-    var model: ImageModel = ImageModel.flux_schnell
+
+    var model: ImageModel
+    var prompt: String
+    var numImages: Int
     
-    var prompt: String = "" // TODO: must take in init tbh
-    var numImages: Int = ImageModelConfig.shared.numImages
+    init(prompt: String = "") {
+        self.prompt = prompt
+        
+        let defaults = ImageConfigDefaults()
+        
+        self.model = defaults.defaultModel
+        self.numImages = defaults.numImages
+    }
+    
 }

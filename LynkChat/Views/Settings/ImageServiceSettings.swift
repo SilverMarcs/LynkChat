@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct ImageServiceSettings: View {
-    @ObservedObject var imageConfig = ImageModelConfig.shared
+    @State var config: ImageConfigDefaults = .init()
     
     var body: some View {
         Form {
             Section {
-                Picker("Default Model", selection: $imageConfig.defaultModel) {
+                Picker("Default Model", selection: $config.defaultModel) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
@@ -25,8 +25,8 @@ struct ImageServiceSettings: View {
                 Stepper(
                     label,
                     value: Binding<Double>(
-                        get: { Double(imageConfig.numImages) },
-                        set: { imageConfig.numImages = Int($0) }
+                        get: { Double(config.numImages) },
+                        set: { config.numImages = Int($0) }
                     ),
                     in: 1...4,
                     step: 1,
@@ -34,7 +34,7 @@ struct ImageServiceSettings: View {
                 )
             }
             
-            Toggle(isOn: $imageConfig.saveToPhotos) {
+            Toggle(isOn: $config.saveToPhotos) {
                 Text("Save to Photos Library")
                 Text("Images will be saved to Downloads folder otherwise")
             }

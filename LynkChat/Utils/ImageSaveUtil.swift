@@ -10,7 +10,7 @@ import Photos
 
 enum ImageSaveUtil {
     static func saveImage(data: Data, completion: @escaping (Bool) -> Void) {
-        let imageConfig = ImageModelConfig.shared
+        let imageConfig = ImageConfigDefaults()
         
         if imageConfig.saveToPhotos {
             saveToPhotos(data: data, completion: completion)

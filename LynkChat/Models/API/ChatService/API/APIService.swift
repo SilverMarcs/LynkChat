@@ -28,6 +28,7 @@ enum APIService {
 enum HTTPMethod: String {
     case POST
     case GET
+    case DELETE
 }
 
 enum APIPath {
@@ -35,6 +36,8 @@ enum APIPath {
     case title
     case image
     case upload
+    case list
+    case delete
     
     var pathString: String {
         switch self {
@@ -46,6 +49,10 @@ enum APIPath {
             return "/image"
         case .upload:
             return "/chat/rag/upload"
+        case .list:
+            return "/chat/rag/list"
+        case .delete:
+            return "/chat/rag/delete"
         }
     }
 }

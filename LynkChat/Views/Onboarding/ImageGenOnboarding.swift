@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ImageGenOnboarding: View {
     // TODO: add new models here
-    @ObservedObject var imageConfig = ImageModelConfig.shared
+    @State var config: ImageConfigDefaults = .init()
     
     var body: some View {
         GenericOnboardingView(
@@ -19,14 +19,14 @@ struct ImageGenOnboarding: View {
             content: {
                 Form {
                     Section {
-                        Picker("Model", selection: $imageConfig.defaultModel) {
+                        Picker("Model", selection: $config.defaultModel) {
                             ForEach(ImageModel.allCases) { model in
                                 Text(model.name)
                                     .tag(model)
                             }
                         }
                         
-                        Toggle(isOn: $imageConfig.saveToPhotos) {
+                        Toggle(isOn: $config.saveToPhotos) {
                             Text("Save to Photos Library")
                             Text("Images will be saved to Downloads folder otherwise")
                         }

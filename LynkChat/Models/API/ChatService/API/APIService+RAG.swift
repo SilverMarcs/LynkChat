@@ -61,4 +61,49 @@ extension APIService {
         
         return try JSONDecoder().decode(FileUploadResponse.self, from: data)
     }
+    
+    static func listFiles() async throws -> RAGListResponse {
+        guard let urlRequest = makeRequest(path: .list, method: .GET) else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        // Check response status
+        if let httpResponse = response as? HTTPURLResponse,
+           !(200...299).contains(httpResponse.statusCode) {
+            AppLogger.critical("List files error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
+            
+            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
+            throw RuntimeError(errorResponse.error)
+        }
+        
+        return try JSONDecoder().decode(RAGListResponse.self, from: data)
+    }
+    
+    static func deleteFile(id: Int) async throws -> RAGDeleteResponse {
+        guard var urlRequest = makeRequest(path: .delete, method: .DELETE) else {
+            throw URLError(.badURL)
+        }
+        
+        // Add query parameter for the resource ID
+        if let url = urlRequest.url,
+           var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+            urlComponents.queryItems = [URLQueryItem(name: "id", value: String(id))]
+            urlRequest.url = urlComponents.url
+        }
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        // Check response status
+        if let httpResponse = response as? HTTPURLResponse,
+           !(200...299).contains(httpResponse.statusCode) {
+            AppLogger.critical("Delete file error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
+            
+            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
+            throw RuntimeError(errorResponse.error)
+        }
+        
+        return try JSONDecoder().decode(RAGDeleteResponse.self, from: data)
+    }
 }
