@@ -46,14 +46,14 @@ struct ToolButton: View {
                 }
             }
             .presentationDragIndicator(.visible)
-            #if !os(macOS)
-            .navigationTransition(.zoom(sourceID: "toolbutton-popover", in: transition))
-            #endif
+//            #if !os(macOS)
+//            .navigationTransition(.zoom(sourceID: "toolbutton-popover", in: transition))
+//            #endif
             .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
             .frame(maxWidth: 500)
         }
-        .matchedTransitionSource(id: "toolbutton-popover", in: transition)
+//        .matchedTransitionSource(id: "toolbutton-popover", in: transition)
     }
     
     func prettyPrintJSON(_ jsonString: String) -> String? {

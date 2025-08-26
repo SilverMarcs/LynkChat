@@ -14,43 +14,41 @@ struct RAGSettings: View {
     @State private var showingFilePicker = false
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("RAG File Upload")
-                .font(.headline)
-            
-            VStack(spacing: 12) {
+        Form {
+            Section {
                 if let file = selectedFile {
-                    HStack {
-                        Text(file.lastPathComponent)
-                        Spacer()
+                    LabeledContent {
                         Button("Remove") {
                             selectedFile = nil
                         }
+                    } label: {
+                        Text(file.lastPathComponent)
                     }
-                    .padding()
-                    .background(Color.secondary.opacity(0.1))
-                    .cornerRadius(8)
+                } else {
+                    Text("No file selected")
                 }
-                
+            } header: {
+                Text("Upload Files")
+            } footer: {
+                if !uploadMessage.isEmpty {
+                    Text(uploadMessage)
+                }
+            }
+            .sectionActions {
                 Button("Choose File") {
                     showingFilePicker = true
                 }
                 .disabled(isUploading)
                 
-                Button("Upload") {
+                Button(isUploading ? "Uploading.." : "Upload") {
                     uploadFile()
                 }
                 .disabled(selectedFile == nil || isUploading)
-                
-                if !uploadMessage.isEmpty {
-                    Text(uploadMessage)
-                        .foregroundColor(uploadMessage.contains("Error") ? .red : .green)
-                }
             }
-            
-            Spacer()
         }
-        .padding()
+        .formStyle(.grouped)
+        .toolbarTitleDisplayMode(.inline)
+        .navigationTitle("Retrieval Augmented Generation")
         .fileImporter(
             isPresented: $showingFilePicker,
             allowedContentTypes: [.item],
@@ -71,21 +69,16 @@ struct RAGSettings: View {
         guard let file = selectedFile else { return }
         
         isUploading = true
-        uploadMessage = "Uploading..."
         
         Task {
             do {
-                let response = try await APIService.uploadFile(file)
-                await MainActor.run {
-                    isUploading = false
-                    uploadMessage = "Upload successful!"
-                    selectedFile = nil
-                }
+                let _ = try await APIService.uploadFile(file)
+                isUploading = false
+                uploadMessage = "Upload successful!"
+                selectedFile = nil
             } catch {
-                await MainActor.run {
-                    isUploading = false
-                    uploadMessage = "Error: \(error.localizedDescription)"
-                }
+                isUploading = false
+                uploadMessage = "Error: \(error.localizedDescription)"
             }
         }
     }

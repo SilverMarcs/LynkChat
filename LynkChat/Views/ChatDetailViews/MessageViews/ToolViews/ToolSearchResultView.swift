@@ -12,13 +12,24 @@ struct ToolSearchResultView: View {
     let searchString: String?
     @ObservedObject var config = AppConfig.shared
     
-    @State private var parsedResults: SearchResult?
+    private let parsedResults: SearchResult?
     
-    // TODO: try init func
+    init(searchString: String?) {
+        self.searchString = searchString
+        
+        // Parse once during initialization
+        if let searchString = searchString,
+           let data = searchString.data(using: .utf8) {
+            self.parsedResults = try? JSONDecoder().decode(SearchResult.self, from: data)
+        } else {
+            self.parsedResults = nil
+        }
+    }
     
     var body: some View {
         if let searchString {
-            if let parsed = try? JSONDecoder().decode(SearchResult.self, from: searchString.data(using: .utf8) ?? Data()) {
+            if let parsed = parsedResults {
+                // Show parsed results in horizontal scroll
                 FlowLayout {
                     ForEach(parsed.results, id: \.url) { result in
                         pillContent(text: result.title, url: result.url)
