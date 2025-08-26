@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ModelOnboarding: View {
-    @ObservedObject var chatConfig: ChatConfigDefaults = .shared
+    @State var chatConfig: ChatConfigDefaults = .init()
     
     var body: some View {
         GenericOnboardingView(

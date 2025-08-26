@@ -7,14 +7,10 @@
 
 import SwiftUI
 
-class ChatConfigDefaults: ObservableObject {
-    static let shared = ChatConfigDefaults()
-    private init() {}
-    
+struct ChatConfigDefaults {
     @AppStorage("defaultModel") var defaultModel: ChatModel = .gemini_2_5_flash
     
     @AppStorage("temperature") var temperature: Temperature = .balanced
-    @AppStorage("maxTokens") var maxTokens: MaxTokens = .t4096
     
     @AppStorage("thinkingBudget") var thinkingBudget: ThinkingBudget = .none
     

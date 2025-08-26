@@ -111,7 +111,7 @@ import Combine
                 let newChat = Chat()
                 newChat.statusId = statusId
                 newChat.status = ChatStatus.quick
-                newChat.config.systemPrompt = ChatConfigDefaults.shared.quickSystemPrompt
+                newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
 //                newChat.config.enableTool(.scrapeLinks)
 //                newChat.config.enableTool(.webSearch)
                 modelContext.insert(newChat)
@@ -126,7 +126,7 @@ import Combine
             let newChat = Chat()
             newChat.statusId = ChatStatus.quick.id
             newChat.status = ChatStatus.quick
-            newChat.config.systemPrompt = ChatConfigDefaults.shared.quickSystemPrompt
+            newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
             modelContext.insert(newChat)  // Insert into SwiftData
             quickPanelChat = newChat
             return newChat

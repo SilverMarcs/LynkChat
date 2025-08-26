@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChatServiceSettings: View {
-    @ObservedObject var config = ChatConfigDefaults.shared
+    @State var config: ChatConfigDefaults = .init()
 
     var body: some View {
         Form {

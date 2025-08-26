@@ -18,31 +18,55 @@ struct APIRequest: Encodable {
     let tools: [String]
 }
 
-struct TitleRequest: Encodable {
-    let prompt: String
-}
-
-enum HTTPMethod: String {
-    case POST
-    case GET
-}
-
-enum APIPath {
-    case chat
-    case title
-    case image
-    case upload
+struct APIMessage: Encodable {
+    let role: Message.Role
+    let content: [ContentItem]
     
-    var pathString: String {
+    init(role: Message.Role, content: [ContentItem]) {
+        self.role = role
+        self.content = content
+    }
+    
+    init(role: Message.Role, text: String) {
+        self.role = role
+        self.content = [.text(text)]
+    }
+}
+
+enum ContentItem: Encodable {
+    case text(String)
+    case image(image: Data, mimeType: String)
+    case file(data: Data, mimeType: String)
+    
+    private enum CodingKeys: String, CodingKey {
+        case type, text, image, data, mimeType, mediaType
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
         switch self {
-        case .chat:
-            return "/chat"
-        case .title:
-            return "/chat/title"
-        case .image:
-            return "/image"
-        case .upload:
-            return "/upload"
+        case .text(let text):
+            try container.encode("text", forKey: .type)
+            try container.encode(text, forKey: .text)
+            
+        case .image(let imageData, let mimeType):
+            try container.encode("image", forKey: .type)
+            // Convert Data to base64 string
+            let base64String = imageData.base64EncodedString()
+            try container.encode(base64String, forKey: .image)
+            try container.encodeIfPresent(mimeType, forKey: .mediaType)
+            
+        case .file(let fileData, let mimeType):
+            try container.encode("file", forKey: .type)
+            // Convert Data to base64 string
+            let base64String = fileData.base64EncodedString()
+            try container.encode(base64String, forKey: .data)
+            try container.encode(mimeType, forKey: .mediaType)
         }
     }
+}
+
+struct TitleRequest: Encodable {
+    let prompt: String
 }

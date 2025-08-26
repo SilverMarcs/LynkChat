@@ -10,7 +10,7 @@ import SwiftData
 
 struct QuickPanelSettings: View {
     @Environment(\.modelContext) var modelContext
-    @ObservedObject var config = ChatConfigDefaults.shared
+    @State var config: ChatConfigDefaults = .init()
     
     var body: some View {
         Form {
