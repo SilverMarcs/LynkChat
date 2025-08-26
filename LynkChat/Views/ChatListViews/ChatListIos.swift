@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import AppIntents
 
 struct ChatListIos: View {
     @Bindable var config = AppSettings.shared
@@ -28,6 +29,14 @@ struct ChatListIos: View {
                     .deleteDisabled(chat.status == .starred)
                 }
                 .onDelete(perform: deleteItems)
+            }
+        }
+        .onAppIntentExecution(CreateChatIntent.self) { intent in
+            Task {
+                let trimmedMessage = intent.message.trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                let newChat = await ChatVM.shared.createNewChat(delay: true)
+                await newChat.sendInput(prompt: trimmedMessage)
             }
         }
         .navigationDestination(for: Chat.self) { chat in

@@ -98,3 +98,8 @@ struct FileUploadResponse: Decodable {
     let success: Bool
     let message: String
 }
+
+// MARK: - Title Response
+struct TitleResponse: Decodable {
+    let title: String
+}

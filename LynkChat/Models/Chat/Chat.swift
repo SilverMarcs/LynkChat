@@ -226,9 +226,14 @@ final class Chat: Equatable, Identifiable, Hashable {
     func generateTitle(forced: Bool = false) async {
         guard status != .quick else { return }
         guard forced || adjustedContext.count <= 2 else { return }
+
+        let formattedPrompt = TitleFormatter.formatMessagesForTitleGeneration(messages: adjustedContext)
         
-        if let newTitle = await TitleGenerator.generateTitle(messages: adjustedContext) {
-            title = newTitle
+        do {
+            let newTitle = try await APIService.generateTitle(prompt: formattedPrompt)
+            self.title = newTitle
+        } catch {
+            await AppLogger.error("Error generating title: \(error)")
         }
     }
 

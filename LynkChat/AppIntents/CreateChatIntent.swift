@@ -23,35 +23,6 @@ struct CreateChatIntent: AppIntent {
     var message: String
     
     func perform() async throws -> some IntentResult {
-        // Ensure we have a valid message
-        let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedMessage.isEmpty else {
-            throw CreateChatError.emptyMessage
-        }
-        
-        // Create new chat
-        let newChat = await ChatVM.shared.createNewChat(delay: true)
-        
-        try? await Task.sleep(for: .seconds(0.1)) // Optional delay for better UX
-        
-        await newChat.sendInput(prompt: trimmedMessage)
-        
-        try await continueInForeground(alwaysConfirm: false)
-        
         return .result()
-    }
-}
-
-enum CreateChatError: Error, LocalizedError {
-    case chatVMNotAvailable
-    case emptyMessage
-    
-    var errorDescription: String? {
-        switch self {
-        case .chatVMNotAvailable:
-            return "Chat system is not available"
-        case .emptyMessage:
-            return "Please provide a message for the chat"
-        }
     }
 }

@@ -18,6 +18,10 @@ struct APIRequest: Encodable {
     let tools: [String]
 }
 
+struct TitleRequest: Encodable {
+    let prompt: String
+}
+
 enum HTTPMethod: String {
     case POST
     case GET
@@ -34,7 +38,7 @@ enum APIPath {
         case .chat:
             return "/chat"
         case .title:
-            return "/title"
+            return "/chat/title"
         case .image:
             return "/image"
         case .upload:

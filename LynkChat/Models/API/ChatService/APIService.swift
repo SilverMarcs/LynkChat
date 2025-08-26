@@ -147,4 +147,27 @@ enum APIService {
         
         return try JSONDecoder().decode(FileUploadResponse.self, from: data)
     }
+    
+    static func generateTitle(prompt: String) async throws -> String {
+        guard var urlRequest = makeRequest(path: .title, method: .POST) else {
+            throw URLError(.badURL)
+        }
+        
+        let request = TitleRequest(prompt: prompt)
+        urlRequest.httpBody = try JSONEncoder().encode(request)
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        // Check response status
+        if let httpResponse = response as? HTTPURLResponse,
+           !(200...299).contains(httpResponse.statusCode) {
+            AppLogger.critical("Title generation error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
+            
+            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
+            throw RuntimeError(errorResponse.error)
+        }
+        
+        let titleResponse = try JSONDecoder().decode(TitleResponse.self, from: data)
+        return titleResponse.title
+    }
 }
