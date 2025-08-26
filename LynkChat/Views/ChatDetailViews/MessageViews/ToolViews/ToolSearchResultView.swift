@@ -14,15 +14,14 @@ struct ToolSearchResultView: View {
     
     @State private var parsedResults: SearchResult?
     
+    // TODO: try init func
+    
     var body: some View {
         if let searchString {
             if let parsed = try? JSONDecoder().decode(SearchResult.self, from: searchString.data(using: .utf8) ?? Data()) {
-                // Show parsed results in horizontal scroll
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(parsed.results, id: \.url) { result in
-                            pillContent(text: result.title, url: result.url)
-                        }
+                FlowLayout {
+                    ForEach(parsed.results, id: \.url) { result in
+                        pillContent(text: result.title, url: result.url)
                     }
                 }
             } else {
@@ -33,15 +32,15 @@ struct ToolSearchResultView: View {
             }
         } else {
             // Placeholder state in horizontal scroll
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(0..<5, id: \.self) { _ in
-                        pillContent(text: "com.example.com", url: nil)
-                    }
+            FlowLayout {
+                ForEach(0..<5, id: \.self) { _ in
+                    pillContent(text: "com.example.com", url: nil)
                 }
             }
         }
     }
+    
+    
     
     private func pillContent(text: String, url: String?) -> some View {
         Link(destination: URL(string: url ?? "") ?? URL(string: "https://www.google.com")!) {

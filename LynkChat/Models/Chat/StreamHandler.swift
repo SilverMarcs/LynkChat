@@ -21,8 +21,8 @@ struct StreamHandler {
         let apiRequest = await createAPIRequest()
         try await processStream(from: apiRequest)
         
-        // Attempt chained follow-up once (web search tool result -> second call)
-        if let followUp = extractWebSearchFollowUp(), !Self.chainedFollowUpIds.contains(assistant.id) {
+        // Attempt chained follow-up once (web search or rag tool result -> second call)
+        if let followUp = extractToolFollowUp(), !Self.chainedFollowUpIds.contains(assistant.id) {
             Self.chainedFollowUpIds.insert(assistant.id)
             assistant.isReplying = true
             chat.isReplying = true
@@ -99,22 +99,32 @@ struct StreamHandler {
         )
     }
 
-    // Determine if a web search tool result should be auto-sent as a follow-up.
-    private func extractWebSearchFollowUp() -> String? {
-        guard let tools = assistant.tools,
-              let webSearchTool = tools.first(where: { $0.tool == .webSearch }),
-              let toolResult = webSearchTool.result,
-              !toolResult.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return nil
+    // Determine if a web search or rag tool result should be auto-sent as a follow-up.
+    private func extractToolFollowUp() -> String? {
+        guard let tools = assistant.tools else { return nil }
+        
+        // Look for either webSearch or rag tools with valid results
+        for tool in tools {
+            if (tool.tool == .webSearch || tool.tool == .rag),
+               let toolResult = tool.result,
+               !toolResult.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                
+                // For webSearch, validate it's a proper SearchResult
+                if tool.tool == .webSearch {
+                    guard let data = toolResult.data(using: .utf8),
+                          let _ = try? JSONDecoder().decode(SearchResult.self, from: data) else {
+                        continue // Skip if webSearch result cannot be decoded as SearchResult
+                    }
+                }
+                
+                // For rag tool, we assume any non-empty result is valid
+                // You can add similar validation here if needed
+                
+                return toolResult
+            }
         }
         
-        // Try to decode the tool result as SearchResult
-        guard let data = toolResult.data(using: .utf8),
-              let _ = try? JSONDecoder().decode(SearchResult.self, from: data) else {
-            return nil // Don't follow up if result cannot be decoded as SearchResult
-        }
-        
-        return toolResult
+        return nil
     }
     
     private func updateTools(with toolCallResponse: ToolCallResponse) {

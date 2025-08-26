@@ -19,6 +19,7 @@ struct PlatformGroupBox: GroupBoxStyle {
         #if os(macOS)
         GroupBox {
             configuration.content
+                .padding(5)
         } label: {
             configuration.label
         }

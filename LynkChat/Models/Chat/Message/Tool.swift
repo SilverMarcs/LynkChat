@@ -46,7 +46,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .webSearch: "network"
         case .scrapeLinks: "link"
         case .imageGeneration: "photo.stack"
-        case .rag: "circle.hexagonpath"
+        case .rag: "circle.hexagongrid"
         case .processFile: "doc.text"
         case .reasoning: "circle.hexagonpath"
         }

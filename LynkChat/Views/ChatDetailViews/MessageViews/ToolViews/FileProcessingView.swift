@@ -15,9 +15,9 @@ struct FileProcessingView: View {
             Text(content ?? String.mockTranscription)
                 .shimmer(when: content == nil)
                 .textSelection(.enabled)
-                .padding(3)
                 .transition(.opacity)
         }
+        .groupBoxStyle(PlatformGroupBox())
         .animation(.easeIn, value: content != nil) // Add animation
     }
 }

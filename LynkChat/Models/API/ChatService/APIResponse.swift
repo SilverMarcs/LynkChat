@@ -92,3 +92,9 @@ struct APIResponse: Decodable {
 struct APIErrorResponse: Decodable {
     let error: String
 }
+
+// MARK: - File Upload Response
+struct FileUploadResponse: Decodable {
+    let success: Bool
+    let message: String
+}

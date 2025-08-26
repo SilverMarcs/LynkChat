@@ -20,7 +20,7 @@ struct ToolResultView: View {
         case .webSearch:
             ToolSearchResultView(searchString: chatTool.result)
         case .rag:
-            Text(chatTool.result ?? "No Content")
+            ToolRagView(result: chatTool.result)
         case .processFile, .reasoning:
             FileProcessingView(content: chatTool.result)
         }

@@ -24,7 +24,6 @@ struct UserMessage: View {
             GroupBox {
                 #if os(macOS)
                 ExpandableText(text: group.content)
-                    .padding(5)
                 #else
                 Text(group.content)
                 #endif

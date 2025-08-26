@@ -46,6 +46,10 @@ struct SettingsView: View {
             }
             
             Section("Services") {
+                NavigationLink(destination: RAGSettings()) {
+                    Label("RAG Service", systemImage: Tool.rag.iconName)
+                }
+                
                 NavigationLink(destination: ChatServiceSettings()) {
                     Label("Chat Service", systemImage: "quote.bubble")
                 }

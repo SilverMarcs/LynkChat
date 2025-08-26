@@ -27,6 +27,7 @@ enum APIPath {
     case chat
     case title
     case image
+    case upload
     
     var pathString: String {
         switch self {
@@ -36,6 +37,8 @@ enum APIPath {
             return "/title"
         case .image:
             return "/image"
+        case .upload:
+            return "/upload"
         }
     }
 }
