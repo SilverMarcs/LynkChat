@@ -32,7 +32,7 @@ struct ToolSearchResultView: View {
                 // Show parsed results in horizontal scroll
                 FlowLayout {
                     ForEach(parsed.results, id: \.url) { result in
-                        pillContent(text: result.title, url: result.url)
+                        SearchResultPillView(title: result.title, url: result.url)
                     }
                 }
             } else {
@@ -45,18 +45,23 @@ struct ToolSearchResultView: View {
             // Placeholder state in horizontal scroll
             FlowLayout {
                 ForEach(0..<5, id: \.self) { _ in
-                    pillContent(text: "com.example.com", url: nil)
+                    SearchResultPillView(title: "com.example.com", url: nil)
+                        .shimmer(when: searchString == nil)
+                        .disabled(searchString == nil)
                 }
             }
         }
     }
+}
+
+struct SearchResultPillView: View {
+    let title: String
+    let url: String?
     
-    
-    
-    private func pillContent(text: String, url: String?) -> some View {
+    var body: some View {
         Link(destination: URL(string: url ?? "") ?? URL(string: "https://www.google.com")!) {
             Label {
-                Text(text.prefix(20) + (text.count > 20 ? "..." : ""))
+                Text(title.prefix(20) + (title.count > 20 ? "..." : ""))
                     .lineLimit(1)
             } icon: {
                 if let url = url, let faviconURL = getFaviconURL(from: url) {
@@ -79,8 +84,6 @@ struct ToolSearchResultView: View {
                         .foregroundStyle(.accent)
                 }
             }
-            .shimmer(when: searchString == nil)
-            .disabled(searchString == nil)
         }
         .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)
@@ -94,13 +97,5 @@ struct ToolSearchResultView: View {
             return "https://\(mainDomain)/favicon.ico"
         }
         return nil
-    }
-    
-    var padding: CGFloat {
-        #if os(macOS)
-        return 6
-        #else
-        return 7
-        #endif
     }
 }

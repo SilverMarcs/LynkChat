@@ -16,7 +16,6 @@ struct ToolRagView: View {
     init(result: String?) {
         self.result = result
         
-        // Parse once during initialization
         if let result = result,
            let data = result.data(using: .utf8) {
             self.ragResponse = try? JSONDecoder().decode(RAGResponse.self, from: data)
@@ -36,7 +35,7 @@ struct ToolRagView: View {
             FlowLayout {
                 ForEach(0..<5, id: \.self) { _ in
                     RAGContentView(content: .init(text: "com.example.com", similarity: 0.44, filename: "longfileName", fileExtension: "pdf"))
-                        .shimmer(when: true)
+                        .shimmer(when: result == nil)
                 }
             }
         }
