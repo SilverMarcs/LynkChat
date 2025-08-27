@@ -16,7 +16,7 @@ struct SearchResult: Codable {
     struct Result: Codable {
         let title: String
         let url: String
+        let favicon: String
         let content: String
-        let score: Double
     }
 }

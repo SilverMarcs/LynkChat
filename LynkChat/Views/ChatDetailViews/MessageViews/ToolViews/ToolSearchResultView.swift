@@ -27,49 +27,49 @@ struct ToolSearchResultView: View {
     }
     
     var body: some View {
-        Text(searchString ?? "nil")
-            .textSelection(.enabled)
-        
-//        if let searchString {
-//            if let parsed = parsedResults {
-//                // Show parsed results in horizontal scroll
-//                FlowLayout {
-//                    ForEach(parsed.results, id: \.url) { result in
-//                        SearchResultPillView(title: result.title, url: result.url)
-//                    }
-//                }
-//            } else {
-//                Text(searchString)
-//                    .textSelection(.enabled)
-//                    .lineSpacing(4)
-//                    .font(.system(size: config.fontSize + 0.5))
-//            }
-//        } else {
-//            // Placeholder state in horizontal scroll
-//            FlowLayout {
-//                ForEach(0..<5, id: \.self) { _ in
-//                    SearchResultPillView(title: "com.example.com", url: nil)
-//                        .shimmer(when: searchString == nil)
-//                        .disabled(searchString == nil)
-//                }
-//            }
-//        }
+        if let searchString {
+            if let parsed = parsedResults {
+                // Show parsed results in horizontal scroll
+                FlowLayout {
+                    ForEach(parsed.results, id: \.url) { result in
+                        SearchResultPillView(searchResult: result)
+                    }
+                }
+            } else {
+                Text(searchString)
+                    .textSelection(.enabled)
+                    .lineSpacing(4)
+                    .font(.system(size: config.fontSize + 0.5))
+            }
+        } else {
+            // Placeholder state in horizontal scroll
+            FlowLayout {
+                ForEach(0..<5, id: \.self) { _ in
+                    SearchResultPillView(searchResult: SearchResult.Result(
+                        title: "Loading...",
+                        url: "https://example.com",
+                        favicon: "",
+                        content: "",
+                    ))
+                    .disabled(searchString == nil)
+                }
+            }
+        }
     }
 }
 
 struct SearchResultPillView: View {
-    let title: String
-    let url: String?
+    let searchResult: SearchResult.Result
     
     var body: some View {
-        Link(destination: URL(string: url ?? "") ?? URL(string: "https://www.google.com")!) {
+        Link(destination: URL(string: searchResult.url) ?? URL(string: "https://www.google.com")!) {
             Label {
-                Text(title.prefix(20) + (title.count > 20 ? "..." : ""))
+                Text(searchResult.title.prefix(20) + (searchResult.title.count > 20 ? "..." : ""))
                     .lineLimit(1)
             } icon: {
                 Group {
-                    if let url = url, let faviconURL = getFaviconURL(from: url) {
-                        AsyncImage(url: URL(string: faviconURL)) { phase in
+                    if !searchResult.favicon.isEmpty, let faviconURL = URL(string: searchResult.favicon) {
+                        AsyncImage(url: faviconURL) { phase in
                             switch phase {
                             case .success(let image):
                                 image
@@ -90,6 +90,7 @@ struct SearchResultPillView: View {
             #if !os(macOS)
             .labelStyle(.iconOnly)
             #endif
+            .shimmer(when: searchResult.content == "Loading")
         }
         .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)
@@ -101,15 +102,5 @@ struct SearchResultPillView: View {
         #else
         20
         #endif
-    }
-    
-    private func getFaviconURL(from url: String) -> String? {
-        guard let host = URL(string: url)?.host else { return nil }
-        let components = host.components(separatedBy: ".")
-        if components.count >= 2 {
-            let mainDomain = components[(components.count - 2)..<components.count].joined(separator: ".")
-            return "https://\(mainDomain)/favicon.ico"
-        }
-        return nil
     }
 }

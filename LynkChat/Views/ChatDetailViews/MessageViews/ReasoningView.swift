@@ -18,7 +18,7 @@ struct ReasoningView: View {
     }
     
     var body: some View {
-        ToolButton(chatTool: tool, skipPrettyPrinting: true)
+        ToolButton(chatTool: tool)
     }
 }
 
