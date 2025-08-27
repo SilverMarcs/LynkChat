@@ -10,7 +10,7 @@ import Foundation
 struct SearchResult: Codable {
     let query: String
     let answer: String?
-    let images: [String]  // Changed from [ImageResult]
+    let images: [String]
     let results: [Result]
     
     struct Result: Codable {

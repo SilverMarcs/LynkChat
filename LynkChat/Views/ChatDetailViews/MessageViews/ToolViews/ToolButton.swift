@@ -14,7 +14,6 @@ struct ToolButton: View {
     @Environment(\.chat) var chat
     
     @State private var showArguments = false
-    @Namespace private var transition
     
     var body: some View {
         Button {
@@ -25,6 +24,7 @@ struct ToolButton: View {
                 .foregroundStyle(chatTool.tool.color)
                 .shimmerWithoutRedact(when: chat.isReasoning)
         }
+        .labelStyle(.titleAndIcon)
         .buttonStyle(.bordered)
         #if os(macOS)
         .controlSize(.large)
@@ -46,14 +46,10 @@ struct ToolButton: View {
                 }
             }
             .presentationDragIndicator(.visible)
-//            #if !os(macOS)
-//            .navigationTransition(.zoom(sourceID: "toolbutton-popover", in: transition))
-//            #endif
             .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
             .frame(maxWidth: 500)
         }
-//        .matchedTransitionSource(id: "toolbutton-popover", in: transition)
     }
     
     func prettyPrintJSON(_ jsonString: String) -> String? {

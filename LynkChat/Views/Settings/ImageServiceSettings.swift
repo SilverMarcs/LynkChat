@@ -48,7 +48,7 @@ struct ImageServiceSettings: View {
         #if os(macOS)
         "Number of Images"
         #else
-        "Number of Images (\(imageConfig.numImages))"
+        "Number of Images (\(config.numImages))"
         #endif
     }
 }

@@ -27,30 +27,33 @@ struct ToolSearchResultView: View {
     }
     
     var body: some View {
-        if let searchString {
-            if let parsed = parsedResults {
-                // Show parsed results in horizontal scroll
-                FlowLayout {
-                    ForEach(parsed.results, id: \.url) { result in
-                        SearchResultPillView(title: result.title, url: result.url)
-                    }
-                }
-            } else {
-                Text(searchString)
-                    .textSelection(.enabled)
-                    .lineSpacing(4)
-                    .font(.system(size: config.fontSize + 0.5))
-            }
-        } else {
-            // Placeholder state in horizontal scroll
-            FlowLayout {
-                ForEach(0..<5, id: \.self) { _ in
-                    SearchResultPillView(title: "com.example.com", url: nil)
-                        .shimmer(when: searchString == nil)
-                        .disabled(searchString == nil)
-                }
-            }
-        }
+        Text(searchString ?? "nil")
+            .textSelection(.enabled)
+        
+//        if let searchString {
+//            if let parsed = parsedResults {
+//                // Show parsed results in horizontal scroll
+//                FlowLayout {
+//                    ForEach(parsed.results, id: \.url) { result in
+//                        SearchResultPillView(title: result.title, url: result.url)
+//                    }
+//                }
+//            } else {
+//                Text(searchString)
+//                    .textSelection(.enabled)
+//                    .lineSpacing(4)
+//                    .font(.system(size: config.fontSize + 0.5))
+//            }
+//        } else {
+//            // Placeholder state in horizontal scroll
+//            FlowLayout {
+//                ForEach(0..<5, id: \.self) { _ in
+//                    SearchResultPillView(title: "com.example.com", url: nil)
+//                        .shimmer(when: searchString == nil)
+//                        .disabled(searchString == nil)
+//                }
+//            }
+//        }
     }
 }
 
@@ -64,29 +67,40 @@ struct SearchResultPillView: View {
                 Text(title.prefix(20) + (title.count > 20 ? "..." : ""))
                     .lineLimit(1)
             } icon: {
-                if let url = url, let faviconURL = getFaviconURL(from: url) {
-                    AsyncImage(url: URL(string: faviconURL)) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 15, height: 15)
-                        default:
-                            Image(systemName: "network")
-                                .frame(width: 15, height: 15)
-                                .foregroundStyle(.accent)
+                Group {
+                    if let url = url, let faviconURL = getFaviconURL(from: url) {
+                        AsyncImage(url: URL(string: faviconURL)) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                            default:
+                                Image(systemName: "network")
+                                    .foregroundStyle(.accent)
+                            }
                         }
+                    } else {
+                        Image(systemName: "network")
+                            .foregroundStyle(.accent)
                     }
-                } else {
-                    Image(systemName: "network")
-                        .frame(width: 15, height: 15)
-                        .foregroundStyle(.accent)
                 }
+                .frame(width: iconDimensions, height: iconDimensions)
             }
+            #if !os(macOS)
+            .labelStyle(.iconOnly)
+            #endif
         }
         .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)
+    }
+    
+    private var iconDimensions: CGFloat {
+        #if os(macOS)
+        15
+        #else
+        20
+        #endif
     }
     
     private func getFaviconURL(from url: String) -> String? {
