@@ -10,8 +10,6 @@ import SwiftUI
 struct ToolButton: View {
     var chatTool: ChatTool
     
-    @Environment(\.chat) var chat
-    
     @State private var showArguments = false
     
     var body: some View {
@@ -21,7 +19,6 @@ struct ToolButton: View {
             Label(chatTool.tool.title, systemImage: chatTool.tool.iconName)
                 .fontWeight(.semibold)
                 .foregroundStyle(chatTool.tool.color)
-                .shimmerWithoutRedact(when: chat.isReasoning)
         }
         .labelStyle(.titleAndIcon)
         .buttonStyle(.bordered)

@@ -13,23 +13,13 @@ struct StreamHandler {
     let chat: Chat
     let assistant: Message
     let user: Message
-    private static var chainedFollowUpIds = Set<UUID>() // track assistant messages already chained
 
     func handleRequest() async throws {
-        chat.isReplying = true
         AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
         
         let apiRequest = await createAPIRequest()
         try await processStream(from: apiRequest)
-        
-        // Attempt chained follow-up once (web search or rag tool result -> second call)
-        if let followUp = extractToolFollowUp(), !Self.chainedFollowUpIds.contains(assistant.id) {
-            Self.chainedFollowUpIds.insert(assistant.id)
-            assistant.isReplying = true
-            chat.isReplying = true
-            try await streamFollowUp(followUpPrompt: followUp)
-        }
         
         finishResponse()
     }
@@ -47,12 +37,11 @@ struct StreamHandler {
                 assistant.content = streamText
 
             case .reasoning(let reasoningResponse):
-                chat.isReasoning = true
                 reasoning += reasoningResponse.reasoning
                 assistant.reasoning = reasoning
 
             case .reasoningEnd(_):
-                chat.isReasoning = false
+                break
 
             case .toolCall(let toolCallResponse):
                 updateTools(with: toolCallResponse)
@@ -84,16 +73,6 @@ struct StreamHandler {
         }
     }
     
-    private func streamFollowUp(followUpPrompt: String) async throws {
-        let baseContext = chat.adjustedContext // full context including last assistant
-        var apiMessages = baseContext.map { $0.toAPIMessage() }
-        // Inject virtual assistant message with the follow-up prompt
-        apiMessages.append(APIMessage(role: .assistant, content: [.text(followUpPrompt)]))
-        
-        let request = createAPIRequest(with: apiMessages)
-        try await processStream(from: request)
-    }
-    
     // MARK: - Helper Methods
     
     private func createAPIRequest() async -> APIRequest {
@@ -115,14 +94,6 @@ struct StreamHandler {
             tools: chat.config.enabledTools.map { $0.rawValue }
         )
     }
-
-    // Determine if a web search or rag tool result should be auto-sent as a follow-up.
-    private func extractToolFollowUp() -> String? {
-        return assistant.tools?
-            .compactMap(\.result)
-            .first(where: \.requiresFollowUp)?
-            .textContent
-    }
     
     private func updateTools(with toolCallResponse: ToolCallResponse) {
         assistant.tools?.append(.init(
@@ -142,11 +113,10 @@ struct StreamHandler {
     private func finishResponse() {
         assistant.isReplying = false
         assistant.reasoning = assistant.reasoning?.trimmingCharacters(in: .whitespacesAndNewlines)
-        chat.isReplying = false
         // TODO: check this logic
-        if assistant.content.isEmpty && !(assistant.tools?.isEmpty ?? true) {
-            chat.errorDeleteLast()
-        }
+//        if assistant.content.isEmpty && !assistant.dataFiles.isEmpty {
+//            chat.errorDeleteLast()
+//        }
         withAnimation(.easeInOut(duration: 1)) { AppSettings.shared.expandColor = false }
     }
 }

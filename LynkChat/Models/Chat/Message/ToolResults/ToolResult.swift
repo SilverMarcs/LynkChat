@@ -15,15 +15,6 @@ enum ToolResult: Codable {
     case processFile(String) // Text content
     case reasoning(String) // Text content
     
-    var requiresFollowUp: Bool {
-        switch self {
-        case .webSearch, .rag:
-            return true
-        default:
-            return false
-        }
-    }
-    
     var textContent: String {
         switch self {
         case .webSearch(let result):

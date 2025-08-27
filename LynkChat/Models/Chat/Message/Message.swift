@@ -127,6 +127,7 @@ extension Message {
             if case .imageGeneration(let imageResult) = tool.result {
                 return imageResult.images.compactMap { (image: ImageResult) -> ContentItem? in
                     guard let data: Data = image.imageData, !data.isEmpty else { return nil }
+                    localRole = .user
                     return ContentItem.file(data: data, mimeType: image.mediaType)
                 }
             }

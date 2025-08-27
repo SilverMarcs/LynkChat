@@ -53,10 +53,10 @@ final class Chat: Equatable, Identifiable, Hashable {
     @Transient
     var streamingTask: Task<Void, Error>?
     
-    @Attribute(.ephemeral)
-    var isReplying: Bool = false
-    @Attribute(.ephemeral)
-    var isReasoning: Bool = false
+    
+    var isReplying: Bool {
+        currentThread.last?.isReplying ?? false
+    }
 
     @Transient
     var inputManager = InputManager()
@@ -201,12 +201,10 @@ final class Chat: Equatable, Identifiable, Hashable {
         guard let task = streamingTask else { return }
         task.cancel()
         streamingTask = nil
-        isReplying = false // Set isReplying to false when stopped manually
         
         // Ensure the message is in a clean state before allowing new queries
         if let lastMessage = currentThread.last?.activeMessage {
             lastMessage.isReplying = false
-            lastMessage.tools = nil
         }
         
         errorDeleteLast()
@@ -217,12 +215,10 @@ final class Chat: Equatable, Identifiable, Hashable {
 
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
-        isReplying = false // Set isReplying to false on error
         
         // Immediately clean up the state rather than waiting
         if let lastMessage = currentThread.last?.activeMessage {
             lastMessage.isReplying = false
-            lastMessage.tools = nil
         }
         
         // Call stopStreaming directly on the main thread
@@ -286,7 +282,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     func errorDeleteLast() {
         guard let last = self.currentThread.last else { return }
         last.activeMessage.isReplying = false
-        last.activeMessage.tools = nil
         if last.activeMessage.content.isEmpty {
             if last.allMessages.count == 1 {
                 self.deleteLastMessage()
