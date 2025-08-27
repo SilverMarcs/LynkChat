@@ -92,7 +92,6 @@ final class Message: Equatable, Identifiable, Hashable {
     }
 }
 
-// TODO: pass tool call and results
 extension Message {
     func toAPIMessage() -> APIMessage {
         var contentItems = [ContentItem]()
@@ -102,19 +101,11 @@ extension Message {
         
         // Create tool usage texts
         let toolTexts = tools?.map { tool -> String in
-            let resultText: String
-            if tool.tool == .imageGeneration {
-                resultText = "generated image was shown to user"
-            } else {
-                // TODO: see this
-                resultText = "result"
-            }
-            
             return """
                 Used \(tool.tool.rawValue) tool
                 Arguments: \(tool.args)
                 Tool Result:
-                \(resultText)
+                \(tool.result?.textContent ?? "No result")
                 """
         } ?? []
         

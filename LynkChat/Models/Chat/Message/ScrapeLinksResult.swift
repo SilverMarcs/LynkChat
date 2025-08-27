@@ -14,5 +14,6 @@ struct ScrapeLinksResult: Codable {
         let url: String
         let rawContent: String
         let images: [String]
+        let favicon: String
     }
 }

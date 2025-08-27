@@ -101,35 +101,10 @@ struct StreamHandler {
 
     // Determine if a web search or rag tool result should be auto-sent as a follow-up.
     private func extractToolFollowUp() -> String? {
-        guard let tools = assistant.tools else { return nil }
-        
-        // Look for either webSearch or rag tools with valid results
-        for tool in tools {
-            if tool.tool == .webSearch || tool.tool == .rag,
-               let toolResult = tool.result {
-                
-                switch toolResult {
-                case .webSearch(let searchResult):
-                    // Convert SearchResult back to JSON string for follow-up
-                    if let data = try? JSONEncoder().encode(searchResult),
-                       let jsonString = String(data: data, encoding: .utf8) {
-                        return jsonString
-                    }
-                    
-                case .rag(let ragResponse):
-                    // Convert RAGResponse back to JSON string for follow-up
-                    if let data = try? JSONEncoder().encode(ragResponse),
-                       let jsonString = String(data: data, encoding: .utf8) {
-                        return jsonString
-                    }
-                    
-                default:
-                    continue // Skip other tool types
-                }
-            }
-        }
-        
-        return nil
+        return assistant.tools?
+            .compactMap(\.result)
+            .first(where: \.requiresFollowUp)?
+            .textContent
     }
     
     private func updateTools(with toolCallResponse: ToolCallResponse) {

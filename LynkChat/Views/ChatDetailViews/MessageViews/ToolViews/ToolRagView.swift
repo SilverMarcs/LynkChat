@@ -27,7 +27,6 @@ struct ToolRagView: View {
                 ForEach(0..<5, id: \.self) { _ in
                     RAGContentView(content: .init(text: "com.example.com", similarity: 0.44, filename: "longfileName", fileExtension: "pdf"))
                         .shimmer(when: true)
-                        .disabled(true)
                 }
             }
         }

@@ -109,7 +109,7 @@ enum ResponseType: Decodable {
         } else if let toolResultResponse = try? container.decode(ToolResultResponse.self) {
             self = .toolResult(toolResultResponse)
         } else {
-            throw RuntimeError("Invalid response received \(container)") // TODO: test this line
+            throw RuntimeError("Invalid response received \(container)")
         }
     }
 }

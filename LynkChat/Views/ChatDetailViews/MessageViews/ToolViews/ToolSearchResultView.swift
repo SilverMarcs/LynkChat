@@ -23,23 +23,15 @@ struct ToolSearchResultView: View {
                     SearchResultPillView(searchResult: result)
                 }
             }
-            
-            if let answer = searchResult.answer {
-                Text(answer)
-                    .textSelection(.enabled)
-                    .lineSpacing(4)
-                    .font(.system(size: config.fontSize + 0.5))
-            }
         } else {
             FlowLayout {
                 ForEach(0..<5, id: \.self) { _ in
                     SearchResultPillView(searchResult: SearchResult.Result(
-                        url: "https://example.com",
-                        title: "Loading...",
+                        url: "this.is.not.valid",
+                        title: "Loading Big",
                         favicon: "",
                         content: "",
                     ))
-                    .disabled(true)
                     .shimmer(when: true)
                 }
             }
@@ -49,30 +41,25 @@ struct ToolSearchResultView: View {
 
 struct SearchResultPillView: View {
     let searchResult: SearchResult.Result
+    @Environment(\.openURL) var openURL
     
     var body: some View {
-        Link(destination: URL(string: searchResult.url) ?? URL(string: "https://www.google.com")!) {
+        Button {
+            if let url = URL(string: searchResult.url) {
+                openURL(url)
+            }
+        } label: {
             Label {
                 Text(searchResult.title.prefix(20) + (searchResult.title.count > 20 ? "..." : ""))
                     .lineLimit(1)
             } icon: {
-                Group {
-                    if !searchResult.favicon.isEmpty, let faviconURL = URL(string: searchResult.favicon) {
-                        AsyncImage(url: faviconURL) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                            default:
-                                Image(systemName: "network")
-                                    .foregroundStyle(.accent)
-                            }
-                        }
-                    } else {
-                        Image(systemName: "network")
-                            .foregroundStyle(.accent)
-                    }
+                AsyncImage(url: !searchResult.favicon.isEmpty ? URL(string: searchResult.favicon) : nil) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } placeholder: {
+                    Image(systemName: "network")
+                        .foregroundStyle(.accent)
                 }
                 .frame(width: iconDimensions, height: iconDimensions)
             }
@@ -83,7 +70,7 @@ struct SearchResultPillView: View {
         .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)
     }
-    
+
     private var iconDimensions: CGFloat {
         #if os(macOS)
         15

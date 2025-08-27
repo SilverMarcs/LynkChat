@@ -35,7 +35,7 @@ struct ChatDetailMobile: View {
                 Color.clear
                     .frame(height: 1)
                     .listRowInsets(.init())
-                    .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1))
+                    .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1)) // TODO: see if needed anymore or not
                     .listRowSeparator(.hidden)
                     .id(String.bottomID)
             }
