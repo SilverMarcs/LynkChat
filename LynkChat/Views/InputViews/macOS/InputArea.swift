@@ -58,6 +58,7 @@ struct InputArea: View {
                     .glassEffect(in: .rect(cornerRadius: 16))
             }
             
+            // TODO: use inline directly instead of actionbutton
             ActionButton(isStop: chat.isReplying) {
                 chat.isReplying ? chat.stopStreaming() : sendInput()
             }

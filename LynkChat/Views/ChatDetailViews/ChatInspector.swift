@@ -69,14 +69,22 @@ struct ChatInspector: View {
         .presentationDragIndicator(.visible)
         #if os(macOS)
         .overlay(alignment: .topTrailing) {
-            Button(role: .close) {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark")
+            HStack {
+                Spacer()
+                
+                Text("Tokens: \(unsafe String(format: "%.2fK", Double(chat.totalTokens) / 1000.0))")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                
+                Button(role: .close) {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                }
+                .controlSize(.large)
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
             }
-            .controlSize(.large)
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
             .padding(10)
         }
         #endif

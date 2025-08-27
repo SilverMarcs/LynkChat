@@ -14,7 +14,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     var date: Date = Date()
     var title: String = "New Chat Session"
     var errorMessage: String? = nil
-    var totalTokens: Int = 0
     
     var statusId: Int = 1 // normal status
     var status: ChatStatus {
@@ -62,9 +61,16 @@ final class Chat: Equatable, Identifiable, Hashable {
     @Transient
     var inputManager = InputManager()
     
+    
+    var totalTokens: Int {
+        adjustedContext.reduce(0) { total, message in
+            total + message.inputTokens + message.outputTokens + message.reasoningTokens
+        }
+    }
+    
     init() { }
     
-    func processRequest(message: Message) async {
+    func processRequest(message: Message, user: Message) async {
         // Cancel any existing task first and wait for it to complete
         streamingTask?.cancel()
         if let task = streamingTask {
@@ -75,7 +81,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         date = Date()
         streamingTask = Task { [weak self] in
             guard let self else { return }
-            let streamer = StreamHandler(chat: self, assistant: message)
+            let streamer = StreamHandler(chat: self, assistant: message, user: user)
             do {
                 try await streamer.handleRequest()
                 
@@ -116,7 +122,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         newUserMessage.next = newAssistantGroup
          
-        await processRequest(message: newAssistantMessage)
+        await processRequest(message: newAssistantMessage, user: newUserMessage)
     }
     
 
@@ -155,7 +161,7 @@ final class Chat: Equatable, Identifiable, Hashable {
             let assistantGroup = MessageGroup(message: assistantMessage)
             userGroup.activeMessage.next = assistantGroup
              
-            await processRequest(message: assistantMessage)
+            await processRequest(message: assistantMessage, user: userMessage)
         }
         
         // Reset inputManager after everything is done
@@ -172,7 +178,7 @@ final class Chat: Equatable, Identifiable, Hashable {
             message.addMessage(newAssistantMessage)
             message.activeMessage.next = nil
            
-            await processRequest(message: newAssistantMessage)
+            await processRequest(message: newAssistantMessage, user: currentThread[index - 1].activeMessage)
         } else if message.role == .user {
             if index + 1 < currentThread.count {
                 let assistantGroup = currentThread[index + 1]
@@ -180,13 +186,13 @@ final class Chat: Equatable, Identifiable, Hashable {
                 assistantGroup.addMessage(newAssistantMessage)
                 assistantGroup.activeMessage.next = nil
                
-                await processRequest(message: newAssistantMessage)
+                await processRequest(message: newAssistantMessage, user: message.activeMessage)
             } else {
                 let assistantMessage = Message.assistant(model: config.model)
                 let assistantGroup = MessageGroup(message: assistantMessage)
                 message.activeMessage.next = assistantGroup
                 
-                await processRequest(message: assistantMessage)
+                await processRequest(message: assistantMessage, user: message.activeMessage)
             }
         }
     }
@@ -242,7 +248,6 @@ final class Chat: Equatable, Identifiable, Hashable {
             contextResetPoint = nil
         } else {
             contextResetPoint = message
-//            totalTokens = 0 // disabling since token count will help estimate usage
         }
         
         if let lastMessage = currentThread.last, lastMessage == message {
@@ -295,14 +300,12 @@ final class Chat: Equatable, Identifiable, Hashable {
         rootMessage = nil
         contextResetPoint = nil
         errorMessage = nil
-        totalTokens = 0
         stopStreaming()
     }
     
     func copy(from message: Message? = nil) async -> Chat {
         let newChat = Chat()
         newChat.config = await self.config.copy()
-        newChat.totalTokens = self.totalTokens
         
         var threadToCopy: [MessageGroup] = []
         

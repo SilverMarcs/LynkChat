@@ -31,6 +31,10 @@ final class Message: Equatable, Identifiable, Hashable {
     
     var tools: [ChatTool]?
     
+    var inputTokens: Int = 0
+    var outputTokens: Int = 0
+    var reasoningTokens: Int = 0
+    
     private init(role: Role,
                  content: String = "",
                  reasoning: String? = nil,
@@ -38,7 +42,10 @@ final class Message: Equatable, Identifiable, Hashable {
                  dataFiles: [TypedData],
                  tools: [ChatTool]?,
                  isReplying: Bool = false,
-                 height: CGFloat) {
+                 height: CGFloat,
+                 inputTokens: Int = 0,
+                 outputTokens: Int = 0,
+                 reasoningTokens: Int = 0) {
         self.role = role
         self.content = content
         self.reasoning = reasoning
@@ -47,6 +54,9 @@ final class Message: Equatable, Identifiable, Hashable {
         self.tools = tools
         self.isReplying = isReplying
         self.height = height
+        self.inputTokens = inputTokens
+        self.outputTokens = outputTokens
+        self.reasoningTokens = reasoningTokens
     }
 
     func copy() -> Message {
@@ -58,7 +68,10 @@ final class Message: Equatable, Identifiable, Hashable {
             dataFiles: dataFiles,
             tools: tools,
             isReplying: isReplying,
-            height: height
+            height: height,
+            inputTokens: inputTokens,
+            outputTokens: outputTokens,
+            reasoningTokens: reasoningTokens
         )
     }
     

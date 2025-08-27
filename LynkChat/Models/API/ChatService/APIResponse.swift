@@ -26,7 +26,9 @@ struct ReasoningEndResponse: Decodable {
 
 struct FinishResponse: Decodable {
     let type: String
-    let totalTokens: Int
+    let inputTokens: Int
+    let outputTokens: Int
+    let reasoningTokens: Int
 }
 
 struct ErrorResponse: Decodable {

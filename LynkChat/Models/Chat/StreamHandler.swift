@@ -11,6 +11,7 @@ import SwiftUI
 struct StreamHandler {
     let chat: Chat
     let assistant: Message
+    let user: Message
     private static var chainedFollowUpIds = Set<UUID>() // track assistant messages already chained
 
     func handleRequest() async throws {
@@ -59,7 +60,9 @@ struct StreamHandler {
                 updateToolResult(for: toolResultResponse)
 
             case .finish(let finishResponse):
-                chat.totalTokens = finishResponse.totalTokens
+                user.inputTokens += finishResponse.inputTokens
+                assistant.outputTokens += finishResponse.outputTokens
+                assistant.reasoningTokens += finishResponse.reasoningTokens
 
             case .error(let errorResponse):
                 throw RuntimeError(errorResponse.content)
