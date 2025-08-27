@@ -17,6 +17,7 @@ struct ChatInspector: View {
     @State var showingDeleteConfirmation: Bool = false
     @State private var isExportingJSON = false
     @State private var isExportingMarkdown = false
+    @State private var showingSecondaryModels = false
 
     var body: some View {
         Form {
@@ -31,6 +32,22 @@ struct ChatInspector: View {
             
             Section("Model") {
                 ModelPicker(selectedModel: $chat.config.model)
+                
+                LabeledContent {
+                    Button {
+                        showingSecondaryModels = true
+                    } label: {
+                        if chat.config.secondaryModels.isEmpty {
+                            Text("None")
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text("\(chat.config.secondaryModels.count)")
+                                .foregroundStyle(.accent)
+                        }
+                    }
+                } label: {
+                    Label("Secondary Models", systemImage: "rectangle.3.group")
+                }
             }
             
             Section("Parameters") {
@@ -67,6 +84,9 @@ struct ChatInspector: View {
         }
         .formStyle(.grouped)
         .presentationDragIndicator(.visible)
+        .sheet(isPresented: $showingSecondaryModels) {
+            SecondaryModelsSheet(config: $chat.config)
+        }
         #if os(macOS)
         .overlay(alignment: .topTrailing) {
             HStack {

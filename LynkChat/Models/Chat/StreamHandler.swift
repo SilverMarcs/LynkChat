@@ -13,7 +13,7 @@ struct StreamHandler {
     let chat: Chat
     let assistant: Message
     let user: Message
-
+    
     func handleRequest() async throws {
         AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
@@ -35,20 +35,20 @@ struct StreamHandler {
             case .text(let textResponse):
                 streamText += textResponse.content
                 assistant.content = streamText
-
+                
             case .reasoning(let reasoningResponse):
                 reasoning += reasoningResponse.reasoning
                 assistant.reasoning = reasoning
-
+                
             case .reasoningEnd(_):
                 break
-
+                
             case .toolCall(let toolCallResponse):
                 updateTools(with: toolCallResponse)
-
+                
             case .toolResult(let toolResultResponse):
                 updateToolResult(for: toolResultResponse)
-
+                
             case .file(let fileResponse):
                 if let data = Data(base64Encoded: fileResponse.base64),
                    let utType = UTType(mimeType: fileResponse.mimeType) {
@@ -61,12 +61,12 @@ struct StreamHandler {
                     )
                     assistant.dataFiles.append(typedData)
                 }
-
+                
             case .finish(let finishResponse):
                 user.inputTokens += finishResponse.inputTokens
                 assistant.outputTokens += finishResponse.outputTokens
                 assistant.reasoningTokens += finishResponse.reasoningTokens
-
+                
             case .error(let errorResponse):
                 throw RuntimeError(errorResponse.content)
             }
@@ -103,7 +103,7 @@ struct StreamHandler {
             result: nil
         ))
     }
-
+    
     private func updateToolResult(for toolResultResponse: ToolResultResponse) {
         if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
             assistant.tools?[index].result = toolResultResponse.result
@@ -113,10 +113,13 @@ struct StreamHandler {
     private func finishResponse() {
         assistant.isReplying = false
         assistant.reasoning = assistant.reasoning?.trimmingCharacters(in: .whitespacesAndNewlines)
+ 
         // TODO: check this logic
-//        if assistant.content.isEmpty && !assistant.dataFiles.isEmpty {
-//            chat.errorDeleteLast()
-//        }
+        // Delete response if content is empty and no data files or tools were used
+        if assistant.content.isEmpty && assistant.dataFiles.isEmpty && assistant.tools == nil {
+            chat.errorDeleteLast()
+        }
+        
         withAnimation(.easeInOut(duration: 1)) { AppSettings.shared.expandColor = false }
     }
 }

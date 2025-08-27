@@ -81,9 +81,19 @@ final class Chat: Equatable, Identifiable, Hashable {
         date = Date()
         streamingTask = Task { [weak self] in
             guard let self else { return }
-            let streamer = StreamHandler(chat: self, assistant: message, user: user)
+            
             do {
-                try await streamer.handleRequest()
+                // Check if we have secondary models to process
+                if !config.secondaryModels.isEmpty,
+                   let assistantGroup = currentThread.last {
+                    // Use MultiStreamHandler for concurrent streams
+                    let multiHandler = MultiStreamHandler(chat: self, assistantGroup: assistantGroup, user: user)
+                    try await multiHandler.handleMultipleRequests()
+                } else {
+                    // Use single StreamHandler for single model
+                    let streamer = StreamHandler(chat: self, assistant: message, user: user)
+                    try await streamer.handleRequest()
+                }
                 
                 #if !os(macOS)
                 let backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
@@ -203,8 +213,13 @@ final class Chat: Equatable, Identifiable, Hashable {
         streamingTask = nil
         
         // Ensure the message is in a clean state before allowing new queries
-        if let lastMessage = currentThread.last?.activeMessage {
-            lastMessage.isReplying = false
+        if let lastGroup = currentThread.last {
+            lastGroup.activeMessage.isReplying = false
+            
+            // Stop all messages in the group from replying
+            for message in lastGroup.allMessages {
+                message.isReplying = false
+            }
         }
         
         errorDeleteLast()
@@ -217,8 +232,11 @@ final class Chat: Equatable, Identifiable, Hashable {
         errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
         
         // Immediately clean up the state rather than waiting
-        if let lastMessage = currentThread.last?.activeMessage {
-            lastMessage.isReplying = false
+        if let lastGroup = currentThread.last {
+            // Stop all messages in the group from replying
+            for message in lastGroup.allMessages {
+                message.isReplying = false
+            }
         }
         
         // Call stopStreaming directly on the main thread
@@ -281,11 +299,28 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     func errorDeleteLast() {
         guard let last = self.currentThread.last else { return }
-        last.activeMessage.isReplying = false
-        if last.activeMessage.content.isEmpty {
+        
+        // Stop all messages from replying and reset pending count
+        for message in last.allMessages {
+            message.isReplying = false
+        }
+        
+        // Check if we should delete the entire group or just clean up empty messages
+        let emptyMessages = last.allMessages.filter { $0.content.isEmpty && $0.dataFiles.isEmpty && $0.tools == nil }
+        
+        if emptyMessages.count == last.allMessages.count {
+            // All messages are empty, delete the entire group
             if last.allMessages.count == 1 {
                 self.deleteLastMessage()
             } else {
+                // Remove empty messages and keep the last one
+                while last.allMessages.count > 1 && last.activeMessage.content.isEmpty {
+                    last.deleteAndSetPreviousActive()
+                }
+            }
+        } else {
+            // Remove only empty messages, keep non-empty ones
+            while last.allMessages.count > 1 && last.activeMessage.content.isEmpty {
                 last.deleteAndSetPreviousActive()
             }
         }

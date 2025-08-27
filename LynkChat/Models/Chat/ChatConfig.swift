@@ -26,6 +26,7 @@ struct ChatConfig: Identifiable, Codable, Sendable {
     var systemPrompt: String
     var model: ChatModel
     var enabledTools: Set<Tool> = []
+    var secondaryModels: [ChatModel] = []
     
     // Helper methods to check and modify tool states
     func isToolEnabled(_ tool: Tool) -> Bool {
@@ -57,6 +58,7 @@ extension ChatConfig {
         newConfig.systemPrompt = self.systemPrompt
         newConfig.model = self.model
         newConfig.enabledTools = self.enabledTools
+        newConfig.secondaryModels = self.secondaryModels
         return newConfig
     }
 }

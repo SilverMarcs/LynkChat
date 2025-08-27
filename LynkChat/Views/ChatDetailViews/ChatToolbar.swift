@@ -68,7 +68,16 @@ struct ChatToolbar: ToolbarContent {
             ToolbarItem(placement: .primaryAction) {
                 ModelMenuPicker(selectedModel: $chat.config.model)
             }
-            
+             
+            ToolbarItem(placement: .primaryAction) {
+                if !chat.config.secondaryModels.isEmpty {
+                    Button {
+                        showingInspector.toggle()
+                    } label:{
+                        Label("\(chat.config.secondaryModels.count)", systemImage: "cpu")
+                    }
+                }
+            }
             
             if chat.status == .temporary {
                 ToolbarSpacer(.fixed)
