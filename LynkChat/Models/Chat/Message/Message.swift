@@ -108,6 +108,7 @@ final class Message: Equatable, Identifiable, Hashable {
 extension Message {
     func toAPIMessage() -> APIMessage {
         var contentItems = [ContentItem]()
+        var localRole = self.role
         
         // Process data files
         let processedDataFiles = TypedData.processDataFiles(dataFiles)
@@ -122,6 +123,17 @@ extension Message {
                 """
         } ?? []
         
+        let imageContentItems: [ContentItem] = tools?.flatMap { (tool) -> [ContentItem] in
+            if case .imageGeneration(let imageResult) = tool.result {
+                return imageResult.images.compactMap { (image: ImageResult) -> ContentItem? in
+                    guard let data: Data = image.imageData, !data.isEmpty else { return nil }
+                    return ContentItem.file(data: data, mimeType: image.mediaType)
+                }
+            }
+            return [ContentItem]()
+        } ?? [ContentItem]()
+        contentItems.append(contentsOf: imageContentItems)
+        
         // Add the original message content, reasoning (if exists), and tool texts
         let messageComponents = [content]
             + (reasoning.map { ["Reasoning: \($0)"] } ?? [])
@@ -131,14 +143,12 @@ extension Message {
             .filter { !$0.isEmpty }
             .joined(separator: "\n\n")
         
-        // Only add user text content if it's not empty
         if !userText.isEmpty {
             contentItems.append(.text(userText))
         }
         
-        // Add all processed data files (text, image, and other files)
         contentItems.append(contentsOf: processedDataFiles)
         
-        return APIMessage(role: role, content: contentItems)
+        return APIMessage(role: localRole, content: contentItems)
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 import PDFKit
 import UniformTypeIdentifiers
 
+// TODO: see if can be simplified
 struct TypedData: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var data: Data
@@ -47,8 +48,6 @@ struct TypedData: Codable, Identifiable, Hashable {
         dataFiles.map { data in
             if data.fileType.conforms(to: .text) {
                 return .text(data.formattedTextContent)
-            } else if data.fileType.conforms(to: .image) {
-                return .image(image: data.data, mimeType: data.mimeType)
             } else {
                 return .file(data: data.data, mimeType: data.mimeType)
             }

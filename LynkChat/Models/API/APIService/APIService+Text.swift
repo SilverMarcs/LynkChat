@@ -53,6 +53,8 @@ extension APIService {
                                     continuation.yield(.toolCall(toolCallResponse))
                                 case .toolResult(let toolResultResponse):
                                     continuation.yield(.toolResult(toolResultResponse))
+                                case .file(let fileResponse):
+                                    continuation.yield(.file(fileResponse))
                                 case .finish(let finishResponse):
                                     continuation.yield(.finish(finishResponse))
                                 case .error(let errorResponse):

@@ -80,7 +80,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
     var toolPrompt: String {
         switch self {
         case .webSearch: 
-            "If user request knowledge thats new to you, you may search the web. If this tool was used and the content property did not hanswer the question properly, use the tool for scraping links to check any of the search results for additional information."
+            "If user request knowledge thats new to you, you may search the web. If this tool was used and the content property did not hanswer the question properly, use the tool for scraping links to check any of the search results for additional information. If the user asks to search online for something do not return the contents of the search verbatim, instead provide your own synthesis based on the results."
         case .scrapeLinks:
             "If links are provided by the user, you may use the scrapeLinks tool to fetch the contents of the URLs. The tool will fetch the contents of the URLs and return the text. Do not come up with Urls on your own. Only use the scrapeLinks tool if the user provides links in their query or if there are urls available in the chat from a prior web search tool invocation. If a link or mor eare provided in user's messages, u should use this tool to scrape its contents if appropriate."
         case .imageGeneration:

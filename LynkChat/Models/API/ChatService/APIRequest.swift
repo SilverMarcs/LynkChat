@@ -35,7 +35,6 @@ struct APIMessage: Encodable {
 
 enum ContentItem: Encodable {
     case text(String)
-    case image(image: Data, mimeType: String)
     case file(data: Data, mimeType: String)
     
     private enum CodingKeys: String, CodingKey {
@@ -49,13 +48,6 @@ enum ContentItem: Encodable {
         case .text(let text):
             try container.encode("text", forKey: .type)
             try container.encode(text, forKey: .text)
-            
-        case .image(let imageData, let mimeType):
-            try container.encode("image", forKey: .type)
-            // Convert Data to base64 string
-            let base64String = imageData.base64EncodedString()
-            try container.encode(base64String, forKey: .image)
-            try container.encodeIfPresent(mimeType, forKey: .mediaType)
             
         case .file(let fileData, let mimeType):
             try container.encode("file", forKey: .type)

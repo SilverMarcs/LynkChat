@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct StreamHandler {
     let chat: Chat
@@ -58,6 +59,19 @@ struct StreamHandler {
 
             case .toolResult(let toolResultResponse):
                 updateToolResult(for: toolResultResponse)
+
+            case .file(let fileResponse):
+                if let data = Data(base64Encoded: fileResponse.base64),
+                   let utType = UTType(mimeType: fileResponse.mimeType) {
+                    let fileExtension = utType.preferredFilenameExtension ?? "dat"
+                    let fileName = "file_\(UUID().uuidString).\(fileExtension)"
+                    let typedData = TypedData(
+                        data: data,
+                        fileType: utType,
+                        fileName: fileName
+                    )
+                    assistant.dataFiles.append(typedData)
+                }
 
             case .finish(let finishResponse):
                 user.inputTokens += finishResponse.inputTokens

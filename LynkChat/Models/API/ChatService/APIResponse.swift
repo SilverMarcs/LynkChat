@@ -36,6 +36,12 @@ struct ErrorResponse: Decodable {
     let content: String
 }
 
+struct FileResponse: Decodable {
+    let type: String
+    let base64: String
+    let mimeType: String 
+}
+
 struct ToolCallResponse: Decodable {
     let type: String
     let toolCallId: String
@@ -90,6 +96,7 @@ enum ResponseType: Decodable {
     case reasoningEnd(ReasoningEndResponse)
     case finish(FinishResponse)
     case error(ErrorResponse)
+    case file(FileResponse)
     case toolCall(ToolCallResponse)
     case toolResult(ToolResultResponse)
 
@@ -106,6 +113,8 @@ enum ResponseType: Decodable {
             self = .finish(finishResponse)
         } else if let errorResponse = try? container.decode(ErrorResponse.self) {
             self = .error(errorResponse)
+        } else if let fileResponse = try? container.decode(FileResponse.self) {
+            self = .file(fileResponse)
         } else if let toolCallResponse = try? container.decode(ToolCallResponse.self) {
             self = .toolCall(toolCallResponse)
         } else if let toolResultResponse = try? container.decode(ToolResultResponse.self) {
