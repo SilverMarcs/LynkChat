@@ -65,7 +65,7 @@ struct ToolResultResponse: Decodable {
             let urlString = try container.decode(String.self, forKey: .result)
             result = .imageGeneration(urlString)
         case .rag:
-            let ragResponse = try container.decode(RAGResponse.self, forKey: .result)
+            let ragResponse = try container.decode(RAGResult.self, forKey: .result)
             result = .rag(ragResponse)
         case .processFile:
             let content = try container.decode(String.self, forKey: .result)

@@ -86,7 +86,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .imageGeneration:
             "If a user desires to generate an image or want to see something, you may use the imageGeneration tool that uses AI for image generation. Craft a text description related to the user's request and pass to the Image gen AI but do not enahnce it so mudh that relevance to the user's request is lost. Do not enhance if the user specifically provides a prompt of their own. Do not reference links generated as part of image generation tool usage. Dont provide links for images in chat, it will be provided by tool anyway"
         case .rag:
-            "If user asks for personalised data or data that you don't think will be available on teh internet, you may use this tool to retrieve related content."
+            "If user asks for personalised data or data that you don't think will be available on the internet, you may use this tool to retrieve related content. "
         case .processFile:
             "File Analysis"
         case .reasoning:

@@ -11,7 +11,7 @@ enum ToolResult: Codable {
     case webSearch(SearchResult)
     case scrapeLinks(ScrapeLinksResult)
     case imageGeneration(String) // URL string
-    case rag(RAGResponse)
+    case rag(RAGResult)
     case processFile(String) // Text content
     case reasoning(String) // Text content
     

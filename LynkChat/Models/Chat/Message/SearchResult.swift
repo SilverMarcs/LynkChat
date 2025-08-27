@@ -11,9 +11,9 @@ struct SearchResult: Codable {
     let query: String
     let answer: String?
     let images: [String]
-    let results: [Result]
+    let results: [SearchResultItem]
     
-    struct Result: Codable {
+    struct SearchResultItem: Codable {
         let url: String
         let title: String
         let favicon: String

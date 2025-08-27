@@ -26,7 +26,7 @@ struct ToolSearchResultView: View {
         } else {
             FlowLayout {
                 ForEach(0..<5, id: \.self) { _ in
-                    SearchResultPillView(searchResult: SearchResult.Result(
+                    SearchResultPillView(searchResult: SearchResult.SearchResultItem(
                         url: "this.is.not.valid",
                         title: "Loading Big",
                         favicon: "",
@@ -40,7 +40,7 @@ struct ToolSearchResultView: View {
 }
 
 struct SearchResultPillView: View {
-    let searchResult: SearchResult.Result
+    let searchResult: SearchResult.SearchResultItem
     @Environment(\.openURL) var openURL
     
     var body: some View {

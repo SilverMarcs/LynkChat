@@ -9,9 +9,9 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ToolRagView: View {
-    let ragResponse: RAGResponse?
+    let ragResponse: RAGResult?
     
-    init(ragResponse: RAGResponse?) {
+    init(ragResponse: RAGResult?) {
         self.ragResponse = ragResponse
     }
     
@@ -34,11 +34,11 @@ struct ToolRagView: View {
 }
 
 struct RAGContentView: View {
-    let content: RAGContent
+    let content: RAGResult.RAGResultItem
     let image: PlatformImage
     @State var showPopover: Bool = false
     
-    init(content: RAGContent) {
+    init(content: RAGResult.RAGResultItem) {
         self.content = content
         #if os(macOS)
         self.image = NSWorkspace.shared.icon(for: UTType(filenameExtension: content.fileExtension) ?? .avi)
