@@ -11,17 +11,33 @@ struct ToolResultView: View {
     let chatTool: ChatTool
     
     var body: some View {
-        switch chatTool.tool {
-        case .scrapeLinks:
-            EmptyView()
-        case .imageGeneration:
-            ToolImageView(urlStr: chatTool.result)
-        case .webSearch:
-            ToolSearchResultView(searchString: chatTool.result)
-        case .rag:
-            ToolRagView(result: chatTool.result)
-        case .processFile, .reasoning:
-            FileProcessingView(content: chatTool.result)
+        if let result = chatTool.result {
+            switch result {
+            case .scrapeLinks:
+                EmptyView()
+            case .imageGeneration(let urlString):
+                ToolImageView(urlStr: urlString)
+            case .webSearch(let searchResult):
+                ToolSearchResultView(searchResult: searchResult)
+            case .rag(let ragResponse):
+                ToolRagView(ragResponse: ragResponse)
+            case .processFile(let content), .reasoning(let content):
+                FileProcessingView(content: content)
+            }
+        } else {
+            // Show placeholder based on tool type
+            switch chatTool.tool {
+            case .scrapeLinks:
+                EmptyView()
+            case .imageGeneration:
+                ToolImageView(urlStr: nil)
+            case .webSearch:
+                ToolSearchResultView(searchResult: nil)
+            case .rag:
+                ToolRagView(ragResponse: nil)
+            case .processFile, .reasoning:
+                FileProcessingView(content: nil)
+            }
         }
     }
 }
@@ -35,14 +51,18 @@ struct ToolResultView: View {
         ToolResultView(chatTool: chatTool1)
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    chatTool1.result = String.mockTavilyThorough
+                    // Create SearchResult from mock data
+                    if let data = String.mockTavilyThorough.data(using: .utf8),
+                       let searchResult = try? JSONDecoder().decode(SearchResult.self, from: data) {
+                        chatTool1.result = .webSearch(searchResult)
+                    }
                 }
             }
         
         ToolResultView(chatTool: chatTool2)
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    chatTool2.result = String.mockTranscription + "\n" + String.mockTranscription
+                    chatTool2.result = .processFile(String.mockTranscription + "\n" + String.mockTranscription)
                 }
             }
     }

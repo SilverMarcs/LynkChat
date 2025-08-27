@@ -9,49 +9,38 @@ import SwiftUI
 
 // Main view
 struct ToolSearchResultView: View {
-    let searchString: String?
+    let searchResult: SearchResult?
     @ObservedObject var config = AppConfig.shared
     
-    private let parsedResults: SearchResult?
-    
-    init(searchString: String?) {
-        self.searchString = searchString
-        
-        // Parse once during initialization
-        if let searchString = searchString,
-           let data = searchString.data(using: .utf8) {
-            self.parsedResults = try? JSONDecoder().decode(SearchResult.self, from: data)
-        } else {
-            self.parsedResults = nil
-        }
+    init(searchResult: SearchResult?) {
+        self.searchResult = searchResult
     }
     
     var body: some View {
-        if let searchString {
-            if let parsed = parsedResults {
-                // Show parsed results in horizontal scroll
-                FlowLayout {
-                    ForEach(parsed.results, id: \.url) { result in
-                        SearchResultPillView(searchResult: result)
-                    }
+        if let searchResult = searchResult {
+            FlowLayout {
+                ForEach(searchResult.results, id: \.url) { result in
+                    SearchResultPillView(searchResult: result)
                 }
-            } else {
-                Text(searchString)
+            }
+            
+            if let answer = searchResult.answer {
+                Text(answer)
                     .textSelection(.enabled)
                     .lineSpacing(4)
                     .font(.system(size: config.fontSize + 0.5))
             }
         } else {
-            // Placeholder state in horizontal scroll
             FlowLayout {
                 ForEach(0..<5, id: \.self) { _ in
                     SearchResultPillView(searchResult: SearchResult.Result(
-                        title: "Loading...",
                         url: "https://example.com",
+                        title: "Loading...",
                         favicon: "",
                         content: "",
                     ))
-                    .disabled(searchString == nil)
+                    .disabled(true)
+                    .shimmer(when: true)
                 }
             }
         }
@@ -90,7 +79,6 @@ struct SearchResultPillView: View {
             #if !os(macOS)
             .labelStyle(.iconOnly)
             #endif
-            .shimmer(when: searchResult.content == "Loading")
         }
         .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)

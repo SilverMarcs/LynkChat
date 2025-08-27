@@ -45,7 +45,40 @@ struct ToolResultResponse: Decodable {
     let type: String
     let toolCallId: String
     let tool: Tool
-    let result: String
+    let result: ToolResult
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(String.self, forKey: .type)
+        toolCallId = try container.decode(String.self, forKey: .toolCallId)
+        tool = try container.decode(Tool.self, forKey: .tool)
+        
+        // Decode result based on tool type - much simpler now!
+        switch tool {
+        case .webSearch:
+            let searchResult = try container.decode(SearchResult.self, forKey: .result)
+            result = .webSearch(searchResult)
+        case .scrapeLinks:
+            let fetchResult = try container.decode(ScrapeLinksResult.self, forKey: .result)
+            result = .scrapeLinks(fetchResult)
+        case .imageGeneration:
+            let urlString = try container.decode(String.self, forKey: .result)
+            result = .imageGeneration(urlString)
+        case .rag:
+            let ragResponse = try container.decode(RAGResponse.self, forKey: .result)
+            result = .rag(ragResponse)
+        case .processFile:
+            let content = try container.decode(String.self, forKey: .result)
+            result = .processFile(content)
+        case .reasoning:
+            let content = try container.decode(String.self, forKey: .result)
+            result = .reasoning(content)
+        }
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case type, toolCallId, tool, result
+    }
 }
 
 // MARK: - Streaming Response

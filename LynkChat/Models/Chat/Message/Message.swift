@@ -106,7 +106,8 @@ extension Message {
             if tool.tool == .imageGeneration {
                 resultText = "generated image was shown to user"
             } else {
-                resultText = tool.result ?? "No result"
+                // TODO: see this
+                resultText = "result"
             }
             
             return """

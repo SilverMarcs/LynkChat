@@ -9,19 +9,10 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ToolRagView: View {
-    let result: String?
+    let ragResponse: RAGResponse?
     
-    private let ragResponse: RAGResponse?
-    
-    init(result: String?) {
-        self.result = result
-        
-        if let result = result,
-           let data = result.data(using: .utf8) {
-            self.ragResponse = try? JSONDecoder().decode(RAGResponse.self, from: data)
-        } else {
-            self.ragResponse = nil
-        }
+    init(ragResponse: RAGResponse?) {
+        self.ragResponse = ragResponse
     }
     
     var body: some View {
@@ -35,7 +26,8 @@ struct ToolRagView: View {
             FlowLayout {
                 ForEach(0..<5, id: \.self) { _ in
                     RAGContentView(content: .init(text: "com.example.com", similarity: 0.44, filename: "longfileName", fileExtension: "pdf"))
-                        .shimmer(when: result == nil)
+                        .shimmer(when: true)
+                        .disabled(true)
                 }
             }
         }
@@ -89,23 +81,4 @@ struct RAGContentView: View {
             .frame(maxWidth: 500)
         }
     }
-}
-
-#Preview {
-    ToolRagView(result: """
-    {
-        "count": "3",
-        "fileName": "document.pdf",
-        "content": [
-            {
-                "text": "This is some sample text from the document.",
-                "similarity": 0.8542
-            },
-            {
-                "text": "Another piece of relevant content.",
-                "similarity": 0.7321
-            }
-        ]
-    }
-    """)
 }

@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct ReasoningView: View {
-    @Environment(\.chat) var chat
     let reason: String
     let tool: ChatTool
     
     init(reason: String) {
         self.reason = reason
-        self.tool = ChatTool(toolCallId: UUID().uuidString, tool: .reasoning, args: reason, result: "reason")
+        self.tool = ChatTool(toolCallId: UUID().uuidString, tool: .reasoning, args: reason, result: .reasoning(reason))
     }
     
     var body: some View {

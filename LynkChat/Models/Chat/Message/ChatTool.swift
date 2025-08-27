@@ -11,7 +11,7 @@ struct ChatTool: Identifiable, Codable {
     let toolCallId: String
     let tool: Tool
     let args: String
-    var result: String?
+    var result: ToolResult?
     
     var id: String {
         toolCallId

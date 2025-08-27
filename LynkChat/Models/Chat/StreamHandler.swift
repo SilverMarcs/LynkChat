@@ -70,7 +70,7 @@ struct StreamHandler {
     private func streamFollowUp(followUpPrompt: String) async throws {
         let baseContext = chat.adjustedContext // full context including last assistant
         var apiMessages = baseContext.map { $0.toAPIMessage() }
-        // Inject virtual user message with the follow-up prompt
+        // Inject virtual assistant message with the follow-up prompt
         apiMessages.append(APIMessage(role: .assistant, content: [.text(followUpPrompt)]))
         
         let request = createAPIRequest(with: apiMessages)
@@ -105,22 +105,27 @@ struct StreamHandler {
         
         // Look for either webSearch or rag tools with valid results
         for tool in tools {
-            if (tool.tool == .webSearch || tool.tool == .rag),
-               let toolResult = tool.result,
-               !toolResult.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            if tool.tool == .webSearch || tool.tool == .rag,
+               let toolResult = tool.result {
                 
-                // For webSearch, validate it's a proper SearchResult
-                if tool.tool == .webSearch {
-                    guard let data = toolResult.data(using: .utf8),
-                          let _ = try? JSONDecoder().decode(SearchResult.self, from: data) else {
-                        continue // Skip if webSearch result cannot be decoded as SearchResult
+                switch toolResult {
+                case .webSearch(let searchResult):
+                    // Convert SearchResult back to JSON string for follow-up
+                    if let data = try? JSONEncoder().encode(searchResult),
+                       let jsonString = String(data: data, encoding: .utf8) {
+                        return jsonString
                     }
+                    
+                case .rag(let ragResponse):
+                    // Convert RAGResponse back to JSON string for follow-up
+                    if let data = try? JSONEncoder().encode(ragResponse),
+                       let jsonString = String(data: data, encoding: .utf8) {
+                        return jsonString
+                    }
+                    
+                default:
+                    continue // Skip other tool types
                 }
-                
-                // For rag tool, we assume any non-empty result is valid
-                // You can add similar validation here if needed
-                
-                return toolResult
             }
         }
         

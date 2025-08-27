@@ -14,8 +14,8 @@ struct SearchResult: Codable {
     let results: [Result]
     
     struct Result: Codable {
-        let title: String
         let url: String
+        let title: String
         let favicon: String
         let content: String
     }
