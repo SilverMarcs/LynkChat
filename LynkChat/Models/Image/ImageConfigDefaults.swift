@@ -11,5 +11,5 @@ struct ImageConfigDefaults {
     @AppStorage("numImages") var numImages: Int = 1
     @AppStorage("saveToPhotos") var saveToPhotos = true
     
-    @AppStorage("defaultModel") var defaultModel: ImageModel = .flux_schnell
+    @AppStorage("defaultModel") var defaultModel: ImageModel = .flux
 }
