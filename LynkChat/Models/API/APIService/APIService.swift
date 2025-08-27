@@ -23,6 +23,42 @@ enum APIService {
         
         return request
     }
+    
+    // Centralized error handling method
+    static func handleAPIResponse(data: Data, response: URLResponse, context: String = "") throws {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw RuntimeError("Invalid response")
+        }
+        
+        if !(200...299).contains(httpResponse.statusCode) {
+            AppLogger.critical("\(context) error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
+            
+            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
+            throw RuntimeError(errorResponse.error)
+        }
+    }
+    
+    // Generic method for making API calls with automatic error handling
+    static func performRequest<T: Codable>(
+        path: APIPath,
+        method: HTTPMethod,
+        body: Encodable? = nil,
+        responseType: T.Type,
+        context: String = ""
+    ) async throws -> T {
+        guard var request = makeRequest(path: path, method: method) else {
+            throw URLError(.badURL)
+        }
+        
+        if let body = body {
+            request.httpBody = try JSONEncoder().encode(body)
+        }
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try handleAPIResponse(data: data, response: response, context: context)
+        
+        return try JSONDecoder().decode(T.self, from: data)
+    }
 }
 
 enum HTTPMethod: String {

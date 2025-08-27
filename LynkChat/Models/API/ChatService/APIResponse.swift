@@ -129,18 +129,18 @@ struct APIErrorResponse: Decodable {
 }
 
 // MARK: - File Upload Response
-struct FileUploadResponse: Decodable {
+struct FileUploadResponse: Codable {
     let success: Bool
     let message: String
 }
 
 // MARK: - Title Response
-struct TitleResponse: Decodable {
+struct TitleResponse: Codable {
     let title: String
 }
 
 // MARK: - RAG List Response
-struct RAGResource: Decodable {
+struct RAGResource: Codable {
     let id: Int
     let filename: String
     let mimeType: String
@@ -148,14 +148,14 @@ struct RAGResource: Decodable {
     let updatedAt: String
 }
 
-struct RAGListResponse: Decodable {
+struct RAGListResponse: Codable {
     let success: Bool
     let data: [RAGResource]
     let count: Int
 }
 
 // MARK: - RAG Delete Response
-struct RAGDeleteResponse: Decodable {
+struct RAGDeleteResponse: Codable {
     let success: Bool
     let message: String
 }

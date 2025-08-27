@@ -41,7 +41,7 @@ class Generation {
 
         generatingTask = Task { @MainActor in
             do {
-                let dataObjects = try await ImageGenerator.generateImages(config: config)
+                let dataObjects = try await APIService.generateImages(config: config)
                 
                 self.images = dataObjects
                 state = .success

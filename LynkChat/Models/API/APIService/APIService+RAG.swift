@@ -49,36 +49,18 @@ extension APIService {
         urlRequest.httpBody = body
         
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
-        
-        // Check response status
-        if let httpResponse = response as? HTTPURLResponse,
-           !(200...299).contains(httpResponse.statusCode) {
-            AppLogger.critical("Upload error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
-            
-            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
-            throw RuntimeError(errorResponse.error)
-        }
+        try handleAPIResponse(data: data, response: response, context: "Upload")
         
         return try JSONDecoder().decode(FileUploadResponse.self, from: data)
     }
     
     static func listFiles() async throws -> RAGListResponse {
-        guard let urlRequest = makeRequest(path: .list, method: .GET) else {
-            throw URLError(.badURL)
-        }
-        
-        let (data, response) = try await URLSession.shared.data(for: urlRequest)
-        
-        // Check response status
-        if let httpResponse = response as? HTTPURLResponse,
-           !(200...299).contains(httpResponse.statusCode) {
-            AppLogger.critical("List files error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
-            
-            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
-            throw RuntimeError(errorResponse.error)
-        }
-        
-        return try JSONDecoder().decode(RAGListResponse.self, from: data)
+        return try await performRequest(
+            path: .list,
+            method: .GET,
+            responseType: RAGListResponse.self,
+            context: "List files"
+        )
     }
     
     static func deleteFile(id: Int) async throws -> RAGDeleteResponse {
@@ -94,15 +76,7 @@ extension APIService {
         }
         
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
-        
-        // Check response status
-        if let httpResponse = response as? HTTPURLResponse,
-           !(200...299).contains(httpResponse.statusCode) {
-            AppLogger.critical("Delete file error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
-            
-            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
-            throw RuntimeError(errorResponse.error)
-        }
+        try handleAPIResponse(data: data, response: response, context: "Delete file")
         
         return try JSONDecoder().decode(RAGDeleteResponse.self, from: data)
     }

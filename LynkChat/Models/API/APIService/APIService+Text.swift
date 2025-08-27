@@ -30,10 +30,7 @@ extension APIService {
                             errorData.append(byte)
                         }
                         
-                        AppLogger.critical("Server error response: \(String(data: errorData, encoding: .utf8) ?? "Unable to read error data")")
-                        
-                        let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: errorData)
-                        throw RuntimeError(errorResponse.error)
+                        try handleAPIResponse(data: errorData, response: response, context: "Server streaming")
                     }
                     
                     for try await line in result.lines {
@@ -79,25 +76,14 @@ extension APIService {
     }
     
     static func basicResponse(prompt: String) async throws -> String {
-        guard var urlRequest = makeRequest(path: .title, method: .POST) else {
-            throw URLError(.badURL)
-        }
-        
         let request = TitleRequest(prompt: prompt)
-        urlRequest.httpBody = try JSONEncoder().encode(request)
-        
-        let (data, response) = try await URLSession.shared.data(for: urlRequest)
-        
-        // Check response status
-        if let httpResponse = response as? HTTPURLResponse,
-           !(200...299).contains(httpResponse.statusCode) {
-            AppLogger.critical("Title generation error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
-            
-            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
-            throw RuntimeError(errorResponse.error)
-        }
-        
-        let titleResponse = try JSONDecoder().decode(TitleResponse.self, from: data)
+        let titleResponse: TitleResponse = try await performRequest(
+            path: .title,
+            method: .POST,
+            body: request,
+            responseType: TitleResponse.self,
+            context: "Title generation"
+        )
         return titleResponse.title
     }
 }
