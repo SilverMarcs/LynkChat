@@ -43,7 +43,7 @@ struct ImageInputView: View {
             }
             .controlSize(.large)
             .fontWeight(.bold)
-            .buttonStyle(.glassProminent)
+            .buttonStyle(.borderedProminent)
             .buttonBorderShape(.circle)
         }
         .fixedSize(horizontal: false, vertical: true)

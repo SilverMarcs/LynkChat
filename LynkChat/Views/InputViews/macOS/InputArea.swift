@@ -58,10 +58,18 @@ struct InputArea: View {
                     .glassEffect(in: .rect(cornerRadius: 16))
             }
             
-            // TODO: use inline directly instead of actionbutton
-            ActionButton(isStop: chat.isReplying) {
+            Button(action: {
                 chat.isReplying ? chat.stopStreaming() : sendInput()
+            }) {
+                Image(systemName: chat.isReplying ? "stop.fill" : "arrow.up")
+                    .font(.system(size: 15)).fontWeight(.bold)
             }
+            .opacity(0.85)
+            .controlSize(.large)
+            .tint(chat.isReplying ? .red : .accent)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.circle)
+            .keyboardShortcut(chat.isReplying ? "d" : .return)
             .offset(y: -2)
         }
         .padding(12)
