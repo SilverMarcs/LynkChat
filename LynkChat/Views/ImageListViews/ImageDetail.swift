@@ -40,7 +40,9 @@ struct ImageDetail: View {
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Button("Delete Last Message", role: .destructive) {
-                        let _ = session.imageGenerations.dropLast()
+                        if let last = session.imageGenerations.last {
+                            session.deleteGeneration(last)
+                        }
                     }
                     .keyboardShortcut(.delete)
                 }

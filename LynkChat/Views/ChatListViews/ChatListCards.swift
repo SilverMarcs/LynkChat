@@ -38,9 +38,8 @@ struct ChatListCards: View {
                 }
         }
         .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets(top: 1, leading: -5, bottom: 10, trailing: -5))
-            .padding(.bottom, 7)
+        .listRowInsets(EdgeInsets(top: 0, leading: -5, bottom: 0, trailing: -5))
+        .padding(.bottom, 8.5)
     }
     
     func handleChatPress() {

@@ -129,6 +129,10 @@ struct StreamHandler {
         assistant.isReplying = false
         assistant.reasoning = assistant.reasoning?.trimmingCharacters(in: .whitespacesAndNewlines)
         chat.isReplying = false
+        // TODO: check this logic
+        if assistant.content.isEmpty && !(assistant.tools?.isEmpty ?? true) {
+            chat.errorDeleteLast()
+        }
         withAnimation(.easeInOut(duration: 1)) { AppSettings.shared.expandColor = false }
     }
 }
