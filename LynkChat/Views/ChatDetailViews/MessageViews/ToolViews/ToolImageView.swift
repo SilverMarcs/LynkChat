@@ -9,7 +9,7 @@ import SwiftUI
 import TipKit
 
 struct ToolImageView: View {
-    var imageResult: ImageToolResult?
+    var imageResult: ImageGenerationResult?
     
     var body: some View {
         if let toolResult = imageResult {

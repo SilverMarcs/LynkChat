@@ -35,6 +35,6 @@ struct ImageResult: Codable {
     }
 }
 
-struct ImageToolResult: Codable {
+struct ImageGenerationResult: Codable {
     let images: [ImageResult]
 }

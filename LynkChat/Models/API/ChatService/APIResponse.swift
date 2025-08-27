@@ -64,7 +64,7 @@ struct ToolResultResponse: Decodable {
             let fetchResult = try container.decode(ScrapeLinksResult.self, forKey: .result)
             result = .scrapeLinks(fetchResult)
         case .imageGeneration:
-            let imageGenResult = try container.decode(ImageToolResult.self, forKey: .result)
+            let imageGenResult = try container.decode(ImageGenerationResult.self, forKey: .result)
             result = .imageGeneration(imageGenResult)
         case .rag:
             let ragResponse = try container.decode(RAGResult.self, forKey: .result)

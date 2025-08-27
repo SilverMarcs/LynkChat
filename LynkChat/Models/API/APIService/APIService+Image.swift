@@ -24,7 +24,7 @@ extension APIService {
         let (data, response) = try await URLSession.shared.data(for: request)
         try handleAPIResponse(data: data, response: response, context: "Image generation")
         
-        let apiResponse = try JSONDecoder().decode(ImageToolResult.self, from: data)
+        let apiResponse = try JSONDecoder().decode(ImageGenerationResult.self, from: data)
         
         return try apiResponse.images.map { imageData in
             guard let data = imageData.imageData else {

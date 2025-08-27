@@ -10,7 +10,7 @@ import Foundation
 enum ToolResult: Codable {
     case webSearch(SearchResult)
     case scrapeLinks(ScrapeLinksResult)
-    case imageGeneration(ImageToolResult)
+    case imageGeneration(ImageGenerationResult)
     case rag(RAGResult)
     case processFile(String) // Text content
     case reasoning(String) // Text content
