@@ -86,7 +86,7 @@ struct ImageList: View {
             } label: {
                 Label("Add Item", systemImage: "square.and.pencil")
             }
-            .keyboardShortcut(.none)
+            .keyboardShortcut("n")
         }
     }
     

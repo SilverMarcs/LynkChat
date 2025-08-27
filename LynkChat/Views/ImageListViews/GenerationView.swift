@@ -17,16 +17,11 @@ struct GenerationView: View {
             HStack {
                 Spacer()
 
-                if generation.state == .generating {
-                    ActionButton(isStop: true) {
-                        generation.stopGenerating()
-                    }
-                }
-                
                 GroupBox {
                     Text(generation.config.prompt)
                         .textSelection(.enabled)
                 }
+                    
                 .groupBoxStyle(PlatformGroupBox())
             }
             
@@ -57,6 +52,16 @@ struct GenerationView: View {
                                     .backgroundExtensionEffect()
                             }
                         }
+                    }
+                    
+                    if generation.state == .generating {
+                        Button(role: .destructive) {
+                            generation.stopGenerating()
+                        } label: {
+                            Text("Stop")
+                        }
+                        .foregroundStyle(.red)
+                        .buttonStyle(.bordered)
                     }
                 }
             }

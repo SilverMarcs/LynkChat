@@ -37,6 +37,14 @@ struct ImageDetail: View {
                 ImageInputView(session: session)
             }
             .navigationTitle(session.title)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Button("Delete Last Message", role: .destructive) {
+                        let _ = session.imageGenerations.dropLast()
+                    }
+                    .keyboardShortcut(.delete)
+                }
+            }
             #else
             .toolbar(.hidden, for: .tabBar)
             .searchable(text: $session.prompt, isPresented: $isFocused, prompt: "Generate Images")

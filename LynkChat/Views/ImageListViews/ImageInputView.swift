@@ -30,6 +30,7 @@ struct ImageInputView: View {
             .controlSize(.large)
             .fontWeight(.bold)
             .buttonBorderShape(.circle)
+            .keyboardShortcut("r")
             
             TextField("Prompt", text: $session.prompt, axis: .vertical)
                 .onSubmit( { sendInput() } )
