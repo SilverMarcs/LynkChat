@@ -91,8 +91,15 @@ struct MessageContextMenu: View {
             
             if chat.currentThread.last == group {
                 Button(role: .destructive, action: chat.deleteLastMessage) {
-                    Label("Delete Message", systemImage: "trash")
+                    Label("Delete All Messages", systemImage: "trash")
                 }
+            }
+            
+            if group.allMessages.count > 1 {
+                Button(role: .destructive, action: { group.deleteActiveMessage() }) {
+                    Label("Delete Message", systemImage: "minus.circle")
+                }
+                .help("Delete Message")
             }
         }
     }

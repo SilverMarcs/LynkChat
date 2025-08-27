@@ -75,6 +75,7 @@ struct ChatToolbar: ToolbarContent {
                         showingInspector.toggle()
                     } label:{
                         Label("\(chat.config.secondaryModels.count)", systemImage: "cpu")
+                            .labelStyle(.titleAndIcon)
                     }
                 }
             }

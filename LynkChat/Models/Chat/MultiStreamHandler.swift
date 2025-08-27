@@ -32,7 +32,7 @@ struct MultiStreamHandler {
             Task {
                 do {
                     let secondaryMessage = Message.assistant(model: model)
-                    assistantGroup.addMessage(secondaryMessage)
+                    assistantGroup.addMessage(secondaryMessage, skipActive: true)
                     
                     let secondaryHandler = StreamHandler(chat: chat, assistant: secondaryMessage, user: user)
                     try await secondaryHandler.handleRequest()

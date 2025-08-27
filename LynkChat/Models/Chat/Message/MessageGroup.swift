@@ -35,12 +35,14 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
         self.activeMessage = message
     }
     
-    func addMessage(_ message: Message) {
+    func addMessage(_ message: Message, skipActive: Bool = false) {
         if message.role == .assistant {
             message.isReplying = true
         }
         allMessages.append(message)
-        activeMessage = message
+        if !skipActive {
+            activeMessage = message
+        }
     }
     
     func copy() -> MessageGroup {
