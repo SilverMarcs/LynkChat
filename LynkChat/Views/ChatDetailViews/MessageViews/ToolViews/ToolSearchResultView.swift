@@ -10,11 +10,6 @@ import SwiftUI
 // Main view
 struct ToolSearchResultView: View {
     let searchResult: SearchResult?
-    @ObservedObject var config = AppConfig.shared
-    
-    init(searchResult: SearchResult?) {
-        self.searchResult = searchResult
-    }
     
     var body: some View {
         if let searchResult = searchResult {

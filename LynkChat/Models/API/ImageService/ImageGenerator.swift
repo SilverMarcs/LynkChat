@@ -7,26 +7,23 @@
 
 import Foundation
 
+// TODO: move to apiservice struct
 enum ImageGenerator {
     static func generateImages(config: ImageConfig) async throws -> [Data] {
-        // Construct the URL
-        guard let url = URL(string: "\(String.apiHost)/image") else {
+        // Create the request body
+        let requestBody = ImageGenerationRequest(
+            prompt: config.prompt,
+            model: config.model.id,
+            n: config.numImages
+        )
+        
+        // Create the request using APIService
+        guard var request = APIService.makeRequest(path: .image, method: .POST) else {
             throw ImageAPIError.invalidURL
         }
         
-        // Prepare the request body
-        let requestBody = [
-            "prompt": config.prompt,
-            "model": config.model.id,
-            "n": config.numImages
-        ] as [String: Any]
-        
-        // Create the request
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(AppConfig.shared.myApiKey, forHTTPHeaderField: "x-api-key")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody)
+        // Set the request body
+        request.httpBody = try? JSONEncoder().encode(requestBody)
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -43,24 +40,14 @@ enum ImageGenerator {
             }
             
             // Decode the success response
-            let apiResponse = try JSONDecoder().decode(ImageAPIResponse.self, from: data)
+            let apiResponse = try JSONDecoder().decode(ImageToolResult.self, from: data)
             
-            // Download all images
-            let imageDataArray = try await withThrowingTaskGroup(of: Data.self) { group in
-                var results: [Data] = []
-                
-                for imageData in apiResponse.data {
-                    group.addTask {
-                        let (imageData, _) = try await URLSession.shared.data(from: URL(string: imageData.url)!)
-                        return imageData
-                    }
+            // Decode all base64 images
+            let imageDataArray = try apiResponse.images.map { data in
+                guard let data = data.imageData else {
+                    throw ImageAPIError.decodingError(NSError(domain: "ImageGenerator", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid base64 data"]))
                 }
-                
-                for try await imageData in group {
-                    results.append(imageData)
-                }
-                
-                return results
+                return data
             }
             
             return imageDataArray

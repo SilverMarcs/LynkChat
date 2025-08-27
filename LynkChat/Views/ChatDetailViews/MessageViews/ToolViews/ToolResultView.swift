@@ -15,8 +15,8 @@ struct ToolResultView: View {
             switch result {
             case .scrapeLinks:
                 EmptyView()
-            case .imageGeneration(let urlString):
-                ToolImageView(urlStr: urlString)
+            case .imageGeneration(let imageGenResult):
+                ToolImageView(imageResult: imageGenResult)
             case .webSearch(let searchResult):
                 ToolSearchResultView(searchResult: searchResult)
             case .rag(let ragResponse):
@@ -30,7 +30,7 @@ struct ToolResultView: View {
             case .scrapeLinks:
                 EmptyView()
             case .imageGeneration:
-                ToolImageView(urlStr: nil)
+                ToolImageView(imageResult: nil)
             case .webSearch:
                 ToolSearchResultView(searchResult: nil)
             case .rag:

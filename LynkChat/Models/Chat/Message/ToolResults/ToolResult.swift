@@ -10,7 +10,7 @@ import Foundation
 enum ToolResult: Codable {
     case webSearch(SearchResult)
     case scrapeLinks(ScrapeLinksResult)
-    case imageGeneration(String) // URL string
+    case imageGeneration(ImageToolResult)
     case rag(RAGResult)
     case processFile(String) // Text content
     case reasoning(String) // Text content
@@ -42,7 +42,7 @@ enum ToolResult: Codable {
             }
             return text
         case .imageGeneration(_):
-            return "Generated Image was shown to user"
+            return "Generated Images were shown to user"
         case .rag(let response):
             var text = ""
             for content in response.content {

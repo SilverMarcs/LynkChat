@@ -11,10 +11,6 @@ import UniformTypeIdentifiers
 struct ToolRagView: View {
     let ragResponse: RAGResult?
     
-    init(ragResponse: RAGResult?) {
-        self.ragResponse = ragResponse
-    }
-    
     var body: some View {
         if let ragResponse = ragResponse {
             FlowLayout {

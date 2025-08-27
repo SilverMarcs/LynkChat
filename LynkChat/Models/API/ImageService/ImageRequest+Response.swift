@@ -5,11 +5,10 @@
 //  Created by Zabir Raihan on 01/01/2025.
 //
 
+import Foundation
 
-struct ImageResponseData: Codable {
-    let url: String
-}
-
-struct ImageAPIResponse: Codable {
-    let data: [ImageResponseData]
+struct ImageGenerationRequest: Codable {
+    let prompt: String
+    let model: String
+    let n: Int
 }

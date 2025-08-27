@@ -9,78 +9,47 @@ import SwiftUI
 import TipKit
 
 struct ToolImageView: View {
-    var urlStr: String?
-    @State private var isHovering = true
-    @State private var showCheckmark = false
+    var imageResult: ImageToolResult?
     
     var body: some View {
-        if let urlStr = urlStr {
-            AsyncImage(url: URL(string: urlStr)) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .popoverTip(ImageGenToolTip())
-                } else if phase.error != nil {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(.red.quinary)
-                        .overlay {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundStyle(.red)
-                                .frame(width: 75, height: 75)
-                        }
-                } else {
-                    ToolImagePlaceholderView()
+        if let toolResult = imageResult {
+            FlowLayout(spacing: 8) {
+                ForEach(toolResult.images, id: \.id) { imageResult in
+                    // Safely unwrap the decoded imageData
+                    if let imageData = imageResult.imageData {
+                        ImageViewerData(data: imageData)
+                    }
+//                       let platformImage = PlatformImage.from(data: imageData) {
+//                        Image(platformImage: platformImage)
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fill)
+//                            .frame(maxWidth: 300, maxHeight: 300)
+//                            .clipShape(RoundedRectangle(cornerRadius: 10))
+//                            .overlay(alignment: .topTrailing) {
+//                                Button(action: { saveImage(for: imageResult) }) {
+//                                    Image(systemName: "square.and.arrow.down")
+//                                        .resizable()
+//                                        .frame(width: 15, height: 15)
+//                                }
+//                                .buttonStyle(.glass) // .glass is not standard, using .borderedProminent
+//                                .buttonBorderShape(.circle)
+//                                .controlSize(.extraLarge)
+//                                .padding(10)
+//                            }
+//                    }
                 }
-            }
-            .frame(width: 300, height: 300)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .overlay(alignment: .topTrailing) {
-                Button(action: saveImage) {
-                    Image(systemName: showCheckmark ? "checkmark" : "square.and.arrow.down")
-                        .resizable()
-                        .frame(width: 15, height: 15)
-                }
-                .buttonStyle(.glass)
-                .buttonBorderShape(.circle)
-                .controlSize(.extraLarge)
-                .padding(10)
             }
         } else {
             ToolImagePlaceholderView()
         }
     }
     
-    func saveImage() {
-        guard let urlStr = urlStr, let url = URL(string: urlStr) else {
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Error downloading image: \(error)")
-                return
-            }
-            
-            guard let data = data else {
-                print("No data received")
-                return
-            }
-            
-            ImageSaveUtil.saveImage(data: data) { success in
-                if success {
-                    showCheckmark = true
-                    
-                    // Revert back to the original icon after 2 seconds
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showCheckmark = false
-                    }
-                }
+    func saveImage(for imageResult: ImageResult) {
+        if let imageData = imageResult.imageData {
+            ImageSaveUtil.saveImage(data: imageData) { success in
+                // Optionally handle success/failure, e.g., show a toast message
             }
         }
-        
-        task.resume()
     }
 }
 
@@ -93,6 +62,6 @@ struct ToolImagePlaceholderView: View {
 }
 
 #Preview {
-    ToolImageView(urlStr: "https://picsum.photos/200")
+    ToolImageView(imageResult: nil)
         .padding()
 }

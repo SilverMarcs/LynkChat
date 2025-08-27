@@ -25,9 +25,4 @@ struct ChatToolView: View {
     }
 }
 
-#Preview {
-    ChatToolView(tools: [.mockTool, .mockImageTool])
-        .frame(width: 400, height: 400)
-}
-
 
