@@ -38,7 +38,7 @@ struct UserMessage: View {
             if chat.inputManager.editingMessage == self.group.activeMessage {
                 Text("Editing")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.accent)
             }
         }
         .transaction { $0.animation = nil }

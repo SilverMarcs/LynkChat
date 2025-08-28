@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum SettingsTab {
+enum SettingsTab: String, Codable {
     case general
-    case appearance
     #if os(macOS)
     case quickPanel
     case shortcuts
     #endif
+    case rag
     case chat
     case image
     case about
