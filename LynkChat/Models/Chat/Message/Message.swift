@@ -127,7 +127,9 @@ extension Message {
             if case .imageGeneration(let imageResult) = tool.result {
                 return imageResult.images.compactMap { (image: ImageResult) -> ContentItem? in
                     guard let data: Data = image.imageData, !data.isEmpty else { return nil }
-                    localRole = .user
+                    if model != .gemini_2_5_flash {
+                        localRole = .user
+                    }
                     return ContentItem.file(data: data, mimeType: image.mediaType)
                 }
             }
