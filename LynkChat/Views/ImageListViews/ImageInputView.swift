@@ -37,6 +37,15 @@ struct ImageInputView: View {
                 .textFieldStyle(.plain)
                 .padding(.leading, 6)
                 .focused($isFocused, equals: .imageInput)
+                .onKeyPress(.upArrow) {
+                    if session.prompt.isEmpty {
+                        if let lastPrompt = session.imageGenerations.last?.config.prompt {
+                            session.prompt = lastPrompt
+                            return .handled
+                        }
+                    }
+                    return .ignored
+                }
             
             Button(action: sendInput) {
                 Image(systemName: "arrow.up")
