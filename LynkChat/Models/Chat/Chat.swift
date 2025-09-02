@@ -369,9 +369,3 @@ final class Chat: Equatable, Identifiable, Hashable {
         rootMessage = nil
     }
 }
-
-enum ChatState: Codable {
-    case notStarted
-    case waiting
-    case started
-}

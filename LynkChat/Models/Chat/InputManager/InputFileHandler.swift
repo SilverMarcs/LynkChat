@@ -11,10 +11,11 @@ import PhotosUI
 
 extension InputManager {
     // Define constants
-    private enum Constants {
+    enum Constants {
         static let maxFileSizeBytes: Int = 10 * 1024 * 1024 // 10MB in bytes
         static let maxTotalFiles: Int = 15
         static let maxAudioFiles: Int = 1
+        static let pasteTextToFileThreshold: Int = 6500
     }
     
     func processData(_ data: Data, fileType: UTType? = nil, fileName: String? = nil, url: URL? = nil) async throws {
@@ -155,15 +156,34 @@ extension InputManager {
                               try await processFile(at: fileURL)
                           }
                       }
-                  } else if let imageData = pasteboardItem.data(forType: .png) ?? pasteboardItem.data(forType: .tiff) {
-                      // Check if images are supported
-                      guard supportedTypes.contains(where: { $0.conforms(to: .image) }) else {
-                          throw InputError.imageNotSupported
-                      }
-                      
-                      let fileType: UTType = pasteboardItem.data(forType: .png) != nil ? .png : .tiff
-                      try await processData(imageData, fileType: fileType, fileName: "Pasted_Image_\(UUID().uuidString).\(fileType.preferredFilenameExtension ?? "png")")
-                  }
+                } else if let imageData = pasteboardItem.data(forType: .png) ?? pasteboardItem.data(forType: .tiff) {
+                    // Check if images are supported
+                    guard supportedTypes.contains(where: { $0.conforms(to: .image) }) else {
+                        throw InputError.imageNotSupported
+                    }
+
+                    let fileType: UTType = pasteboardItem.data(forType: .png) != nil ? .png : .tiff
+                    try await processData(imageData, fileType: fileType, fileName: "Pasted_Image_\(UUID().uuidString).\(fileType.preferredFilenameExtension ?? "png")")
+                } else if let pastedString = pasteboardItem.string(forType: .string) {
+                    // Handle pasted plain text:
+                    // If the pasted text is large (>= threshold) create a .txt file and add it as an attachment.
+                    // Otherwise, do nothing here and allow the normal paste behavior (e.g., pasting into the text field).
+                    let trimmed = pastedString.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if trimmed.count >= Constants.pasteTextToFileThreshold {
+                        // Convert to data and create a .txt file
+                        guard let textData = trimmed.data(using: .utf8) else {
+                            throw InputError.unsupportedFileType
+                        }
+
+                        let fileType: UTType = .plainText
+                        let fileName = "Pasted_\(UUID().uuidString.prefix(6)).txt"
+
+                        try await processData(textData, fileType: fileType, fileName: fileName)
+                    } else {
+                        // Small text: do nothing here so that the default paste continues
+                        // (PasteHandler will return false so the system inserts text into the focused text view)
+                    }
+                }
             } catch {
                 print("Error processing paste: \(error)")
             }

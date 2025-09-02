@@ -33,12 +33,12 @@ struct PasteHandler: ViewModifier {
             }
             .background(HostingViewFinder(hostingView: $hostingView))
     }
-    
+
     private func shouldHandlePaste() -> Bool {
         guard let keyWindow = NSApp.keyWindow else {
             return false
         }
-        
+
         // For quick panel handler, only handle paste if the quick panel is key
         if isQuickPanel {
             return keyWindow.identifier?.rawValue == "quickPanel"
@@ -47,7 +47,7 @@ struct PasteHandler: ViewModifier {
             guard let hostingView = hostingView, let viewWindow = unsafe hostingView.window else {
                 return false
             }
-            
+
             return viewWindow == keyWindow
         }
     }
@@ -58,19 +58,29 @@ struct PasteHandler: ViewModifier {
         }
 
         let handledTypes: Set<NSPasteboard.PasteboardType> = [.fileURL, .png, .tiff, .pdf]
-        var handledFiles = false
-        var containsText = false
+        var handled = false
 
         for item in pasteboardItems {
+            // Files and images — always handle
             if Set(item.types).intersection(handledTypes).isEmpty == false {
                 chat.inputManager.handlePaste(pasteboardItem: item, supportedTypes: chat.config.model.supportedTypes)
-                handledFiles = true
+                handled = true
             } else if item.types.contains(.string) {
-                containsText = true
+                // For plain text, only intercept and convert to a .txt attachment when the text is large.
+                if let pasted = item.string(forType: .string) {
+                    let trimmed = pasted.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if trimmed.count >= InputManager.Constants.pasteTextToFileThreshold {
+                        // Let InputManager decide how to convert the large text into a .txt file
+                        chat.inputManager.handlePaste(pasteboardItem: item, supportedTypes: chat.config.model.supportedTypes)
+                        handled = true
+                    } else {
+                        // Small text: do not consume the paste event so the system pastes into the focused text field
+                    }
+                }
             }
         }
 
-        return handledFiles || (containsText ? false : false)
+        return handled
     }
 }
 

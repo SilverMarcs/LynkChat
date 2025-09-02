@@ -27,18 +27,13 @@ struct StreamHandler {
     // MARK: - Stream Processing
     
     private func processStream(from request: APIRequest) async throws {
-        var streamText = assistant.content // preserve existing content for follow-ups
-        var reasoning = assistant.reasoning ?? ""
-        
         for try await response in APIService.streamResponse(from: request) {
             switch response {
             case .text(let textResponse):
-                streamText += textResponse.content
-                assistant.content = streamText
+                assistant.content += textResponse.content
                 
             case .reasoning(let reasoningResponse):
-                reasoning += reasoningResponse.reasoning
-                assistant.reasoning = reasoning
+                assistant.reasoning = (assistant.reasoning ?? "") + reasoningResponse.reasoning
                 
             case .reasoningEnd(_):
                 break
