@@ -51,14 +51,14 @@ struct ChatDetailMac: View {
                     InputArea(chat: chat)
                 }
             }
-            .onScrollPhaseChange { oldPhase, newPhase in
-                if newPhase == .interacting {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        config.expandColor = false
-                    }
-                }
-                return
-            }
+//            .onScrollPhaseChange { oldPhase, newPhase in
+//                if newPhase == .interacting {
+//                    withAnimation(.easeInOut(duration: 0.5)) {
+//                        config.expandColor = false
+//                    }
+//                }
+//                return
+//            }
             .toolbar {
                 ChatToolbar(chat: chat)
             }

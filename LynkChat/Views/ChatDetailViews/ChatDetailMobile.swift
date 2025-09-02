@@ -9,21 +9,21 @@ import SwiftUI
 import TipKit
 
 struct ChatDetailMobile: View {
-    var config: AppSettings = AppSettings.shared
+    private let config: AppSettings = AppSettings.shared
+    private let chatVM = ChatVM.shared
     
     @Bindable var chat: Chat
+    
+    @Namespace private var transition
 
     @State private var isFocused: Bool = false
     @State private var showingInspector: Bool = false
-    @Namespace private var transition
     @State private var searchScope: SearchScope = .regular
     @State private var showingExpandedSearch: Bool = false
     
-    private let chatVM = ChatVM.shared
-    
     var body: some View {
         ScrollViewReader { proxy in
-            List {
+            ScrollView {
                 ForEach(chat.currentThread, id: \.self) { group in
                     MessageView(group: group)
                         .environment(\.chat, chat)
@@ -39,6 +39,7 @@ struct ChatDetailMobile: View {
                     .listRowSeparator(.hidden)
                     .id(String.bottomID)
             }
+            .contentMargins(5)
             .environment(\.defaultMinListRowHeight, 1)
             .overlay {
                 if chat.currentThread.isEmpty {
@@ -51,14 +52,13 @@ struct ChatDetailMobile: View {
                      .padding()
                 }
             }
-            .onScrollPhaseChange { oldPhase, newPhase in
-                if newPhase == .interacting {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        config.expandColor = false
-                    }
-                }
-                return
-            }
+//            .if(config.expandColor) {
+//                $0.onScrollPhaseChange { oldPhase, newPhase in
+//                    if newPhase == .interacting {
+//                        withAnimation(.easeInOut(duration: 0.5)) {  config.expandColor = false }
+//                    }
+//                }
+//            }
             .scrollDismissesKeyboard(.interactively)
             .safeAreaBar(edge: .bottom) {
                 InputArea(chat: chat)
@@ -143,6 +143,7 @@ struct ChatDetailMobile: View {
     }
     
     private func sendInput() {
+        config.expandColor = true
         isFocused = false
         Task {
             await chat.sendInput()
