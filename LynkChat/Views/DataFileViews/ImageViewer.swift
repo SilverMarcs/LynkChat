@@ -16,7 +16,7 @@ struct ImageViewer: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(maxWidth: size , maxHeight: size)
-                .roundedRectangleOverlay(radius: 8)
+//                .roundedRectangleOverlay(radius: 8)
                 .clipShape(.rect(cornerRadius: 8))
         } else {
             Text("Image Unable to Load")

@@ -34,15 +34,13 @@ struct DataFilesView: View {
                 .padding(.trailing, -8)
             }
             
-            GlassEffectContainer {
-                if !nonImageFiles.isEmpty {
-                    FlowLayout(spacing: 8) {
-                        ForEach(nonImageFiles) { file in
-                            fileItemView(for: file)
-                        }
+            if !nonImageFiles.isEmpty {
+                FlowLayout(spacing: 8) {
+                    ForEach(nonImageFiles) { file in
+                        fileItemView(for: file)
                     }
-                    .padding(.trailing, -8)
                 }
+                .padding(.trailing, -8)
             }
         }
         .quickLookPreview($selectedFileURL)
@@ -50,20 +48,19 @@ struct DataFilesView: View {
     
     @ViewBuilder
     private func fileItemView(for typedData: TypedData) -> some View {
-        ZStack(alignment: .topTrailing) {
-            fileView(for: typedData)
-            
-            if let onDelete {
-                Button(role: .destructive) {
-                    onDelete(typedData)
-                } label: {
-                    Label("Remove", systemImage: "xmark")
+        fileView(for: typedData)
+            .overlay(alignment: .topTrailing) {
+                if let onDelete {
+                    Button(role: .destructive) {
+                        onDelete(typedData)
+                    } label: {
+                        Label("Remove", systemImage: "xmark")
+                    }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
+                    .labelStyle(.iconOnly)
+                    .padding(3)
                 }
-                .buttonStyle(.glass)
-                .buttonBorderShape(.circle)
-                .labelStyle(.iconOnly)
-                .padding(3)
-            }
         }
     }
     

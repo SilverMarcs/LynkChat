@@ -20,31 +20,34 @@ struct ListCard: View {
         Button {
             action()
         } label: {
-            GroupBox {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Image(systemName: icon)
-                            .font(.title3)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Image(systemName: icon)
+                        .font(.title3)
+                        .foregroundStyle(iconColor)
 
-                        Spacer()
-                        
-                        Text(count)
-                            .contentTransition(.numericText())
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                    }
+                    Spacer()
                     
-                    Text(title)
-                        .font(.callout)
+                    Text(count)
+                        .contentTransition(.numericText())
+                        .font(.title2)
                         .fontWeight(.semibold)
-                        .opacity(0.9)
-                        .padding(.leading, 2)
+                        .foregroundStyle(.secondary)
                 }
-                .padding(2)
+                
+                Text(title)
+                    .font(.callout)
+                    .fontWeight(.semibold)
+                    .opacity(0.9)
+                    .padding(.leading, 2)
+                    .foregroundStyle(.secondary)
             }
-            .foregroundStyle(.white)
-            .opacity(appearsActive ? 1 : 0.5)
-            .background(iconColor.mix(with: .black, by: 0.1).gradient.opacity(0.7), in: RoundedRectangle(cornerRadius: 7))
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
+            .background {
+                RoundedRectangle(cornerRadius: 11)
+                    .fill(.background.quaternary)
+            }
         }
         .buttonStyle(.plain)
     }
