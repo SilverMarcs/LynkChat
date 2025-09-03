@@ -13,7 +13,6 @@ struct FileViewer: View {
     var body: some View {
         HStack(spacing: 4) {
             Image(platformImage: typedData.imageName)
-//                .renderingMode(.original)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 27, height: 27)
@@ -32,7 +31,6 @@ struct FileViewer: View {
             
             Spacer()
         }
-//        .frame(height: 28)
         .frame(maxWidth: 200)
         .padding(2)
     }

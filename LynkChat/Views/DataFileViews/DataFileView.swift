@@ -67,14 +67,7 @@ struct DataFilesView: View {
     @ViewBuilder
     func fileView(for typedData: TypedData) -> some View {
         if typedData.fileType.conforms(to: .image) {
-            Button {
-                if let url = FileHelper.createTemporaryURL(for: typedData) {
-                    selectedFileURL = url
-                }
-            } label: {
-                ImageViewer(typedData: typedData)
-            }
-            .buttonStyle(.plain)
+            ImageViewerData(data: typedData.data, enableSave: false, size: size)
         } else {
             Button {
                 if let url = FileHelper.createTemporaryURL(for: typedData) {
@@ -85,6 +78,14 @@ struct DataFilesView: View {
             }
             .buttonStyle(.glass)
         }
+    }
+    
+    var size: CGFloat {
+        #if os(macOS)
+        100
+        #else
+        75
+        #endif
     }
 }
 

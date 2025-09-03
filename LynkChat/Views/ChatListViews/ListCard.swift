@@ -45,7 +45,7 @@ struct ListCard: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
             .background {
-                RoundedRectangle(cornerRadius: 11)
+                RoundedRectangle(cornerRadius: 10)
                     .fill(.background.quaternary)
             }
         }

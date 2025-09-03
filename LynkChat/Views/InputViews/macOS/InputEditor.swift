@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct InputEditor: View {
-//    @ObservedObject var config = AppConfig.shared
-    
+struct InputEditor: View {    
     @Bindable var chat: Chat
     @FocusState var isFocused: FocusedField?
     

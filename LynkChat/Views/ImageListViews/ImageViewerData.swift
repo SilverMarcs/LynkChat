@@ -10,7 +10,8 @@ import Photos
 
 struct ImageViewerData: View {
     let data: Data
-    private let size: CGFloat = 300
+    var enableSave: Bool = true
+    var size: CGFloat = 300
     
     @State private var selectedFileURL: URL?
     @State private var showCheckmark = false
@@ -33,15 +34,17 @@ struct ImageViewerData: View {
             .quickLookPreview($selectedFileURL)
             .buttonStyle(.plain)
             
-            Button(action: saveImage) {
-                Image(systemName: showCheckmark ? "checkmark.circle.fill" : "square.and.arrow.up.circle.fill")
-                    .font(.largeTitle)
-                    .rotationEffect(.degrees(showCheckmark ? 0 : 180))
-                    .foregroundStyle(.primary, .clear)
-                    .glassEffect()
+            if enableSave {
+                Button(action: saveImage) {
+                    Image(systemName: showCheckmark ? "checkmark.circle.fill" : "square.and.arrow.up.circle.fill")
+                        .font(.largeTitle)
+                        .rotationEffect(.degrees(showCheckmark ? 0 : 180))
+                        .foregroundStyle(.primary, .clear)
+                        .glassEffect()
+                }
+                .buttonStyle(.plain)
+                .padding(10)
             }
-            .buttonStyle(.plain)
-            .padding(10)
         }
     }
     
