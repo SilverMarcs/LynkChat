@@ -44,19 +44,19 @@ struct ToolsToggleView: View {
             Label(Tool.imageGeneration.title, systemImage: Tool.imageGeneration.iconName)
         }
         
-        Toggle(isOn: Binding(
-            get: {
-                config.isToolEnabled(.rag)
-            },
-            set: { newValue in
-                if newValue {
-                    config.enableTool(.rag)
-                } else {
-                    config.disableTool(.rag)
-                }
-            }
-        )) {
-            Label(Tool.rag.title, systemImage: Tool.rag.iconName)
-        }
+//        Toggle(isOn: Binding(
+//            get: {
+//                config.isToolEnabled(.rag)
+//            },
+//            set: { newValue in
+//                if newValue {
+//                    config.enableTool(.rag)
+//                } else {
+//                    config.disableTool(.rag)
+//                }
+//            }
+//        )) {
+//            Label(Tool.rag.title, systemImage: Tool.rag.iconName)
+//        }
     }
 }

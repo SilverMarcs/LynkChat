@@ -58,7 +58,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gpt_5, .gpt_5_mini: "#00947A"
         case .gemini_2_5_flash, .gemini_2_5_pro: "#E64335"
         case .claude_sonnet_4, .claude_opus_4: "#D6683B"
-        case .grok_4, .grok_code_1: "#888888"
+        case .grok_4, .grok_code_1: "#777777"
         }
     }
     

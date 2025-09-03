@@ -38,8 +38,6 @@ struct NavigationButtons: View {
                         }
                         .disabled(!message.canGoToPrevious)
                         
-                                 
-                        
                         Button {
                             message.goToNextMessage()
                         } label: {
@@ -49,6 +47,24 @@ struct NavigationButtons: View {
                     }
                 }
                 .controlGroupStyle(.navigation)
+                
+                // Model icons for all messages except the currently active one
+                FlowLayout(spacing: 0) {
+                   ForEach(message.allMessages.indices, id: \.self) { index in
+                       let msg = message.allMessages[index]
+                       if msg != message.activeMessage {
+                           Image(msg.model.imageName)
+                               .foregroundStyle(.white)
+                               .frame(width: 16, height: 16)
+                               .background(
+                                   Circle()
+                                    .fill(Color(hex: msg.model.color).gradient)
+                                       .frame(width: 20, height: 20)
+                               )
+                               .opacity(0.8)
+                       }
+                   }
+               }
             }
             .buttonStyle(.glass)
             .labelStyle(.iconOnly)
