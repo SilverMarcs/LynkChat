@@ -14,6 +14,8 @@ struct ChatDetailMac: View {
     
     var chat: Chat
     
+    @Namespace var inputNS
+    
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -33,9 +35,8 @@ struct ChatDetailMac: View {
                 }
             }
             .overlay(alignment: .center) {
-                if chat.currentThread.isEmpty {
-                    EmptyChat(chat: chat)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                if chat.isEmpty {
+                    EmptyChat(chat: chat, namespace: inputNS)
                 }
             }
             .contentMargins(.all, 15, for: .scrollContent)
@@ -47,8 +48,9 @@ struct ChatDetailMac: View {
                 Scroller.scrollToBottom(animated: false)
             }
             .safeAreaBar(edge: .bottom) {
-                if chat.status != .quick, !chat.currentThread.isEmpty {
+                if !chat.isEmpty {
                     InputArea(chat: chat)
+                        .matchedGeometryEffect(id: "input", in: inputNS)
                 }
             }
 //            .onScrollPhaseChange { oldPhase, newPhase in

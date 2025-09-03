@@ -16,6 +16,8 @@ struct EmptyChat: View {
     }, sort: \Chat.date, order: .reverse)
     var chats: [Chat]
     
+    var namespace: Namespace.ID
+    
     var body: some View {
         VStack {
             Spacer()
@@ -33,8 +35,9 @@ struct EmptyChat: View {
             
             VStack {
                 InputArea(chat: chat)
+                    .matchedGeometryEffect(id: "input", in: namespace)
                     .multilineTextAlignment(.leading)
-                    .scaleEffect(1.05)
+//                    .scaleEffect(1.05)
                 
                 TipView(PlusButtonTip())
                     .fixedSize()
@@ -51,7 +54,7 @@ struct EmptyChat: View {
                     
                 } else {
                     HStack(alignment: .center) {
-                        ForEach(chats.dropFirst().prefix(4)) { chat in
+                        ForEach(chats.dropFirst().prefix(3)) { chat in
                             Button {
                                 ChatVM.shared.selections = [chat]
                             } label: {
@@ -61,7 +64,7 @@ struct EmptyChat: View {
                                     Image(chat.config.model.imageName)
                                         .foregroundStyle(Color(hex: chat.config.model.color))
                                 }
-                                .frame(maxWidth: 175)
+                                .frame(maxWidth: 185)
                                 .frame(height: 20)
                             }
                             .buttonStyle(.glass)
@@ -84,6 +87,6 @@ struct EmptyChat: View {
     }
 }
 
-#Preview {
-    EmptyChat(chat: .mockChat)
-}
+//#Preview {
+//    EmptyChat(chat: .mockChat)
+//}

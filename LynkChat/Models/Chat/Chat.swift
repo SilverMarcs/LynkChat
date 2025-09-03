@@ -46,13 +46,13 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         return thread
     }
+    var isEmpty: Bool = true
     
     @Relationship(deleteRule: .cascade)
     var config: ChatConfig = ChatConfig()
     
     @Transient
     var streamingTask: Task<Void, Error>?
-    
     
     var isReplying: Bool {
         currentThread.last?.isReplying ?? false
@@ -70,6 +70,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     init() { }
     
+    @MainActor
     func processRequest(message: Message, user: Message) async {
         // Cancel any existing task first and wait for it to complete
         streamingTask?.cancel()
@@ -138,6 +139,10 @@ final class Chat: Equatable, Identifiable, Hashable {
 
     @MainActor
     func sendInput(prompt: String? = nil) async {
+        if rootMessage == nil {
+            withAnimation { isEmpty = false }
+        }
+        
         var content: String
         if let prompt = prompt {
             content = prompt
@@ -207,6 +212,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
     
+    @MainActor
     func stopStreaming() {
         guard let task = streamingTask else { return }
         task.cancel()
@@ -228,6 +234,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
 
+    @MainActor
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
         
@@ -279,6 +286,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         contextResetPoint = nil
     }
     
+    @MainActor
     func deleteLastMessage() {
         guard let lastGroup = currentThread.last, !lastGroup.isReplying else { return }
         errorMessage = nil
@@ -289,6 +297,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         if currentThread.count == 1 {
             rootMessage = nil
+            withAnimation { isEmpty = true }
         } else {
             let secondToLastGroup = currentThread[currentThread.count - 2]
             secondToLastGroup.activeMessage.next = nil
@@ -297,6 +306,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         Scroller.scrollToBottom()
     }
     
+    @MainActor
     func errorDeleteLast() {
         guard let last = self.currentThread.last else { return }
         
@@ -324,13 +334,20 @@ final class Chat: Equatable, Identifiable, Hashable {
                 last.deleteAndSetPreviousActive()
             }
         }
+        
+        // Check if thread became empty after cleanup
+        if rootMessage == nil || currentThread.isEmpty {
+            withAnimation { isEmpty = true }
+        }
     }
     
+    @MainActor
     func deleteAllMessages() {
         rootMessage = nil
         contextResetPoint = nil
         errorMessage = nil
         stopStreaming()
+        withAnimation { isEmpty = true }
     }
     
     func copy(from message: Message? = nil) async -> Chat {
@@ -365,7 +382,9 @@ final class Chat: Equatable, Identifiable, Hashable {
         return newChat
     }
     
+    @MainActor
     func cleanupMessagesAndGroups() {
         rootMessage = nil
+        withAnimation { isEmpty = true }
     }
 }
