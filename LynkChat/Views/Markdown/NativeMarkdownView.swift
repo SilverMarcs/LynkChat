@@ -176,8 +176,6 @@ struct NativeMarkdownView: View {
     }
 }
 
-
-
 #Preview {
     List {
         NativeMarkdownView(text: "Hello, **world**!", highlightText: "")

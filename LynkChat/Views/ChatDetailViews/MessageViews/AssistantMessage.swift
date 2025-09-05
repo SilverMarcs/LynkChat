@@ -63,12 +63,19 @@ struct AssistantMessage: View {
             }
                 .padding(.leading, 25)
         }
+        .contentShape(.rect)
         .transaction { $0.animation = nil }
         .frame(maxWidth: .infinity, alignment: .leading)
         .contextMenu {
             MessageContextMenu(group: group) {
                 showingTextSelection.toggle()
             }
+        } preview: {
+            VStack(alignment: .leading, spacing: 8) {
+                AssistantLabel(model: message.model)
+                MDView(content: String(message.content.prefix(500)))
+            }
+            .padding()
         }
         .matchedTransitionSource(id: "assistant-text-selection", in: transition)
         .padding(.leading, 5)

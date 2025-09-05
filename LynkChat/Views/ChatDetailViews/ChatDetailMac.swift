@@ -19,20 +19,18 @@ struct ChatDetailMac: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack {
-                    ForEach(chat.currentThread, id: \.self) { group in
-                        MessageView(group: group)
-                            .environment(\.chat, chat)
-                    }
-                    
-                    ErrorMessageView(chat: chat)
-                    
-                    Color.clear
-                        .frame(height: config.expandColor
-                               ? (chat.status == .quick ? 250 : 475)
-                               : 1)
-                        .id(String.bottomID)
+                ForEach(chat.currentThread, id: \.self) { group in
+                    MessageView(group: group)
+                        .environment(\.chat, chat)
                 }
+                
+                ErrorMessageView(chat: chat)
+                
+                Color.clear
+                    .frame(height: config.expandColor
+                           ? (chat.status == .quick ? 250 : 475)
+                           : 1)
+                    .id(String.bottomID)
             }
             .overlay(alignment: .center) {
                 if chat.isEmpty {
@@ -47,8 +45,11 @@ struct ChatDetailMac: View {
                 config.proxy = proxy
                 Scroller.scrollToBottom(animated: false)
             }
+            .toolbar {
+                ChatToolbar(chat: chat)
+            }
             .safeAreaBar(edge: .bottom) {
-                if !chat.isEmpty {
+                if !chat.isEmpty && chat.status != .quick {
                     InputArea(chat: chat)
                         .matchedGeometryEffect(id: "input", in: inputNS)
                 }
@@ -61,9 +62,6 @@ struct ChatDetailMac: View {
 //                }
 //                return
 //            }
-            .toolbar {
-                ChatToolbar(chat: chat)
-            }
         }
     }
 }
