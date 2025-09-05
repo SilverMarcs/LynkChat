@@ -30,16 +30,11 @@ struct MultiStreamHandler {
         // Start secondary streams concurrently
         let secondaryTasks = secondaryModels.map { model in
             Task {
-                do {
-                    let secondaryMessage = Message.assistant(model: model)
-                    assistantGroup.addMessage(secondaryMessage, skipActive: true)
-                    
-                    let secondaryHandler = StreamHandler(chat: chat, assistant: secondaryMessage, user: user)
-                    try await secondaryHandler.handleRequest()
-                } catch {
-                    // Handle individual stream errors gracefully
-                    AppLogger.error("Secondary stream error for model \(model.name): \(error)")
-                }
+                let secondaryMessage = Message.assistant(model: model)
+                assistantGroup.addMessage(secondaryMessage, skipActive: true)
+                
+                let secondaryHandler = StreamHandler(chat: chat, assistant: secondaryMessage, user: user)
+                try await secondaryHandler.handleRequest()
             }
         }
         
@@ -48,37 +43,7 @@ struct MultiStreamHandler {
         
         // Wait for all secondary tasks
         for task in secondaryTasks {
-            await task.value
-        }
-        
-        finishResponse()
-    }
-    
-    // MARK: - Helper Methods
-    
-    private func createAPIRequest() async -> APIRequest {
-        let adjustedContext = chat.adjustedContext.dropLast() // removing last assistant msg
-        let apiMessages = adjustedContext.map { $0.toAPIMessage() }
-        return createAPIRequest(with: apiMessages)
-    }
-    
-    private func createAPIRequest(with messages: [APIMessage]) -> APIRequest {
-        let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
-        
-        return APIRequest(
-            userId: "zabir",
-            model: AppConfig.shared.sendDebugModel ? "debug" : chat.config.model.id,
-            messages: messages,
-            temperature: chat.config.temperature.value,
-            thinkingBudget: chat.config.thinkingBudget.rawValue,
-            system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
-            tools: chat.config.enabledTools.map { $0.rawValue }
-        )
-    }
-    
-    private func finishResponse() {
-        withAnimation(.easeInOut(duration: 1)) { 
-            AppSettings.shared.expandColor = false 
+            try await task.value
         }
     }
 }
