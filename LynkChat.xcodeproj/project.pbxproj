@@ -6,10 +6,6 @@
 	objectVersion = 70;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		08AF6F732DFEA57A00C4FC6C /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, xros, ); productRef = 08AF6F722DFEA57A00C4FC6C /* MarkdownUI */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		08A2227F2C2AB4FD00D76C8B /* LynkChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LynkChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -141,7 +137,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08AF6F732DFEA57A00C4FC6C /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,7 +179,6 @@
 			);
 			name = LynkChat;
 			packageProductDependencies = (
-				08AF6F722DFEA57A00C4FC6C /* MarkdownUI */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -215,7 +209,6 @@
 			);
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
-				08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -515,25 +508,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.4.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		08AF6F722DFEA57A00C4FC6C /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 08AF6F712DFEA57A00C4FC6C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
-			productName = MarkdownUI;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 08A222772C2AB4FD00D76C8B /* Project object */;
 }

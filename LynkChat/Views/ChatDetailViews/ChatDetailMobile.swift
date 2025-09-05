@@ -27,6 +27,9 @@ struct ChatDetailMobile: View {
                 ForEach(chat.currentThread, id: \.self) { group in
                     MessageView(group: group)
                         .environment(\.chat, chat)
+                    #if !os(macOS)
+                        .padding(.vertical, 2)
+                    #endif
                 }
                 .listRowSeparator(.hidden)
                 

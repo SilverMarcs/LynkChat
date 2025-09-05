@@ -4,8 +4,8 @@
 //
 //  Created by Zabir Raihan on 27/11/2024.
 //
-
-import MarkdownUI
+//
+//import MarkdownUI
 //import HighlightSwift
 import SwiftUI
 
@@ -17,7 +17,8 @@ struct MessageMarkdownView: View {
     var highlightText: String
 
     var body: some View {
-        Markdown(text)
+//        Markdown(text)
+        Text(text)
     
 //            .font(.system(size: config.fontSize + 2))
 //            .markdownBlockStyle(\.codeBlock) {

@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct NativeMarkdownView: View {
-    var attributed: NSAttributedString
+    var attributed: AttributedString
 
     var body: some View {
-        Text(AttributedString(attributed)) // Convert NSAttributedString to AttributedString for SwiftUI Text
+        Text(attributed)
     }
     
     init(text: String, highlightText: String) {
@@ -21,8 +21,8 @@ struct NativeMarkdownView: View {
         }
     }
 
-    private static func parseMarkdown(_ text: String) -> NSAttributedString {
-        let attributedString = NSMutableAttributedString()
+    private static func parseMarkdown(_ text: String) -> AttributedString {
+        var attributedString = AttributedString()
         
         let scanner = Scanner(string: text)
         scanner.charactersToBeSkipped = nil
@@ -36,61 +36,37 @@ struct NativeMarkdownView: View {
                 
                 if let codeContent = scanner.scanUpToString("```") {
                     if scanner.scanString("```") != nil {
-                        let codeAttribute = NSAttributedString(
-                            string: codeContent,
-                            attributes: [
-                                .font: PlatformFont.monospacedSystemFont(ofSize: baseSize - 1, weight: .regular)
-                            ]
-                        )
-                        attributedString.append(codeAttribute)
+                        var codeBlock = AttributedString(codeContent)
+                        codeBlock.font = .system(size: baseSize - 1, weight: .regular, design: .monospaced)
+                        attributedString.append(codeBlock)
                     } else {
-                        let fallback = NSAttributedString(
-                            string: "```\(codeContent)",
-                            attributes: [
-                                .font: PlatformFont.systemFont(ofSize: baseSize)
-                            ]
-                        )
+                        var fallback = AttributedString("```\(codeContent)")
+                        fallback.font = .system(size: baseSize)
                         attributedString.append(fallback)
                     }
                 }
             } else if scanner.scanString("`") != nil {
                 if let codeContent = scanner.scanUpToString("`") {
                     if scanner.scanString("`") != nil {
-                        let inlineCode = NSAttributedString(
-                            string: codeContent,
-                            attributes: [
-                                .font: PlatformFont.monospacedSystemFont(ofSize: baseSize - 1, weight: .regular),
-                                .backgroundColor: PlatformColor.secondarySystemFill
-                            ]
-                        )
+                        var inlineCode = AttributedString(codeContent)
+                        inlineCode.font = .system(size: baseSize - 1, weight: .regular, design: .monospaced)
+                        inlineCode.backgroundColor = .secondary.opacity(0.2)
                         attributedString.append(inlineCode)
                     } else {
-                        let fallback = NSAttributedString(
-                            string: "`\(codeContent)",
-                            attributes: [
-                                .font: PlatformFont.systemFont(ofSize: baseSize)
-                            ]
-                        )
+                        var fallback = AttributedString("`\(codeContent)")
+                        fallback.font = .system(size: baseSize)
                         attributedString.append(fallback)
                     }
                 }
             } else if scanner.scanString("**") != nil {
                 if let boldContent = scanner.scanUpToString("**") {
                     if scanner.scanString("**") != nil {
-                        let bold = NSAttributedString(
-                            string: boldContent,
-                            attributes: [
-                                .font: PlatformFont.boldSystemFont(ofSize: baseSize)
-                            ]
-                        )
+                        var bold = AttributedString(boldContent)
+                        bold.font = .system(size: baseSize, weight: .bold)
                         attributedString.append(bold)
                     } else {
-                        let fallback = NSAttributedString(
-                            string: "**\(boldContent)",
-                            attributes: [
-                                .font: PlatformFont.systemFont(ofSize: baseSize)
-                            ]
-                        )
+                        var fallback = AttributedString("**\(boldContent)")
+                        fallback.font = .system(size: baseSize)
                         attributedString.append(fallback)
                     }
                 }
@@ -102,30 +78,18 @@ struct NativeMarkdownView: View {
                 let _ = scanner.scanCharacters(from: .whitespaces)
                 if let headingContent = scanner.scanUpToCharacters(from: .newlines) {
                     let headingSize: CGFloat = baseSize * (2.0 - (0.3 * CGFloat(headingLevel - 1)))
-                    let heading = NSAttributedString(
-                        string: headingContent,
-                        attributes: [
-                            .font: PlatformFont.systemFont(ofSize: headingSize, weight: .bold)
-                        ]
-                    )
+                    var heading = AttributedString(headingContent)
+                    heading.font = .system(size: headingSize, weight: .bold)
                     attributedString.append(heading)
                 }
             } else {
                 if let textContent = scanner.scanUpToCharacters(from: CharacterSet(charactersIn: "`*#")) {
-                    let text = NSAttributedString(
-                        string: textContent,
-                        attributes: [
-                            .font: PlatformFont.systemFont(ofSize: baseSize)
-                        ]
-                    )
+                    var text = AttributedString(textContent)
+                    text.font = .system(size: baseSize)
                     attributedString.append(text)
                 } else if let char = scanner.scanCharacter() {
-                    let text = NSAttributedString(
-                        string: String(char),
-                        attributes: [
-                            .font: PlatformFont.systemFont(ofSize: baseSize)
-                        ]
-                    )
+                    var text = AttributedString(String(char))
+                    text.font = .system(size: baseSize)
                     attributedString.append(text)
                 }
             }
@@ -134,40 +98,37 @@ struct NativeMarkdownView: View {
         return attributedString
     }
 
-    private static func applyHighlighting(to attributedString: NSAttributedString, highlightText: String) -> NSAttributedString {
+    private static func applyHighlighting(to attributedString: AttributedString, highlightText: String) -> AttributedString {
         guard !highlightText.isEmpty else { return attributedString }
         
-        let mutableAttributedString = NSMutableAttributedString(attributedString: attributedString)
+        var mutableAttributedString = attributedString
         let lowercasedHighlight = highlightText.lowercased()
-        let fullRange = NSRange(location: 0, length: mutableAttributedString.length)
+        let fullString = String(attributedString.characters)
         
-        let string = mutableAttributedString.string as NSString
-        var searchRange = fullRange
+        var searchStartIndex = fullString.startIndex
         
-        while true {
-            let range = string.range(
+        while searchStartIndex < fullString.endIndex {
+            if let range = fullString.range(
                 of: lowercasedHighlight,
                 options: .caseInsensitive,
-                range: searchRange
-            )
-            
-            if range.location == NSNotFound {
-                break
-            }
-            
-            // Apply highlighting to the found range
-            mutableAttributedString.addAttributes([
-                .backgroundColor: PlatformColor.yellow,
-                .foregroundColor: PlatformColor.black
-            ], range: range)
-            
-            // Update search range
-            searchRange = NSRange(
-                location: range.location + range.length,
-                length: fullRange.length - (range.location + range.length)
-            )
-            
-            if searchRange.location >= fullRange.length {
+                range: searchStartIndex..<fullString.endIndex
+            ) {
+                // Convert String.Index range to AttributedString.Index range
+                let startDistance = fullString.distance(from: fullString.startIndex, to: range.lowerBound)
+                let endDistance = fullString.distance(from: fullString.startIndex, to: range.upperBound)
+                
+                let attrStartIndex = mutableAttributedString.index(mutableAttributedString.startIndex, offsetByCharacters: startDistance)
+                let attrEndIndex = mutableAttributedString.index(mutableAttributedString.startIndex, offsetByCharacters: endDistance)
+                
+                let attrRange = attrStartIndex..<attrEndIndex
+                
+                // Apply highlighting to the found range
+                mutableAttributedString[attrRange].backgroundColor = .yellow
+                mutableAttributedString[attrRange].foregroundColor = .black
+                
+                // Update search start position
+                searchStartIndex = range.upperBound
+            } else {
                 break
             }
         }

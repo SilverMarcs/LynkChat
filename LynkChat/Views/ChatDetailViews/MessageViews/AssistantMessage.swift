@@ -31,14 +31,12 @@ struct AssistantMessage: View {
             
                 MDView(content: message.content, calculatedHeight: $height)
                     .transaction { $0.animation = nil }
-                    #if os(macOS)
                     .frame(height: message.height, alignment: .top)
                     .onChange(of: height) {
                         if height > 0 {
                             message.height = height
                         }
                     }
-                    #endif
                 
                 if !message.dataFiles.isEmpty {
                     ForEach(message.dataFiles, id: \.self) { data in
@@ -73,9 +71,10 @@ struct AssistantMessage: View {
         } preview: {
             VStack(alignment: .leading, spacing: 8) {
                 AssistantLabel(model: message.model)
-                MDView(content: String(message.content.prefix(500)))
+                NativeMarkdownView(text: String(message.content.prefix(800)), highlightText: "")
             }
             .padding()
+            .frame(maxWidth: 500)
         }
         .matchedTransitionSource(id: "assistant-text-selection", in: transition)
         .padding(.leading, 5)
