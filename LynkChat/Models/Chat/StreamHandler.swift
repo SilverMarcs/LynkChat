@@ -27,13 +27,27 @@ struct StreamHandler {
     // MARK: - Stream Processing
     
     private func processStream(from request: APIRequest) async throws {
+        // Local buffers for batching updates
+        var contentBuffer = ""
+        var reasoningBuffer = assistant.reasoning ?? ""
+        
+        // Timer for periodic updates
+        let updateInterval: TimeInterval = 0.2
+        var lastUpdateTime = Date()
+        
+        // Helper function to update UI
+        func updateUI() {
+            assistant.content = contentBuffer
+            assistant.reasoning = reasoningBuffer.isEmpty ? nil : reasoningBuffer
+        }
+        
         for try await response in APIService.streamResponse(from: request) {
             switch response {
             case .text(let textResponse):
-                assistant.content += textResponse.content
+                contentBuffer += textResponse.content
                 
             case .reasoning(let reasoningResponse):
-                assistant.reasoning = (assistant.reasoning ?? "") + reasoningResponse.reasoning
+                reasoningBuffer += reasoningResponse.reasoning
                 
             case .reasoningEnd(_):
                 break
@@ -65,7 +79,17 @@ struct StreamHandler {
             case .error(let errorResponse):
                 throw RuntimeError(errorResponse.content)
             }
+            
+            // Periodic UI updates
+            let now = Date()
+            if now.timeIntervalSince(lastUpdateTime) >= updateInterval {
+                updateUI()
+                lastUpdateTime = now
+            }
         }
+        
+        // Final update to ensure all content is set
+        updateUI()
     }
     
     // MARK: - Helper Methods
