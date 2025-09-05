@@ -39,6 +39,7 @@ import Combine
     }
 
     func fork(newChat: Chat) {
+        newChat.isEmpty = false
         let modelContext = globalContainer.mainContext
         modelContext.insert(newChat)
         #if os(macOS)
