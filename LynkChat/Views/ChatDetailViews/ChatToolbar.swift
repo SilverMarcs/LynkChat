@@ -96,9 +96,10 @@ struct ChatToolbar: ToolbarContent {
             
         ToolbarItemGroup(placement: .keyboard) {
             Section {
-//                Button("Send/Stop Message") {
-//                    chat.isReplying ? chat.stopStreaming() : sendInput()
-//                }
+                Button("Send/Stop Message") {
+                    chat.isReplying ? chat.stopStreaming() : sendInput()
+                }
+                .keyboardShortcut(chat.isReplying ? "d" : .return)
                 
                 Button("Edit Last Message") {
                     guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }
@@ -130,6 +131,12 @@ struct ChatToolbar: ToolbarContent {
                 }
                 .keyboardShortcut(.delete)
             }
+        }
+    }
+    
+    private func sendInput() {
+        Task {
+            await chat.sendInput()
         }
     }
 }

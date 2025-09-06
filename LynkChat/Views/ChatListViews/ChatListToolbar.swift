@@ -12,8 +12,6 @@ struct ChatListToolbar: ToolbarContent {
     let deleteItems: (IndexSet) -> Void
     
     var body: some ToolbarContent {
-        ToolbarSpacer()
-        
         #if os(macOS)
         ToolbarItem(placement: .keyboard) {
             Button(action: {
@@ -33,9 +31,7 @@ struct ChatListToolbar: ToolbarContent {
         }
         #endif
         
-        ToolbarSpacer(placement: .primaryAction)
-        
-        ToolbarItem(placement: .primaryAction) {
+        ToolbarItem {
             Menu {
                 ForEach(ChatModel.allCases) { model in
                     Button {
@@ -51,7 +47,6 @@ struct ChatListToolbar: ToolbarContent {
                 ChatVM.shared.createNewChat()
             }
             .menuIndicator(.hidden)
-//            .popoverTip(NewChatTip())
         }
     }
 }

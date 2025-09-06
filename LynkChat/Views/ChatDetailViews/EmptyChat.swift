@@ -37,7 +37,6 @@ struct EmptyChat: View {
                 InputArea(chat: chat)
                     .matchedGeometryEffect(id: "input", in: namespace)
                     .multilineTextAlignment(.leading)
-//                    .scaleEffect(1.05)
                 
                 TipView(PlusButtonTip())
                     .fixedSize()

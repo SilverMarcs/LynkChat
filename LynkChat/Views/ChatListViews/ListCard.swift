@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ListCard: View {
-    @Environment(\.appearsActive) var appearsActive
+    @Environment(\.colorScheme) var colorScheme
     
     var icon: String
     var iconColor: Color
@@ -46,7 +46,7 @@ struct ListCard: View {
             .padding(.vertical, 6)
             .background {
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(.background.quaternary)
+                    .fill(colorScheme == .dark ? AnyShapeStyle(.background.quaternary) : AnyShapeStyle(.gray.quaternary))
             }
         }
         .buttonStyle(.plain)

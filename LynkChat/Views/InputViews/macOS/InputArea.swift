@@ -65,7 +65,7 @@ struct InputArea: View {
                 .tint(chat.isReplying ? .red : .accent)
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
-                .keyboardShortcut(chat.isReplying ? "d" : .return)
+//                .keyboardShortcut(chat.isReplying ? "d" : .return)
                 .offset(y: -2)
             }
             .padding(12)
