@@ -68,7 +68,7 @@ struct ChatToolbar: ToolbarContent {
             ToolbarItem(placement: .primaryAction) {
                 ModelMenuPicker(selectedModel: $chat.config.model)
             }
-             
+            
             ToolbarItem(placement: .primaryAction) {
                 if !chat.config.secondaryModels.isEmpty {
                     Button {
@@ -92,39 +92,43 @@ struct ChatToolbar: ToolbarContent {
                     .popoverTip(TemporaryChatTip())
                 }
             }
+        }
             
-            ToolbarItemGroup(placement: .keyboard) {
-                Section {
-                    Button("Edit Last Message") {
-                        guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }
-                        isFocused = .textEditor // this isnt doing anything (on macos at least)
-                        chat.inputManager.setupEditing(message: lastUserMessage)
-                    }
-                    .keyboardShortcut("e")
-                    .disabled(chat.status == .quick || chat.isReplying)
-                    
-                    Button("Regen Last Message") {
-                        guard !chat.isReplying, let last = chat.currentThread.last else { return }
-                        Task {
-                            await chat.regenerate(message: last)
-                        }
-                    }
-                    .keyboardShortcut("r")
-                }
+        ToolbarItemGroup(placement: .keyboard) {
+            Section {
+//                Button("Send/Stop Message") {
+//                    chat.isReplying ? chat.stopStreaming() : sendInput()
+//                }
                 
-                Section {
-                    Button("Reset Context") {
-                        guard !chat.isReplying, let last = chat.currentThread.last else { return }
-                        chat.resetContext(at: last)
-                    }
-                    .keyboardShortcut("k")
-                    
-                    Button("Delete Last Message", role: .destructive) {
-                        chat.deleteLastMessage()
-                        chat.errorMessage = nil
-                    }
-                    .keyboardShortcut(.delete)
+                Button("Edit Last Message") {
+                    guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }
+                    isFocused = .textEditor // this isnt doing anything (on macos at least)
+                    chat.inputManager.setupEditing(message: lastUserMessage)
                 }
+                .keyboardShortcut("e")
+                .disabled(chat.status == .quick || chat.isReplying)
+                
+                Button("Regen Last Message") {
+                    guard !chat.isReplying, let last = chat.currentThread.last else { return }
+                    Task {
+                        await chat.regenerate(message: last)
+                    }
+                }
+                .keyboardShortcut("r")
+            }
+            
+            Section {
+                Button("Reset Context") {
+                    guard !chat.isReplying, let last = chat.currentThread.last else { return }
+                    chat.resetContext(at: last)
+                }
+                .keyboardShortcut("k")
+                
+                Button("Delete Last Message", role: .destructive) {
+                    chat.deleteLastMessage()
+                    chat.errorMessage = nil
+                }
+                .keyboardShortcut(.delete)
             }
         }
     }

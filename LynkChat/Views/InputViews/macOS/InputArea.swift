@@ -54,9 +54,9 @@ struct InputArea: View {
                         .glassEffect(in: .rect(cornerRadius: 16))
                 }
                 
-                Button(action: {
+                Button {
                     chat.isReplying ? chat.stopStreaming() : sendInput()
-                }) {
+                } label: {
                     Image(systemName: chat.isReplying ? "stop.fill" : "arrow.up")
                         .font(.system(size: 15)).fontWeight(.bold)
                 }
