@@ -41,8 +41,13 @@ struct ChatInspector: View {
                             Text("None")
                                 .foregroundStyle(.secondary)
                         } else {
-                            Text("\(chat.config.secondaryModels.count)")
-                                .foregroundStyle(.accent)
+                            HStack {
+                                ForEach(chat.config.secondaryModels)  { model in
+                                    Image(model.imageName)
+                                        .imageScale(.large)
+                                        .foregroundStyle(Color(hex: model.color).gradient)
+                                }
+                            }
                         }
                     }
                 } label: {

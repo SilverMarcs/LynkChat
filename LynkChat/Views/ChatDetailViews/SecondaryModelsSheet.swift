@@ -11,47 +11,54 @@ struct SecondaryModelsSheet: View {
     @Environment(\.dismiss) var dismiss
     @Binding var config: ChatConfig
     
-    var availableModels: [ChatModel] {
-        ChatModel.allCases.filter { $0 != config.model }
-    }
-    
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    ForEach(availableModels, id: \.self) { model in
+                    ForEach(ChatModel.allCases, id: \.self) { model in
                         Toggle(isOn: Binding(
-                            get: { config.secondaryModels.contains(model) },
+                            get: {
+                                if model == config.model {
+                                    return true
+                                }
+                                return config.secondaryModels.contains(model)
+                            },
                             set: { isSelected in
-                                if isSelected {
-                                    config.secondaryModels.append(model)
-                                } else {
-                                    config.secondaryModels.removeAll { $0 == model }
+                                if model != config.model {
+                                    if isSelected {
+                                        config.secondaryModels.append(model)
+                                    } else {
+                                        config.secondaryModels.removeAll { $0 == model }
+                                    }
                                 }
                             }
                         )) {
-                            HStack {
+                            Label {
+                                Text(model.name)
+                            } icon: {
                                 Image(model.imageName)
                                     .imageScale(.large)
                                     .foregroundStyle(Color(hex: model.color).gradient)
-                                
-                                Text(model.name)
                             }
                         }
+                        .disabled(model == config.model)
                     }
                 }
             }
             .formStyle(.grouped)
-            .overlay(alignment: .topTrailing) {
-                Button(role: .close) {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(role: .confirm) {
+                        dismiss()
+                    }
+                    .keyboardShortcut(.defaultAction)
                 }
-                .controlSize(.large)
-                .buttonStyle(.glass)
-                .buttonBorderShape(.circle)
-                .padding(10)
+                
+                ToolbarItem(placement: .destructiveAction) {
+                    Button(role: .destructive) {
+                        config.secondaryModels = []
+                    }
+                }
             }
         }
     }
