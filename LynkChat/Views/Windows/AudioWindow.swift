@@ -9,9 +9,12 @@ import SwiftUI
 
 struct AudioWindow: Scene {
     var body: some Scene {
-        Window("Images", id: WindowID.audio) {
+        Window("Live", id: WindowID.audio) {
             LiveAudioView()
+                .ignoresSafeArea()
+                .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
         }
+        .windowToolbarStyle(.unifiedCompact)
         .defaultSize(.init(width: 450, height: 450))
     }
 }

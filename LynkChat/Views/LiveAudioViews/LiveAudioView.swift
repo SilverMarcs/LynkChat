@@ -35,6 +35,7 @@ struct LiveAudioView: View {
                 Task { await toggleMic() }
             } label: {
                 Image(systemName: isStreaming ? "pause.fill" : "play.fill")
+                    .foregroundStyle(.white.opacity(0.8))
                     .contentTransition(.symbolEffect(.replace, options: .speed(1.5)))
                     .font(.system(size: 100))
                     .padding(20)
@@ -56,7 +57,7 @@ struct LiveAudioView: View {
             .navigationTitle("Live")
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Button(action: resetSession) {
                         Label("Reset", systemImage: "arrow.counterclockwise")
                     }
