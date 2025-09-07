@@ -1,8 +1,9 @@
+//
 //  LiveAudioView.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 07/09/2025.
-//  Updated to SwiftUI-first UI with WebView overlay
+//  Zabir Raihan
 //
 
 import SwiftUI
@@ -22,10 +23,9 @@ struct LiveAudioView: View {
         guard let baseURL = Bundle.main.url(forResource: "liveaudio", withExtension: "html") else {
             fatalError("Could not find liveaudio.html in bundle")
         }
-        
+
         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
         components.queryItems = [URLQueryItem(name: "key", value: AppConfig.shared.geminiApiKey)]
-        
         self.url = components.url!
     }
 
@@ -51,14 +51,14 @@ struct LiveAudioView: View {
             .overlay {
                 WebView(page)
                     .frame(width: 1, height: 1)
-                    .opacity(0.1)
+                    .opacity(0.01)
             }
             .navigationTitle("Live")
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: resetSession) {
-                        Image(systemName: "arrow.counterclockwise")
+                        Label("Reset", systemImage: "arrow.counterclockwise")
                     }
                 }
             }
@@ -69,16 +69,20 @@ struct LiveAudioView: View {
 
     private func loadPage(_ url: URL) async {
         page.load(url)
-        _ = try? await page.callJavaScript("window.liveAudio.syncStateToTitle()")
+        _ = try? await page.callJavaScript("window.liveAudio?.syncStateToTitle?.()")
     }
 
     private func toggleMic() async {
-        _ = try? await page.callJavaScript("window.liveAudio.toggle()")
+        _ = try? await page.callJavaScript("window.liveAudio?.toggle?.()")
     }
 
     private func resetSession() {
         Task {
-            _ = try? await page.callJavaScript("window.liveAudio.reset()")
+            do {
+                try await page.callJavaScript("window.liveAudio?.reset?.()")
+            } catch {
+                print("Failed to reset session: \(error)")
+            }
         }
     }
 

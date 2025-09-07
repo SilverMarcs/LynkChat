@@ -19,7 +19,6 @@
       for (let i = 0; i < bytes.byteLength; i++) b += String.fromCharCode(bytes[i]);
       return btoa(b);
     }
-    
     function decode(b64) {
       const s = atob(b64);
       const len = s.length;
@@ -27,21 +26,21 @@
       for (let i = 0; i < len; i++) out[i] = s.charCodeAt(i);
       return out;
     }
-    
     function createBlob(data) {
       const l = data.length;
       const i16 = new Int16Array(l);
       for (let i = 0; i < l; i++) i16[i] = data[i] * 32768;
       return { data: encode(new Uint8Array(i16.buffer)), mimeType: "audio/pcm;rate=16000" };
     }
-    
     async function decodeAudioData(data, ctx, sampleRate, numChannels) {
-      const buf = ctx.createBuffer(numChannels, data.length / 2 / numChannels, sampleRate);
+      const frames = data.length / 2 / numChannels;
+      const buf = ctx.createBuffer(numChannels || 1, frames, sampleRate);
       const i16 = new Int16Array(data.buffer);
       const l = i16.length;
       const f32 = new Float32Array(l);
       for (let i = 0; i < l; i++) f32[i] = i16[i] / 32768.0;
-      if (numChannels === 1) {
+
+      if (!numChannels || numChannels === 1) {
         buf.copyToChannel(f32, 0);
       } else {
         for (let c = 0; c < numChannels; c++) {
@@ -66,7 +65,9 @@
         this.isStreaming = false;
         this.hasSession = false;
         this.isModelSpeaking = false;
+        this.lastSpeakAt = 0;
 
+        // Simple state for SwiftUI mirroring
         this._state = { isStreaming: false, isSpeaking: false, hasSession: false };
 
         this.shadow = this.attachShadow({ mode: "open" });
@@ -75,22 +76,21 @@
         this.waveBtn.addEventListener("click", () => this.toggleMic());
       }
 
+      // ---- State mirroring to SwiftUI via document.title ----
+
       syncStateToTitle() {
         try {
           document.title = JSON.stringify(this._state);
         } catch {}
       }
-      
       setStreaming(v) {
         this._state.isStreaming = !!v;
         this.syncStateToTitle();
       }
-      
       setSpeaking(v) {
         this._state.isSpeaking = !!v;
         this.syncStateToTitle();
       }
-      
       setHasSession(v) {
         this._state.hasSession = !!v;
         this.syncStateToTitle();
@@ -99,6 +99,8 @@
       connectedCallback() {
         this.syncStateToTitle();
       }
+
+      // ---- Audio/session internals ----
 
       initAudioIfNeeded() {
         if (!this.inputAudioContext) {
@@ -115,7 +117,7 @@
 
       getApiKey() {
         const url = new URL(window.location.href);
-        return url.searchParams.get("key");
+        return url.searchParams.get("key") || window.GEMINI_API_KEY;
       }
 
       async ensureClient() {
@@ -140,6 +142,7 @@
               if (audio && this.outputAudioContext) {
                 this.isModelSpeaking = true;
                 this.setSpeaking(true);
+                this.lastSpeakAt = performance.now();
                 this.nextStartTime = Math.max(this.nextStartTime, this.outputAudioContext.currentTime);
                 const audioBuffer = await decodeAudioData(decode(audio.data), this.outputAudioContext, 24000, 1);
                 const source = this.outputAudioContext.createBufferSource();
@@ -148,6 +151,7 @@
                 source.addEventListener("ended", () => {
                   this.sources.delete(source);
                   this.isModelSpeaking = false;
+                  this.lastSpeakAt = performance.now();
                   setTimeout(() => this.setSpeaking(false), 200);
                 });
                 source.start(this.nextStartTime);
@@ -165,6 +169,7 @@
             },
             onclose: () => {
               this.setHasSession(false);
+              this.hasSession = false;
             }
           },
           config: {
@@ -174,14 +179,9 @@
         });
       }
 
-      setMicIcon(state) {
-        if (state === "pause") {
-          this.waveBtn.textContent = "Pause Microphone";
-          this.setStreaming(true);
-        } else {
-          this.waveBtn.textContent = "Start Microphone";
-          this.setStreaming(false);
-        }
+      updateButtonLabel() {
+        this.waveBtn.textContent = this.isStreaming ? "Pause Microphone" : "Start Microphone";
+        this.setStreaming(this.isStreaming);
       }
 
       async toggleMic() {
@@ -192,11 +192,11 @@
         if (this.isStreaming) {
           this.pauseStreaming();
         } else {
-          await this.startStreaming();
+          await this.startStreaming(true);
         }
       }
 
-      async startStreaming() {
+      async startStreaming(isResume = false) {
         if (this.isStreaming) return;
         this.initAudioIfNeeded();
         await this.inputAudioContext.resume();
@@ -218,15 +218,16 @@
 
         this.sourceNode.connect(this.scriptProcessorNode);
         this.scriptProcessorNode.connect(this.inputAudioContext.destination);
+
         this.isStreaming = true;
-        this.setMicIcon("pause");
         this.hasSession = true;
         this.setHasSession(true);
+        this.updateButtonLabel();
       }
 
       pauseStreaming() {
         if (!this.isStreaming && !this.mediaStream) {
-          this.setMicIcon("mic");
+          this.updateButtonLabel();
           return;
         }
         this.isStreaming = false;
@@ -238,14 +239,13 @@
           try { this.mediaStream.getTracks().forEach(t => t.stop()); } catch {}
           this.mediaStream = null;
         }
-        this.setMicIcon("mic");
+        // Keep hasSession as-is; can resume without reconnect
+        this.updateButtonLabel();
       }
 
       reset() {
         this.pauseStreaming();
-        for (const s of this.sources.values()) {
-          try { s.stop(); } catch {}
-        }
+        for (const s of this.sources.values()) { try { s.stop(); } catch {} }
         this.sources.clear();
         this.nextStartTime = this.outputAudioContext?.currentTime ?? 0;
         try { this.session?.close?.(); } catch {}
@@ -254,18 +254,19 @@
         this.isModelSpeaking = false;
         this.setHasSession(false);
         this.setSpeaking(false);
-        this.setMicIcon("mic");
+        this.updateButtonLabel();
       }
     }
 
     customElements.define("gdm-live-audio", GdmLiveAudio);
 
-    // Bridge for SwiftUI
+    // Minimal bridge for SwiftUI
     window.liveAudio = {
       get el() { return document.querySelector("gdm-live-audio"); },
       async toggle() { return this.el?.toggleMic(); },
       async pause() { return this.el?.pauseStreaming(); },
       async reset() { return this.el?.reset(); },
+      state() { return this.el?._state ?? { isStreaming: false, isSpeaking: false, hasSession: false }; },
       syncStateToTitle() { this.el?.syncStateToTitle(); },
     };
   </script>
