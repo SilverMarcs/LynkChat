@@ -48,6 +48,10 @@ struct IOSWindow: Scene {
                     ImageList(selection: $selection)
                 }
                 
+                Tab("Live", systemImage: "waveform.mid") {
+                    LiveAudioView()
+                }
+                
                 // Settings Tab
                 Tab("Settings", systemImage: "gear") {
                     SettingsView()

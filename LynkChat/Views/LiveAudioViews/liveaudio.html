@@ -1,0 +1,287 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Live Audio</title>
+    <script type="importmap">
+            {
+                "imports": {
+                    "@google/genai": "https://esm.sh/@google/genai@^1.15.0"
+                }
+            }
+        </script>
+    <style>
+        :root {
+            --base-font-size: 13px;
+            font-size: var(--base-font-size);
+            --background-light: rgba(245, 245, 245, 0.2);
+            --background-dark: rgba(0, 0, 0, 1.0);
+            --background: var(--background-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: var(--background-dark);
+            }
+        }
+
+        html,
+        body {
+            font-family: system-ui;
+            overscroll-behavior: none !important;
+            margin: 0 !important;
+            padding: 0;
+            background: var(--background);
+            color: -apple-system-label;
+            /* Prevent all scrolling */
+            overflow: hidden !important;
+<!--            height: 100vh !important;-->
+<!--            width: 100vw !important;-->
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+        
+
+        *::-webkit-scrollbar {
+            display: none !important; /* WebKit */
+        }
+        
+        body::-webkit-scrollbar {
+          display: none !important;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* Prevent touch scrolling on mobile */
+            touch-action: none !important;
+            -webkit-overflow-scrolling: auto !important;
+        }
+
+        gdm-live-audio {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <gdm-live-audio></gdm-live-audio>
+    <script type="module">
+        import { GoogleGenAI, Modality } from "@google/genai";
+
+        // utils
+        function encode(bytes) { let b = ""; for (let i = 0; i < bytes.byteLength; i++) b += String.fromCharCode(bytes[i]); return btoa(b); }
+        function decode(b64) { const s = atob(b64); const len = s.length; const out = new Uint8Array(len); for (let i = 0; i < len; i++) out[i] = s.charCodeAt(i); return out; }
+        function createBlob(data) { const l = data.length; const i16 = new Int16Array(l); for (let i = 0; i < l; i++) i16[i] = data[i] * 32768; return { data: encode(new Uint8Array(i16.buffer)), mimeType: "audio/pcm;rate=16000" }; }
+        async function decodeAudioData(data, ctx, sampleRate, numChannels) {
+            const buf = ctx.createBuffer(numChannels, data.length / 2 / numChannels, sampleRate);
+            const i16 = new Int16Array(data.buffer); const l = i16.length; const f32 = new Float32Array(l);
+            for (let i = 0; i < l; i++) f32[i] = i16[i] / 32768.0;
+            if (numChannels === 0) { buf.copyToChannel(f32, 0); } else {
+                for (let c = 0; c < numChannels; c++) { const ch = f32.filter((_, idx) => idx % numChannels === c); buf.copyToChannel(ch, c); }
+            }
+            return buf;
+        }
+
+        class GdmLiveAudio extends HTMLElement {
+            constructor() {
+                super();
+                this.inputAudioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+                this.outputAudioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+                this.inputNode = this.inputAudioContext.createGain();
+                this.outputNode = this.outputAudioContext.createGain();
+                this.sources = new Set();
+                this.nextStartTime = 0; this.isRecording = false; this.status = ""; this.error = "";
+
+                this.shadow = this.attachShadow({ mode: "open" });
+                const style = document.createElement("style");
+                style.textContent = `
+                        :host { 
+                            color: -apple-system-label; 
+                            display: block; 
+                        }
+                        .app { 
+                            min-height: 100dvh; 
+                            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); 
+                            display: flex; 
+                            flex-direction: column; 
+                            background: var(--background); 
+                            -webkit-font-smoothing: antialiased; 
+                            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; 
+                        }
+                        main { 
+                            flex: 1; 
+                            display: flex; 
+                            flex-direction: column; 
+                            align-items: center; 
+                            justify-content: center; 
+                            gap: 20px; 
+                            padding: 24px 16px; 
+                            text-align: center; 
+                        }
+                        .mic-button { 
+                            width: 88px; 
+                            height: 88px; 
+                            border-radius: 999px; 
+                            display: grid; 
+                            place-items: center; 
+                            background: -apple-system-control-background; 
+                            border: 1px solid -apple-system-separator; 
+                            color: -apple-system-label; 
+                            cursor: pointer; 
+                            transition: transform .12s ease, background .2s ease; 
+                        }
+                        .mic-button:active { 
+                            transform: scale(.98); 
+                        }
+                        .mic-button.recording { 
+                            background: -apple-system-red; 
+                            border-color: -apple-system-red; 
+                            color: -apple-system-white;
+                        }
+                        .actions { 
+                            display: flex; 
+                            gap: 12px; 
+                        }
+                        .pill { 
+                            padding: 10px 14px; 
+                            border-radius: 12px; 
+                            background: -apple-system-control-background; 
+                            border: 1px solid -apple-system-separator; 
+                            color: -apple-system-label; 
+                            font-size: 14px; 
+                            font-weight: 500; 
+                            cursor: pointer; 
+                        }
+                        .pill[disabled] { 
+                            opacity: .5; 
+                            cursor: default; 
+                        }
+                        .status { 
+                            color: -apple-system-secondary-label; 
+                            font-size: 13px; 
+                            min-height: 18px; 
+                        }
+                        .error { 
+                            color: -apple-system-red; 
+                            font-size: 13px; 
+                        }
+                    `;
+                this.shadow.appendChild(style);
+
+                const app = document.createElement("div"); app.className = "app";
+                const main = document.createElement("main");
+                const micButton = document.createElement("button"); micButton.className = "mic-button"; micButton.title = "Start";
+                micButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Zm-7-3a1 1 0 1 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11Z"/></svg>';
+                micButton.addEventListener("click", () => { this.isRecording ? this.stopRecording() : this.startRecording(); });
+                main.appendChild(micButton);
+                const actions = document.createElement("div"); actions.className = "actions";
+                const resetButton = document.createElement("button"); resetButton.className = "pill"; resetButton.textContent = "Reset Session"; resetButton.addEventListener("click", () => this.reset()); actions.appendChild(resetButton);
+                const stopButton = document.createElement("button"); stopButton.className = "pill"; stopButton.textContent = "Stop"; stopButton.addEventListener("click", () => this.stopRecording()); actions.appendChild(stopButton);
+                main.appendChild(actions);
+                const statusDiv = document.createElement("div"); statusDiv.className = "status"; main.appendChild(statusDiv);
+                const errorDiv = document.createElement("div"); errorDiv.className = "error"; main.appendChild(errorDiv);
+                app.appendChild(main);
+                this.shadow.appendChild(app);
+
+                this.micButton = micButton; this.statusDiv = statusDiv; this.errorDiv = errorDiv; this.resetButton = resetButton; this.stopButton = stopButton;
+                this.initClient();
+            }
+
+            initAudio() { this.nextStartTime = this.outputAudioContext.currentTime; }
+
+            async initClient() {
+                this.initAudio();
+                const url = new URL(window.location.href);
+                const keyFromQuery = url.searchParams.get("key");
+                const apiKey = keyFromQuery || window.GEMINI_API_KEY || undefined;
+                if (!apiKey) { this.updateError("Missing GEMINI API key. Pass ?key=YOUR_KEY or set window.GEMINI_API_KEY."); return; }
+                this.client = new GoogleGenAI({ apiKey });
+                this.outputNode.connect(this.outputAudioContext.destination);
+                this.initSession();
+            }
+
+            async initSession() {
+                const model = "gemini-2.5-flash-preview-native-audio-dialog";
+                try {
+                    this.session = await this.client.live.connect({
+                        model,
+                        callbacks: {
+                            onopen: () => this.updateStatus("Connected"),
+                            onmessage: async (message) => {
+                                const audio = message.serverContent?.modelTurn?.parts?.[0]?.inlineData;
+                                if (audio) {
+                                    this.nextStartTime = Math.max(this.nextStartTime, this.outputAudioContext.currentTime);
+                                    const audioBuffer = await decodeAudioData(
+                                        decode(audio.data), this.outputAudioContext, 24000, 1
+                                    );
+                                    const source = this.outputAudioContext.createBufferSource();
+                                    source.buffer = audioBuffer; source.connect(this.outputNode);
+                                    source.addEventListener("ended", () => this.sources.delete(source));
+                                    source.start(this.nextStartTime);
+                                    this.nextStartTime += audioBuffer.duration;
+                                    this.sources.add(source);
+                                }
+                                const interrupted = message.serverContent?.interrupted;
+                                if (interrupted) { for (const s of this.sources.values()) { s.stop(); this.sources.delete(s); } this.nextStartTime = 0; }
+                            },
+                            onerror: (e) => this.updateError(e.message || String(e)),
+                            onclose: (e) => this.updateStatus("Closed: " + (e?.reason || "")),
+                        },
+                        config: {
+                            responseModalities: [Modality.AUDIO],
+                            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Orus" } } },
+                        },
+                    });
+                } catch (e) { console.error(e); this.updateError("Failed to open session. Check key and model access."); }
+            }
+
+            updateStatus(msg) { this.status = msg; this.statusDiv.textContent = msg || ""; }
+            updateError(msg) { this.error = msg; this.errorDiv.textContent = msg || ""; }
+
+            async startRecording() {
+                if (this.isRecording) return;
+                this.inputAudioContext.resume(); this.outputAudioContext.resume();
+                this.updateStatus("Requesting microphone...");
+                try {
+                    this.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                    this.updateStatus("Mic ready. Speak when the ring is red.");
+                    this.sourceNode = this.inputAudioContext.createMediaStreamSource(this.mediaStream);
+                    this.sourceNode.connect(this.inputNode);
+                    const bufferSize = 256;
+                    this.scriptProcessorNode = this.inputAudioContext.createScriptProcessor(bufferSize, 1, 1);
+                    this.scriptProcessorNode.onaudioprocess = (e) => {
+                        if (!this.isRecording) return; const pcm = e.inputBuffer.getChannelData(0);
+                        this.session?.sendRealtimeInput?.({ media: createBlob(pcm) });
+                    };
+                    this.sourceNode.connect(this.scriptProcessorNode);
+                    this.scriptProcessorNode.connect(this.inputAudioContext.destination);
+                    this.isRecording = true; this.updateStatus("Listening…"); this.updateMicButton(); this.resetButton.disabled = true; this.stopButton.disabled = false;
+                } catch (err) { console.error("Error starting recording:", err); this.updateStatus(""); this.updateError(err?.message || String(err)); this.stopRecording(); }
+            }
+
+            stopRecording() {
+                if (!this.isRecording && !this.mediaStream && !this.inputAudioContext) return;
+                this.updateStatus(""); this.isRecording = false;
+                if (this.scriptProcessorNode && this.sourceNode && this.inputAudioContext) { this.scriptProcessorNode.disconnect(); this.sourceNode.disconnect(); }
+                this.scriptProcessorNode = null; this.sourceNode = null;
+                if (this.mediaStream) { this.mediaStream.getTracks().forEach(t => t.stop()); this.mediaStream = null; }
+                this.updateMicButton(); this.resetButton.disabled = false; this.stopButton.disabled = true;
+            }
+
+            updateMicButton() {
+                if (this.isRecording) { this.micButton.classList.add("recording"); this.micButton.title = "Stop"; this.micButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>'; }
+                else { this.micButton.classList.remove("recording"); this.micButton.title = "Start"; this.micButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Zm-7-3a1 1 0 1 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11Z"/></svg>'; }
+            }
+
+            reset() { this.session?.close?.(); this.initSession(); this.updateStatus("Session reset"); }
+        }
+
+        customElements.define("gdm-live-audio", GdmLiveAudio);
+    </script>
+</body>
+
+</html>

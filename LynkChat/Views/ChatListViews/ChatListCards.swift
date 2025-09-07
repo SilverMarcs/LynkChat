@@ -48,7 +48,9 @@ struct ChatListCards: View {
             cycleChatStatus()
         case .images:
             openWindow(id: WindowID.chats)
-            dismissWindow(id: "images")
+            dismissWindow(id: WindowID.images)
+        case .audio:
+            print("TBI")
         }
     }
     
@@ -66,7 +68,7 @@ struct ChatListCards: View {
     
     func handleImagePress() {
         openWindow(id: WindowID.images)
-        dismissWindow(id: "chats")
+        dismissWindow(id: WindowID.chats)
     }
 }
 
