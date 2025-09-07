@@ -1,8 +1,8 @@
 <!doctype html>
 <html>
-
 <head>
   <meta charset="utf-8" />
+  <!-- Disable zooming; keep safe-area support -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Live Audio</title>
   <script type="importmap">
@@ -13,62 +13,33 @@
     }
   </script>
   <style>
-    :root {
-      --base-font-size: 13px;
-      font-size: var(--base-font-size);
-      --background-light: rgba(245, 245, 245, 0.2);
-      --background-dark: rgba(0, 0, 0, 1.0);
-      --background: var(--background-light);
-    }
+    :root { color-scheme: light dark; }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --background: var(--background-dark);
-      }
-    }
-
-    html,
-    body {
-      font-family: system-ui;
-      overscroll-behavior: none !important;
-      margin: 0 !important;
-      padding: 0;
-      background: var(--background);
+    /* Fill the viewport, no scrolling, no selection */
+    html, body {
+      height: 100%;
+      margin: 0;
+      font: system-ui;
       color: -apple-system-label;
-      /* Prevent all scrolling */
-      overflow: hidden !important;
-      /*            height: 100vh !important;*/
-      /*            width: 100vw !important;*/
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-    }
-
-    *::-webkit-scrollbar {
-      display: none !important;
-      /* WebKit */
-    }
-
-    body::-webkit-scrollbar {
-      display: none !important;
-    }
-
-    body {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      /* Prevent touch scrolling on mobile */
-      touch-action: none !important;
-      -webkit-overflow-scrolling: auto !important;
+      background: -apple-system-background;
+      overflow: hidden;                /* no scroll */
+      user-select: none;               /* no text selection */
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-text-size-adjust: 100%;
+      touch-action: none;              /* block gestures (pan/zoom) */
     }
 
     gdm-live-audio {
       display: block;
+      height: 100%;
     }
   </style>
 </head>
 
 <body>
   <gdm-live-audio></gdm-live-audio>
+
   <script type="module">
     import { GoogleGenAI, Modality } from "@google/genai";
 
@@ -89,122 +60,160 @@
     class GdmLiveAudio extends HTMLElement {
       constructor() {
         super();
-        // Lazy-init: these are created on first mic press to comply with autoplay policies
+
+        // Audio/session fields
         this.inputAudioContext = null;
         this.outputAudioContext = null;
         this.inputNode = null;
         this.outputNode = null;
-
         this.sources = new Set();
         this.nextStartTime = 0;
-        this.isRecording = false;
-        this.status = "";
-        this.error = "";
 
         this.client = null;
         this.session = null;
 
+        // UI state
+        this.isStreaming = false;     // sending mic audio
+        this.hasSession = false;      // connected at least once
+        this.isModelSpeaking = false; // toggles waveform bobbing
+        this.lastSpeakAt = 0;
+
         this.shadow = this.attachShadow({ mode: "open" });
-        const style = document.createElement("style");
-        style.textContent = `
-          :host { 
-            color: -apple-system-label; 
-            display: block; 
-          }
-          .app { 
-            min-height: 100dvh; 
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); 
-            display: flex; 
-            flex-direction: column; 
-            background: var(--background); 
-            -webkit-font-smoothing: antialiased; 
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; 
-          }
-          main { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 20px; 
-            padding: 24px 16px; 
-            text-align: center; 
-          }
-          .mic-button { 
-            width: 88px; 
-            height: 88px; 
-            border-radius: 999px; 
-            display: grid; 
-            place-items: center; 
-            background: -apple-system-control-background; 
-            border: 1px solid -apple-system-separator; 
-            color: -apple-system-label; 
-            cursor: pointer; 
-            transition: transform .12s ease, background .2s ease; 
-          }
-          .mic-button:active { 
-            transform: scale(.98); 
-          }
-          .mic-button.recording { 
-            background: -apple-system-red; 
-            border-color: -apple-system-red; 
-            color: -apple-system-white;
-          }
-          .actions { 
-            display: flex; 
-            gap: 12px; 
-          }
-          .pill { 
-            padding: 10px 14px; 
-            border-radius: 12px; 
-            background: -apple-system-control-background; 
-            border: 1px solid -apple-system-separator; 
-            color: -apple-system-label; 
-            font-size: 14px; 
-            font-weight: 500; 
-            cursor: pointer; 
-          }
-          .pill[disabled] { 
-            opacity: .5; 
-            cursor: default; 
-          }
-          .status { 
-            color: -apple-system-secondary-label; 
-            font-size: 13px; 
-            min-height: 18px; 
-          }
-          .error { 
-            color: -apple-system-red; 
-            font-size: 13px; 
-          }
+        this.shadow.innerHTML = `
+          <style>
+            :host, * {
+              user-select: none;
+              -webkit-user-select: none;
+              -webkit-touch-callout: none;
+              touch-action: none;
+            }
+
+            .app {
+              position: relative;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center; /* vertical center */
+              gap: 20px;
+              min-height: 100dvh;      /* fill viewport */
+              padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            }
+
+            .center {
+              display: grid;
+              gap: 12px;
+              place-items: center;
+              text-align: center;
+            }
+
+            /* Simplified waveform: single system-blue circle */
+            .wave {
+              width: min(56vmin, 380px);
+              aspect-ratio: 1;
+              border-radius: 999px;
+              display: grid;
+              place-items: center;
+              background: -apple-system-blue;
+              will-change: transform;
+              transition: transform 120ms ease;
+            }
+
+            .status {
+              font: -apple-system-footnote;
+              color: -apple-system-tertiary-label;
+              min-height: 1.2em;
+            }
+
+            /* Controls live inside the same flow (no fixed positioning) */
+            .controls {
+              width: 100%;
+              display: grid;
+              place-items: center;
+            }
+
+            .row {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              align-items: center;
+              gap: 12px;
+              width: min(1200px, 94vw);
+              margin: 0 auto;
+            }
+
+            .btn {
+              width: 64px; height: 64px;
+              border-radius: 999px;
+              display: grid; place-items: center;
+              color: -apple-system-label;
+              background: -apple-system-secondary-background;
+              border: none;
+              transition: transform 120ms ease, background 120ms ease;
+            }
+            .btn:active { transform: translateY(1px) scale(0.99); }
+
+            .btn.right { justify-self: end; }
+
+            .btn.mic.streaming {
+              background: color-mix(in oklab, -apple-system-blue 20%, -apple-system-secondary-background);
+            }
+
+            svg { width: 28px; height: 28px; }
+
+            /* Respect reduced motion */
+            @media (prefers-reduced-motion: reduce) {
+              .wave { transition: none; }
+            }
+          </style>
+
+          <div class="app" role="application" aria-label="Live audio interface">
+            <div class="center" aria-live="polite">
+              <div class="wave" id="wave" role="img" aria-label="Audio waveform"></div>
+              <div class="status" id="status">Ready. Press the mic to connect.</div>
+              <div class="status" id="error" style="color: -apple-system-red;"></div>
+            </div>
+
+            <div class="controls" aria-label="Controls">
+              <div class="row">
+                <button class="btn mic" id="micBtn" title="Start" aria-label="Toggle microphone">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Zm-7-3a1 1 0 1 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11Z"/>
+                  </svg>
+                </button>
+                <button class="btn right" id="resetBtn" title="Reset" aria-label="Reset session">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M6.225 4.811 4.811 6.225 9.586 11l-4.775 4.775 1.414 1.414L11 12.414l4.775 4.775 1.414-1.414L12.414 11l4.775-4.775-1.414-1.414L11 9.586 6.225 4.811z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
         `;
-        this.shadow.appendChild(style);
 
-        const app = document.createElement("div"); app.className = "app";
-        const main = document.createElement("main");
-        const micButton = document.createElement("button"); micButton.className = "mic-button"; micButton.title = "Start";
-        micButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Zm-7-3a1 1 0 1 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11Z"/></svg>';
-        micButton.addEventListener("click", () => { this.isRecording ? this.stopRecording() : this.startRecording(); });
-        main.appendChild(micButton);
+        // Element refs
+        this.statusEl = this.shadow.getElementById("status");
+        this.errorEl = this.shadow.getElementById("error");
+        this.waveEl = this.shadow.getElementById("wave");
+        this.micBtn = this.shadow.getElementById("micBtn");
+        this.resetBtn = this.shadow.getElementById("resetBtn");
 
-        const actions = document.createElement("div"); actions.className = "actions";
-        const resetButton = document.createElement("button"); resetButton.className = "pill"; resetButton.textContent = "Reset Session"; resetButton.addEventListener("click", () => this.reset()); actions.appendChild(resetButton);
-        const stopButton = document.createElement("button"); stopButton.className = "pill"; stopButton.textContent = "Stop"; stopButton.addEventListener("click", () => this.stopRecording()); actions.appendChild(stopButton);
-        main.appendChild(actions);
+        // Events
+        this.micBtn.addEventListener("click", () => this.toggleMic());
+        this.resetBtn.addEventListener("click", () => this.reset());
 
-        const statusDiv = document.createElement("div"); statusDiv.className = "status"; main.appendChild(statusDiv);
-        const errorDiv = document.createElement("div"); errorDiv.className = "error"; main.appendChild(errorDiv);
-        app.appendChild(main);
-        this.shadow.appendChild(app);
-
-        this.micButton = micButton; this.statusDiv = statusDiv; this.errorDiv = errorDiv; this.resetButton = resetButton; this.stopButton = stopButton;
-
-        // Initial UI state
-        this.resetButton.disabled = false;
-        this.stopButton.disabled = true;
-        this.updateStatus("Ready. Press the mic to connect.");
+        // Animation loop: scale the blue circle as a simple "fake waveform"
+        const loop = () => {
+          const now = performance.now();
+          const speaking = this.isModelSpeaking || (now - this.lastSpeakAt < 450);
+          const base = 1.0;
+          const mag = speaking ? 0.06 : 0.0; // up to ~6% scale change
+          const r = Math.sin(now / 180) * mag;
+          this.waveEl.style.transform = `scale(${(base + r).toFixed(3)})`;
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
       }
 
+      // --- Setup
       initAudioIfNeeded() {
         if (!this.inputAudioContext) {
           this.inputAudioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
@@ -236,7 +245,7 @@
 
       async ensureSession() {
         if (this.session) return;
-        const model = "gemini-2.5-flash-preview-native-audio-dialog";
+        const model = "gemini-live-2.5-flash-preview";
         await this.ensureClient();
 
         this.updateStatus("Connecting…");
@@ -244,29 +253,35 @@
           this.session = await this.client.live.connect({
             model,
             callbacks: {
-              onopen: () => this.updateStatus("Connected. Listening…"),
+              onopen: () => { this.updateStatus("Connected."); this.hasSession = true; },
               onmessage: async (message) => {
                 const audio = message.serverContent?.modelTurn?.parts?.[0]?.inlineData;
                 if (audio && this.outputAudioContext) {
+                  this.isModelSpeaking = true;
+                  this.lastSpeakAt = performance.now();
                   this.nextStartTime = Math.max(this.nextStartTime, this.outputAudioContext.currentTime);
                   const audioBuffer = await decodeAudioData(
                     decode(audio.data), this.outputAudioContext, 24000, 1
                   );
                   const source = this.outputAudioContext.createBufferSource();
                   source.buffer = audioBuffer; source.connect(this.outputNode);
-                  source.addEventListener("ended", () => this.sources.delete(source));
+                  source.addEventListener("ended", () => {
+                    this.sources.delete(source);
+                    this.isModelSpeaking = false;
+                    this.lastSpeakAt = performance.now();
+                  });
                   source.start(this.nextStartTime);
                   this.nextStartTime += audioBuffer.duration;
                   this.sources.add(source);
                 }
                 const interrupted = message.serverContent?.interrupted;
                 if (interrupted) {
-                  for (const s of this.sources.values()) { s.stop(); this.sources.delete(s); }
-                  this.nextStartTime = 0;
+                  for (const s of this.sources.values()) { try { s.stop(); } catch {} this.sources.delete(s); }
+                  this.nextStartTime = this.outputAudioContext?.currentTime ?? 0;
                 }
               },
               onerror: (e) => this.updateError(e.message || String(e)),
-              onclose: (e) => this.updateStatus("Closed: " + (e?.reason || "")),
+              onclose: (e) => this.updateStatus("Closed" + (e?.reason ? `: ${e.reason}` : "")),
             },
             config: {
               responseModalities: [Modality.AUDIO],
@@ -280,24 +295,59 @@
         }
       }
 
-      updateStatus(msg) { this.status = msg; this.statusDiv.textContent = msg || ""; }
-      updateError(msg) { this.error = msg; this.errorDiv.textContent = msg || ""; }
+      // --- UI helpers
+      updateStatus(msg) { this.statusEl.textContent = msg || ""; }
+      updateError(msg) { this.errorEl.textContent = msg || ""; }
 
-      async startRecording() {
-        if (this.isRecording) return;
+      setMicIcon(state) {
+        // state: "mic" | "pause"
+        if (state === "pause") {
+          this.micBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <rect x="6" y="5" width="4" height="14" rx="1.5"></rect>
+              <rect x="14" y="5" width="4" height="14" rx="1.5"></rect>
+            </svg>`;
+          this.micBtn.title = "Pause";
+          this.micBtn.classList.add("streaming");
+        } else {
+          this.micBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Zm-7-3a1 1 0 1 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11Z"/>
+            </svg>`;
+          this.micBtn.title = this.hasSession ? "Resume" : "Start";
+          this.micBtn.classList.remove("streaming");
+        }
+      }
 
-        // User gesture: safe to init and resume audio contexts
+      // --- Mic control
+      async toggleMic() {
+        if (!this.hasSession) {
+          // First press: init + connect + start streaming
+          await this.startStreaming();
+          return;
+        }
+        if (this.isStreaming) {
+          // Pause (stop sending mic, keep session)
+          this.pauseStreaming();
+        } else {
+          // Resume streaming
+          await this.startStreaming(true);
+        }
+      }
+
+      async startStreaming(isResume = false) {
+        if (this.isStreaming) return;
+
         this.initAudioIfNeeded();
         await this.inputAudioContext.resume();
         await this.outputAudioContext.resume();
 
         try {
-          // Connect only now (on mic press)
           await this.ensureSession();
 
-          this.updateStatus("Requesting microphone…");
+          if (!isResume) this.updateStatus("Requesting microphone…");
           this.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-          this.updateStatus("Mic ready. Speak when the ring is red.");
+          if (!isResume) this.updateStatus("Listening…");
 
           this.sourceNode = this.inputAudioContext.createMediaStreamSource(this.mediaStream);
           this.sourceNode.connect(this.inputNode);
@@ -305,7 +355,7 @@
           const bufferSize = 256;
           this.scriptProcessorNode = this.inputAudioContext.createScriptProcessor(bufferSize, 1, 1);
           this.scriptProcessorNode.onaudioprocess = (e) => {
-            if (!this.isRecording) return;
+            if (!this.isStreaming) return;
             const pcm = e.inputBuffer.getChannelData(0);
             this.session?.sendRealtimeInput?.({ media: createBlob(pcm) });
           };
@@ -313,64 +363,72 @@
           this.sourceNode.connect(this.scriptProcessorNode);
           this.scriptProcessorNode.connect(this.inputAudioContext.destination);
 
-          this.isRecording = true;
-          this.updateStatus("Listening…");
-          this.updateMicButton();
-          this.resetButton.disabled = true;
-          this.stopButton.disabled = false;
+          this.isStreaming = true;
+          this.setMicIcon("pause");
         } catch (err) {
-          console.error("Error starting recording:", err);
-          this.updateStatus("");
+          console.error("Error starting mic:", err);
           this.updateError(err?.message || String(err));
-          this.stopRecording();
+          this.pauseStreaming();
+        } finally {
+          this.hasSession = !!this.session;
         }
       }
 
-      stopRecording() {
-        if (!this.isRecording && !this.mediaStream && !this.inputAudioContext) return;
+      pauseStreaming() {
+        if (!this.isStreaming && !this.mediaStream) { this.setMicIcon("mic"); return; }
 
-        this.updateStatus("");
-        this.isRecording = false;
-
-        if (this.scriptProcessorNode && this.sourceNode && this.inputAudioContext) {
-          try { this.scriptProcessorNode.disconnect(); } catch {}
-          try { this.sourceNode.disconnect(); } catch {}
-        }
+        this.isStreaming = false;
+        try { this.scriptProcessorNode?.disconnect(); } catch {}
+        try { this.sourceNode?.disconnect(); } catch {}
         this.scriptProcessorNode = null;
         this.sourceNode = null;
 
         if (this.mediaStream) {
-          this.mediaStream.getTracks().forEach(t => t.stop());
+          try { this.mediaStream.getTracks().forEach(t => t.stop()); } catch {}
           this.mediaStream = null;
         }
-
-        this.updateMicButton();
-        this.resetButton.disabled = false;
-        this.stopButton.disabled = true;
+        this.setMicIcon("mic");
+        this.updateStatus(this.hasSession ? "Paused." : "Ready. Press the mic to connect.");
       }
 
-      updateMicButton() {
-        if (this.isRecording) {
-          this.micButton.classList.add("recording");
-          this.micButton.title = "Stop";
-          this.micButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
-        } else {
-          this.micButton.classList.remove("recording");
-          this.micButton.title = "Start";
-          this.micButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Zm-7-3a1 1 0 1 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11Z"/></svg>';
-        }
-      }
-
+      // --- Reset session and UI
       reset() {
+        // Stop local capture
+        this.pauseStreaming();
+
+        // Stop output
+        for (const s of this.sources.values()) { try { s.stop(); } catch {} }
+        this.sources.clear();
+        this.nextStartTime = this.outputAudioContext?.currentTime ?? 0;
+
+        // Close session
         try { this.session?.close?.(); } catch {}
         this.session = null;
-        this.updateStatus("Session reset. Press the mic to reconnect.");
-        // Do not auto-reconnect; wait for user gesture
+        this.hasSession = false;
+        this.isModelSpeaking = false;
+
+        // UI
+        this.setMicIcon("mic");
+        this.updateStatus("Session reset. Press the mic to connect.");
+        this.updateError("");
       }
     }
 
     customElements.define("gdm-live-audio", GdmLiveAudio);
+
+    /* Hard-disable page zoom and scroll (fallbacks across browsers) */
+    // Prevent pinch zoom (iOS Safari)
+    document.addEventListener('gesturestart', e => e.preventDefault());
+    document.addEventListener('gesturechange', e => e.preventDefault());
+    document.addEventListener('gestureend', e => e.preventDefault());
+    // Prevent Ctrl/⌘ + wheel zoom
+    window.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+    // Prevent keyboard zoom shortcuts
+    window.addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && ['=', '+', '-', '0'].includes(e.key)) e.preventDefault();
+    }, { passive: false });
+    // Prevent touch scrolling (extra safety if any element re-enables it)
+    window.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
   </script>
 </body>
-
 </html>

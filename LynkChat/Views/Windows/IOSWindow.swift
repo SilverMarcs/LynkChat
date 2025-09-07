@@ -48,7 +48,7 @@ struct IOSWindow: Scene {
                     ImageList(selection: $selection)
                 }
                 
-                Tab("Live", systemImage: "waveform.mid") {
+                Tab("Live", systemImage: "waveform") {
                     LiveAudioView()
                 }
                 

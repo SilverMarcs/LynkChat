@@ -17,12 +17,15 @@ struct LiveAudioView: View {
     }
 
     var body: some View {
-        if let url = urlWithKey {
-            WebView(url: url)
-                .edgesIgnoringSafeArea(.bottom)
-        } else {
-            Text("Failed to load live audio UI")
-                .foregroundStyle(.secondary)
+        NavigationStack {
+            if let url = urlWithKey {
+                WebView(url: url)
+                    .navigationTitle("Live")
+                    .toolbarTitleDisplayMode(.inlineLarge)
+            } else {
+                Text("Failed to load live audio UI")
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }
