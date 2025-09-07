@@ -1,8 +1,8 @@
-//
 //  LiveAudioView.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 07/09/2025.
+//  Updated to SwiftUI-first UI with WebView overlay
 //
 
 import SwiftUI
@@ -11,44 +11,84 @@ import WebKit
 struct LiveAudioView: View {
     @ObservedObject var config: AppConfig = .shared
     @State private var page: WebPage = WebPage()
-    
-    private var urlWithKey: URL? {
-        guard let baseURL = Bundle.main.url(forResource: "liveaudio", withExtension: "html") else { return nil }
-        var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
-        components?.queryItems = [URLQueryItem(name: "key", value: config.geminiApiKey)]
-        return components?.url
+
+    @State private var isStreaming = false
+    @State private var isSpeaking = false
+    @State private var hasSession = false
+
+    private let url: URL
+
+    init() {
+        guard let baseURL = Bundle.main.url(forResource: "liveaudio", withExtension: "html") else {
+            fatalError("Could not find liveaudio.html in bundle")
+        }
+        
+        var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
+        components.queryItems = [URLQueryItem(name: "key", value: AppConfig.shared.geminiApiKey)]
+        
+        self.url = components.url!
     }
 
     var body: some View {
         NavigationStack {
-            if let url = urlWithKey {
+            Button {
+                Task { await toggleMic() }
+            } label: {
+                Image(systemName: isStreaming ? "pause.fill" : "play.fill")
+                    .contentTransition(.symbolEffect(.replace, options: .speed(1.5)))
+                    .font(.system(size: 100))
+                    .padding(20)
+            }
+            .buttonStyle(.glassProminent)
+            .controlSize(.extraLarge)
+            .buttonBorderShape(.circle)
+            .task {
+                await loadPage(url)
+            }
+            .onChange(of: page.title) {
+                applyStateFromTitle()
+            }
+            .overlay {
                 WebView(page)
-                    .navigationTitle("Live")
-                    .toolbarTitleDisplayMode(.inlineLarge)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: resetSession) {
-                                Image(systemName: "square.and.pencil")
-                            }
-                        }
+                    .frame(width: 1, height: 1)
+                    .opacity(0.1)
+            }
+            .navigationTitle("Live")
+            .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: resetSession) {
+                        Image(systemName: "arrow.counterclockwise")
                     }
-                    .task {
-                        page.load(url)
-                    }
-            } else {
-                Text("Failed to load live audio UI")
-                    .foregroundStyle(.red)
+                }
             }
         }
     }
-    
+
+    // MARK: - JS bridge
+
+    private func loadPage(_ url: URL) async {
+        page.load(url)
+        _ = try? await page.callJavaScript("window.liveAudio.syncStateToTitle()")
+    }
+
+    private func toggleMic() async {
+        _ = try? await page.callJavaScript("window.liveAudio.toggle()")
+    }
+
     private func resetSession() {
         Task {
-            do {
-                try await page.callJavaScript("window.resetLiveAudio && window.resetLiveAudio();")
-            } catch {
-                print("Failed to reset session: \(error)")
-            }
+            _ = try? await page.callJavaScript("window.liveAudio.reset()")
+        }
+    }
+
+    private func applyStateFromTitle() {
+        let title = page.title
+        guard let data = title.data(using: .utf8) else { return }
+        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+            if let s = json["isStreaming"] as? Bool { isStreaming = s }
+            if let sp = json["isSpeaking"] as? Bool { isSpeaking = sp }
+            if let hs = json["hasSession"] as? Bool { hasSession = hs }
         }
     }
 }

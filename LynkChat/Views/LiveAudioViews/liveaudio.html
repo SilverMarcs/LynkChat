@@ -7,22 +7,6 @@
   <script type="importmap">
     { "imports": { "@google/genai": "https://esm.sh/@google/genai@^1.15.0" } }
   </script>
-  <style>
-    :root { color-scheme: light dark; }
-    html, body {
-      height: 100%;
-      margin: 0;
-      font: system-ui;
-      color: -apple-system-label;
-      background: -apple-system-background;
-      overflow: hidden;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      -webkit-text-size-adjust: 100%;
-      touch-action: none;
-    }
-    gdm-live-audio { display: block; height: 100%; }
-  </style>
 </head>
 <body>
   <gdm-live-audio></gdm-live-audio>
@@ -30,15 +14,40 @@
   <script type="module">
     import { GoogleGenAI, Modality } from "@google/genai";
 
-    function encode(bytes) { let b = ""; for (let i = 0; i < bytes.byteLength; i++) b += String.fromCharCode(bytes[i]); return btoa(b); }
-    function decode(b64) { const s = atob(b64); const len = s.length; const out = new Uint8Array(len); for (let i = 0; i < len; i++) out[i] = s.charCodeAt(i); return out; }
-    function createBlob(data) { const l = data.length; const i16 = new Int16Array(l); for (let i = 0; i < l; i++) i16[i] = data[i] * 32768; return { data: encode(new Uint8Array(i16.buffer)), mimeType: "audio/pcm;rate=16000" }; }
+    function encode(bytes) {
+      let b = "";
+      for (let i = 0; i < bytes.byteLength; i++) b += String.fromCharCode(bytes[i]);
+      return btoa(b);
+    }
+    
+    function decode(b64) {
+      const s = atob(b64);
+      const len = s.length;
+      const out = new Uint8Array(len);
+      for (let i = 0; i < len; i++) out[i] = s.charCodeAt(i);
+      return out;
+    }
+    
+    function createBlob(data) {
+      const l = data.length;
+      const i16 = new Int16Array(l);
+      for (let i = 0; i < l; i++) i16[i] = data[i] * 32768;
+      return { data: encode(new Uint8Array(i16.buffer)), mimeType: "audio/pcm;rate=16000" };
+    }
+    
     async function decodeAudioData(data, ctx, sampleRate, numChannels) {
       const buf = ctx.createBuffer(numChannels, data.length / 2 / numChannels, sampleRate);
-      const i16 = new Int16Array(data.buffer); const l = i16.length; const f32 = new Float32Array(l);
+      const i16 = new Int16Array(data.buffer);
+      const l = i16.length;
+      const f32 = new Float32Array(l);
       for (let i = 0; i < l; i++) f32[i] = i16[i] / 32768.0;
-      if (numChannels === 0) { buf.copyToChannel(f32, 0); } else {
-        for (let c = 0; c < numChannels; c++) { const ch = f32.filter((_, idx) => idx % numChannels === c); buf.copyToChannel(ch, c); }
+      if (numChannels === 1) {
+        buf.copyToChannel(f32, 0);
+      } else {
+        for (let c = 0; c < numChannels; c++) {
+          const ch = f32.filter((_, idx) => idx % numChannels === c);
+          buf.copyToChannel(ch, c);
+        }
       }
       return buf;
     }
@@ -57,114 +66,38 @@
         this.isStreaming = false;
         this.hasSession = false;
         this.isModelSpeaking = false;
-        this.lastSpeakAt = 0;
+
+        this._state = { isStreaming: false, isSpeaking: false, hasSession: false };
 
         this.shadow = this.attachShadow({ mode: "open" });
-        this.shadow.innerHTML = `
-          <style>
-            :host, * {
-              -webkit-user-select: none;
-              -webkit-touch-callout: none;
-              touch-action: none;
-            }
-            .app {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 20px;
-              min-height: 100dvh;
-              padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-            }
-            .center {
-              display: grid;
-              place-items: center;
-            }
-
-            /* Fixed icon size that doesn't scale with circle */
-            :host {
-              --circle-size: min(56vmin, 380px);
-              --icon-size: 80px; /* Fixed size, bigger than before */
-              --blue-dark-1: color-mix(in oklab, -apple-system-indigo 85%, black);
-              --blue-dark-2: color-mix(in oklab, -apple-system-indigo 70%, black);
-              --blue-press:  color-mix(in oklab, -apple-system-indigo 60%, black);
-              --ring-color: color-mix(in oklab, white 20%, transparent);
-            }
-
-            /* The circle itself is the button */
-            .wave {
-              width: var(--circle-size);
-              height: var(--circle-size);
-              border-radius: 999px;
-              display: grid;
-              place-items: center;
-              border: none;
-              padding: 0;
-              cursor: pointer;
-              color: white;
-              background: linear-gradient(135deg, var(--blue-dark-1) 0%, var(--blue-dark-2) 100%);
-              box-shadow:
-                0 10px 30px color-mix(in oklab, -apple-system-indigo 35%, transparent),
-                inset 0 0 0 1px var(--ring-color);
-              will-change: transform, box-shadow;
-              transition: transform 120ms ease, box-shadow 180ms ease, background 180ms ease, filter 180ms ease;
-            }
-            .wave:focus-visible {
-              outline: none;
-              box-shadow:
-                0 10px 30px color-mix(in oklab, -apple-system-indigo 40%, transparent),
-                0 0 0 4px color-mix(in oklab, -apple-system-indigo 40%, transparent),
-                inset 0 0 0 1px var(--ring-color);
-            }
-            .wave:active {
-              transform: translateY(1px) scale(0.99);
-              background: linear-gradient(135deg, var(--blue-press) 0%, var(--blue-dark-2) 100%);
-              filter: brightness(0.98);
-            }
-            .wave.streaming {
-              /* slight hue/sat pop when live */
-              filter: saturate(1.05) brightness(1.02);
-            }
-
-            svg { width: var(--icon-size); height: var(--icon-size); display: block; }
-
-            @media (prefers-reduced-motion: reduce) {
-              .wave { transition: none; }
-            }
-          </style>
-          <div class="app">
-            <div class="center">
-              <button class="wave" id="waveBtn" aria-label="Start microphone" aria-pressed="false">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <circle cx="12" cy="12" r="8"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        `;
-
+        this.shadow.innerHTML = `<div><button id="waveBtn">Start Microphone</button></div>`;
         this.waveBtn = this.shadow.getElementById("waveBtn");
-
-        // Entire circle toggles mic
         this.waveBtn.addEventListener("click", () => this.toggleMic());
-        this.waveBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this.toggleMic(); }
-        });
+      }
 
-        // Expose reset method to window for SwiftUI to call
-        window.resetLiveAudio = () => this.reset();
+      syncStateToTitle() {
+        try {
+          document.title = JSON.stringify(this._state);
+        } catch {}
+      }
+      
+      setStreaming(v) {
+        this._state.isStreaming = !!v;
+        this.syncStateToTitle();
+      }
+      
+      setSpeaking(v) {
+        this._state.isSpeaking = !!v;
+        this.syncStateToTitle();
+      }
+      
+      setHasSession(v) {
+        this._state.hasSession = !!v;
+        this.syncStateToTitle();
+      }
 
-        const loop = () => {
-          const now = performance.now();
-          const speaking = this.isModelSpeaking || (now - this.lastSpeakAt < 450);
-          const base = 1.0;
-          const mag = speaking ? 0.06 : 0.0;
-          const r = Math.sin(now / 180) * mag;
-          // Keep the breathing effect
-          this.waveBtn.style.transform = `scale(${(base + r).toFixed(3)})`;
-          requestAnimationFrame(loop);
-        };
-        requestAnimationFrame(loop);
+      connectedCallback() {
+        this.syncStateToTitle();
       }
 
       initAudioIfNeeded() {
@@ -182,7 +115,7 @@
 
       getApiKey() {
         const url = new URL(window.location.href);
-        return url.searchParams.get("key") || window.GEMINI_API_KEY;
+        return url.searchParams.get("key");
       }
 
       async ensureClient() {
@@ -198,20 +131,24 @@
         this.session = await this.client.live.connect({
           model: "gemini-live-2.5-flash-preview",
           callbacks: {
-            onopen: () => { this.hasSession = true; },
+            onopen: () => {
+              this.hasSession = true;
+              this.setHasSession(true);
+            },
             onmessage: async (message) => {
               const audio = message.serverContent?.modelTurn?.parts?.[0]?.inlineData;
               if (audio && this.outputAudioContext) {
                 this.isModelSpeaking = true;
-                this.lastSpeakAt = performance.now();
+                this.setSpeaking(true);
                 this.nextStartTime = Math.max(this.nextStartTime, this.outputAudioContext.currentTime);
                 const audioBuffer = await decodeAudioData(decode(audio.data), this.outputAudioContext, 24000, 1);
                 const source = this.outputAudioContext.createBufferSource();
-                source.buffer = audioBuffer; source.connect(this.outputNode);
+                source.buffer = audioBuffer;
+                source.connect(this.outputNode);
                 source.addEventListener("ended", () => {
                   this.sources.delete(source);
                   this.isModelSpeaking = false;
-                  this.lastSpeakAt = performance.now();
+                  setTimeout(() => this.setSpeaking(false), 200);
                 });
                 source.start(this.nextStartTime);
                 this.nextStartTime += audioBuffer.duration;
@@ -219,10 +156,16 @@
               }
               const interrupted = message.serverContent?.interrupted;
               if (interrupted) {
-                for (const s of this.sources.values()) { try { s.stop(); } catch {} this.sources.delete(s); }
+                for (const s of this.sources.values()) {
+                  try { s.stop(); } catch {}
+                  this.sources.delete(s);
+                }
                 this.nextStartTime = this.outputAudioContext?.currentTime ?? 0;
               }
             },
+            onclose: () => {
+              this.setHasSession(false);
+            }
           },
           config: {
             responseModalities: [Modality.AUDIO],
@@ -233,22 +176,11 @@
 
       setMicIcon(state) {
         if (state === "pause") {
-          this.waveBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <rect x="7" y="6" width="3" height="12" rx="1.5"></rect>
-              <rect x="14" y="6" width="3" height="12" rx="1.5"></rect>
-            </svg>`;
-          this.waveBtn.classList.add("streaming");
-          this.waveBtn.setAttribute("aria-pressed", "true");
-          this.waveBtn.setAttribute("aria-label", "Pause microphone");
+          this.waveBtn.textContent = "Pause Microphone";
+          this.setStreaming(true);
         } else {
-          this.waveBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <circle cx="12" cy="12" r="8"/>
-            </svg>`;
-          this.waveBtn.classList.remove("streaming");
-          this.waveBtn.setAttribute("aria-pressed", "false");
-          this.waveBtn.setAttribute("aria-label", "Start microphone");
+          this.waveBtn.textContent = "Start Microphone";
+          this.setStreaming(false);
         }
       }
 
@@ -260,17 +192,18 @@
         if (this.isStreaming) {
           this.pauseStreaming();
         } else {
-          await this.startStreaming(true);
+          await this.startStreaming();
         }
       }
 
-      async startStreaming(isResume = false) {
+      async startStreaming() {
         if (this.isStreaming) return;
         this.initAudioIfNeeded();
         await this.inputAudioContext.resume();
         await this.outputAudioContext.resume();
 
         await this.ensureSession();
+
         this.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         this.sourceNode = this.inputAudioContext.createMediaStreamSource(this.mediaStream);
         this.sourceNode.connect(this.inputNode);
@@ -288,10 +221,14 @@
         this.isStreaming = true;
         this.setMicIcon("pause");
         this.hasSession = true;
+        this.setHasSession(true);
       }
 
       pauseStreaming() {
-        if (!this.isStreaming && !this.mediaStream) { this.setMicIcon("mic"); return; }
+        if (!this.isStreaming && !this.mediaStream) {
+          this.setMicIcon("mic");
+          return;
+        }
         this.isStreaming = false;
         try { this.scriptProcessorNode?.disconnect(); } catch {}
         try { this.sourceNode?.disconnect(); } catch {}
@@ -306,18 +243,31 @@
 
       reset() {
         this.pauseStreaming();
-        for (const s of this.sources.values()) { try { s.stop(); } catch {} }
+        for (const s of this.sources.values()) {
+          try { s.stop(); } catch {}
+        }
         this.sources.clear();
         this.nextStartTime = this.outputAudioContext?.currentTime ?? 0;
         try { this.session?.close?.(); } catch {}
         this.session = null;
         this.hasSession = false;
         this.isModelSpeaking = false;
+        this.setHasSession(false);
+        this.setSpeaking(false);
         this.setMicIcon("mic");
       }
     }
 
     customElements.define("gdm-live-audio", GdmLiveAudio);
+
+    // Bridge for SwiftUI
+    window.liveAudio = {
+      get el() { return document.querySelector("gdm-live-audio"); },
+      async toggle() { return this.el?.toggleMic(); },
+      async pause() { return this.el?.pauseStreaming(); },
+      async reset() { return this.el?.reset(); },
+      syncStateToTitle() { this.el?.syncStateToTitle(); },
+    };
   </script>
 </body>
 </html>
