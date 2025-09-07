@@ -9,12 +9,16 @@ import SwiftUI
 import WebKit
 
 struct LiveAudioView: View {
+    @ObservedObject var config: AppConfig = .shared
+    
     private var urlWithKey: URL? {
         guard let baseURL = Bundle.main.url(forResource: "liveaudio", withExtension: "html") else { return nil }
         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
-        components?.queryItems = [URLQueryItem(name: "key", value: "<>")]
+        components?.queryItems = [URLQueryItem(name: "key", value: config.geminiApiKey)]
         return components?.url
     }
+    
+    @State var page: WebPage = WebPage()
 
     var body: some View {
         NavigationStack {

@@ -48,6 +48,10 @@ struct SettingsView: View {
 //                    Label("RAG Service", systemImage: Tool.rag.iconName)
 //                }
                 
+                NavigationLink(destination: AudioServiceSettings()) {
+                   Label("Audio Service", systemImage: "waveform")
+               }
+                
                 NavigationLink(destination: ChatServiceSettings()) {
                     Label("Chat Service", systemImage: "quote.bubble")
                 }

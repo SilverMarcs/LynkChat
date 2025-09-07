@@ -12,6 +12,6 @@ struct AudioWindow: Scene {
         Window("Images", id: WindowID.audio) {
             LiveAudioView()
         }
-        .defaultSize(.init(width: 1100, height: 800))
+        .defaultSize(.init(width: 450, height: 450))
     }
 }

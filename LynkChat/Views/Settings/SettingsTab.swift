@@ -14,6 +14,7 @@ enum SettingsTab: String, Codable {
     case shortcuts
     #endif
     case rag
+    case audio
     case chat
     case image
     case about

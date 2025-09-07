@@ -36,6 +36,7 @@ class AppConfig: ObservableObject {
     
     // DEBUG
     @AppStorage("myApiKey") var myApiKey: String = ""
+    @AppStorage("geminiApiKey") var geminiApiKey: String = ""
     @AppStorage("reseTips") var resetTips = false
     @AppStorage("useLocalhost") var useLocalhost = false
     @AppStorage("printDebgLogs") var printDebgLogs = false
