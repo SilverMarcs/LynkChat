@@ -78,79 +78,81 @@
             }
             .center {
               display: grid;
-              gap: 12px;
               place-items: center;
             }
+
+            /* Fixed icon size that doesn't scale with circle */
+            :host {
+              --circle-size: min(56vmin, 380px);
+              --icon-size: 80px; /* Fixed size, bigger than before */
+              --blue-dark-1: color-mix(in oklab, -apple-system-indigo 85%, black);
+              --blue-dark-2: color-mix(in oklab, -apple-system-indigo 70%, black);
+              --blue-press:  color-mix(in oklab, -apple-system-indigo 60%, black);
+              --ring-color: color-mix(in oklab, white 20%, transparent);
+            }
+
+            /* The circle itself is the button */
             .wave {
-              width: min(56vmin, 380px);
-              aspect-ratio: 1;
+              width: var(--circle-size);
+              height: var(--circle-size);
               border-radius: 999px;
               display: grid;
               place-items: center;
-              background: -apple-system-blue;
-              will-change: transform;
-              transition: transform 120ms ease;
-            }
-            .controls {
-              width: 100%;
-              display: grid;
-              place-items: center;
-              margin-top: 50px;
-            }
-            .row {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              align-items: center;
-              gap: 12px;
-              width: min(1200px, 94vw);
-              margin: 0 auto;
-            }
-            .btn {
-              width: 64px; height: 64px;
-              border-radius: 999px;
-              display: grid; place-items: center;
-              color: -apple-system-label;
-              background: -apple-system-secondary-background;
               border: none;
-              transition: transform 120ms ease, background 120ms ease;
+              padding: 0;
+              cursor: pointer;
+              color: white;
+              background: linear-gradient(135deg, var(--blue-dark-1) 0%, var(--blue-dark-2) 100%);
+              box-shadow:
+                0 10px 30px color-mix(in oklab, -apple-system-indigo 35%, transparent),
+                inset 0 0 0 1px var(--ring-color);
+              will-change: transform, box-shadow;
+              transition: transform 120ms ease, box-shadow 180ms ease, background 180ms ease, filter 180ms ease;
             }
-            .btn:active { transform: translateY(1px) scale(0.99); }
-            .btn.right { justify-self: end; }
-            .btn.mic.streaming {
-              background: color-mix(in oklab, -apple-system-blue 20%, -apple-system-secondary-background);
+            .wave:focus-visible {
+              outline: none;
+              box-shadow:
+                0 10px 30px color-mix(in oklab, -apple-system-indigo 40%, transparent),
+                0 0 0 4px color-mix(in oklab, -apple-system-indigo 40%, transparent),
+                inset 0 0 0 1px var(--ring-color);
             }
-            svg { width: 28px; height: 28px; }
+            .wave:active {
+              transform: translateY(1px) scale(0.99);
+              background: linear-gradient(135deg, var(--blue-press) 0%, var(--blue-dark-2) 100%);
+              filter: brightness(0.98);
+            }
+            .wave.streaming {
+              /* slight hue/sat pop when live */
+              filter: saturate(1.05) brightness(1.02);
+            }
+
+            svg { width: var(--icon-size); height: var(--icon-size); display: block; }
+
             @media (prefers-reduced-motion: reduce) {
               .wave { transition: none; }
             }
           </style>
           <div class="app">
             <div class="center">
-              <div class="wave" id="wave"></div>
-            </div>
-            <div class="controls">
-              <div class="row">
-                <button class="btn mic" id="micBtn">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Zm-7-3a1 1 0 1 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11Z"/>
-                  </svg>
-                </button>
-                <button class="btn right" id="resetBtn">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6.225 4.811 4.811 6.225 9.586 11l-4.775 4.775 1.414 1.414L11 12.414l4.775 4.775 1.414-1.414L12.414 11l4.775-4.775-1.414-1.414L11 9.586 6.225 4.811z"/>
-                  </svg>
-                </button>
-              </div>
+              <button class="wave" id="waveBtn" aria-label="Start microphone" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="8"/>
+                </svg>
+              </button>
             </div>
           </div>
         `;
 
-        this.waveEl = this.shadow.getElementById("wave");
-        this.micBtn = this.shadow.getElementById("micBtn");
-        this.resetBtn = this.shadow.getElementById("resetBtn");
+        this.waveBtn = this.shadow.getElementById("waveBtn");
 
-        this.micBtn.addEventListener("click", () => this.toggleMic());
-        this.resetBtn.addEventListener("click", () => this.reset());
+        // Entire circle toggles mic
+        this.waveBtn.addEventListener("click", () => this.toggleMic());
+        this.waveBtn.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this.toggleMic(); }
+        });
+
+        // Expose reset method to window for SwiftUI to call
+        window.resetLiveAudio = () => this.reset();
 
         const loop = () => {
           const now = performance.now();
@@ -158,7 +160,8 @@
           const base = 1.0;
           const mag = speaking ? 0.06 : 0.0;
           const r = Math.sin(now / 180) * mag;
-          this.waveEl.style.transform = `scale(${(base + r).toFixed(3)})`;
+          // Keep the breathing effect
+          this.waveBtn.style.transform = `scale(${(base + r).toFixed(3)})`;
           requestAnimationFrame(loop);
         };
         requestAnimationFrame(loop);
@@ -230,11 +233,22 @@
 
       setMicIcon(state) {
         if (state === "pause") {
-          this.micBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.5"></rect><rect x="14" y="5" width="4" height="14" rx="1.5"></rect></svg>`;
-          this.micBtn.classList.add("streaming");
+          this.waveBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <rect x="7" y="6" width="3" height="12" rx="1.5"></rect>
+              <rect x="14" y="6" width="3" height="12" rx="1.5"></rect>
+            </svg>`;
+          this.waveBtn.classList.add("streaming");
+          this.waveBtn.setAttribute("aria-pressed", "true");
+          this.waveBtn.setAttribute("aria-label", "Pause microphone");
         } else {
-          this.micBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Zm-7-3a1 1 0 1 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11Z"/></svg>`;
-          this.micBtn.classList.remove("streaming");
+          this.waveBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <circle cx="12" cy="12" r="8"/>
+            </svg>`;
+          this.waveBtn.classList.remove("streaming");
+          this.waveBtn.setAttribute("aria-pressed", "false");
+          this.waveBtn.setAttribute("aria-label", "Start microphone");
         }
       }
 
