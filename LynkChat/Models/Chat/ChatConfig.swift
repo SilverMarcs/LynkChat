@@ -17,16 +17,40 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         self.temperature = defaults.temperature
         self.thinkingBudget = defaults.thinkingBudget
         self.systemPrompt = defaults.systemPrompt
-        self.model = defaults.defaultModel
+        self.models = [defaults.defaultModel]
         self.enabledTools = []
+    }
+    
+    var model: ChatModel {
+        self.models.first!
     }
     
     var temperature: Temperature
     var thinkingBudget: ThinkingBudget
     var systemPrompt: String
-    var model: ChatModel
+    var models: Set<ChatModel> = []
     var enabledTools: Set<Tool> = []
-    var secondaryModels: [ChatModel] = []
+    
+    // Helper methods to check and modify model states
+    func isModelEnabled(_ model: ChatModel) -> Bool {
+        models.contains(model)
+    }
+    
+    mutating func enableModel(_ model: ChatModel) {
+        models.insert(model)
+    }
+    
+    mutating func disableModel(_ model: ChatModel) {
+        models.remove(model)
+    }
+    
+    mutating func toggleModel(_ model: ChatModel) {
+        if isModelEnabled(model) {
+            disableModel(model)
+        } else {
+            enableModel(model)
+        }
+    }
     
     // Helper methods to check and modify tool states
     func isToolEnabled(_ tool: Tool) -> Bool {
@@ -56,9 +80,8 @@ extension ChatConfig {
         newConfig.temperature = self.temperature
         newConfig.thinkingBudget = self.thinkingBudget
         newConfig.systemPrompt = self.systemPrompt
-        newConfig.model = self.model
+        newConfig.models = self.models
         newConfig.enabledTools = self.enabledTools
-        newConfig.secondaryModels = self.secondaryModels
         return newConfig
     }
 }

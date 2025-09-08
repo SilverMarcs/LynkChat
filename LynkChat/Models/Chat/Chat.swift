@@ -85,15 +85,10 @@ final class Chat: Equatable, Identifiable, Hashable {
             
             do {
                 // Check if we have secondary models to process
-                if !config.secondaryModels.isEmpty,
-                   let assistantGroup = currentThread.last {
-                    // Use MultiStreamHandler for concurrent streams
+                if let assistantGroup = currentThread.last {
+                    // Always use MultiStreamHandler with all models
                     let multiHandler = MultiStreamHandler(chat: self, assistantGroup: assistantGroup, user: user)
                     try await multiHandler.handleMultipleRequests()
-                } else {
-                    // Use single StreamHandler for single model
-                    let streamer = StreamHandler(chat: self, assistant: message, user: user)
-                    try await streamer.handleRequest()
                 }
                 
                 #if !os(macOS)

@@ -20,7 +20,8 @@ struct ChatDetail: View {
             #endif
         }
         .id(chat.id)
-        .onDrop(of: Array(chat.config.model.supportedTypes), isTargeted: nil) { providers in
+        // TODO: fix this
+        .onDrop(of: [.item], isTargeted: nil) { providers in
             do {
                 return try chat.inputManager.handleDrop(providers)
             } catch {

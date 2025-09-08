@@ -38,13 +38,14 @@ struct ChatInputMenu: View {
                 }
                 #endif
                 
-                if chat.config.model.supportedTypes.contains(.image) {
+                // TODO: fix
+//                if chat.config.model.supportedTypes.contains(.image) {
                     Button {
                         showPhotosPicker = true
                     } label: {
                         Label("Photos Library", systemImage: "photo.on.rectangle.angled")
                     }
-                }
+//                }
                 
                 Button {
                     isFilePickerPresented = true
@@ -78,7 +79,8 @@ struct ChatInputMenu: View {
         }
         .fileImporter(
             isPresented: $isFilePickerPresented,
-            allowedContentTypes: Array(chat.config.model.supportedTypes),
+            // TODO: fix
+            allowedContentTypes: [.item],
             allowsMultipleSelection: true
         ) { result in
             switch result {

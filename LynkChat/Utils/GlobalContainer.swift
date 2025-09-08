@@ -33,13 +33,13 @@ let globalContainer: ModelContainer = {
                 modelContext.delete(chat)
             }
         }
-
+        
         if AppConfig.shared.finishedInitialSetup {
             return container // Return the container if setup is already done
         }
         
         let chat = Chat()
-        chat.config.model = .gemini_2_5_flash
+        chat.config.models = [.gemini_2_5_flash]
         chat.title = "Welcome to LynkChat"
         let group = MessageGroup(message: Message.assistant(model: .gemini_2_5_flash, content: String.onboarding))
         chat.rootMessage = group

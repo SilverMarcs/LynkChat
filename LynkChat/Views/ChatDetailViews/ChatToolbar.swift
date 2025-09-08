@@ -67,29 +67,7 @@ struct ChatToolbar: ToolbarContent {
             ToolbarSpacer(.fixed)
             
             ToolbarItemGroup(placement: .primaryAction) {
-                ModelMenuPicker(selectedModel: $chat.config.model)
-                    .onChange(of: chat.config.model) {
-                        if chat.config.secondaryModels.contains(chat.config.model) {
-                            chat.config.secondaryModels.removeAll(where: { $0 == chat.config.model })
-                        }
-                    }
-                
-                if !chat.config.secondaryModels.isEmpty {
-                    Button {
-                        showingSecondaryModels = true
-                    } label: {
-                        if chat.config.secondaryModels.isEmpty {
-                            Text("None")
-                                .foregroundStyle(.secondary)
-                        } else {
-                            Label("\(chat.config.secondaryModels.count)", systemImage: "plus")
-                                .labelStyle(.titleAndIcon)
-                        }
-                    }
-                    .sheet(isPresented: $showingSecondaryModels) {
-                        SecondaryModelsSheet(config: $chat.config)
-                    }
-                }
+                ModelMenuPicker(selectedModels: $chat.config.models)
             }
             
             if chat.status == .temporary {

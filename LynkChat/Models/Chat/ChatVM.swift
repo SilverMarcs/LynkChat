@@ -55,7 +55,7 @@ import Combine
         let newChat = Chat()
 
         if let model = model {
-            newChat.config.model = model
+            newChat.config.enableModel(model)
         }
 
         globalContainer.mainContext.insert(newChat)
@@ -106,7 +106,7 @@ import Combine
             if let existingChat = quickChats.first {
                 existingChat.deleteAllMessages() // Clear existing messages
                 existingChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-                existingChat.config.model = .gemini_2_5_flash
+                existingChat.config.models = [.gemini_2_5_flash]
                 
 //                existingChat.config.enableTool(.scrapeLinks)
 //                existingChat.config.enableTool(.webSearch)
@@ -116,7 +116,7 @@ import Combine
                 newChat.statusId = statusId
                 newChat.status = ChatStatus.quick
                 newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-                newChat.config.model = .gemini_2_5_flash
+                newChat.config.models = [.gemini_2_5_flash]
 //                newChat.config.enableTool(.scrapeLinks)
 //                newChat.config.enableTool(.webSearch)
                 modelContext.insert(newChat)

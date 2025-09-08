@@ -27,71 +27,114 @@ struct ModelPicker: View {
 }
 
 
-struct ModelPopoverPicker: View {
-    @Binding var selectedModel: ChatModel
-    @State private var showPopover = false
+struct ModelMenuPicker: View {
+    @Binding var selectedModels: Set<ChatModel>
+    @State var showingPopover: Bool = false
     
     var body: some View {
-        Button(action: {
-            showPopover = true
-        }) {
-            HStack {
-                Label(selectedModel.name, image: selectedModel.imageName)
+        Button {
+            var transaction = Transaction(animation: .none)
+             transaction.disablesAnimations = true
+             withTransaction(transaction) {
+                 showingPopover.toggle()
+             }
+        } label: {
+            if selectedModels.count == 1 {
+                Label(labelText, image: selectedModels.first?.imageName ?? "cpu")
                     .labelStyle(.titleAndIcon)
-                Image(systemName: "chevron.down")
-                    .font(.caption)
-            }
-        }
-        .popover(isPresented: $showPopover) {
-            Form {
-                ForEach(ChatModel.allCases, id: \.self) { model in
-                    Button(action: {
-                        selectedModel = model
-                        showPopover = false
-                    }) {
-                        HStack {
-                            Label(model.name, image: model.imageName)
-                                .labelStyle(.titleAndIcon)
-                            
-                            Spacer()
-                            
-                            if model == selectedModel {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.accentColor)
-                            }
-                        }
-                        .contentShape(.rect)
-                    }
-                    .buttonStyle(.plain)
+            } else if selectedModels.count > 1 {
+                ForEach(selectedModels.sortedByName()) { model in
+                    Label(labelText, image: model.imageName)
+                        .foregroundStyle(Color(hex: model.color))
+                        .labelStyle(.iconOnly)
                 }
             }
-            .formStyle(.grouped)
+        }
+        .popover(isPresented: $showingPopover) {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(ChatModel.allCases, id: \.self) { model in
+                    Toggle(isOn: Binding(
+                        get: { selectedModels.contains(model) },
+                        set: { isOn in
+                            if isOn {
+                                selectedModels.insert(model)
+                            } else {
+                                selectedModels.remove(model)
+                            }
+                        }
+                    )) {
+                        Label(model.name, image: model.imageName)
+                    }
+                    .toggleStyle(IconTextCheckmarkToggleStyle())
+                    .disabled(selectedModels.count == 1 && selectedModels.contains(model))
+                }
+            }
+            .padding(8)
+        }
+    }
+    
+    private var labelText: String {
+        switch selectedModels.count {
+        case 0:
+            return "No Models"
+        case 1:
+            return selectedModels.first?.name ?? "1 Model"
+        default:
+            return "\(selectedModels.count) Models"
         }
     }
 }
 
-struct ModelMenuPicker: View {
-    @Binding var selectedModel: ChatModel
+private extension Set where Element == ChatModel {
+    func sortedByName() -> [ChatModel] {
+        Array(self).sorted { $0.name < $1.name }
+    }
+}
+
+
+struct IconTextCheckmarkToggleStyle: ToggleStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        HoverableButton {
+            configuration.isOn.toggle()
+        } label: {
+            HStack {
+                Image(systemName: "checkmark")
+                    .imageScale(.small)
+                    .opacity(configuration.isOn ? 1 : 0)
+                configuration.label
+                Spacer()
+            }
+            .contentShape(.rect) // better hit-testing
+        }
+    }
+}
+
+// A tiny helper to add hover background to any button label.
+private struct HoverableButton<Label: View>: View {
+    let action: () -> Void
+    @ViewBuilder let label: () -> Label
+    @State private var isHovering = false
+    @Environment(\.colorScheme) private var scheme
     
     var body: some View {
-        Menu {
-            ForEach(ChatModel.allCases, id: \.self) { model in
-                Button(action: {
-                    selectedModel = model
-                }) {
-                    HStack {
-                        Label(model.name, image: model.imageName)
-                            .labelStyle(.titleAndIcon)
-                        
-                        if model == selectedModel {
-                            Image(systemName: "checkmark")
-                        }
-                    }
-                }
-            }
-        } label: {
-            Label(selectedModel.name, image: selectedModel.imageName)
-                .labelStyle(.titleAndIcon)
+        Button(action: action) {
+            label()
+                .padding(4)
+                .background(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(isHovering ? AnyShapeStyle(.accent.secondary) : AnyShapeStyle(.clear))
+                )
         }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            isHovering = hovering
+        }
+    }
+    
+    private var hoverFill: Color {
+        // Use accent tint with low opacity for a subtle effect
+        (isHovering ? .accentColor.opacity(scheme == .dark ? 0.18 : 0.12) : .clear)
     }
 }
