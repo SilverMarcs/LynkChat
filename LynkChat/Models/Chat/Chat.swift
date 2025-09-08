@@ -178,6 +178,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         inputManager.reset()
     }
 
+    @MainActor
     func regenerate(message: MessageGroup) async {
         guard let index = currentThread.firstIndex(where: { $0 == message }) else { return }
        

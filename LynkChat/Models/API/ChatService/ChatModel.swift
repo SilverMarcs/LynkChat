@@ -33,12 +33,12 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     
     var name: String {
         switch self {
-        case .gemini_2_5_flash: "Gemini 2.5 Flash"
-        case .gemini_2_5_pro:"Gemini 2.5 Pro"
+        case .gemini_2_5_flash: "Gemini 2.5F"
+        case .gemini_2_5_pro:"Gemini 2.5P"
         case .gpt_5: "GPT-5"
         case .gpt_5_mini: "GPT-5 Mini"
-        case .claude_sonnet_4: "Claude 4 Sonnet"
-        case .claude_opus_4: "Claude 4 Opus"
+        case .claude_sonnet_4: "Claude 4S"
+        case .claude_opus_4: "Claude 4O"
         case .grok_4: "Grok 4"
         case .grok_code_1: "Grok Code"
         }

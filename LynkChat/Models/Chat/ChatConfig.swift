@@ -22,7 +22,14 @@ struct ChatConfig: Identifiable, Codable, Sendable {
     }
     
     var model: ChatModel {
-        self.models.first!
+        get {
+            self.models.first!
+        }
+        set {
+            // Remove the old model and add the new one
+            self.models.removeAll()
+            self.models.insert(newValue)
+        }
     }
     
     var temperature: Temperature
