@@ -16,18 +16,18 @@ struct MDView: View {
     var calculatedHeight: Binding<CGFloat>? = nil
 
 var body: some View {
-//    #if os(macOS)
-//    SwiftMarkdownView(
-//        content,
-//        calculatedHeight: calculatedHeight,
-//        fontSize: CGFloat(config.fontSize),
-////            highlightString: searchText,
-//        baseURL: "LynkChat Web Content",
-////            codeBlockTheme: config.codeBlockTheme
-//    )
-//    #else
-    NativeMarkdownView(text: content, highlightText: "")
-//    #endif
+    #if os(macOS)
+    SwiftMarkdownView(
+        content,
+        calculatedHeight: calculatedHeight,
+        fontSize: CGFloat(config.fontSize),
+//            highlightString: searchText,
+        baseURL: "LynkChat Web Content",
+//            codeBlockTheme: config.codeBlockTheme
+    )
+    #else
+    NativeMarkdownView(text: content)
+    #endif
     }
 }
 

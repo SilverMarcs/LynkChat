@@ -36,6 +36,7 @@ class Generation {
         self.state = .generating
     }
     
+    @MainActor
     func send() async {
         state = .generating
 
@@ -71,7 +72,7 @@ class Generation {
             state = .error
         }
     
-        await Scroller.scrollToBottom(delay: 0.1)
+        Scroller.scrollToBottom(delay: 0.1)
     }
     
     func stopGenerating() {

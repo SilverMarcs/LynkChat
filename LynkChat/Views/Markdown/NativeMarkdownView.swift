@@ -1,77 +1,130 @@
-//
-//  NativeMarkdownView.swift
-//  LynkChat
-//
-//  Created by Zabir Raihan on 26/11/2024.
-//
-
 import SwiftUI
 
-enum MarkdownPart {
-    case text(AttributedString)
+enum MarkdownPart: Equatable {
+    case text(String)
     case codeBlock(String)
-    case listItem(AttributedString)
+    case heading(level: Int, text: String)
+    case list(items: [ListItem])
+}
+
+struct ListItem: Equatable, Identifiable {
+    enum Marker: Equatable {
+        case bullet
+        case ordered(Int)
+    }
+    let id = UUID()
+    var marker: Marker
+    var content: String
+    var level: Int // 1 = top-level
+    var children: [ListItem] = []
 }
 
 struct NativeMarkdownView: View {
     private let parts: [MarkdownPart]
-    private let highlightText: String
     @ObservedObject var config = AppConfig.shared
+    
+    
+    init(text: String) {
+        self.parts = NativeMarkdownView.parseMarkdown(text)
+    }
+
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            ForEach(Array(parts.enumerated()), id: \.offset) { index, part in
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(parts.enumerated()), id: \.offset) { _, part in
                 switch part {
-                case .text(let attributed):
-                    Text(attributed)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                case .text(let string):
+                    Text(LocalizedStringKey(string))
+                        .lineSpacing(2)
                         .font(.system(size: config.fontSize + 1))
-                    
+
                 case .codeBlock(let code):
                     GroupBox {
                         ScrollView(.horizontal, showsIndicators: false) {
                             Text(code)
                                 .font(.system(size: config.fontSize - 1, weight: .regular, design: .monospaced))
-                            }
+                                .textSelection(.enabled)                        }
                     }
                     #if os(macOS)
                     .groupBoxStyle(PlatformGroupBox())
                     #endif
-                    
-                case .listItem(let attributed):
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Circle()
-                            .fill(.primary)
-                            .frame(width: 4, height: 4)
-                            .offset(y: -3)
-                        
-                        Text(attributed)
-                            .font(.system(size: config.fontSize + 1))
-                    }
+
+                case .heading(let level, let text):
+                    headingView(level: level, text: text)
+
+                case .list(let items):
+                    listView(items: items)
                 }
             }
         }
-        .lineSpacing(2)
-    }
-    
-    init(text: String, highlightText: String) {
-        self.highlightText = highlightText
-        self.parts = NativeMarkdownView.parseMarkdown(text, highlightText: highlightText)
+        .textSelection(.enabled)
     }
 
-    private static func parseMarkdown(_ text: String, highlightText: String) -> [MarkdownPart] {
+    // MARK: - Heading Rendering
+
+    @ViewBuilder
+    private func headingView(level: Int, text: String) -> some View {
+        // Map Markdown heading levels to SwiftUI fonts
+        let font: Font = {
+            switch level {
+            case 1: return .system(size: config.fontSize + 10, weight: .bold)
+            case 2: return .system(size: config.fontSize + 8, weight: .bold)
+            case 3: return .system(size: config.fontSize + 6, weight: .semibold)
+            case 4: return .system(size: config.fontSize + 4, weight: .semibold)
+            case 5: return .system(size: config.fontSize + 2, weight: .medium)
+            default: return .system(size: config.fontSize + 1, weight: .medium)
+            }
+        }()
+        Text(LocalizedStringKey(text))
+            .font(font)
+            .padding(.top, level == 1 ? 4 : 2)
+    }
+
+    // MARK: - List Rendering (Recursive)
+
+    @ViewBuilder
+    private func listView(items: [ListItem]) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            ForEach(items) { item in
+                ListItemView(
+                    config: config,
+                    item: item,
+                    markerViewProvider: { marker in AnyView(markerView(for: marker)) },
+                    childViewProvider: { children in AnyView(listView(items: children)) }
+                )
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func markerView(for marker: ListItem.Marker) -> some View {
+        switch marker {
+        case .bullet:
+            Circle()
+                .fill(.primary)
+                .frame(width: 4, height: 4)
+                .offset(y: -2)
+        case .ordered(let n):
+            Text("\(n).")
+                .font(.system(size: config.fontSize + 1, weight: .regular, design: .default))
+                .foregroundStyle(.primary)
+        }
+    }
+
+    // MARK: - Parser
+
+    private static func parseMarkdown(_ text: String) -> [MarkdownPart] {
         var parts: [MarkdownPart] = []
         let lines = text.components(separatedBy: .newlines)
-        
+
         var i = 0
         while i < lines.count {
             let line = lines[i]
-            
-            // Handle code blocks
+
+            // Handle code blocks (``` or ```lang)
             if line.trimmingCharacters(in: .whitespaces).hasPrefix("```") {
                 var codeLines: [String] = []
-                i += 1 // Skip the opening ```
-                
+                i += 1 // Skip opening ```
                 while i < lines.count {
                     let codeLine = lines[i]
                     if codeLine.trimmingCharacters(in: .whitespaces) == "```" {
@@ -80,253 +133,232 @@ struct NativeMarkdownView: View {
                     codeLines.append(codeLine)
                     i += 1
                 }
-                
-                let codeContent = codeLines.joined(separator: "\n")
-                parts.append(.codeBlock(codeContent))
-                i += 1 // Skip the closing ```
+                parts.append(.codeBlock(codeLines.joined(separator: "\n")))
+                i += 1 // Skip closing ```
                 continue
             }
-            
-            // Handle list items
-            let trimmedLine = line.trimmingCharacters(in: .whitespaces)
-            if trimmedLine.hasPrefix("- ") || trimmedLine.hasPrefix("* ") || trimmedLine.hasPrefix("+ ") {
-                let listContent = String(trimmedLine.dropFirst(2))
-                let attributed = parseInlineMarkdown(listContent, highlightText: highlightText)
-                parts.append(.listItem(attributed))
+
+            // Handle headings: # .. ###### + space
+            if let heading = parseHeading(line: line) {
+                parts.append(.heading(level: heading.level, text: heading.text))
                 i += 1
                 continue
             }
-            
-            // Handle numbered lists
-            if let match = trimmedLine.range(of: #"^\d+\.\s"#, options: .regularExpression) {
-                let listContent = String(trimmedLine[match.upperBound...])
-                let attributed = parseInlineMarkdown(listContent, highlightText: highlightText)
-                parts.append(.listItem(attributed))
-                i += 1
+
+            // Handle list block (bulleted or ordered, supports nesting)
+            if isListLine(line) {
+                let (listItems, nextIndex) = parseListBlock(from: i, lines: lines)
+                parts.append(.list(items: listItems))
+                i = nextIndex
                 continue
             }
-            
+
             // Collect consecutive non-special lines as regular text
             var textLines: [String] = []
             while i < lines.count {
                 let currentLine = lines[i]
                 let trimmed = currentLine.trimmingCharacters(in: .whitespaces)
-                
-                // Break if we encounter special markdown
-                if trimmed.hasPrefix("```") ||
-                   trimmed.hasPrefix("- ") ||
-                   trimmed.hasPrefix("* ") ||
-                   trimmed.hasPrefix("+ ") ||
-                   trimmed.range(of: #"^\d+\.\s"#, options: .regularExpression) != nil {
+
+                if trimmed.hasPrefix("```")
+                    || isListLine(currentLine)
+                    || parseHeading(line: currentLine) != nil
+                {
                     break
                 }
-                
+
                 textLines.append(currentLine)
                 i += 1
             }
-            
+
             if !textLines.isEmpty {
-                let textContent = textLines.joined(separator: "\n")
-                let attributed = parseInlineMarkdown(textContent, highlightText: highlightText)
-                parts.append(.text(attributed))
+                parts.append(.text(textLines.joined(separator: "\n")))
+            } else {
+                // empty line
+                i += 1
             }
         }
-        
+
         return parts
     }
 
-    private static func parseInlineMarkdown(_ text: String, highlightText: String) -> AttributedString {
-        var attributedString = AttributedString()
-        
-        let scanner = Scanner(string: text)
-        scanner.charactersToBeSkipped = nil
+    // MARK: - Helpers: Headings
 
-        let baseSize = AppConfig.shared.fontSize
-        
-        while !scanner.isAtEnd {
-            if scanner.scanString("`") != nil {
-                if let codeContent = scanner.scanUpToString("`") {
-                    if scanner.scanString("`") != nil {
-                        var inlineCode = AttributedString(codeContent)
-                        inlineCode.font = .system(size: baseSize - 1, weight: .regular, design: .monospaced)
-                        inlineCode.backgroundColor = .secondary.opacity(0.2)
-                        attributedString.append(inlineCode)
-                    } else {
-                        var fallback = AttributedString("`\(codeContent)")
-                        fallback.font = .system(size: baseSize)
-                        attributedString.append(fallback)
-                    }
-                }
-            } else if scanner.scanString("**") != nil {
-                if let boldContent = scanner.scanUpToString("**") {
-                    if scanner.scanString("**") != nil {
-                        var bold = AttributedString(boldContent)
-                        bold.font = .system(size: baseSize, weight: .bold)
-                        attributedString.append(bold)
-                    } else {
-                        var fallback = AttributedString("**\(boldContent)")
-                        fallback.font = .system(size: baseSize)
-                        attributedString.append(fallback)
-                    }
-                }
-            } else if scanner.scanString("*") != nil {
-                if let italicContent = scanner.scanUpToString("*") {
-                    if scanner.scanString("*") != nil {
-                        var italic = AttributedString(italicContent)
-                        italic.font = .system(size: baseSize, weight: .regular).italic()
-                        attributedString.append(italic)
-                    } else {
-                        var fallback = AttributedString("*\(italicContent)")
-                        fallback.font = .system(size: baseSize)
-                        attributedString.append(fallback)
-                    }
-                }
-            } else if scanner.scanString("#") != nil {
-                var headingLevel = 1
-                while scanner.scanString("#") != nil {
-                    headingLevel += 1
-                }
-                let _ = scanner.scanCharacters(from: .whitespaces)
-                if let headingContent = scanner.scanUpToCharacters(from: .newlines) {
-                    let headingSize: CGFloat = baseSize * (2.0 - (0.3 * CGFloat(headingLevel - 1)))
-                    var heading = AttributedString(headingContent)
-                    heading.font = .system(size: headingSize, weight: .bold)
-                    attributedString.append(heading)
-                }
-            } else {
-                if let textContent = scanner.scanUpToCharacters(from: CharacterSet(charactersIn: "`*#")) {
-                    var text = AttributedString(textContent)
-                    text.font = .system(size: baseSize)
-                    attributedString.append(text)
-                } else if let char = scanner.scanCharacter() {
-                    var text = AttributedString(String(char))
-                    text.font = .system(size: baseSize)
-                    attributedString.append(text)
-                }
-            }
-        }
-
-        // Apply highlighting if needed
-        if !highlightText.isEmpty {
-            attributedString = applyHighlighting(to: attributedString, highlightText: highlightText)
-        }
-
-        return attributedString
+    private static func parseHeading(line: String) -> (level: Int, text: String)? {
+        // Match leading #'s followed by a space
+        // e.g. "### Title"
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        guard trimmed.first == "#" else { return nil }
+        let hashes = trimmed.prefix { $0 == "#" }
+        guard hashes.count >= 1 && hashes.count <= 6 else { return nil }
+        let remainder = trimmed.dropFirst(hashes.count)
+        guard remainder.first == " " else { return nil }
+        let text = remainder.dropFirst().trimmingCharacters(in: .whitespaces)
+        return (level: hashes.count, text: String(text))
     }
 
-    private static func applyHighlighting(to attributedString: AttributedString, highlightText: String) -> AttributedString {
-        guard !highlightText.isEmpty else { return attributedString }
-        
-        var mutableAttributedString = attributedString
-        let lowercasedHighlight = highlightText.lowercased()
-        let fullString = String(attributedString.characters)
-        
-        var searchStartIndex = fullString.startIndex
-        
-        while searchStartIndex < fullString.endIndex {
-            if let range = fullString.range(
-                of: lowercasedHighlight,
-                options: .caseInsensitive,
-                range: searchStartIndex..<fullString.endIndex
-            ) {
-                // Convert String.Index range to AttributedString.Index range
-                let startDistance = fullString.distance(from: fullString.startIndex, to: range.lowerBound)
-                let endDistance = fullString.distance(from: fullString.startIndex, to: range.upperBound)
-                
-                let attrStartIndex = mutableAttributedString.index(mutableAttributedString.startIndex, offsetByCharacters: startDistance)
-                let attrEndIndex = mutableAttributedString.index(mutableAttributedString.startIndex, offsetByCharacters: endDistance)
-                
-                let attrRange = attrStartIndex..<attrEndIndex
-                
-                // Apply highlighting to the found range
-                mutableAttributedString[attrRange].backgroundColor = .yellow
-                mutableAttributedString[attrRange].foregroundColor = .black
-                
-                // Update search start position
-                searchStartIndex = range.upperBound
-            } else {
+    // MARK: - Helpers: Lists
+
+    private static func isListLine(_ line: String) -> Bool {
+        let s = line
+        let pattern = #"^\s*(?:[-*+]\s+|\d+\.\s+)"#
+        return s.range(of: pattern, options: .regularExpression) != nil
+    }
+
+    private static func parseListBlock(from start: Int, lines: [String]) -> ([ListItem], Int) {
+        var i = start
+        var rawItems: [ListItem] = []
+
+        // Collect contiguous list lines (stopping at blank line or non-list)
+        while i < lines.count {
+            let line = lines[i]
+            if line.trimmingCharacters(in: .whitespaces).isEmpty {
                 break
             }
+            guard let parsed = parseListLine(line) else { break }
+            rawItems.append(parsed)
+            i += 1
+
+            // NOTE: For multi-line list items (wrapped paragraphs), you could extend this:
+            // while next line is indented more than content indent and not a new marker, append to content...
         }
-        
-        return mutableAttributedString
+
+        // Build hierarchy from levels using a stack
+        let tree = buildListTree(from: rawItems)
+        return (tree, i)
+    }
+
+    private static func parseListLine(_ line: String) -> ListItem? {
+        let lineChars = Array(line)
+        let spaces = countLeadingSpaces(in: lineChars)
+        // Use 2-space steps to define nesting; tabs assumed as 4 spaces
+        let level = max(1, spaces / 2 + 1)
+
+        let trimmed = String(line.dropFirst(spaces))
+
+        // Ordered: n. content
+        if let orderedRange = trimmed.range(of: #"^\d+\.\s+"#, options: .regularExpression) {
+            let markerStr = String(trimmed[orderedRange])
+            let numStr = markerStr.trimmingCharacters(in: .whitespaces).dropLast().split(separator: ".").first ?? ""
+            let n = Int(numStr) ?? 1
+            let content = String(trimmed[orderedRange.upperBound...]).trimmingCharacters(in: .whitespaces)
+            return ListItem(marker: .ordered(n), content: content, level: level, children: [])
+        }
+
+        // Bulleted: -, *, +
+        if let bulletRange = trimmed.range(of: #"^[-*+]\s+"#, options: .regularExpression) {
+            let content = String(trimmed[bulletRange.upperBound...]).trimmingCharacters(in: .whitespaces)
+            return ListItem(marker: .bullet, content: content, level: level, children: [])
+        }
+
+        return nil
+    }
+
+    private static func countLeadingSpaces(in chars: [Character]) -> Int {
+        var count = 0
+        for c in chars {
+            if c == " " { count += 1 }
+            else if c == "\t" { count += 4 }
+            else { break }
+        }
+        return count
+    }
+
+    private static func buildListTree(from items: [ListItem]) -> [ListItem] {
+        var result: [ListItem] = []
+        var stack: [ListItem] = []
+
+        func appendToCurrent(_ item: ListItem) {
+            if stack.isEmpty {
+                result.append(item)
+                stack = [item]
+            } else {
+                var top = stack.removeLast()
+                if item.level > top.level {
+                    // child
+                    top.children.append(item)
+                    stack.append(top)
+                    stack.append(item)
+                    // Need to also fix result linkage if top is in result or nested
+                    // We re-sync the tree after loop by rebuilding from stack references.
+                    // To keep it simple, we’ll reconstruct using indexes below.
+                } else {
+                    // ascend until we find a parent with lower level
+                    var tmp = top
+                    var tempStack = stack
+                    while item.level <= tmp.level, !tempStack.isEmpty {
+                        tmp = tempStack.removeLast()
+                    }
+                    // Reconstruct the ancestors array to the found parent
+                    stack = tempStack
+                    if stack.isEmpty {
+                        result.append(item)
+                        stack = [item]
+                    } else {
+                        // Append as sibling to the parent's children
+                        var parent = stack.removeLast()
+                        parent.children.append(item)
+                        stack.append(parent)
+                        stack.append(item)
+                    }
+                }
+            }
+        }
+
+        // Simpler and correct approach: we’ll maintain an array of references through indices.
+        result.removeAll()
+        var parentIndicesStack: [(arrayRef: UnsafeMutablePointer<[ListItem]>, idx: Int, level: Int)] = unsafe []
+
+        func appendItem(_ item: ListItem) {
+            // Find correct parent by level
+            while let last = unsafe parentIndicesStack.last, unsafe item.level <= last.level {
+                unsafe parentIndicesStack.removeLast()
+            }
+
+            if let last = unsafe parentIndicesStack.last {
+                // Append to parent's children
+                unsafe last.arrayRef.pointee[last.idx].children.append(item)
+                let childIdx = unsafe last.arrayRef.pointee[last.idx].children.count - 1
+                let ptr = unsafe withUnsafeMutablePointer(to: &last.arrayRef.pointee[last.idx].children) { unsafe $0 }
+                unsafe parentIndicesStack.append((arrayRef: ptr, idx: childIdx, level: item.level))
+            } else {
+                // Append to root
+                result.append(item)
+                let idx = result.count - 1
+                let ptr = unsafe withUnsafeMutablePointer(to: &result) { unsafe $0 }
+                unsafe parentIndicesStack.append((arrayRef: ptr, idx: idx, level: item.level))
+            }
+        }
+
+        for item in items {
+            appendItem(item)
+        }
+
+        return result
     }
 }
 
-//#Preview {
-//    ScrollView {
-//        VStack(alignment: .leading, spacing: 16) {
-//            NativeMarkdownView(text: """
-//            # Heading 1
-//            This is regular text with **bold** and *italic* formatting.
-//            
-//            ## List Example
-//            - First item
-//            - Second item with **bold text**
-//            - Third item
-//            
-//            ### Code Block
-//            ```swift
-//            func hello() {
-//                print("Hello, World!")
-//            }
-//            ```
-//            
-//            Regular text with `inline code` here.
-//            
-//            1. Numbered item one
-//            2. Numbered item two
-//            3. Numbered item three
-//            """, highlightText: "")
-//            .padding()
-//        }
-//    }
-//}
 
+struct ListItemView: View {
+    @ObservedObject var config: AppConfig
+    let item: ListItem
+    let markerViewProvider: (ListItem.Marker) -> AnyView
+    let childViewProvider: ([ListItem]) -> AnyView
 
-//    struct CodeBlock: View {
-//        let configuration: CodeBlockConfiguration
-//        let highlightText: String
-//
-//        @State private var isButtonPressed = false
-//
-//        var body: some View {
-//            ZStack(alignment: .bottomTrailing) {
-//                CodeText(configuration.content)
-//                    .highlightedString(highlightText)
-//                    .codeTextColors(.theme(.atomOne))
-//                    .padding(12)
-////                    .background(.background.secondary)
-//                    .background(
-//                        RoundedRectangle(
-//                            cornerRadius: 12,
-//                        )
-//                        .fill(.background.secondary.opacity(0.3))
-//                        .stroke(.quaternary, lineWidth: 1)
-//                    )
-//                    .markdownMargin(top: .zero, bottom: .em(0.8))
-//
-//                copyButton
-//                    .padding(5)
-//            }
-//        }
-//
-//        var copyButton: some View {
-//            Button {
-//                self.isButtonPressed = true
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                    self.isButtonPressed = false
-//                }
-//                configuration.content.copyToPasteboard()
-//            } label: {
-//                Image(systemName: isButtonPressed ? "checkmark" : "clipboard")
-//                    .contentTransition(.symbolEffect(.replace, options: .speed(2)))
-//                    .frame(width: 10, height: 10)
-//                    .padding(10)
-//                    .contentShape(.rect)
-//                    .glassEffect(in: .rect(cornerRadius: 8, style: .continuous))
-//            }
-//            .buttonStyle(.plain)
-//            .disabled(isButtonPressed)
-//        }
-//    }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                markerViewProvider(item.marker)
+                    .frame(width: 16, alignment: .trailing)
+//                        .offset(y: -2)
+
+                Text(LocalizedStringKey(item.content))
+                    .lineSpacing(2)
+                    .font(.system(size: config.fontSize + 1))
+            }
+            if !item.children.isEmpty {
+                childViewProvider(item.children)
+                    .padding(.leading, 16)
+            }
+        }
+    }
+}
