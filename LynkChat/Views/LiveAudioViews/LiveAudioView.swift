@@ -27,6 +27,22 @@ struct LiveAudioView: View {
         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
         components.queryItems = [URLQueryItem(name: "key", value: AppConfig.shared.geminiApiKey)]
         self.url = components.url!
+        
+        var cfg = WebPage.Configuration()
+        cfg.deviceSensorAuthorization = .init { permission, frame, origin in
+              switch permission {
+              case .mediaCapture(let type):
+                  if type == .microphone {
+                      return .grant
+                  }
+
+              default:
+                  return .deny
+              }
+            return .deny
+          }
+
+          _page = State(initialValue: WebPage(configuration: cfg))
     }
 
     var body: some View {
@@ -45,6 +61,10 @@ struct LiveAudioView: View {
             .buttonBorderShape(.circle)
             .task {
                 await loadPage(url)
+            }
+            .onDisappear {
+                resetSession()
+                page.reload()
             }
             .onChange(of: page.title) {
                 applyStateFromTitle()

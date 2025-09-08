@@ -65,7 +65,6 @@
         this.isStreaming = false;
         this.hasSession = false;
         this.isModelSpeaking = false;
-        this.lastSpeakAt = 0;
 
         // Simple state for SwiftUI mirroring
         this._state = { isStreaming: false, isSpeaking: false, hasSession: false };
@@ -142,7 +141,6 @@
               if (audio && this.outputAudioContext) {
                 this.isModelSpeaking = true;
                 this.setSpeaking(true);
-                this.lastSpeakAt = performance.now();
                 this.nextStartTime = Math.max(this.nextStartTime, this.outputAudioContext.currentTime);
                 const audioBuffer = await decodeAudioData(decode(audio.data), this.outputAudioContext, 24000, 1);
                 const source = this.outputAudioContext.createBufferSource();
@@ -151,7 +149,6 @@
                 source.addEventListener("ended", () => {
                   this.sources.delete(source);
                   this.isModelSpeaking = false;
-                  this.lastSpeakAt = performance.now();
                   setTimeout(() => this.setSpeaking(false), 200);
                 });
                 source.start(this.nextStartTime);
@@ -174,7 +171,7 @@
           },
           config: {
             responseModalities: [Modality.AUDIO],
-            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Orus" } } },
+            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Orus" } }, languageCode: "en-US" },
           },
         });
       }
