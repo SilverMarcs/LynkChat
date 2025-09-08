@@ -30,11 +30,15 @@ struct ChatInspector: View {
             }
             
             Section("Model") {
+                #if os(macOS)
                 LabeledContent {
                     ModelMenuPicker(selectedModels: $chat.config.models)
                 } label: {
                     Text("Models")
                 }
+                #else
+                ModelSinglePicker(selectedModel: $chat.config.model)
+                #endif
             }
             
             Section("Parameters") {

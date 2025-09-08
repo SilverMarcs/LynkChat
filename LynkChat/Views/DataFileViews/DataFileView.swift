@@ -81,11 +81,7 @@ struct DataFilesView: View {
     }
     
     var size: CGFloat {
-        #if os(macOS)
         100
-        #else
-        75
-        #endif
     }
 }
 

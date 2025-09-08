@@ -98,6 +98,7 @@ struct QuickPanelView: View {
             Button(action: chat.isReplying ? chat.stopStreaming : send) {
                 Image(systemName: chat.isReplying ? "stop.circle.fill" : "arrow.up.circle.fill")
                     .font(.largeTitle).fontWeight(.semibold)
+                    .scaleEffect(1.1)
             }
             .foregroundStyle((chat.isReplying ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (chat.isReplying ? .red : .accentColor))
             .buttonStyle(.plain)
