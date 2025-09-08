@@ -68,10 +68,6 @@
 				Views/InputViews/macOS/InputEditor.swift = (
 					macos,
 				);
-				Views/Markdown/NativeMDView/MessageMarkdownView.swift = (
-					ios,
-					xros,
-				);
 				Views/Onboarding/PermissionsOnboarding.swift = (
 					ios,
 					xros,

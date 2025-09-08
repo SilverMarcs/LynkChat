@@ -67,7 +67,8 @@ struct ChatToolbar: ToolbarContent {
             ToolbarSpacer(.fixed)
             
             ToolbarItemGroup(placement: .primaryAction) {
-                ModelMenuPicker(selectedModels: $chat.config.models)
+//                ModelMenuPicker(selectedModels: $chat.config.models)
+                ModelPicker(selectedModel: $chat.config.model)
             }
             
             if chat.status == .temporary {

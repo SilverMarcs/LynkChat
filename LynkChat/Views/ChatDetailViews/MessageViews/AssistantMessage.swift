@@ -31,14 +31,14 @@ struct AssistantMessage: View {
             
                 MDView(content: message.content, calculatedHeight: $height)
                     .transaction { $0.animation = nil }
-                    #if os(macOS)
-                    .frame(height: message.height, alignment: .top)
-                    .onChange(of: height) {
-                        if height > 0 {
-                            message.height = height
-                        }
-                    }
-                    #endif
+//                    #if os(macOS)
+//                    .frame(height: message.height, alignment: .top)
+//                    .onChange(of: height) {
+//                        if height > 0 {
+//                            message.height = height
+//                        }
+//                    }
+//                    #endif
                 
                 if !message.dataFiles.isEmpty {
                     ForEach(message.dataFiles, id: \.self) { data in

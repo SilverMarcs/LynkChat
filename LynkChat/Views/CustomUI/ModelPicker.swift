@@ -26,6 +26,33 @@ struct ModelPicker: View {
     }
 }
 
+struct ModelSinglePicker: View {
+    @Binding var selectedModel: ChatModel
+    
+    var body: some View {
+        Menu {
+            ForEach(ChatModel.allCases, id: \.self) { model in
+                Button(action: {
+                    selectedModel = model
+                }) {
+                    HStack {
+                        Label(model.name, image: model.imageName)
+                            .labelStyle(.titleAndIcon)
+                        
+                        if model == selectedModel {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+            }
+        } label: {
+            Label(selectedModel.name, image: selectedModel.imageName)
+                .labelStyle(.titleAndIcon)
+        }
+    }
+}
+
+
 
 struct ModelMenuPicker: View {
     @Binding var selectedModels: Set<ChatModel>

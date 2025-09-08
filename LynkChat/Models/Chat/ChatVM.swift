@@ -55,7 +55,7 @@ import Combine
         let newChat = Chat()
 
         if let model = model {
-            newChat.config.enableModel(model)
+            newChat.config.model = model
         }
 
         globalContainer.mainContext.insert(newChat)

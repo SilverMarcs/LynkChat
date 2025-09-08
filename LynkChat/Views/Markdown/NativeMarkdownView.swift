@@ -28,23 +28,24 @@ struct NativeMarkdownView: View {
                         .font(.system(size: config.fontSize + 1))
                     
                 case .codeBlock(let code):
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        Text(code)
-                            .font(.system(size: config.fontSize - 1, weight: .regular, design: .monospaced))
-                            .padding(12)
-                            .background(.background.secondary)
-                            .cornerRadius(8)
+                    GroupBox {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            Text(code)
+                                .font(.system(size: config.fontSize - 1, weight: .regular, design: .monospaced))
+                            }
                     }
+                    #if os(macOS)
+                    .groupBoxStyle(PlatformGroupBox())
+                    #endif
                     
                 case .listItem(let attributed):
-                    HStack(alignment: .top, spacing: 8) {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Circle()
                             .fill(.primary)
                             .frame(width: 4, height: 4)
-                            .padding(.top, 6)
+                            .offset(y: -3)
                         
                         Text(attributed)
-                            .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.system(size: config.fontSize + 1))
                     }
                 }
@@ -281,3 +282,51 @@ struct NativeMarkdownView: View {
 //        }
 //    }
 //}
+
+
+//    struct CodeBlock: View {
+//        let configuration: CodeBlockConfiguration
+//        let highlightText: String
+//
+//        @State private var isButtonPressed = false
+//
+//        var body: some View {
+//            ZStack(alignment: .bottomTrailing) {
+//                CodeText(configuration.content)
+//                    .highlightedString(highlightText)
+//                    .codeTextColors(.theme(.atomOne))
+//                    .padding(12)
+////                    .background(.background.secondary)
+//                    .background(
+//                        RoundedRectangle(
+//                            cornerRadius: 12,
+//                        )
+//                        .fill(.background.secondary.opacity(0.3))
+//                        .stroke(.quaternary, lineWidth: 1)
+//                    )
+//                    .markdownMargin(top: .zero, bottom: .em(0.8))
+//
+//                copyButton
+//                    .padding(5)
+//            }
+//        }
+//
+//        var copyButton: some View {
+//            Button {
+//                self.isButtonPressed = true
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                    self.isButtonPressed = false
+//                }
+//                configuration.content.copyToPasteboard()
+//            } label: {
+//                Image(systemName: isButtonPressed ? "checkmark" : "clipboard")
+//                    .contentTransition(.symbolEffect(.replace, options: .speed(2)))
+//                    .frame(width: 10, height: 10)
+//                    .padding(10)
+//                    .contentShape(.rect)
+//                    .glassEffect(in: .rect(cornerRadius: 8, style: .continuous))
+//            }
+//            .buttonStyle(.plain)
+//            .disabled(isButtonPressed)
+//        }
+//    }
