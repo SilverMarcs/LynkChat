@@ -10,7 +10,6 @@ import SwiftUI
 import WebKit
 
 struct LiveAudioView: View {
-    @ObservedObject var config: AppConfig = .shared
     @State private var page: WebPage = WebPage()
 
     @State private var isStreaming = false
@@ -69,7 +68,7 @@ struct LiveAudioView: View {
             .onChange(of: page.title) {
                 applyStateFromTitle()
             }
-            .overlay {
+            .overlay(alignment: .topLeading) {
                 WebView(page)
                     .frame(width: 1, height: 1)
                     .opacity(0.01)
