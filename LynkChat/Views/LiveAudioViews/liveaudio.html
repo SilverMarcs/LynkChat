@@ -65,6 +65,7 @@
         this.isStreaming = false;
         this.hasSession = false;
         this.isModelSpeaking = false;
+        this.activeSources = 0;
 
         // Simple state for SwiftUI mirroring
         this._state = { isStreaming: false, isSpeaking: false, hasSession: false };
@@ -82,14 +83,35 @@
           document.title = JSON.stringify(this._state);
         } catch {}
       }
+      
       setStreaming(v) {
+        // Preserve the current streaming state if model is speaking
+        if (this.isModelSpeaking) {
+          // Don't change streaming state while model is speaking
+          return;
+        }
+        
         this._state.isStreaming = !!v;
         this.syncStateToTitle();
       }
+      
       setSpeaking(v) {
+        this.isModelSpeaking = !!v;
         this._state.isSpeaking = !!v;
+        
+        if (v) {
+          // When model starts speaking, ensure streaming shows false
+          this._state.isStreaming = false;
+        } else {
+          // When model stops speaking, restore streaming state if we're actually streaming
+          if (this.isStreaming && this.hasSession) {
+            this._state.isStreaming = true;
+          }
+        }
+        
         this.syncStateToTitle();
       }
+      
       setHasSession(v) {
         this._state.hasSession = !!v;
         this.syncStateToTitle();
@@ -139,29 +161,45 @@
             onmessage: async (message) => {
               const audio = message.serverContent?.modelTurn?.parts?.[0]?.inlineData;
               if (audio && this.outputAudioContext) {
-                this.isModelSpeaking = true;
+                this.activeSources++;
                 this.setSpeaking(true);
+                
                 this.nextStartTime = Math.max(this.nextStartTime, this.outputAudioContext.currentTime);
                 const audioBuffer = await decodeAudioData(decode(audio.data), this.outputAudioContext, 24000, 1);
                 const source = this.outputAudioContext.createBufferSource();
                 source.buffer = audioBuffer;
                 source.connect(this.outputNode);
+                
                 source.addEventListener("ended", () => {
                   this.sources.delete(source);
-                  this.isModelSpeaking = false;
-                  setTimeout(() => this.setSpeaking(false), 200);
+                  this.activeSources--;
+                  
+                  // Only stop speaking when all audio sources have finished
+                  if (this.activeSources <= 0) {
+                    this.activeSources = 0;
+                    // Small delay to ensure smooth transition
+                    setTimeout(() => {
+                      if (this.activeSources === 0) {
+                        this.setSpeaking(false);
+                      }
+                    }, 50);
+                  }
                 });
+                
                 source.start(this.nextStartTime);
                 this.nextStartTime += audioBuffer.duration;
                 this.sources.add(source);
               }
+              
               const interrupted = message.serverContent?.interrupted;
               if (interrupted) {
+                this.activeSources = 0;
                 for (const s of this.sources.values()) {
                   try { s.stop(); } catch {}
                   this.sources.delete(s);
                 }
                 this.nextStartTime = this.outputAudioContext?.currentTime ?? 0;
+                this.setSpeaking(false);
               }
             },
             onclose: () => {
@@ -178,7 +216,7 @@
 
       updateButtonLabel() {
         this.waveBtn.textContent = this.isStreaming ? "Pause Microphone" : "Start Microphone";
-        this.setStreaming(this.isStreaming);
+        // Don't call setStreaming here to avoid state conflicts
       }
 
       async toggleMic() {
@@ -219,6 +257,12 @@
         this.isStreaming = true;
         this.hasSession = true;
         this.setHasSession(true);
+        
+        // Only set streaming state if model is not speaking
+        if (!this.isModelSpeaking) {
+          this.setStreaming(true);
+        }
+        
         this.updateButtonLabel();
       }
 
@@ -228,6 +272,8 @@
           return;
         }
         this.isStreaming = false;
+        this.setStreaming(false);
+        
         try { this.scriptProcessorNode?.disconnect(); } catch {}
         try { this.sourceNode?.disconnect(); } catch {}
         this.scriptProcessorNode = null;
@@ -236,12 +282,12 @@
           try { this.mediaStream.getTracks().forEach(t => t.stop()); } catch {}
           this.mediaStream = null;
         }
-        // Keep hasSession as-is; can resume without reconnect
         this.updateButtonLabel();
       }
 
       reset() {
         this.pauseStreaming();
+        this.activeSources = 0;
         for (const s of this.sources.values()) { try { s.stop(); } catch {} }
         this.sources.clear();
         this.nextStartTime = this.outputAudioContext?.currentTime ?? 0;
@@ -251,6 +297,7 @@
         this.isModelSpeaking = false;
         this.setHasSession(false);
         this.setSpeaking(false);
+        this.setStreaming(false);
         this.updateButtonLabel();
       }
     }

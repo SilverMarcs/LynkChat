@@ -46,18 +46,38 @@ struct LiveAudioView: View {
 
     var body: some View {
         NavigationStack {
-            Button {
-                Task { await toggleMic() }
-            } label: {
-                Image(systemName: isStreaming ? "pause.fill" : "play.fill")
-                    .foregroundStyle(.white.opacity(0.8))
-                    .contentTransition(.symbolEffect(.replace, options: .speed(1.5)))
-                    .font(.system(size: 100))
-                    .padding(20)
-            }
-            .buttonStyle(.glassProminent)
-            .controlSize(.extraLarge)
-            .buttonBorderShape(.circle)
+//            VStack {
+                Button {
+                    Task { await toggleMic() }
+                } label: {
+                    Image(systemName: currentSymbol)
+                        .foregroundStyle(.white.opacity(0.9))
+                        .font(.system(size: currentSize, weight: .medium))
+                        .contentTransition(.symbolEffect(.replace.offUp, options: .speed(1.2)))
+                        .symbolEffect(.pulse.byLayer,
+                                    options: .repeating.speed(pulseSpeed),
+                                    isActive: shouldPulse)
+                        .symbolEffect(.bounce.up,
+                                      options: .repeating.speed(1.5),
+                                    isActive: isSpeaking)
+//                        .symbolEffect(.variableColor.iterative,
+//                                    options: .repeating.speed(0.8),
+//                                    isActive: isStreaming && !isSpeaking)
+//                        .scaleEffect(isSpeaking ? 1.2 : 1.0)
+                        .animation(.easeInOut(duration: 0.3), value: isSpeaking)
+                        .padding(20)
+                }
+                .buttonStyle(.glassProminent)
+                .controlSize(.extraLarge)
+                .buttonBorderShape(.circle)
+//                
+//                // Status text
+//                Text(statusText)
+//                    .font(.subheadline)
+//                    .foregroundStyle(.secondary)
+//                    .contentTransition(.numericText())
+//                    .animation(.easeInOut(duration: 0.2), value: statusText)
+//            }
             .task {
                 await loadPage(url)
             }
@@ -82,6 +102,62 @@ struct LiveAudioView: View {
                     }
                 }
             }
+        }
+    }
+    
+    // MARK: - UI State
+    
+    private var currentSymbol: String {
+        return "waveform"
+        
+        if isSpeaking {
+            return "waveform"
+        } else if isStreaming {
+            return "waveform"
+        } else if hasSession {
+            return "waveform"
+        } else {
+            return "waveform"
+        }
+    }
+    
+    private var currentSize: CGFloat {
+        return 110
+        
+        if isSpeaking {
+            return 105
+        } else if isStreaming {
+            return 110
+        } else if hasSession {
+            return 95
+        } else {
+            return 90
+        }
+    }
+    
+    private var shouldPulse: Bool {
+        return isStreaming
+    }
+    
+    private var pulseSpeed: Double {
+        if isSpeaking {
+            return 2.0
+        } else if isStreaming {
+            return 1.5
+        } else {
+            return 1.0
+        }
+    }
+    
+    private var statusText: String {
+        if isSpeaking {
+            return "Speaking..."
+        } else if isStreaming {
+            return "Listening..."
+        } else if hasSession {
+            return "Ready"
+        } else {
+            return "Tap to start"
         }
     }
 
@@ -110,9 +186,11 @@ struct LiveAudioView: View {
         let title = page.title
         guard let data = title.data(using: .utf8) else { return }
         if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-            if let s = json["isStreaming"] as? Bool { isStreaming = s }
-            if let sp = json["isSpeaking"] as? Bool { isSpeaking = sp }
-            if let hs = json["hasSession"] as? Bool { hasSession = hs }
+            withAnimation(.easeInOut(duration: 0.3)) {
+                if let s = json["isStreaming"] as? Bool { isStreaming = s }
+                if let sp = json["isSpeaking"] as? Bool { isSpeaking = sp }
+                if let hs = json["hasSession"] as? Bool { hasSession = hs }
+            }
         }
     }
 }
