@@ -31,8 +31,6 @@ struct ChatToolbar: ToolbarContent {
         }
         
         ToolbarSpacer(.fixed)
-        
-        if showToolbarItems {
             ToolbarItem(placement: .navigation) {
                 Button {
                     showingInspector.toggle()
@@ -44,7 +42,8 @@ struct ChatToolbar: ToolbarContent {
                     ChatInspector(chat: chat)
                 }
             }
-            
+        
+        if showToolbarItems {
             ToolbarItemGroup(placement: .primaryAction) {
                 ToolsToggleView(config: $chat.config)
             }

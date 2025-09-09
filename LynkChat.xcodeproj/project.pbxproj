@@ -6,6 +6,11 @@
 	objectVersion = 70;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 085E58772E700DD20024AA4B /* SwiftMarkdownView */; };
+		085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 085E587A2E70113F0024AA4B /* SwiftMarkdownView */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		08A2227F2C2AB4FD00D76C8B /* LynkChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LynkChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -136,6 +141,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */,
+				085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,6 +185,8 @@
 			);
 			name = LynkChat;
 			packageProductDependencies = (
+				085E58772E700DD20024AA4B /* SwiftMarkdownView */,
+				085E587A2E70113F0024AA4B /* SwiftMarkdownView */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -208,6 +217,7 @@
 			);
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
+				085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -525,6 +535,29 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SilverMarcs/SwiftMarkdownView";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		085E58772E700DD20024AA4B /* SwiftMarkdownView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftMarkdownView;
+		};
+		085E587A2E70113F0024AA4B /* SwiftMarkdownView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */;
+			productName = SwiftMarkdownView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 08A222772C2AB4FD00D76C8B /* Project object */;
 }

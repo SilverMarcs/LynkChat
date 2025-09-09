@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
-//#if !os(macOS)
-//import MarkdownUI
-//#endif
+#if os(macOS)
+import SwiftMarkdownView
+#endif
 
 struct MDView: View {
     @ObservedObject var config = AppConfig.shared
@@ -21,9 +21,7 @@ var body: some View {
         content,
         calculatedHeight: calculatedHeight,
         fontSize: CGFloat(config.fontSize),
-//            highlightString: searchText,
         baseURL: "LynkChat Web Content",
-//            codeBlockTheme: config.codeBlockTheme
     )
     #else
     NativeMarkdownView(text: content)

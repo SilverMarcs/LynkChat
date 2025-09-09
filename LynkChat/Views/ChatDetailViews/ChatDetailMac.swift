@@ -39,7 +39,7 @@ struct ChatDetailMac: View {
             }
             .contentMargins(.all, 15, for: .scrollContent)
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
-            .navigationSubtitle(chat.config.systemPrompt.prefix(300))
+            .navigationSubtitle(chat.config.systemPrompt.prefix(100))
             .task {
                 config.expandColor = false
                 config.proxy = proxy
