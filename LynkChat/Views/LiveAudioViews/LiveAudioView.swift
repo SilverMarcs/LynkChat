@@ -99,34 +99,14 @@ struct LiveAudioView: View {
     
     private var currentSymbol: String {
         return "waveform"
-
-//        if isSpeaking {
-//            return "waveform"
-//        } else if isStreaming {
-//            return "waveform"
-//        } else if hasSession {
-//            return "waveform"
-//        } else {
-//            return "waveform"
-//        }
     }
     
     private var currentSize: CGFloat {
         return 110
-        
-//        if isSpeaking {
-//            return 105
-//        } else if isStreaming {
-//            return 110
-//        } else if hasSession {
-//            return 95
-//        } else {
-//            return 90
-//        }
     }
     
     private var shouldPulse: Bool {
-        return isStreaming
+        return isStreaming || isSpeaking
     }
     
     private var pulseSpeed: Double {
@@ -156,6 +136,8 @@ struct LiveAudioView: View {
     private func loadPage(_ url: URL) async {
         page.load(url)
         _ = try? await page.callJavaScript("window.liveAudio?.syncStateToTitle?.()")
+        // Establish WebSocket connection immediately after page loads
+        _ = try? await page.callJavaScript("window.liveAudio?.establishConnection?.()")
     }
 
     private func toggleMic() async {
