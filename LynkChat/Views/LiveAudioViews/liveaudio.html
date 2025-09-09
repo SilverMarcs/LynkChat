@@ -63,12 +63,18 @@
         this.client = null;
         this.session = null;
         this.isStreaming = false;
+        this.isPaused = false;
         this.hasSession = false;
         this.isModelSpeaking = false;
         this.activeSources = 0;
 
+        // Audio nodes for pause/resume
+        this.mediaStream = null;
+        this.sourceNode = null;
+        this.scriptProcessorNode = null;
+
         // Simple state for SwiftUI mirroring
-        this._state = { isStreaming: false, isSpeaking: false, hasSession: false };
+        this._state = { isStreaming: false, isPaused: false, isSpeaking: false, hasSession: false };
 
         this.shadow = this.attachShadow({ mode: "open" });
         this.shadow.innerHTML = `<div><button id="waveBtn">Start Microphone</button></div>`;
@@ -94,6 +100,11 @@
         this._state.isStreaming = !!v;
         this.syncStateToTitle();
       }
+
+      setPaused(v) {
+        this._state.isPaused = !!v;
+        this.syncStateToTitle();
+      }
       
       setSpeaking(v) {
         this.isModelSpeaking = !!v;
@@ -104,7 +115,7 @@
           this._state.isStreaming = false;
         } else {
           // When model stops speaking, restore streaming state if we're actually streaming
-          if (this.isStreaming && this.hasSession) {
+          if (this.isStreaming && this.hasSession && !this.isPaused) {
             this._state.isStreaming = true;
           }
         }
@@ -214,7 +225,7 @@
         });
       }
 
-      // NEW: Establish connection without starting audio streaming
+      // Establish connection without starting audio streaming
       async establishConnection() {
         try {
           this.initAudioIfNeeded();
@@ -228,14 +239,24 @@
       }
 
       updateButtonLabel() {
-        this.waveBtn.textContent = this.isStreaming ? "Pause Microphone" : "Start Microphone";
+        if (this.isPaused) {
+          this.waveBtn.textContent = "Resume";
+        } else if (this.isStreaming) {
+          this.waveBtn.textContent = "Pause";
+        } else {
+          this.waveBtn.textContent = "Start";
+        }
       }
 
       async toggleMic() {
-        // Connection should already be established, so just toggle streaming
-        if (this.isStreaming) {
+        if (this.isPaused) {
+          // State 3: Resume from pause
+          this.resumeStreaming();
+        } else if (this.isStreaming) {
+          // State 2: Pause (keep connection)
           this.pauseStreaming();
         } else {
+          // State 1: Start listening
           await this.startStreaming();
         }
       }
@@ -249,6 +270,7 @@
         }
 
         try {
+          // Get microphone access
           this.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
           this.sourceNode = this.inputAudioContext.createMediaStreamSource(this.mediaStream);
           this.sourceNode.connect(this.inputNode);
@@ -256,7 +278,7 @@
           const bufferSize = 256;
           this.scriptProcessorNode = this.inputAudioContext.createScriptProcessor(bufferSize, 1, 1);
           this.scriptProcessorNode.onaudioprocess = (e) => {
-            if (!this.isStreaming) return;
+            if (!this.isStreaming || this.isPaused) return;
             const pcm = e.inputBuffer.getChannelData(0);
             this.session?.sendRealtimeInput?.({ media: createBlob(pcm) });
           };
@@ -265,6 +287,8 @@
           this.scriptProcessorNode.connect(this.inputAudioContext.destination);
 
           this.isStreaming = true;
+          this.isPaused = false;
+          this.setPaused(false);
           
           // Only set streaming state if model is not speaking
           if (!this.isModelSpeaking) {
@@ -278,12 +302,42 @@
       }
 
       pauseStreaming() {
+        if (!this.isStreaming) return;
+        
+        this.isPaused = true;
+        this.setPaused(true);
+        this.setStreaming(false);
+        
+        // Keep microphone access but stop sending data
+        // The onaudioprocess check for isPaused will prevent data sending
+        
+        this.updateButtonLabel();
+      }
+
+      resumeStreaming() {
+        if (!this.isPaused || !this.isStreaming) return;
+        
+        this.isPaused = false;
+        this.setPaused(false);
+        
+        // Only set streaming state if model is not speaking
+        if (!this.isModelSpeaking) {
+          this.setStreaming(true);
+        }
+        
+        this.updateButtonLabel();
+      }
+
+      stopStreaming() {
         if (!this.isStreaming && !this.mediaStream) {
           this.updateButtonLabel();
           return;
         }
+        
         this.isStreaming = false;
+        this.isPaused = false;
         this.setStreaming(false);
+        this.setPaused(false);
         
         try { this.scriptProcessorNode?.disconnect(); } catch {}
         try { this.sourceNode?.disconnect(); } catch {}
@@ -297,7 +351,7 @@
       }
 
       reset() {
-        this.pauseStreaming();
+        this.stopStreaming();
         this.activeSources = 0;
         for (const s of this.sources.values()) { try { s.stop(); } catch {} }
         this.sources.clear();
@@ -306,9 +360,11 @@
         this.session = null;
         this.hasSession = false;
         this.isModelSpeaking = false;
+        this.isPaused = false;
         this.setHasSession(false);
         this.setSpeaking(false);
         this.setStreaming(false);
+        this.setPaused(false);
         this.updateButtonLabel();
       }
     }
@@ -320,9 +376,10 @@
       get el() { return document.querySelector("gdm-live-audio"); },
       async toggle() { return this.el?.toggleMic(); },
       async pause() { return this.el?.pauseStreaming(); },
+      async resume() { return this.el?.resumeStreaming(); },
       async reset() { return this.el?.reset(); },
       async establishConnection() { return this.el?.establishConnection(); },
-      state() { return this.el?._state ?? { isStreaming: false, isSpeaking: false, hasSession: false }; },
+      state() { return this.el?._state ?? { isStreaming: false, isPaused: false, isSpeaking: false, hasSession: false }; },
       syncStateToTitle() { this.el?.syncStateToTitle(); },
     };
   </script>

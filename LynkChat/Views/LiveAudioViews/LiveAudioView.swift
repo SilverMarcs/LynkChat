@@ -12,7 +12,9 @@ import WebKit
 struct LiveAudioView: View {
     @State private var page: WebPage = WebPage()
 
+    // what does isstremaign mean
     @State private var isStreaming = false
+    @State private var isPaused = false
     @State private var isSpeaking = false
     @State private var hasSession = false
 
@@ -52,16 +54,16 @@ struct LiveAudioView: View {
                 Image(systemName: currentSymbol)
                     .foregroundStyle(.white.opacity(0.9))
                     .font(.system(size: currentSize, weight: .medium))
-                    .contentTransition(.symbolEffect(.replace.offUp, options: .speed(1.2)))
-                    .symbolEffect(.pulse.byLayer,
-                                options: .repeating.speed(pulseSpeed),
-                                isActive: shouldPulse)
+                    .contentTransition(.symbolEffect(.replace, options: .speed(1.2)))
+//                    .symbolEffect(.pulse.byLayer,
+//                                options: .repeating.speed(pulseSpeed),
+//                                isActive: shouldPulse)
                     .symbolEffect(.bounce.up,
                                   options: .repeating.speed(1.5),
                                 isActive: isSpeaking)
                     .symbolEffect(.variableColor.iterative,
                                 options: .repeating.speed(0.8),
-                                isActive: isStreaming && !isSpeaking)
+                                isActive: (isStreaming || isSpeaking) && !isPaused)
                     .animation(.easeInOut(duration: 0.3), value: isSpeaking)
                     .padding(20)
             }
@@ -84,6 +86,7 @@ struct LiveAudioView: View {
                     .opacity(0.01)
             }
             .navigationTitle("Live")
+            .navigationSubtitle(statusText)
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -98,7 +101,17 @@ struct LiveAudioView: View {
     // MARK: - UI State
     
     private var currentSymbol: String {
-        return "waveform"
+        if isSpeaking {
+            return "waveform"
+        } else if isStreaming {
+            return "waveform"
+        } else if isPaused {
+            return "waveform.mid"
+        } else if hasSession {
+            return "waveform"
+        } else {
+            return "waveform.mid"
+        }
     }
     
     private var currentSize: CGFloat {
@@ -106,16 +119,18 @@ struct LiveAudioView: View {
     }
     
     private var shouldPulse: Bool {
-        return isStreaming || isSpeaking
+        return (isStreaming || isSpeaking) && !isPaused
     }
     
     private var pulseSpeed: Double {
         if isSpeaking {
-            return 2.0
+            return 1.25
         } else if isStreaming {
-            return 1.5
+            return 1.25
+        } else if isPaused {
+            return 0
         } else {
-            return 1.0
+            return 1.25
         }
     }
     
@@ -124,10 +139,12 @@ struct LiveAudioView: View {
             return "Speaking..."
         } else if isStreaming {
             return "Listening..."
+        } else if isPaused {
+            return "Paused"
         } else if hasSession {
             return "Ready"
         } else {
-            return "Tap to start"
+            return "Connecting..."
         }
     }
 
@@ -136,7 +153,6 @@ struct LiveAudioView: View {
     private func loadPage(_ url: URL) async {
         page.load(url)
         _ = try? await page.callJavaScript("window.liveAudio?.syncStateToTitle?.()")
-        // Establish WebSocket connection immediately after page loads
         _ = try? await page.callJavaScript("window.liveAudio?.establishConnection?.()")
     }
 
@@ -160,6 +176,7 @@ struct LiveAudioView: View {
         if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
             withAnimation(.easeInOut(duration: 0.3)) {
                 if let s = json["isStreaming"] as? Bool { isStreaming = s }
+                if let p = json["isPaused"] as? Bool { isPaused = p }
                 if let sp = json["isSpeaking"] as? Bool { isSpeaking = sp }
                 if let hs = json["hasSession"] as? Bool { hasSession = hs }
             }
