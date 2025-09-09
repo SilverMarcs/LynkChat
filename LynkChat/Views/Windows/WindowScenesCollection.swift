@@ -15,8 +15,8 @@ struct WindowScenesCollection: Scene {
         ImageWindow()
             .environment(\.windowType, .images)
         
-//        AudioWindow()
-//            .environment(\.windowType, .audio)
+        AudioWindow()
+            .environment(\.windowType, .audio)
         
         SettingsWindow()
         

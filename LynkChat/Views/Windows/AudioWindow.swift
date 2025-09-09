@@ -13,7 +13,10 @@ struct AudioWindow: Scene {
             LiveAudioView()
                 .ignoresSafeArea()
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+                .presentedWindowStyle(.hiddenTitleBar)
         }
+        .restorationBehavior(.disabled)
+        .windowLevel(.floating)
         .windowToolbarStyle(.unifiedCompact)
         .defaultSize(.init(width: 450, height: 450))
     }

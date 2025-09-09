@@ -42,12 +42,12 @@ struct MenuCommands: Commands {
             .keyboardShortcut(",", modifiers: .command)
         }
         
-//        CommandGroup(before: .appSettings) {
-//            Button("Audio") {
-//                openWindow(id: WindowID.audio)
-//            }
-//            .keyboardShortcut("I", modifiers: .command)
-//        }
+        CommandGroup(before: .appSettings) {
+            Button("Audio") {
+                openWindow(id: WindowID.audio)
+            }
+            .keyboardShortcut("I", modifiers: .command)
+        }
         #endif
     }
 }
