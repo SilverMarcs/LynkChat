@@ -16,6 +16,7 @@ struct ChatInputMenu: View {
     @State private var isFilePickerPresented: Bool = false
     @State private var showPhotosPicker = false
     @State private var selectedPhotos = [PhotosPickerItem]()
+    @State var addingPhoto: Bool = false
     
     var body: some View {
         Menu {
@@ -55,14 +56,21 @@ struct ChatInputMenu: View {
             }
             .labelStyle(.titleAndIcon)
         } label: {
-            #if os(macOS)
-            Image(systemName: "plus.circle.fill")
-                .foregroundStyle(.secondary, .clear)
-                .font(.largeTitle).fontWeight(.semibold)
-                .glassEffect()
-            #else
-            Image(systemName: "plus")
-            #endif
+            if !addingPhoto {
+#if os(macOS)
+                Image(systemName: "plus.circle.fill")
+                    .foregroundStyle(.secondary, .clear)
+                    .font(.largeTitle).fontWeight(.semibold)
+                    .glassEffect()
+#else
+                Image(systemName: "plus")
+#endif
+            } else {
+                ProgressView()
+                    .controlSize(.small)
+                    .padding(8)
+                    .glassEffect()
+            }
         }
         .menuStyle(.button)
         .buttonStyle(.plain)
@@ -70,12 +78,15 @@ struct ChatInputMenu: View {
         .fixedSize()
         .photosPicker(isPresented: $showPhotosPicker, selection: $selectedPhotos, matching: .images)
         .task(id: selectedPhotos) {
+            guard !selectedPhotos.isEmpty else { return }  // Skip if no photos selected (e.g., on first appearance)
+            addingPhoto = true
             do {
                 try await chat.inputManager.loadTransferredPhotos(from: selectedPhotos)
             } catch {
                 chat.errorMessage = "Failed to load transferred photos. Error: \(error)"
             }
             selectedPhotos.removeAll()
+            addingPhoto = false
         }
         .fileImporter(
             isPresented: $isFilePickerPresented,
