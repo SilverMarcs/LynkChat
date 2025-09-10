@@ -12,7 +12,6 @@ import WebKit
 struct LiveAudioView: View {
     @State private var page: WebPage = WebPage()
 
-//     what does isstremaign mean whn user talking
     @State private var isStreaming = false
     @State private var isPaused = false
     @State private var isSpeaking = false
@@ -58,7 +57,7 @@ struct LiveAudioView: View {
 //                    .symbolEffect(.pulse.byLayer,
 //                                options: .repeating.speed(pulseSpeed),
 //                                isActive: shouldPulse)
-                    .symbolEffect(.bounce.up,
+                    .symbolEffect(.bounce.byLayer, // try bounce up
                                   options: .repeating.speed(1.5),
                                 isActive: isSpeaking)
 //                    .symbolEffect(.breathe,
@@ -74,6 +73,7 @@ struct LiveAudioView: View {
 //                    .animation(.easeInOut(duration: 0.3), value: isSpeaking)
                     .padding(20)
             }
+            .disabled(!hasSession)
             .buttonStyle(.glassProminent)
             .controlSize(.extraLarge)
             .buttonBorderShape(.circle)
@@ -81,8 +81,10 @@ struct LiveAudioView: View {
                 await loadPage(url)
             }
             .onDisappear {
-                resetSession()
-                page.reload()
+                Task {
+                    await resetSession()
+                    page.reload()
+                }
             }
             .onChange(of: page.title) {
                 applyStateFromTitle()
@@ -97,7 +99,9 @@ struct LiveAudioView: View {
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button(action: resetSession) {
+                    Button {
+                        Task { await resetSession() }
+                    } label: {
                         Label("Reset", systemImage: "arrow.counterclockwise")
                     }
                 }
@@ -167,14 +171,8 @@ struct LiveAudioView: View {
         _ = try? await page.callJavaScript("window.liveAudio?.toggle?.()")
     }
 
-    private func resetSession() {
-        Task {
-            do {
-                try await page.callJavaScript("window.liveAudio?.reset?.()")
-            } catch {
-                print("Failed to reset session: \(error)")
-            }
-        }
+    private func resetSession() async {
+        let _ = try? await page.callJavaScript("window.liveAudio?.reset?.()")
     }
 
     private func applyStateFromTitle() {
