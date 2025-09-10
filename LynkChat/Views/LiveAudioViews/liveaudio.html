@@ -308,8 +308,19 @@
         this.setPaused(true);
         this.setStreaming(false);
         
-        // Keep microphone access but stop sending data
-        // The onaudioprocess check for isPaused will prevent data sending
+        // **ADD THIS: Stop all ongoing assistant speech**
+        this.activeSources = 0;
+        for (const s of this.sources.values()) {
+          try { s.stop(); } catch {}
+          this.sources.delete(s);
+        }
+        this.nextStartTime = this.outputAudioContext?.currentTime ?? 0;
+        this.setSpeaking(false);
+        
+        // Send interrupt signal to the session if available
+        try {
+          this.session?.sendRealtimeInput?.({ interrupt: true });
+        } catch {}
         
         this.updateButtonLabel();
       }

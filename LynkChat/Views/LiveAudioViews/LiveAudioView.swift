@@ -12,7 +12,7 @@ import WebKit
 struct LiveAudioView: View {
     @State private var page: WebPage = WebPage()
 
-    // what does isstremaign mean
+//     what does isstremaign mean whn user talking
     @State private var isStreaming = false
     @State private var isPaused = false
     @State private var isSpeaking = false
@@ -52,7 +52,7 @@ struct LiveAudioView: View {
                 Task { await toggleMic() }
             } label: {
                 Image(systemName: currentSymbol)
-                    .foregroundStyle(.white.opacity(0.9))
+//                    .foregroundStyle(.white.opacity(0.9))
                     .font(.system(size: currentSize, weight: .medium))
                     .contentTransition(.symbolEffect(.replace, options: .speed(1.2)))
 //                    .symbolEffect(.pulse.byLayer,
@@ -61,10 +61,17 @@ struct LiveAudioView: View {
                     .symbolEffect(.bounce.up,
                                   options: .repeating.speed(1.5),
                                 isActive: isSpeaking)
+//                    .symbolEffect(.breathe,
+//                                  options: .repeating.speed(1.5),
+//                                isActive: isSpeaking)
                     .symbolEffect(.variableColor.iterative,
-                                options: .repeating.speed(0.8),
+//                    .symbolEffect(.pulse.byLayer,
+                                  options: .repeating.speed(1),
                                 isActive: (isStreaming || isSpeaking) && !isPaused)
-                    .animation(.easeInOut(duration: 0.3), value: isSpeaking)
+//                    .symbolEffect(.variableColor.iterative,
+//                                options: .repeating.speed(0.8),
+//                                isActive: isSpeaking && !isPaused)
+//                    .animation(.easeInOut(duration: 0.3), value: isSpeaking)
                     .padding(20)
             }
             .buttonStyle(.glassProminent)
@@ -174,7 +181,7 @@ struct LiveAudioView: View {
         let title = page.title
         guard let data = title.data(using: .utf8) else { return }
         if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-            withAnimation(.easeInOut(duration: 0.3)) {
+            withAnimation(.easeInOut) {
                 if let s = json["isStreaming"] as? Bool { isStreaming = s }
                 if let p = json["isPaused"] as? Bool { isPaused = p }
                 if let sp = json["isSpeaking"] as? Bool { isSpeaking = sp }
