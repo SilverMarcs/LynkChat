@@ -115,12 +115,13 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
 
+    @MainActor
     func editMessage(_ message: Message) async {
         guard let userGroup = currentThread.first(where: { $0.activeMessage == message }) else { return }
         
         unsetContextResetPointIfNeeded(for: userGroup)
         
-        let newUserMessage = await Message.user(content: inputManager.prompt, dataFiles: inputManager.dataFiles)
+        let newUserMessage = Message.user(content: inputManager.prompt, dataFiles: inputManager.dataFiles)
         userGroup.addMessage(newUserMessage)
         
         let newAssistantMessage = Message.assistant(model: config.model)

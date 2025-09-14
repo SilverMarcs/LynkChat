@@ -176,7 +176,7 @@ extension InputManager {
                         }
 
                         let fileType: UTType = .plainText
-                        let fileName = "\(pastedString.prefix(10))_\(UUID().uuidString.prefix(3)).txt"
+                        let fileName = "Paste_\(pastedString.prefix(7))_\(UUID().uuidString.prefix(2)).txt"
 
                         try await processData(textData, fileType: fileType, fileName: fileName)
                     } else {
