@@ -73,7 +73,7 @@ struct LiveAudioView: View {
 //                    .animation(.easeInOut(duration: 0.3), value: isSpeaking)
                     .padding(20)
             }
-            .disabled(!hasSession)
+//            .disabled(!hasSession)
             .buttonStyle(.glassProminent)
             .controlSize(.extraLarge)
             .buttonBorderShape(.circle)
