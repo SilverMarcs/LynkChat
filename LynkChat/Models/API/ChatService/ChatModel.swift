@@ -14,7 +14,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     case gpt_5
     case gpt_5_mini
     case grok_4
-    case grok_code_1
+    case grok_4_fast
     case claude_sonnet_4
     case claude_opus_4
     
@@ -27,7 +27,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .claude_sonnet_4: "claude-sonnet-4"
         case .claude_opus_4: "claude-opus-4"
         case .grok_4: "grok-4"
-        case .grok_code_1: "grok-code-1"
+        case .grok_4_fast: "grok-4-fast"
         }
     }
     
@@ -40,7 +40,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .claude_sonnet_4: "Claude 4S"
         case .claude_opus_4: "Claude 4O"
         case .grok_4: "Grok 4"
-        case .grok_code_1: "Grok Code"
+        case .grok_4_fast: "Grok 4 Fast"
         }
     }
     
@@ -49,7 +49,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gpt_5, .gpt_5_mini: "openai.symbols"
         case .gemini_2_5_flash, .gemini_2_5_pro: "gemini.symbols"
         case .claude_sonnet_4, .claude_opus_4: "claude.symbols"
-        case .grok_4, .grok_code_1: "xai.symbols"
+        case .grok_4, .grok_4_fast: "xai.symbols"
         }
     }
     
@@ -58,7 +58,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gpt_5, .gpt_5_mini: "#00947A"
         case .gemini_2_5_flash, .gemini_2_5_pro: "#E64335"
         case .claude_sonnet_4, .claude_opus_4: "#D6683B"
-        case .grok_4, .grok_code_1: "#777777"
+        case .grok_4, .grok_4_fast: "#777777"
         }
     }
     
@@ -66,10 +66,8 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         switch self {
         case .gemini_2_5_flash, .gemini_2_5_pro:
             [.text, .image, .pdf, .audio, .video]
-        case .gpt_5, .gpt_5_mini, .claude_sonnet_4, .claude_opus_4, .grok_4:
+        case .gpt_5, .gpt_5_mini, .claude_sonnet_4, .claude_opus_4, .grok_4, .grok_4_fast:
             [.text, .image]
-        case .grok_code_1:
-            [.text]
         }
     }
 }
