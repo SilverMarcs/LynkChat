@@ -90,8 +90,9 @@ struct LiveAudioView: View {
                 applyStateFromTitle()
             }
             .overlay(alignment: .topLeading) {
+                // This wont trigger permission overlay unless size is big enough TODO: fix
                 WebView(page)
-                    .frame(width: 1, height: 1)
+                    .frame(width: 10, height: 10)
                     .opacity(0.01)
             }
             .navigationTitle("Live")
@@ -106,6 +107,9 @@ struct LiveAudioView: View {
                     }
                 }
             }
+            #if os(macOS)
+            .padding(.top, -20)
+            #endif
         }
     }
     

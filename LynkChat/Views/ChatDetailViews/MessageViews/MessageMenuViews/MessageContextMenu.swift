@@ -54,6 +54,16 @@ struct MessageContextMenu: View {
             }
             .contentTransition(.symbolEffect(.replace))
             .frame(width: 15)
+            
+            // Copy All Messages Button (only show if there are multiple messages)
+            if group.allMessages.count > 1 {
+                Button {
+                    copyAllMessages()
+                } label: {
+                    Label("Copy All Messages", systemImage: "doc.on.doc")
+                }
+                .frame(width: 15)
+            }
         }
 
         Section {
@@ -102,6 +112,14 @@ struct MessageContextMenu: View {
                 .help("Delete Message")
             }
         }
+    }
+    
+    private func copyAllMessages() {
+        let allMessagesText = group.allMessages.map { message in
+            "\(message.model.name):\n\(message.content)"
+        }.joined(separator: "\n\n")
+        
+        allMessagesText.copyToPasteboard()
     }
 }
 
