@@ -79,7 +79,7 @@ final class Message: Equatable, Identifiable, Hashable {
         Message(
             role: .user,
             content: content,
-            model: .gemini_2_5_flash,
+            model: .gemini_flash,
             dataFiles: dataFiles,
             tools: nil,
             isReplying: false,

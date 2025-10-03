@@ -38,5 +38,5 @@ struct ListRowImage: View {
 }
 
 #Preview {
-    ListRowImage(model: ChatModel.gemini_2_5_flash)
+    ListRowImage(model: ChatModel.gemini_flash)
 }

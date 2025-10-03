@@ -9,64 +9,64 @@ import Foundation
 import UniformTypeIdentifiers
 
 enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, Sendable, ModelImageProvider {
-    case gemini_2_5_flash
-    case gemini_2_5_pro
-    case gpt_5
-    case gpt_5_mini
-    case grok_4
-    case grok_4_fast
-    case claude_sonnet_4
-    case claude_opus_4
+    case gemini_flash
+    case gemini_pro
+    case gpt
+    case gpt_mini
+    case grok
+    case grok_fast
+    case claude_sonnet
+    case claude_opus
     
     var id: String {
         switch self {
-        case .gemini_2_5_flash: "gemini-2.5-flash"
-        case .gemini_2_5_pro: "gemini-2.5-pro"
-        case .gpt_5: "gpt-5"
-        case .gpt_5_mini: "gpt-5-mini"
-        case .claude_sonnet_4: "claude-sonnet-4"
-        case .claude_opus_4: "claude-opus-4"
-        case .grok_4: "grok-4"
-        case .grok_4_fast: "grok-4-fast"
+        case .gemini_flash: "gemini-flash"
+        case .gemini_pro: "gemini-pro"
+        case .gpt: "gpt"
+        case .gpt_mini: "gpt-mini"
+        case .claude_sonnet: "claude-sonnet"
+        case .claude_opus: "claude-opus"
+        case .grok: "grok"
+        case .grok_fast: "grok-fast"
         }
     }
     
     var name: String {
         switch self {
-        case .gemini_2_5_flash: "Gemini 2.5F"
-        case .gemini_2_5_pro:"Gemini 2.5P"
-        case .gpt_5: "GPT-5"
-        case .gpt_5_mini: "GPT-5 Mini"
-        case .claude_sonnet_4: "Claude 4S"
-        case .claude_opus_4: "Claude 4O"
-        case .grok_4: "Grok 4"
-        case .grok_4_fast: "Grok 4 Fast"
+        case .gemini_flash: "Gemini Flash"
+        case .gemini_pro: "Gemini Pro"
+        case .gpt: "GPT"
+        case .gpt_mini: "GPT Mini"
+        case .claude_sonnet: "Claude Sonnet"
+        case .claude_opus: "Claude Opus"
+        case .grok: "Grok"
+        case .grok_fast: "Grok Fast"
         }
     }
     
     var imageName: String {
         switch self {
-        case .gpt_5, .gpt_5_mini: "openai.symbols"
-        case .gemini_2_5_flash, .gemini_2_5_pro: "gemini.symbols"
-        case .claude_sonnet_4, .claude_opus_4: "claude.symbols"
-        case .grok_4, .grok_4_fast: "xai.symbols"
+        case .gpt, .gpt_mini: "openai.symbols"
+        case .gemini_flash, .gemini_pro: "gemini.symbols"
+        case .claude_sonnet, .claude_opus: "claude.symbols"
+        case .grok, .grok_fast: "xai.symbols"
         }
     }
     
     var color: String {
         switch self {
-        case .gpt_5, .gpt_5_mini: "#00947A"
-        case .gemini_2_5_flash, .gemini_2_5_pro: "#E64335"
-        case .claude_sonnet_4, .claude_opus_4: "#D6683B"
-        case .grok_4, .grok_4_fast: "#777777"
+        case .gpt, .gpt_mini: "#00947A"
+        case .gemini_flash, .gemini_pro: "#E64335"
+        case .claude_sonnet, .claude_opus: "#D6683B"
+        case .grok, .grok_fast: "#777777"
         }
     }
     
     var supportedTypes: Set<UTType> {
         switch self {
-        case .gemini_2_5_flash, .gemini_2_5_pro:
+        case .gemini_flash, .gemini_pro:
             [.text, .image, .pdf, .audio, .video]
-        case .gpt_5, .gpt_5_mini, .claude_sonnet_4, .claude_opus_4, .grok_4, .grok_4_fast:
+        case .gpt, .gpt_mini, .claude_sonnet, .claude_opus, .grok, .grok_fast:
             [.text, .image]
         }
     }

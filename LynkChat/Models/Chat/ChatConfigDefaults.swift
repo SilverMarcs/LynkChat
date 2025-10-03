@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChatConfigDefaults {
-    @AppStorage("defaultModel") var defaultModel: ChatModel = .gemini_2_5_flash
+    @AppStorage("defaultModel") var defaultModel: ChatModel = .gemini_flash
     
     @AppStorage("temperature") var temperature: Temperature = .balanced
     

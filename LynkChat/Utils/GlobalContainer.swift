@@ -39,9 +39,9 @@ let globalContainer: ModelContainer = {
         }
         
         let chat = Chat()
-        chat.config.models = [.gemini_2_5_flash]
+        chat.config.models = [.gemini_flash]
         chat.title = "Welcome to LynkChat"
-        let group = MessageGroup(message: Message.assistant(model: .gemini_2_5_flash, content: String.onboarding))
+        let group = MessageGroup(message: Message.assistant(model: .gemini_flash, content: String.onboarding))
         chat.rootMessage = group
         modelContext.insert(chat)
         
