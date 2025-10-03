@@ -51,7 +51,7 @@ struct AssistantMessage: View {
                         .controlSize(.small)
                 }
                 
-                if !message.isReplying {
+//                if !message.isReplying {
                     if !showMenu {
                         SecondaryNavigationButtons(group: group)
                     } else {
@@ -59,9 +59,9 @@ struct AssistantMessage: View {
                             NavigationButtons(message: group)
                         }
                     }
-                }
+//                }
             }
-                .padding(.leading, 25)
+            .padding(.leading, 25)
         }
         .contentShape(.rect)
         .transaction { $0.animation = nil }
