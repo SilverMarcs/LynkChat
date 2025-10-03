@@ -14,7 +14,6 @@ class ImageSession {
     var id: UUID = UUID()
     var date: Date = Date()
     var title: String = "Image Session"
-    @Attribute(.ephemeral)
     var prompt: String = ""
 
     @Relationship(deleteRule: .cascade, inverse: \Generation.session)
