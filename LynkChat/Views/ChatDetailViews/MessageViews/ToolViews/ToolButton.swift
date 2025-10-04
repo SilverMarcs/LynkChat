@@ -29,12 +29,13 @@ struct ToolButton: View {
         .popover(isPresented: $showArguments) {
             ScrollView {
 //                Text(try! AttributedString(markdown: chatTool.args))
-                NativeMarkdownView(text: chatTool.args)
+                NativeMarkdownView(text: chatTool.result?.textContent ?? chatTool.args)
                     .textSelection(.enabled)
             }
             .presentationDragIndicator(.visible)
             .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
+            .frame(maxWidth: 500, maxHeight: 500)
         }
     }
     
