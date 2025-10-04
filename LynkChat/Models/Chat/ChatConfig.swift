@@ -18,7 +18,11 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         self.thinkingBudget = defaults.thinkingBudget
         self.systemPrompt = defaults.systemPrompt
         self.models = [defaults.defaultModel]
+        #if os(macOS)
         self.enabledTools = []
+        #else
+        self.enabledTools = [.scrapeLinks, .webSearch]
+        #endif
     }
     
     var model: ChatModel {
