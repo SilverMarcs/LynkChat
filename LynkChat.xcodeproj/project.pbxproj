@@ -9,10 +9,36 @@
 /* Begin PBXBuildFile section */
 		085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 085E58772E700DD20024AA4B /* SwiftMarkdownView */; };
 		085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 085E587A2E70113F0024AA4B /* SwiftMarkdownView */; };
+		08DAD9C62E908D3D00BC04A1 /* LynkShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		08DAD9C42E908D3D00BC04A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08A222772C2AB4FD00D76C8B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 08DAD9BB2E908D3D00BC04A1;
+			remoteInfo = LynkShare;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		08DAD9CB2E908D3D00BC04A1 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				08DAD9C62E908D3D00BC04A1 /* LynkShare.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		08A2227F2C2AB4FD00D76C8B /* LynkChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LynkChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LynkShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -130,10 +156,18 @@
 			};
 			target = 08A2227E2C2AB4FD00D76C8B /* LynkChat */;
 		};
+		08DAD9CA2E908D3D00BC04A1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 08DAD9BB2E908D3D00BC04A1 /* LynkShare */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		08B067FF2D815C760020A9E7 /* LynkChat */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (08B068CD2D815C760020A9E7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = LynkChat; sourceTree = "<group>"; };
+		08DAD9BD2E908D3D00BC04A1 /* LynkShare */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (08DAD9CA2E908D3D00BC04A1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = LynkShare; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +180,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		08DAD9B92E908D3D00BC04A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -153,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				08B067FF2D815C760020A9E7 /* LynkChat */,
+				08DAD9BD2E908D3D00BC04A1 /* LynkShare */,
 				08A222802C2AB4FD00D76C8B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -161,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				08A2227F2C2AB4FD00D76C8B /* LynkChat.app */,
+				08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -175,10 +218,12 @@
 				08A2227B2C2AB4FD00D76C8B /* Sources */,
 				08A2227C2C2AB4FD00D76C8B /* Frameworks */,
 				08A2227D2C2AB4FD00D76C8B /* Resources */,
+				08DAD9CB2E908D3D00BC04A1 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				08DAD9C52E908D3D00BC04A1 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				08B067FF2D815C760020A9E7 /* LynkChat */,
@@ -192,6 +237,28 @@
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
 			productType = "com.apple.product-type.application";
 		};
+		08DAD9BB2E908D3D00BC04A1 /* LynkShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 08DAD9C72E908D3D00BC04A1 /* Build configuration list for PBXNativeTarget "LynkShare" */;
+			buildPhases = (
+				08DAD9B82E908D3D00BC04A1 /* Sources */,
+				08DAD9B92E908D3D00BC04A1 /* Frameworks */,
+				08DAD9BA2E908D3D00BC04A1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				08DAD9BD2E908D3D00BC04A1 /* LynkShare */,
+			);
+			name = LynkShare;
+			packageProductDependencies = (
+			);
+			productName = LynkShare;
+			productReference = 08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -199,11 +266,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					08A2227E2C2AB4FD00D76C8B = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					08DAD9BB2E908D3D00BC04A1 = {
+						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
@@ -224,12 +294,20 @@
 			projectRoot = "";
 			targets = (
 				08A2227E2C2AB4FD00D76C8B /* LynkChat */,
+				08DAD9BB2E908D3D00BC04A1 /* LynkShare */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		08A2227D2C2AB4FD00D76C8B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		08DAD9BA2E908D3D00BC04A1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -246,7 +324,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		08DAD9B82E908D3D00BC04A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		08DAD9C52E908D3D00BC04A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 08DAD9BB2E908D3D00BC04A1 /* LynkShare */;
+			targetProxy = 08DAD9C42E908D3D00BC04A1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		08A222A42C2AB4FE00D76C8B /* Debug */ = {
@@ -389,6 +482,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = LynkChat/LynkChat.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -435,6 +529,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.temporary.Lynkchat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -454,6 +549,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = LynkChat/LynkChat.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -500,6 +596,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.temporary.Lynkchat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -510,6 +607,71 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,6,7";
 				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		08DAD9C82E908D3D00BC04A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = LynkShare/LynkShare.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2L782RMCG7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LynkShare/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = LynkShare;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.temporary.Lynkchat.LynkShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		08DAD9C92E908D3D00BC04A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = LynkShare/LynkShare.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2L782RMCG7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LynkShare/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = LynkShare;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.temporary.Lynkchat.LynkShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -530,6 +692,15 @@
 			buildConfigurations = (
 				08A222A72C2AB4FE00D76C8B /* Debug */,
 				08A222A82C2AB4FE00D76C8B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		08DAD9C72E908D3D00BC04A1 /* Build configuration list for PBXNativeTarget "LynkShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				08DAD9C82E908D3D00BC04A1 /* Debug */,
+				08DAD9C92E908D3D00BC04A1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
