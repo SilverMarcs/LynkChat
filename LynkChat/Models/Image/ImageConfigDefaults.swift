@@ -10,6 +10,8 @@ import SwiftUI
 struct ImageConfigDefaults {
     @AppStorage("numImages") var numImages: Int = 1
     @AppStorage("saveToPhotos") var saveToPhotos = true
+    @AppStorage("wavespeedApiKey") var wavespeedApiKey: String = ""
     
     @AppStorage("defaultModel") var defaultModel: ImageModel = .flux
+    @AppStorage("defaultImageMode") var defaultMode: ImageMode = .generation
 }

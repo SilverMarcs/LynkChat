@@ -9,6 +9,11 @@ import SwiftUI
 
 struct ChatServiceSettings: View {
     @State var config: ChatConfigDefaults = .init()
+    
+    @AppStorage("geminiApiKey") private var geminiApiKey = ""
+    @AppStorage("openaiApiKey") private var openaiApiKey = ""
+    @AppStorage("anthropicApiKey") private var anthropicApiKey = ""
+    @AppStorage("xaiApiKey") private var xaiApiKey = ""
 
     var body: some View {
         Form {
@@ -22,16 +27,16 @@ struct ChatServiceSettings: View {
                 }
             }
             
-            Section("Plugins") {
-                ForEach([Tool.webSearch, Tool.imageGeneration], id: \.self) { tool in
-                    Label {
-                        Text(tool.title)
-                        Text(tool.description)
-                    } icon: {
-                        Image(systemName: tool.iconName)
-                    }
-                }
-            }
+//            Section("Plugins") {
+//                ForEach([Tool.webSearch, Tool.imageGeneration], id: \.self) { tool in
+//                    Label {
+//                        Text(tool.title)
+//                        Text(tool.description)
+//                    } icon: {
+//                        Image(systemName: tool.iconName)
+//                    }
+//                }
+//            }
 
             Section {
                 sysPrompt
@@ -46,6 +51,13 @@ struct ChatServiceSettings: View {
                             .fontWeight(.regular)
                     }
                 }
+            }
+            
+            Section("API Keys") {
+                SecureField("Gemini API Key", text: $geminiApiKey)
+                SecureField("OpenAI API Key", text: $openaiApiKey)
+                SecureField("Anthropic API Key", text: $anthropicApiKey)
+                SecureField("xAI API Key", text: $xaiApiKey)
             }
         }
         .navigationTitle("Chat Parameters")

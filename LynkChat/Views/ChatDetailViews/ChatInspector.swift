@@ -60,10 +60,10 @@ struct ChatInspector: View {
                     Label("Behaviour", systemImage: "brain")
                 }
             }
-            
-            Section("Plugins") {
-                ToolsToggleView(config: $chat.config)
-            }
+//            
+//            Section("Plugins") {
+//                ToolsToggleView(config: $chat.config)
+//            }
             
             Section("System Prompt") {
                 sysPrompt

@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct ChatToolView: View {
-    var tools: [ChatTool]
+    var tools: [ToolCall]
     
     var body: some View {
         FlowLayout {
-            ForEach(tools) { chatTool in
-                ToolButton(chatTool: chatTool)
+            ForEach(tools) { toolCall in
+                ToolButton(toolCall: toolCall)
             }
         }
         .padding(.trailing, -8)
         
         
-        ForEach(tools) { chatTool in
-            ToolResultView(chatTool: chatTool)
+        ForEach(tools) { toolCall in
+            ToolResultView(toolCall: toolCall)
         }
     }
 }

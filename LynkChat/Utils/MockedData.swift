@@ -13,14 +13,20 @@ extension Message {
     static let mockUserMessage = Message.user(content: String.shortContent)
 }
 
-extension ChatTool {
-    static let mockTool = ChatTool(toolCallId: "scrapeLinks123", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: .processFile("This is the result of the tool url scraping of page"))
+extension ToolCall {
+    static let mockTool = ToolCall(
+        id: "generateImage123",
+        tool: .generateImage,
+        arguments: "{\"prompt\": \"A beautiful sunset over mountains\"}",
+        result: ToolCall.Result(text: "Image generated successfully")
+    )
     
-//    static let mockImageTool = ChatTool(toolCallId: "imageTool123", tool: .imageGeneration, args: "{url : https://www.google.com}", result: .imageGeneration("https://picsum.photos/200"))
-    
-    static let mockGoogleTool2 = ChatTool(toolCallId: "googleTool123", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: nil)
-
-    static let mockTranscribeTool = ChatTool(toolCallId: "transcribel123", tool: .processFile, args: "{key : ddgyusadg67ygyisdgiyas}", result: nil)
+    static let mockEditImageTool = ToolCall(
+        id: "editImage456",
+        tool: .editImage,
+        arguments: "{\"prompt\": \"Make the sky more vibrant\"}",
+        result: nil
+    )
 }
 
 extension MessageGroup {

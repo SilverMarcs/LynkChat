@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ImageInputView: View {
     @Bindable var session: ImageSession
     @FocusState var isFocused: FocusedField?
+    
+    @State private var showPhotosPicker = false
+    @State private var selectedPhotos = [PhotosPickerItem]()
+    @State private var isLoadingPhotos = false
     
     var body: some View {
         HStack(spacing: 5) {
@@ -31,6 +36,23 @@ struct ImageInputView: View {
             .fontWeight(.bold)
             .buttonBorderShape(.circle)
             .keyboardShortcut("r")
+            
+            Button {
+                showPhotosPicker = true
+            } label: {
+                if isLoadingPhotos {
+                    ProgressView()
+                        .controlSize(.small)
+                } else {
+                    Label("Add Photos", systemImage: "photo.on.rectangle.angled")
+                        .labelStyle(.iconOnly)
+                        .tint(.white)
+                }
+            }
+            .controlSize(.large)
+            .fontWeight(.bold)
+            .buttonBorderShape(.circle)
+            .disabled(isLoadingPhotos)
             
             TextField("Prompt", text: $session.prompt, axis: .vertical)
                 .onSubmit( { sendInput() } )
@@ -60,6 +82,20 @@ struct ImageInputView: View {
         .glassEffect(in: .rect(cornerRadius: 20))
         .ignoresSafeArea()
         .padding(11)
+        .photosPicker(isPresented: $showPhotosPicker, selection: $selectedPhotos, matching: .images)
+        .task(id: selectedPhotos) {
+            guard !selectedPhotos.isEmpty else { return }
+            isLoadingPhotos = true
+            
+            for photo in selectedPhotos {
+                if let data = try? await photo.loadTransferable(type: Data.self) {
+                    session.addUploadedImage(data)
+                }
+            }
+            
+            selectedPhotos.removeAll()
+            isLoadingPhotos = false
+        }
         #if os(macOS)
         .task {
             isFocused = .imageInput

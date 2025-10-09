@@ -44,9 +44,9 @@ struct ChatToolbar: ToolbarContent {
             }
         
         if showToolbarItems {
-            ToolbarItemGroup(placement: .primaryAction) {
-                ToolsToggleView(config: $chat.config)
-            }
+//            ToolbarItemGroup(placement: .primaryAction) {
+//                ToolsToggleView(config: $chat.config)
+//            }
             
             ToolbarSpacer(.fixed)
             

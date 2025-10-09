@@ -12,11 +12,26 @@ struct ImageServiceSettings: View {
     
     var body: some View {
         Form {
+            Section(header: Text("API Configuration")) {
+                SecureField("Wavespeed API Key", text: $config.wavespeedApiKey)
+                    .textContentType(.password)
+                #if os(macOS)
+                    .help("Enter your Wavespeed API key for image generation and editing")
+                #endif
+            }
+            
             Section {
                 Picker("Default Model", selection: $config.defaultModel) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
+                    }
+                }
+                
+                Picker("Default Mode", selection: $config.defaultMode) {
+                    ForEach(ImageMode.allCases, id: \.self) { mode in
+                        Text(mode.displayName)
+                            .tag(mode)
                     }
                 }
             }

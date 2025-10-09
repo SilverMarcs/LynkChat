@@ -27,9 +27,7 @@ struct ChatDetailMobile: View {
                 ForEach(chat.currentThread, id: \.self) { group in
                     MessageView(group: group)
                         .environment(\.chat, chat)
-                    #if !os(macOS)
                         .padding(.vertical, 2)
-                    #endif
                 }
                 .listRowSeparator(.hidden)
                 
@@ -38,7 +36,6 @@ struct ChatDetailMobile: View {
                 Color.clear
                     .frame(height: config.expandColor ? 400 : 1)
                     .listRowInsets(.init())
-//                    .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1)) // TODO: see if needed anymore or not
                     .listRowSeparator(.hidden)
                     .id(String.bottomID)
             }

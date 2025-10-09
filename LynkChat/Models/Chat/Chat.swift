@@ -253,9 +253,35 @@ final class Chat: Equatable, Identifiable, Hashable {
 
         let formattedPrompt = TitleFormatter.formatMessagesForTitleGeneration(messages: adjustedContext)
         
+        // TODO: adjust this
         do {
-            let newTitle = try await APIService.basicResponse(prompt: formattedPrompt)
-            self.title = newTitle
+//                TODO: pls fix
+//            let client = OpenAIClient(
+//                apiKey: ChatModel.gpt_mini.apiKey,
+//                baseURL: ChatModel.gpt_mini.baseURL,
+//                model: ChatModel.gpt_mini.id
+//            )
+//            
+//            let systemMessage = ChatRequestMessage(
+//                role: .system,
+//                content: [MessageContent(text: "Generate a concise, descriptive title (max 6 words) for this conversation.")]
+//            )
+//            let userMessage = ChatRequestMessage(
+//                role: .user,
+//                content: [MessageContent(text: formattedPrompt)]
+//            )
+//            
+//            var titleContent = ""
+//            for try await response in client.streamChatCompletion(
+//                messages: [systemMessage, userMessage],
+//                temperature: 0.3
+//            ) {
+//                if let content = response.choices.first?.delta.content {
+//                    titleContent += content
+//                }
+//            }
+//            
+//            self.title = titleContent.trimmingCharacters(in: .whitespacesAndNewlines)
         } catch {
             await AppLogger.error("Error generating title: \(error)")
         }

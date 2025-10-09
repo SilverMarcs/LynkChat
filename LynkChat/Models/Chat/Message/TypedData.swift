@@ -44,14 +44,15 @@ struct TypedData: Codable, Identifiable, Hashable {
         #endif
     }
     
-    static func processDataFiles(_ dataFiles: [TypedData]) -> [ContentItem] {
-        dataFiles.map { data in
-            if data.fileType.conforms(to: .text) {
-                return .text(data.formattedTextContent)
-            } else {
-                return .file(data: data.data, mimeType: data.mimeType)
-            }
-        }
+    static func processDataFiles(_ dataFiles: [TypedData]) -> [Any] {
+//        dataFiles.map { data in
+//            if data.fileType.conforms(to: .text) {
+//                return .text(data.formattedTextContent)
+//            } else {
+//                return .file(data: data.data, mimeType: data.mimeType)
+//            }
+//        }
+        return []
     }
 }
 

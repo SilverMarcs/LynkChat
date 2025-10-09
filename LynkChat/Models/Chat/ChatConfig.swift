@@ -21,7 +21,7 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         #if os(macOS)
         self.enabledTools = []
         #else
-        self.enabledTools = [.scrapeLinks, .webSearch]
+        self.enabledTools = []
         #endif
     }
     

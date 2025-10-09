@@ -15,6 +15,10 @@ class ImageSession {
     var date: Date = Date()
     var title: String = "Image Session"
     var prompt: String = ""
+    
+    // Store user-uploaded images for editing mode
+    @Relationship(deleteRule: .cascade)
+    var uploadedImages: [Data] = []
 
     @Relationship(deleteRule: .cascade, inverse: \Generation.session)
     var imageGenerations = [Generation]()
@@ -48,6 +52,41 @@ class ImageSession {
         while let generation = imageGenerations.popLast() {
             modelContext?.delete(generation)
         }
+    }
+    
+    func addUploadedImage(_ imageData: Data) {
+        uploadedImages.append(imageData)
+    }
+    
+    func removeUploadedImage(at index: Int) {
+        guard index < uploadedImages.count else { return }
+        uploadedImages.remove(at: index)
+    }
+    
+    func clearUploadedImages() {
+        uploadedImages.removeAll()
+    }
+    
+    // Get all images from history for editing mode
+    func getAllHistoryImages() -> [Data] {
+        var allImages: [Data] = []
+        
+        // Add uploaded images
+        allImages.append(contentsOf: uploadedImages)
+        
+        // Add generated images from all generations
+        for generation in imageGenerations.sorted(by: { $0.date < $1.date }) {
+            allImages.append(contentsOf: generation.images)
+        }
+        
+        return allImages
+    }
+    
+    // Get all prompts from history for editing mode
+    func getAllHistoryPrompts() -> [String] {
+        return imageGenerations
+            .sorted(by: { $0.date < $1.date })
+            .map { $0.config.prompt }
     }
 }
 

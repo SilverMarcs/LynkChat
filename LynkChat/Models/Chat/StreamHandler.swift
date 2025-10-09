@@ -18,18 +18,45 @@ struct StreamHandler {
         AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
         
-        let apiRequest = await createAPIRequest()
-        try await processStream(from: apiRequest)
+        try await processStream()
         
         finishResponse()
     }
     
     // MARK: - Stream Processing
     
-    private func processStream(from request: APIRequest) async throws {
+    private func processStream() async throws {
+        // Create OpenAI client for the assistant's model
+        let client = OpenAIClient(
+            apiKey: assistant.model.apiKey,
+            baseURL: assistant.model.baseURL,
+            model: assistant.model.id
+        )
+        
+        // Prepare messages
+        let adjustedContext = chat.adjustedContext.dropLast() // removing last assistant msg
+        var apiMessages = adjustedContext.map { $0.toAPIMessage() }
+        
+        // Add system message
+        let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
+        let systemContent = date + "\n" + chat.config.systemPrompt
+        apiMessages.insert(
+            ChatRequestMessage(role: .system, content: [MessageContent(text: systemContent)]),
+            at: 0
+        )
+        
         // Local buffers for batching updates
         var contentBuffer = ""
-        var reasoningBuffer = assistant.reasoning ?? ""
+        var reasoningBuffer = assistant.reasoning ?? "" // Placeholder, not used in OpenAI streaming
+        
+        // Tool call tracking
+        var pendingToolCalls: [String: PendingToolCall] = [:]
+        
+        struct PendingToolCall {
+            var id: String
+            var name: String
+            var argumentsBuffer: String
+        }
         
         // Timer for periodic updates
         let updateInterval: TimeInterval = 0.2
@@ -41,43 +68,62 @@ struct StreamHandler {
             assistant.reasoning = reasoningBuffer.isEmpty ? nil : reasoningBuffer
         }
         
-        for try await response in APIService.streamResponse(from: request) {
-            switch response {
-            case .text(let textResponse):
-                contentBuffer += textResponse.content
-                
-            case .reasoning(let reasoningResponse):
-                reasoningBuffer += reasoningResponse.reasoning
-                
-            case .reasoningEnd(_):
-                break
-                
-            case .toolCall(let toolCallResponse):
-                updateTools(with: toolCallResponse)
-                
-            case .toolResult(let toolResultResponse):
-                updateToolResult(for: toolResultResponse)
-                
-            case .file(let fileResponse):
-                if let data = Data(base64Encoded: fileResponse.base64),
-                   let utType = UTType(mimeType: fileResponse.mimeType) {
-                    let fileExtension = utType.preferredFilenameExtension ?? "dat"
-                    let fileName = "file_\(UUID().uuidString).\(fileExtension)"
-                    let typedData = TypedData(
-                        data: data,
-                        fileType: utType,
-                        fileName: fileName
-                    )
-                    assistant.dataFiles.append(typedData)
+        // Stream the response
+        for try await response in client.streamChatCompletion(
+            messages: apiMessages,
+            temperature: chat.config.temperature.value,
+            tools: [] // Tools disabled for now
+        ) {
+            guard let choice = response.choices.first else { continue }
+            let delta = choice.delta
+            
+            // Handle content
+            if let content = delta.content {
+                contentBuffer += content
+            }
+            
+            // Handle tool calls
+            if let toolCalls = delta.tool_calls {
+                for toolCall in toolCalls {
+                    let index = toolCall.index ?? 0
+                    let key = "\(index)"
+                    
+                    if let id = toolCall.id, let function = toolCall.function?.name {
+                        // Start of a new tool call
+                        pendingToolCalls[key] = PendingToolCall(
+                            id: id,
+                            name: function,
+                            argumentsBuffer: toolCall.function?.arguments ?? ""
+                        )
+                    } else if var pending = pendingToolCalls[key] {
+                        // Continue existing tool call
+                        if let args = toolCall.function?.arguments {
+                            pending.argumentsBuffer += args
+                            pendingToolCalls[key] = pending
+                        }
+                    }
                 }
-                
-            case .finish(let finishResponse):
-                user.inputTokens += finishResponse.inputTokens
-                assistant.outputTokens += finishResponse.outputTokens
-                assistant.reasoningTokens += finishResponse.reasoningTokens
-                
-            case .error(let errorResponse):
-                throw RuntimeError(errorResponse.content)
+            }
+            
+            // Handle finish reason
+            if let finishReason = choice.finish_reason {
+                if finishReason == "tool_calls" {
+                    // Finalize tool calls
+                    for (_, pending) in pendingToolCalls {
+                        if let tool = Tool(rawValue: pending.name) {
+                            let toolCall = ToolCall(
+                                id: pending.id,
+                                tool: tool,
+                                arguments: pending.argumentsBuffer,
+                                result: nil
+                            )
+                            if assistant.tools == nil {
+                                assistant.tools = []
+                            }
+                            assistant.tools?.append(toolCall)
+                        }
+                    }
+                }
             }
             
             // Periodic UI updates
@@ -93,41 +139,6 @@ struct StreamHandler {
     }
     
     // MARK: - Helper Methods
-    
-    private func createAPIRequest() async -> APIRequest {
-        let adjustedContext = chat.adjustedContext.dropLast() // removing last assistant msg
-        let apiMessages = adjustedContext.map { $0.toAPIMessage() }
-        return createAPIRequest(with: apiMessages)
-    }
-    
-    private func createAPIRequest(with messages: [APIMessage]) -> APIRequest {
-        let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
-        
-        return APIRequest(
-            userId: "zabir",
-            model: AppConfig.shared.sendDebugModel ? "debug" : chat.config.model.id,
-            messages: messages,
-            temperature: chat.config.temperature.value,
-            thinkingBudget: chat.config.thinkingBudget.rawValue,
-            system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
-            tools: chat.config.enabledTools.map { $0.rawValue }
-        )
-    }
-    
-    private func updateTools(with toolCallResponse: ToolCallResponse) {
-        assistant.tools?.append(.init(
-            toolCallId: toolCallResponse.toolCallId,
-            tool: toolCallResponse.tool,
-            args: toolCallResponse.args,
-            result: nil
-        ))
-    }
-    
-    private func updateToolResult(for toolResultResponse: ToolResultResponse) {
-        if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
-            assistant.tools?[index].result = toolResultResponse.result
-        }
-    }
     
     private func finishResponse() {
         assistant.isReplying = false

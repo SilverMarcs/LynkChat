@@ -29,7 +29,7 @@ final class Message: Equatable, Identifiable, Hashable {
     @Relationship(deleteRule: .cascade)
     var next: MessageGroup?
     
-    var tools: [ChatTool]?
+    var tools: [ToolCall]?
     
     var inputTokens: Int = 0
     var outputTokens: Int = 0
@@ -40,7 +40,7 @@ final class Message: Equatable, Identifiable, Hashable {
                  reasoning: String? = nil,
                  model: ChatModel,
                  dataFiles: [TypedData],
-                 tools: [ChatTool]?,
+                 tools: [ToolCall]?,
                  isReplying: Bool = false,
                  height: CGFloat,
                  inputTokens: Int = 0,
@@ -106,37 +106,73 @@ final class Message: Equatable, Identifiable, Hashable {
 }
 
 extension Message {
-    func toAPIMessage() -> APIMessage {
-        var contentItems = [ContentItem]()
+    func toAPIMessage() -> ChatRequestMessage {
+        var contentItems = [MessageContent]()
         
-        // Process data files
-        let processedDataFiles = TypedData.processDataFiles(dataFiles)
-        
-        // Create tool usage texts
-        let toolTexts = tools?.map { tool -> String in
-            return """
-                Used \(tool.tool.rawValue) tool
-                Arguments: \(tool.args)
-                Tool Result:
-                \(tool.result?.textContent ?? "No result")
-                """
-        } ?? []
-        
-        // Add the original message content, reasoning (if exists), and tool texts
-        let messageComponents = [content]
-            + (reasoning.map { ["Reasoning: \($0)"] } ?? [])
-            + toolTexts
-        
-        let userText = messageComponents
-            .filter { !$0.isEmpty }
-            .joined(separator: "\n\n")
-        
-        if !userText.isEmpty {
-            contentItems.append(.text(userText))
+        // For assistant messages with tool calls
+        if role == .assistant && tools != nil && !tools!.isEmpty {
+            // Add content if present
+            if !content.isEmpty {
+                contentItems.append(MessageContent(text: content))
+            }
+            
+            // Convert tools to tool calls
+            let toolCalls = tools!.map { tool in
+                ChatRequestMessage.ToolCallInfo(
+                    id: tool.id,
+                    type: "function",
+                    function: ChatRequestMessage.ToolCallInfo.FunctionInfo(
+                        name: tool.tool.rawValue,
+                        arguments: tool.arguments
+                    )
+                )
+            }
+            
+            return ChatRequestMessage(
+                role: MessageRole(rawValue: role.rawValue)!,
+                content: contentItems,
+                toolCalls: toolCalls
+            )
         }
         
-        contentItems.append(contentsOf: processedDataFiles)
+        // For messages with tool results (convert to tool role messages)
+        if let toolList = tools, !toolList.isEmpty, toolList.first?.result != nil {
+            // Create separate tool messages for each tool result
+            // Note: This returns only the first tool result as a tool message
+            // In practice, you may need to handle multiple tool results differently
+            if let firstTool = toolList.first, let result = firstTool.result {
+                contentItems.append(MessageContent(text: result.text))
+                return ChatRequestMessage(
+                    role: .tool,
+                    content: contentItems,
+                    toolCallId: firstTool.id
+                )
+            }
+        }
         
-        return APIMessage(role: role, content: contentItems)
+        // Process data files for images
+        for dataFile in dataFiles {
+            if dataFile.fileType.conforms(to: .image) {
+                let imageURL = OpenAIClient.imageDataURL(from: dataFile.data)
+                contentItems.append(MessageContent(
+                    image: MessageContent.ImageURL(url: imageURL, detail: "auto")
+                ))
+            }
+        }
+        
+        // Add text content (including reasoning if present)
+        var textContent = content
+        if let reasoning = reasoning, !reasoning.isEmpty {
+            textContent += "\n\nReasoning: \(reasoning)"
+        }
+        
+        if !textContent.isEmpty {
+            contentItems.insert(MessageContent(text: textContent), at: 0)
+        }
+        
+        return ChatRequestMessage(
+            role: MessageRole(rawValue: role.rawValue)!,
+            content: contentItems
+        )
     }
 }

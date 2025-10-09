@@ -27,8 +27,19 @@ struct GenerationView: View {
             
             
             VStack(alignment: .leading) {
-                AssistantLabel(model: generation.config.model)
-                    .padding(.bottom, 4)
+                HStack {
+                    AssistantLabel(model: generation.config.model)
+                    
+                    // Mode badge
+                    Text(generation.config.mode.displayName)
+                        .font(.caption)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(generation.config.mode == .generation ? Color.blue.opacity(0.2) : Color.purple.opacity(0.2))
+                        .foregroundStyle(generation.config.mode == .generation ? .blue : .purple)
+                        .clipShape(Capsule())
+                }
+                .padding(.bottom, 4)
                 
                 if generation.state == .error {
                     Text(generation.errorMessage)

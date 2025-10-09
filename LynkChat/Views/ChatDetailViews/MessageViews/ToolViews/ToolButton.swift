@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ToolButton: View {
-    var chatTool: ChatTool
+    var toolCall: ToolCall
     
     @State private var showArguments = false
     
@@ -16,9 +16,9 @@ struct ToolButton: View {
         Button {
             showArguments.toggle()
         } label: {
-            Label(chatTool.tool.title, systemImage: chatTool.tool.iconName)
+            Label(toolCall.tool.title, systemImage: toolCall.tool.iconName)
                 .fontWeight(.semibold)
-                .foregroundStyle(chatTool.tool.color)
+                .foregroundStyle(toolCall.tool.color)
         }
         .labelStyle(.titleAndIcon)
         .buttonStyle(.bordered)
@@ -28,8 +28,7 @@ struct ToolButton: View {
         .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
             ScrollView {
-//                Text(try! AttributedString(markdown: chatTool.args))
-                NativeMarkdownView(text: chatTool.result?.textContent ?? chatTool.args)
+                NativeMarkdownView(text: toolCall.result?.text ?? toolCall.arguments)
                     .textSelection(.enabled)
             }
             .presentationDragIndicator(.visible)
@@ -42,5 +41,5 @@ struct ToolButton: View {
 }
 
 #Preview {
-    ToolButton(chatTool: .mockTool)
+    ToolButton(toolCall: ToolCall(id: "test", tool: .generateImage, arguments: "Test prompt"))
 }

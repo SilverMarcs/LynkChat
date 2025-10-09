@@ -20,7 +20,7 @@ struct ImageInspector: View {
                     .labelsHidden()
             }
             
-            Section("Models") {
+            Section("Configuration") {
                 Picker("Model", selection: $session.config.model) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
@@ -28,6 +28,22 @@ struct ImageInspector: View {
                     }
                 }
                 .labelStyle(.titleAndIcon)
+                
+                Picker("Mode", selection: $session.config.mode) {
+                    ForEach(ImageMode.allCases, id: \.self) { mode in
+                        Text(mode.displayName)
+                            .tag(mode)
+                    }
+                }
+                
+                if session.config.mode == .editing {
+                    HStack {
+                        Text("Uploaded Images")
+                        Spacer()
+                        Text("\(session.uploadedImages.count)")
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
             
             Section("Parameters") {

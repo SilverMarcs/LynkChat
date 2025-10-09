@@ -13,6 +13,7 @@ struct ImageConfig: Identifiable, Codable, Sendable {
     var model: ImageModel
     var prompt: String
     var numImages: Int
+    var mode: ImageMode
     
     init(prompt: String = "") {
         self.prompt = prompt
@@ -21,6 +22,7 @@ struct ImageConfig: Identifiable, Codable, Sendable {
         
         self.model = defaults.defaultModel
         self.numImages = defaults.numImages
+        self.mode = defaults.defaultMode
     }
     
 }

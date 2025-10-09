@@ -8,64 +8,59 @@
 import SwiftUI
 
 struct ToolResultView: View {
-    let chatTool: ChatTool
+    let toolCall: ToolCall
     
     var body: some View {
-        if let result = chatTool.result {
-            switch result {
-            case .scrapeLinks:
-                EmptyView()
-            case .imageGeneration(let imageGenResult):
-                ToolImageView(imageResult: imageGenResult)
-            case .webSearch(let searchResult):
-                ToolSearchResultView(searchResult: searchResult)
-            case .rag(let ragResponse):
-                ToolRagView(ragResponse: ragResponse)
-            case .processFile(let content), .reasoning(let content):
-                FileProcessingView(content: content)
+        if let result = toolCall.result {
+            // Display images if data is present
+            if !result.data.isEmpty {
+                ToolImageGridView(imageDatas: result.data)
             }
         } else {
-            // Show placeholder based on tool type
-            switch chatTool.tool {
-            case .scrapeLinks:
-                EmptyView()
-            case .imageGeneration:
-                ToolImageView(imageResult: nil)
-            case .webSearch:
-                ToolSearchResultView(searchResult: nil)
-            case .rag:
-                ToolRagView(ragResponse: nil)
-            case .processFile, .reasoning:
-                FileProcessingView(content: nil)
+            // Show placeholder for image tools
+            switch toolCall.tool {
+            case .generateImage, .editImage:
+                ToolImageGridView(imageDatas: [])
             }
         }
     }
 }
 
-#Preview {
-    @Previewable @State var chatTool1: ChatTool = .mockGoogleTool2
+// Helper view for displaying images in a grid
+struct ToolImageGridView: View {
+    let imageDatas: [Data]
     
-    @Previewable @State var chatTool2: ChatTool = .mockTranscribeTool
-    
-    VStack {
-        ToolResultView(chatTool: chatTool1)
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    // Create SearchResult from mock data
-                    if let data = String.mockTavilyThorough.data(using: .utf8),
-                       let searchResult = try? JSONDecoder().decode(SearchResult.self, from: data) {
-                        chatTool1.result = .webSearch(searchResult)
+    var body: some View {
+        if imageDatas.isEmpty {
+            // Placeholder
+            EmptyView()
+        } else {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 200))], spacing: 10) {
+                ForEach(Array(imageDatas.enumerated()), id: \.offset) { index, data in
+                    #if os(macOS)
+                    if let nsImage = NSImage(data: data) {
+                        Image(nsImage: nsImage)
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(8)
                     }
+                    #else
+                    if let uiImage = UIImage(data: data) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(8)
+                    }
+                    #endif
                 }
             }
-        
-        ToolResultView(chatTool: chatTool2)
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    chatTool2.result = .processFile(String.mockTranscription + "\n" + String.mockTranscription)
-                }
-            }
+            .padding()
+        }
     }
-    .padding()
-    .frame(width: 700, height: 300)
+}
+
+#Preview {
+    ToolResultView(toolCall: ToolCall(id: "test", tool: .generateImage, arguments: "Test prompt"))
+        .padding()
+        .frame(width: 700, height: 300)
 }

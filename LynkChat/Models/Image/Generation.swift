@@ -42,7 +42,31 @@ class Generation {
 
         generatingTask = Task { @MainActor in
             do {
-                let dataObjects = try await APIService.generateImages(config: config)
+                let dataObjects: [Data]
+                
+                // Choose API based on mode
+                if config.mode == .generation {
+                    // For generation mode, just send the current prompt
+                    dataObjects = try await APIService.generateImageWithWavespeed(
+                        prompt: config.prompt,
+                        numImages: config.numImages
+                    )
+                } else {
+                    // For editing mode, send all images and prompts from history
+                    guard let session = session else {
+                        throw RuntimeError("No session found for editing")
+                    }
+                    
+                    let historyImages = session.getAllHistoryImages()
+                    let historyPrompts = session.getAllHistoryPrompts()
+                    
+                    dataObjects = try await APIService.editImageWithWavespeed(
+                        prompt: config.prompt,
+                        images: historyImages,
+                        contextPrompts: historyPrompts,
+                        numImages: config.numImages
+                    )
+                }
                 
                 self.images = dataObjects
                 state = .success
