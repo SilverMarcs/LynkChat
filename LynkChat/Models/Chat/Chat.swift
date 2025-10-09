@@ -61,7 +61,6 @@ final class Chat: Equatable, Identifiable, Hashable {
     @Transient
     var inputManager = InputManager()
     
-    
     var totalTokens: Int {
         adjustedContext.reduce(0) { total, message in
             total + message.inputTokens + message.outputTokens + message.reasoningTokens

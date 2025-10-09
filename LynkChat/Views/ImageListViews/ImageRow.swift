@@ -17,7 +17,8 @@ struct ImageRow: View {
         HStack {
             ListRowImage(model: session.config.model)
             
-            HighlightableTextView(session.title, highlightedText: imageSearchText)
+//            HighlightableTextView(session.title, highlightedText: imageSearchText)
+            Text(session.title)
                 .lineLimit(1)
                 .font(font)
                 .opacity(0.9)

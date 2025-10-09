@@ -24,5 +24,4 @@ struct ImageConfig: Identifiable, Codable, Sendable {
         self.numImages = defaults.numImages
         self.mode = defaults.defaultMode
     }
-    
 }

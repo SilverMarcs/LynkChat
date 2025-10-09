@@ -35,15 +35,6 @@ struct ImageInspector: View {
                             .tag(mode)
                     }
                 }
-                
-                if session.config.mode == .editing {
-                    HStack {
-                        Text("Uploaded Images")
-                        Spacer()
-                        Text("\(session.uploadedImages.count)")
-                            .foregroundStyle(.secondary)
-                    }
-                }
             }
             
             Section("Parameters") {

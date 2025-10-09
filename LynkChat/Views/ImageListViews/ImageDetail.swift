@@ -17,10 +17,7 @@ struct ImageDetail: View {
     
     var body: some View {
         ScrollViewReader { proxy in
-            List {
-                // Show uploaded images section
-                UploadedImagesView(session: session)
-                
+            List {                
                 ForEach(session.imageGenerations.sorted(by: { $0.date < $1.date })) { generation in
                     GenerationView(generation: generation)
                         .padding(.bottom)
@@ -40,16 +37,6 @@ struct ImageDetail: View {
                 ImageInputView(session: session)
             }
             .navigationTitle(session.title)
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Button("Delete Last Message", role: .destructive) {
-                        if let last = session.imageGenerations.last {
-                            session.deleteGeneration(last)
-                        }
-                    }
-                    .keyboardShortcut(.delete)
-                }
-            }
             #else
             .toolbarTitleMenu {
                 Picker("Model", selection: $session.config.model) {
@@ -74,18 +61,7 @@ struct ImageDetail: View {
             }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
-                    Button {
-                        Task {
-                            // Get the most recent generation's prompt (if any) and regenerate
-                            if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
-                                // copy prompt from the generation's config to session prompt
-                                await session.send(latest.config.prompt)
-                            }
-                        }
-                    } label: {
-                        Label("Regenerate", systemImage: "arrow.clockwise")
-                    }
-                    .disabled(session.imageGenerations.isEmpty)
+                    ImageInputMenu(session: session)
                 }
                 
                 ToolbarSpacer(.fixed, placement: .bottomBar)
@@ -110,6 +86,7 @@ struct ImageDetail: View {
                     .navigationTransition(.zoom(sourceID: "image-inspector-button", in: transition))
                     .presentationDetents(horizontalSizeClass == .compact ? [.medium] : [.large])
             }
+            .scrollDismissesKeyboard(.interactively)
             #endif
         }
     }

@@ -11,9 +11,7 @@ struct ChatServiceSettings: View {
     @State var config: ChatConfigDefaults = .init()
     
     @AppStorage("geminiApiKey") private var geminiApiKey = ""
-    @AppStorage("openaiApiKey") private var openaiApiKey = ""
-    @AppStorage("anthropicApiKey") private var anthropicApiKey = ""
-    @AppStorage("xaiApiKey") private var xaiApiKey = ""
+    @AppStorage("vercelApiKey") private var vercelApiKey = ""
 
     var body: some View {
         Form {
@@ -55,9 +53,7 @@ struct ChatServiceSettings: View {
             
             Section("API Keys") {
                 SecureField("Gemini API Key", text: $geminiApiKey)
-                SecureField("OpenAI API Key", text: $openaiApiKey)
-                SecureField("Anthropic API Key", text: $anthropicApiKey)
-                SecureField("xAI API Key", text: $xaiApiKey)
+                SecureField("Vercel AI API Key", text: $vercelApiKey)
             }
         }
         .navigationTitle("Chat Parameters")

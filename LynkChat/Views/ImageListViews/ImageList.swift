@@ -22,7 +22,7 @@ struct ImageList: View {
     
     var body: some View {
         list
-            .searchable(text: $searchText, placement: searchPlacement)
+        .searchable(text: $searchText, placement: searchPlacement)
     }
     
     @ViewBuilder

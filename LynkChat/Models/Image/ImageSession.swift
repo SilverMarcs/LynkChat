@@ -14,10 +14,11 @@ class ImageSession {
     var id: UUID = UUID()
     var date: Date = Date()
     var title: String = "Image Session"
+    
+    @Transient
     var prompt: String = ""
     
-    // Store user-uploaded images for editing mode
-    @Relationship(deleteRule: .cascade)
+    @Transient
     var uploadedImages: [Data] = []
 
     @Relationship(deleteRule: .cascade, inverse: \Generation.session)
@@ -88,5 +89,4 @@ class ImageSession {
             .sorted(by: { $0.date < $1.date })
             .map { $0.config.prompt }
     }
-}
-
+} 

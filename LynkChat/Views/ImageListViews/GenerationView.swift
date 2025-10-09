@@ -14,17 +14,12 @@ struct GenerationView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Spacer()
-
-                GroupBox {
-                    Text(generation.config.prompt)
-                        .textSelection(.enabled)
-                }
-                    
-                .groupBoxStyle(PlatformGroupBox())
-            }
-            
+            Text(generation.config.prompt)
+                .padding(12)
+//                .glassEffect(.regular.tint(.accentColor), in: .rect(cornerRadius: 24))
+//                .foregroundStyle(.white)
+                .glassEffect(in: .rect(cornerRadius: 24))
+                .frame(maxWidth: .infinity, alignment: .trailing)
             
             VStack(alignment: .leading) {
                 HStack {
