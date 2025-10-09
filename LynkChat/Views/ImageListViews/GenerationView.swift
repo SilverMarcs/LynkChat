@@ -56,6 +56,8 @@ struct GenerationView: View {
                         } else if generation.state == .success {
                             ForEach(generation.images, id: \.self) { image in
                                 SMVImageData(data: image)
+                                    .scaledToFill()
+                                    .clipShape(.rect(cornerRadius: 12))
                                     .backgroundExtensionEffect()
                             }
                         }

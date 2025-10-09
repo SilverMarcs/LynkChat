@@ -24,27 +24,6 @@ struct InputEditor: View {
                 .frame(maxHeight: 350)
                 .fixedSize(horizontal: false, vertical: true)
                 .scrollContentBackground(.hidden)
-//                .apply {
-//                    if config.enterToSend {
-//                        $0.onChange(of: chat.inputManager.prompt) { oldValue, newValue in
-//                            let modifiers = NSApp.currentEvent?.modifierFlags
-//                            if modifiers?.contains(.shift) != true && modifiers?.contains(.option) != true {
-//                                let hasNewlineAtEnd = chat.inputManager.prompt.last?.isNewline == .some(true)
-//                                let isDeleting = oldValue.count > chat.inputManager.prompt.count
-//                                
-//                                if hasNewlineAtEnd && !isDeleting {
-//                                    chat.inputManager.prompt.removeLast()
-//                                    isFocused = nil
-//                                    Task {
-//                                        await chat.sendInput()
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        $0
-//                    }
-//                }
         }
         .font(.body)
         .focused($isFocused, equals: .textEditor)
