@@ -24,7 +24,8 @@ class OpenAIClient {
         messages: [ChatRequestMessage],
         temperature: Double? = 0.3,
         maxTokens: Int? = nil,
-        tools: [ChatCompletionRequest.Tool]? = nil
+        tools: [ChatCompletionRequest.Tool]? = nil,
+        reasoning: ChatCompletionRequest.ReasoningConfig? = nil
     ) -> AsyncThrowingStream<ChatStreamResponse, Error> {
         AsyncThrowingStream { continuation in
             Task {
@@ -35,7 +36,8 @@ class OpenAIClient {
                         stream: true,
                         temperature: temperature,
                         max_tokens: maxTokens,
-                        tools: tools
+                        tools: tools,
+                        reasoning: reasoning
                     )
                     
                     let url = URL(string: "\(baseURL)/chat/completions")!

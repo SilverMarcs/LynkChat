@@ -16,6 +16,11 @@ struct ChatCompletionRequest: Codable {
     let temperature: Double?
     let max_tokens: Int?
     let tools: [Tool]?
+    let reasoning: ReasoningConfig?
+    
+    struct ReasoningConfig: Codable {
+        let effort: String
+    }
     
     struct Tool: Codable {
         let type: String
@@ -96,6 +101,7 @@ struct ChatStreamResponse: Codable {
     struct Delta: Codable {
         let role: String?
         let content: String?
+        let reasoning: String?
         let tool_calls: [ToolCall]?
     }
     

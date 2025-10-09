@@ -47,7 +47,7 @@ struct StreamHandler {
         
         // Local buffers for batching updates
         var contentBuffer = ""
-        var reasoningBuffer = assistant.reasoning ?? "" // Placeholder, not used in OpenAI streaming
+        var reasoningBuffer = ""
         
         // Tool call tracking
         var pendingToolCalls: [String: PendingToolCall] = [:]
@@ -68,11 +68,22 @@ struct StreamHandler {
             assistant.reasoning = reasoningBuffer.isEmpty ? nil : reasoningBuffer
         }
         
+        // Prepare reasoning config if thinking budget is not none
+        let reasoningConfig: ChatCompletionRequest.ReasoningConfig?
+        if chat.config.thinkingBudget != .none {
+            reasoningConfig = ChatCompletionRequest.ReasoningConfig(
+                effort: chat.config.thinkingBudget.rawValue
+            )
+        } else {
+            reasoningConfig = nil
+        }
+        
         // Stream the response
         for try await response in client.streamChatCompletion(
             messages: apiMessages,
             temperature: chat.config.temperature.value,
-            tools: [] // Tools disabled for now
+            tools: [], // Tools disabled for now
+            reasoning: reasoningConfig
         ) {
             guard let choice = response.choices.first else { continue }
             let delta = choice.delta
@@ -80,6 +91,11 @@ struct StreamHandler {
             // Handle content
             if let content = delta.content {
                 contentBuffer += content
+            }
+            
+            // Handle reasoning
+            if let reasoning = delta.reasoning {
+                reasoningBuffer += reasoning
             }
             
             // Handle tool calls
