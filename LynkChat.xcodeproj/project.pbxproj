@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 085E58772E700DD20024AA4B /* SwiftMarkdownView */; };
 		085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 085E587A2E70113F0024AA4B /* SwiftMarkdownView */; };
+		08A55C532E980E6900892F36 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08A55C522E980E6900892F36 /* SwiftMediaViewer */; };
 		08DAD9C62E908D3D00BC04A1 /* LynkShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -175,6 +176,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08A55C532E980E6900892F36 /* SwiftMediaViewer in Frameworks */,
 				085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */,
 				085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */,
 			);
@@ -232,6 +234,7 @@
 			packageProductDependencies = (
 				085E58772E700DD20024AA4B /* SwiftMarkdownView */,
 				085E587A2E70113F0024AA4B /* SwiftMarkdownView */,
+				08A55C522E980E6900892F36 /* SwiftMediaViewer */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -288,6 +291,7 @@
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
 				085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
+				08A55C512E980E6900892F36 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -711,6 +715,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		08A55C512E980E6900892F36 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Frameworks/SwiftMediaViewer;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -731,6 +742,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */;
 			productName = SwiftMarkdownView;
+		};
+		08A55C522E980E6900892F36 /* SwiftMediaViewer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftMediaViewer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

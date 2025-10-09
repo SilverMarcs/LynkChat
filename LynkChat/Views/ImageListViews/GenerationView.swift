@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftMediaViewer
 
 struct GenerationView: View {
     var generation: Generation
@@ -54,7 +55,7 @@ struct GenerationView: View {
                             }
                         } else if generation.state == .success {
                             ForEach(generation.images, id: \.self) { image in
-                                ImageViewerData(data: image)
+                                SMVImageData(data: image)
                                     .backgroundExtensionEffect()
                             }
                         }

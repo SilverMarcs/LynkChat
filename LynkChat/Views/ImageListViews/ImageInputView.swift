@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import SwiftMediaViewer
 
 struct ImageInputView: View {
     @Bindable var session: ImageSession
@@ -20,7 +21,8 @@ struct ImageInputView: View {
         VStack {
             FlowLayout {
                 ForEach(Array(session.uploadedImages.enumerated()), id: \.offset) { index, imageData in
-                    ImageViewerData(data: imageData, enableSave: false, size: 100)
+                    SMVImageData(data: imageData)
+                        .frame(width: 100, height: 100)
                         .overlay(alignment: .topTrailing) {
                             Button(role: .destructive) {
                                 session.removeUploadedImage(at: index)
