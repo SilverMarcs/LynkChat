@@ -11,7 +11,6 @@ struct ChatServiceSettings: View {
     @State var config: ChatConfigDefaults = .init()
     
     @AppStorage("geminiApiKey") private var geminiApiKey = ""
-    @AppStorage("openrouterApiKey") private var openrouterApiKey = ""
     @AppStorage("vercelApiKey") private var vercelApiKey = ""
 
     var body: some View {
