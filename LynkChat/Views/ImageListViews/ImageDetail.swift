@@ -32,12 +32,13 @@ struct ImageDetail: View {
                 AppSettings.shared.proxy = proxy
                 Scroller.scrollToBottom(animated: false)
             }
-            #if os(macOS)
             .safeAreaBar(edge: .bottom) {
                 ImageInputView(session: session)
             }
+            #if os(macOS)
             .navigationTitle(session.title)
             #else
+//            .navigationTitle(session.config.model.name)
             .toolbarTitleMenu {
                 Picker("Model", selection: $session.config.model) {
                     ForEach(ImageModel.allCases) { model in
@@ -48,7 +49,7 @@ struct ImageDetail: View {
                 .labelStyle(.titleAndIcon)
             }
             .toolbar(.hidden, for: .tabBar)
-            .searchable(text: $session.prompt, isPresented: $isFocused, prompt: "Generate Images")
+            .searchable(text: $session.inputManager.prompt, isPresented: $isFocused, prompt: "Generate or Edit Images")
             .onSubmit(of: .search) {
                 Task {
                     await session.send()
@@ -69,7 +70,6 @@ struct ImageDetail: View {
                 DefaultToolbarItem(kind: .search, placement: .bottomBar)
             }
             .listStyle(.plain)
-            .navigationTitle(session.config.model.name)
             .toolbarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem {

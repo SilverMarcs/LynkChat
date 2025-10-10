@@ -86,7 +86,7 @@ struct ImageInputMenu: View {
             
             for item in selectedPhotos {
                 if let data = try? await item.loadTransferable(type: Data.self) {
-                    session.addUploadedImage(data)
+                    session.inputManager.addImage(data)
                 }
             }
             
@@ -109,7 +109,7 @@ struct ImageInputMenu: View {
                         }
                         
                         if let data = try? Data(contentsOf: url) {
-                            session.addUploadedImage(data)
+                            session.inputManager.addImage(data)                        
                         }
                         
                         url.stopAccessingSecurityScopedResource()

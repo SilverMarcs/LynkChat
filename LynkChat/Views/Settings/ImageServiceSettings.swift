@@ -48,11 +48,6 @@ struct ImageServiceSettings: View {
                     format: .number
                 )
             }
-            
-            Toggle(isOn: $config.saveToPhotos) {
-                Text("Save to Photos Library")
-                Text("Images will be saved to Downloads folder otherwise")
-            }
         }
         .formStyle(.grouped)
         .navigationTitle("Image Parameters")

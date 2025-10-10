@@ -15,15 +15,6 @@ struct DebugSettings: View {
     
     var body: some View {
         Form {
-            Section("API Settings") {
-                TextField("API Key", text: $config.myApiKey)
-                
-                Toggle(isOn: $config.useLocalhost) {
-                    Text("Use Localhost")
-                    Text(String.apiHost.replacingOccurrences(of: "/api", with: ""))
-                }
-            }
-            
             Section("Reset Settings") {
                 LabeledContent {
                     Button("Reset First Launch") {

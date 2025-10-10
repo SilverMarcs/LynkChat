@@ -25,11 +25,6 @@ struct ImageGenOnboarding: View {
                                     .tag(model)
                             }
                         }
-                        
-                        Toggle(isOn: $config.saveToPhotos) {
-                            Text("Save to Photos Library")
-                            Text("Images will be saved to Downloads folder otherwise")
-                        }
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))

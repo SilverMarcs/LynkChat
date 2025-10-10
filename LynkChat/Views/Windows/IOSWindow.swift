@@ -24,11 +24,6 @@ struct IOSWindow: Scene {
                     NavigationStack(path: $chatVM.chatPath) {
                         ChatList(status: chatVM.statusFilter, searchText: searchText)
                             .searchable(text: $searchText)
-                            .onSubmit(of: .search) {
-                                if PasswordHelper.verifyPassword(searchText) {
-                                    config.showDebugMenu = true
-                                }
-                            }
                             .onAppear {
                                 // Clear current chat when back at chat list
                                 if chatVM.chatPath.isEmpty {

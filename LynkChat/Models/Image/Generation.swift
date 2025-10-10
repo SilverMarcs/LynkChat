@@ -24,6 +24,8 @@ class Generation {
     @Relationship(deleteRule: .cascade)
     var images: [Data] = []
     
+    var inputImages: [Data] = []
+    
     @Attribute(.ephemeral)
     var state: GenerationState
     

@@ -19,37 +19,39 @@ struct ImageInputView: View {
     
     var body: some View {
         VStack {
-            FlowLayout {
-                ForEach(Array(session.uploadedImages.enumerated()), id: \.offset) { index, imageData in
+//            FlowLayout {
+                ForEach(Array(session.inputManager.inputImages.enumerated()), id: \.offset) { index, imageData in
                     SMVImageData(data: imageData)
+                        .scaledToFill()
                         .frame(width: 100, height: 100)
+                        .clipShape(.rect(cornerRadius: 12))
                         .overlay(alignment: .topTrailing) {
                             Button(role: .destructive) {
-                                session.removeUploadedImage(at: index)
+                                session.inputManager.removeImage(at: index)
                             } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .font(.title2)
-                                    .foregroundStyle(.white, .red)
+                                Image(systemName: "xmark")
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
                             .padding(8)
                         }
                 }
-            }
+//            }
             
+            #if os(macOS)
             HStack {
                 ImageInputMenu(session: session)
                 
                 HStack(spacing: 5) {
-                    TextField("Prompt", text: $session.prompt, axis: .vertical)
+                    TextField("Prompt", text: $session.inputManager.prompt, axis: .vertical)
                         .onSubmit( { sendInput() } )
                         .textFieldStyle(.plain)
                         .padding(.leading, 6)
                         .focused($isFocused, equals: .imageInput)
                         .onKeyPress(.upArrow) {
-                            if session.prompt.isEmpty {
+                            if session.inputManager.prompt.isEmpty {
                                 if let lastPrompt = session.imageGenerations.last?.config.prompt {
-                                    session.prompt = lastPrompt
+                                    session.inputManager.prompt = lastPrompt
                                     return .handled
                                 }
                             }
@@ -67,8 +69,8 @@ struct ImageInputView: View {
                 .padding(4)
                 .glassEffect(in: .rect(cornerRadius: 20))
             }
+            #endif
         }
-        .ignoresSafeArea()
         .padding(11)
         #if os(macOS)
         .task {
@@ -93,7 +95,7 @@ struct ImageInputView: View {
     }
     
     private func sendInput() {
-        guard !session.prompt.isEmpty else { return }
+        guard !session.inputManager.prompt.isEmpty else { return }
 
         Task {
             await session.send()

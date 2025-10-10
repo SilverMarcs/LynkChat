@@ -16,10 +16,7 @@ class ImageSession {
     var title: String = "Image Session"
     
     @Transient
-    var prompt: String = ""
-    
-    @Transient
-    var uploadedImages: [Data] = []
+    var inputManager: ImageInputManager = ImageInputManager()
 
     @Relationship(deleteRule: .cascade, inverse: \Generation.session)
     var imageGenerations = [Generation]()
@@ -30,18 +27,21 @@ class ImageSession {
     init() { }
     
     func send(_ customPrompt: String? = nil) async {
-        let promptToUse = customPrompt ?? prompt
+        let inputManagerPrompt = await inputManager.prompt
+        let promptToUse = customPrompt ?? inputManagerPrompt
         
         guard !promptToUse.isEmpty else { return }
         
         let generation = Generation(config: config, session: self)
         generation.config.prompt = promptToUse
+        generation.inputImages = await inputManager.inputImages
         
         imageGenerations.append(generation)
         
         await Scroller.scrollToBottom(delay: 0.2)
         
         await generation.send()
+        await inputManager.clearImages()
     }
     
     func deleteGeneration(_ generation: Generation) {
@@ -55,25 +55,12 @@ class ImageSession {
         }
     }
     
-    func addUploadedImage(_ imageData: Data) {
-        uploadedImages.append(imageData)
-    }
-    
-    func removeUploadedImage(at index: Int) {
-        guard index < uploadedImages.count else { return }
-        uploadedImages.remove(at: index)
-    }
-    
-    func clearUploadedImages() {
-        uploadedImages.removeAll()
-    }
-    
     // Get all images from history for editing mode
     func getAllHistoryImages() -> [Data] {
         var allImages: [Data] = []
         
         // Add uploaded images
-        allImages.append(contentsOf: uploadedImages)
+        allImages.append(contentsOf: inputManager.inputImages)
         
         // Add generated images from all generations
         for generation in imageGenerations.sorted(by: { $0.date < $1.date }) {
