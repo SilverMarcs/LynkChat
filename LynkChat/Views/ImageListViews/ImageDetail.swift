@@ -38,7 +38,7 @@ struct ImageDetail: View {
             #if os(macOS)
             .navigationTitle(session.title)
             #else
-//            .navigationTitle(session.config.model.name)
+            .navigationTitle(session.config.mode.displayName)
             .toolbarTitleMenu {
                 Picker("Model", selection: $session.config.model) {
                     ForEach(ImageModel.allCases) { model in
