@@ -32,12 +32,6 @@ struct LynkChatApp: App {
     }
     
     init() {
-        #if DEBUG
-        if AppConfig.shared.resetTips {
-            try? Tips.resetDatastore()
-            AppConfig.shared.resetTips = false
-        }
-        #endif
         try? Tips.configure()
 
         #if os(macOS)

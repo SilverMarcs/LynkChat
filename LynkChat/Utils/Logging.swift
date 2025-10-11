@@ -13,22 +13,22 @@ enum AppLogger {
     private static let baseLogger = Logger(subsystem: subsystem, category: "api")
     
     static func info(_ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.info("\(message)")
     }
     
     static func notice(_ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.notice("\(message)")
     }
     
     static func trace(_ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.trace("\(message)")
     }
     
     static func debug(_ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.debug("\(message)")
     }
     
@@ -38,7 +38,7 @@ enum AppLogger {
     }
     
     static func warning(_ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.warning("\(message)")
     }
     
@@ -53,7 +53,7 @@ enum AppLogger {
     }
     
     static func log(level: OSLogType, _ message: String) {
-        guard AppConfig.shared.printDebgLogs else { return }
+//        guard AppConfig.shared.printDebgLogs else { return }
         baseLogger.log(level: level, "\(message)")
     }
 }

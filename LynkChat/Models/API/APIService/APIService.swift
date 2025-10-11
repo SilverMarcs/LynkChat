@@ -15,7 +15,7 @@ enum APIService {
         
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        request.setValue(AppConfig.shared.myApiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(AppConfig().myApiKey, forHTTPHeaderField: "x-api-key")
         
         if method == .POST && path != .upload {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")

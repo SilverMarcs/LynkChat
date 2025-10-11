@@ -7,12 +7,7 @@
 
 import SwiftUI
 
-class AppConfig: ObservableObject {
-    static let shared = AppConfig()
-    private init() {}
-
-    @AppStorage("finishedInitialSetup") var finishedInitialSetup = false
-    
+struct AppConfig {
     // Appearance
     #if os(macOS)
     @AppStorage("fontSize") var fontSize: Double = 13
@@ -37,9 +32,7 @@ class AppConfig: ObservableObject {
     // DEBUG
     @AppStorage("myApiKey") var myApiKey: String = ""
     @AppStorage("geminiApiKey") var geminiApiKey: String = ""
-    @AppStorage("reseTips") var resetTips = false
     @AppStorage("useLocalhost") var useLocalhost = false
     @AppStorage("printDebgLogs") var printDebgLogs = false
     @AppStorage("sendDebugModel") var sendDebugModel = false
-    @AppStorage("showDebugMenu") var showDebugMenu: Bool = false
 }

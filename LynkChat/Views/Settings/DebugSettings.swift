@@ -10,7 +10,7 @@ import SwiftUI
 struct DebugSettings: View {
     @Environment(\.openWindow) var openWindow
     
-    @ObservedObject var config = AppConfig.shared
+    @State var config = AppConfig()
     @State private var showWebView = false
     
     var body: some View {
@@ -24,38 +24,9 @@ struct DebugSettings: View {
                 }
             }
             
-            Section("Reset Settings") {
-                LabeledContent {
-                    Button("Reset First Launch") {
-                        config.finishedInitialSetup = false
-                    }
-                } label: {
-                    Text("First Launch Completed: \(String(config.finishedInitialSetup))")
-                }
-                
-                LabeledContent {
-                    Button("Reset Tips") {
-                        config.resetTips.toggle()
-                    }
-                } label: {
-                    Text("Will reset tips on next launch: \(String(config.resetTips))")
-                }
-            }
-            
             Section("Debug Options") {
                 Toggle("Print debug lines", isOn: $config.printDebgLogs)
                 Toggle("Send debug model", isOn: $config.sendDebugModel)
-            }
-            
-            Section {
-                LabeledContent {
-                    Button("Hide Debug") {
-                        config.showDebugMenu.toggle()
-                    }
-                } label: {
-                    Text("Controls visibility of this page")
-                }
-                    
             }
         }
         .formStyle(.grouped)

@@ -12,7 +12,7 @@ struct ChatContentView: View {
     @Environment(\.undoManager) var undoManager
     @Environment(\.modelContext) var modelContext
     
-    @ObservedObject var config = AppConfig.shared
+    @State var config = AppConfig()
     
     @Environment(ChatVM.self) var chatVM: ChatVM
     @State var searchText = ""
@@ -40,15 +40,6 @@ struct ChatContentView: View {
             OnboardingView()
         }
         .searchable(text: $searchText, placement: .sidebar)
-//        .searchFocused($isSearchFieldFocused, equals: .searchBox)
-//        .onChange(of: chatVM.searchText) {
-//            chatVM.updateSearchText(chatVM.searchText)
-//            
-//            // Keep password verification functionality
-//            if PasswordHelper.verifyPassword(chatVM.searchText) {
-//                config.showDebugMenu = true
-//            }
-//        }
     }
 }
 

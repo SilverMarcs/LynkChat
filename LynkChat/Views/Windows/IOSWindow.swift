@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct IOSWindow: Scene {
-    @ObservedObject var config = AppConfig.shared
+    @State var config = AppConfig()
     @Bindable var settings = AppSettings.shared
     
     @State var selection: ImageSession?
@@ -26,11 +26,6 @@ struct IOSWindow: Scene {
                     NavigationStack(path: $chatVM.chatPath) {
                         ChatList(status: chatVM.statusFilter, searchText: searchText)
                             .searchable(text: $searchText)
-                            .onSubmit(of: .search) {
-                                if PasswordHelper.verifyPassword(searchText) {
-                                    config.showDebugMenu = true
-                                }
-                            }
                             .onAppear {
                                 // Clear current chat when back at chat list
                                 if chatVM.chatPath.isEmpty {

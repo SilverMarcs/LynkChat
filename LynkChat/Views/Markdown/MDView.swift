@@ -11,7 +11,7 @@ import SwiftMarkdownView
 #endif
 
 struct MDView: View {
-    @ObservedObject var config = AppConfig.shared
+    @State var config = AppConfig()
     var content: String
     var calculatedHeight: Binding<CGFloat>? = nil
 

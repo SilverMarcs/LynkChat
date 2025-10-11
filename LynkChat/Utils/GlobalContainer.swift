@@ -35,22 +35,6 @@ let globalContainer: ModelContainer = {
             }
         }
         
-        if AppConfig.shared.finishedInitialSetup {
-            return container // Return the container if setup is already done
-        }
-        
-        let chat = Chat()
-        chat.config.models = [.gemini_flash]
-        chat.title = "Welcome to LynkChat"
-        let group = MessageGroup(message: Message.assistant(model: .gemini_flash, content: String.onboarding))
-        chat.rootMessage = group
-        modelContext.insert(chat)
-        
-        // Image session,
-        modelContext.insert(ImageSession())
-        
-        AppConfig.shared.finishedInitialSetup = true
-        
         return container
     } catch {
         fatalError("Could not create ModelContainer: \(error)")

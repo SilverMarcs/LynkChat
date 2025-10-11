@@ -12,6 +12,7 @@ struct ChatDetailMobile: View {
     private let config: AppSettings = AppSettings.shared
     @Environment(ChatVM.self) var chatVM
     
+    @Bindable var settings = AppSettings.shared
     @Bindable var chat: Chat
     
     @Namespace private var transition
@@ -42,7 +43,7 @@ struct ChatDetailMobile: View {
                     .listRowSeparator(.hidden)
                     .id(String.bottomID)
             }
-            .contentMargins(5)
+            .contentMargins(10)
             .environment(\.defaultMinListRowHeight, 1)
             .overlay {
                 if chat.currentThread.isEmpty {
@@ -142,6 +143,10 @@ struct ChatDetailMobile: View {
                 }
             }
             .toolbar(.hidden, for: .tabBar)
+            .fullScreenCover(isPresented: $settings.showCamera) {
+                CameraView(chat: chat)
+                    .ignoresSafeArea()
+            }
         }
     }
     

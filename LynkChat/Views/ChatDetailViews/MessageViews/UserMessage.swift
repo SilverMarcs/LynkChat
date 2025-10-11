@@ -79,7 +79,7 @@ struct ExpandableText: View {
     @State private var isExpanded = false
     private let needsExpansion: Bool
     
-    @ObservedObject var config = AppConfig.shared
+    @State var config = AppConfig()
     
     init(text: String, maxCharacters: Int = 400) {
         self.text = text

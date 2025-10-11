@@ -25,7 +25,7 @@ struct LiveAudioView: View {
         }
 
         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
-        components.queryItems = [URLQueryItem(name: "key", value: AppConfig.shared.geminiApiKey)]
+        components.queryItems = [URLQueryItem(name: "key", value: AppConfig().geminiApiKey)]
         self.url = components.url!
         
         var cfg = WebPage.Configuration()

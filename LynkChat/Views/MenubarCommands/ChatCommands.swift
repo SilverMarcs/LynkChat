@@ -10,7 +10,7 @@ import SwiftData
 
 struct ChatCommands: Commands {
     @Environment(\.modelContext) var modelContext
-    @ObservedObject var config = AppConfig.shared
+    @State var config = AppConfig()
     @Environment(ChatVM.self) var chatVM
     
     var body: some Commands {

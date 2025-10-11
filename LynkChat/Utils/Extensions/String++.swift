@@ -12,7 +12,7 @@ extension String {
     static let testPrompt = "Respond with just the word Test"
     
     static var apiHost: String {
-        if AppConfig.shared.useLocalhost {
+        if AppConfig().useLocalhost {
             "http://localhost:3000/api"
         } else {
             "https://lynkchat-server.vercel.app/api"

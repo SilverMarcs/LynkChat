@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct OnboardingView: View {
-    @ObservedObject var config = AppConfig.shared
+    @State var config = AppConfig()
     
     @Namespace private var skipButtonSpace
     

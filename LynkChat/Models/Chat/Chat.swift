@@ -103,7 +103,7 @@ final class Chat: Equatable, Identifiable, Hashable {
                 #endif
                 
                 // Generate title after streaming is complete
-                if AppConfig.shared.autogenTitle {
+                if AppConfig().autogenTitle {
                     await generateTitle()
                 }
             } catch {

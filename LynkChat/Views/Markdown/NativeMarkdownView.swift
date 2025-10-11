@@ -21,8 +21,7 @@ struct ListItem: Equatable, Identifiable {
 
 struct NativeMarkdownView: View {
     private let parts: [MarkdownPart]
-    @ObservedObject var config = AppConfig.shared
-    
+    @State var config = AppConfig()
     
     init(text: String) {
         self.parts = NativeMarkdownView.parseMarkdown(text)
@@ -339,7 +338,7 @@ struct NativeMarkdownView: View {
 
 
 struct ListItemView: View {
-    @ObservedObject var config: AppConfig
+    @State var config = AppConfig()
     let item: ListItem
     let markerViewProvider: (ListItem.Marker) -> AnyView
     let childViewProvider: ([ListItem]) -> AnyView

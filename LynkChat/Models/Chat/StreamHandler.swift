@@ -107,7 +107,7 @@ struct StreamHandler {
         
         return APIRequest(
             userId: "zabir",
-            model: AppConfig.shared.sendDebugModel ? "debug" : chat.config.model.id,
+            model: AppConfig().sendDebugModel ? "debug" : chat.config.model.id,
             messages: messages,
             temperature: chat.config.temperature.value,
             thinkingBudget: chat.config.thinkingBudget.rawValue,

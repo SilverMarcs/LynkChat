@@ -11,7 +11,7 @@ import SwiftData
 struct GeneralSettings: View {
     @Environment(\.modelContext) var modelContext
     
-    @ObservedObject var config = AppConfig.shared
+    @State var config = AppConfig()
 
     var body: some View {
         Form {
