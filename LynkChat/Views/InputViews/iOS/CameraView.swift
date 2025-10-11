@@ -47,8 +47,8 @@ class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePicker
         Task {
             try? await chat.inputManager.processData(
                 imageData,
-                fileType: .image,
-                fileName: "Camera_\(UUID().uuidString)"
+                fileType: .jpeg,
+                fileName: "Camera_\(UUID().uuidString).jpg"
             )
         
             await MainActor.run {

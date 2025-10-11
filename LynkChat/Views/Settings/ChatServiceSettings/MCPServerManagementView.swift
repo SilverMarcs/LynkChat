@@ -13,15 +13,22 @@ struct MCPServerManagementView: View {
     @State private var trigger = 0
     
     var body: some View {
-        List {
+        Form {
             ForEach($config.mcpServers) { $server in
                 MCPServerRow(server: $server)
-            }
-            .onDelete { indexSet in
-                config.mcpServers.remove(atOffsets: indexSet)
-                trigger += 1
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            if let index = config.mcpServers.firstIndex(where: { $0.id == server.id }) {
+                                config.mcpServers.remove(at: index)
+                                trigger += 1
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
             }
         }
+        .formStyle(.grouped)
         .id(trigger)
         .navigationTitle("MCP Servers")
         .toolbarTitleDisplayMode(.inline)
