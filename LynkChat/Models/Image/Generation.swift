@@ -23,6 +23,13 @@ class Generation {
     
     @Relationship(deleteRule: .cascade)
     var images: [Data] = []
+
+    // Any user-provided input images used for editing in this step
+    @Relationship(deleteRule: .cascade)
+    var inputImages: [Data] = []
+
+    // Track whether this step is generation or editing
+    var mode: GenerationMode = GenerationMode.generation
     
     @Attribute(.ephemeral)
     var state: GenerationState
@@ -42,8 +49,18 @@ class Generation {
 
         generatingTask = Task { @MainActor in
             do {
-                let dataObjects = try await APIService.generateImages(config: config)
-                
+                let dataObjects: [Data]
+                switch mode {
+                case .generation:
+                    dataObjects = try await APIService.generateImages(config: config)
+                case .editing:
+                    let history = session?.imageGenerations ?? []
+                    dataObjects = try await ImageEditingService.editImages(
+                        using: config.editingModel,
+                        allHistory: history
+                    )
+                }
+
                 self.images = dataObjects
                 state = .success
             } catch {
@@ -90,4 +107,9 @@ enum GenerationState: Codable, Sendable {
     case generating
     case success
     case error
+}
+
+enum GenerationMode: String, Codable, Sendable {
+    case generation
+    case editing
 }

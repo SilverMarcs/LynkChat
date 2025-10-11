@@ -11,6 +11,7 @@ struct ImageConfig: Identifiable, Codable, Sendable {
     var id: UUID = UUID()
 
     var model: ImageModel
+    var editingModel: ImageEditingModel
     var prompt: String
     var numImages: Int
     
@@ -20,6 +21,7 @@ struct ImageConfig: Identifiable, Codable, Sendable {
         let defaults = ImageConfigDefaults()
         
         self.model = defaults.defaultModel
+        self.editingModel = .seedream
         self.numImages = defaults.numImages
     }
     

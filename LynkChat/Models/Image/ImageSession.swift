@@ -15,9 +15,20 @@ class ImageSession {
     var date: Date = Date()
     var title: String = "Image Session"
     var prompt: String = ""
+    // Images user attaches to be used for editing on next send
+    var inputImages: [Data] = []
 
     @Relationship(deleteRule: .cascade, inverse: \Generation.session)
-    var imageGenerations = [Generation]()
+    private var unsortedImageGenerations = [Generation]()
+
+    var imageGenerations: [Generation] {
+        get {
+            unsortedImageGenerations.sorted { $0.date < $1.date }
+        }
+        set {
+            unsortedImageGenerations = newValue
+        }
+    }
     
     @Relationship(deleteRule: .cascade)
     var config: ImageConfig = ImageConfig()
@@ -31,9 +42,14 @@ class ImageSession {
         
         let generation = Generation(config: config, session: self)
         generation.config.prompt = promptToUse
-        
+        // Attach current input images and decide mode
+        generation.inputImages = inputImages
         imageGenerations.append(generation)
-        
+
+        generation.mode = await ImageModelSelector.selectMode(prompt: promptToUse, history: imageGenerations, hasInputImages: !inputImages.isEmpty)
+
+        inputImages.removeAll()
+    
         await Scroller.scrollToBottom(delay: 0.2)
         
         await generation.send()

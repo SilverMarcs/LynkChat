@@ -17,11 +17,11 @@ let globalContainer: ModelContainer = {
         Generation.self,
     ])
     
-    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    let modelConfiguration = ModelConfiguration("LynkChatDB", schema: schema, isStoredInMemoryOnly: false)
 
-    // TODO: if error then delete all existign data in all tables and reinit
     do {
         let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+//        try  container.mainContext.delete(model: ImageSession.self)
         let modelContext = container.mainContext
         
         // fetch chats with temporary status

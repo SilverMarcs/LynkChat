@@ -12,6 +12,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
     case gpt
     case grok
     case imagen
+    case nanoBanana
+    case seedream
 
     var id: String {
         switch self {
@@ -19,6 +21,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         case .gpt: "gpt"
         case .grok: "grok"
         case .imagen: "imagen"
+        case .nanoBanana: "nanoBanana"
+        case .seedream: "seedream"
         }
     }
 
@@ -28,6 +32,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         case .gpt: "GPT"
         case .grok: "Grok"
         case .imagen: "Imagen"
+        case .nanoBanana: "Banana"
+        case .seedream: "Seedream"
         }
     }
 
@@ -36,7 +42,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         case .flux: "flux.symbols"
         case .gpt: "openai.symbols"
         case .grok: "xai.symbols"
-        case .imagen: "gemini.symbols"
+        case .imagen, .nanoBanana: "gemini.symbols"
+        case .seedream: "cohere.symbols"
         }
     }
 
@@ -45,7 +52,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         case .flux: "#6431e2"
         case .gpt: "#00947A"
         case .grok: "#222222"
-        case .imagen: "#E64335"
+        case .imagen, .nanoBanana: "#E64335"
+        case .seedream: "#6431e2"
         }
     }
 }

@@ -12,52 +12,56 @@ struct ImageInputView: View {
     @FocusState var isFocused: FocusedField?
     
     var body: some View {
-        HStack(spacing: 5) {
-            Button {
-                Task {
-                    // Get the most recent generation's prompt (if any) and regenerate
-                    if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
-                        // copy prompt from the generation's config to session prompt
-                        await session.send(latest.config.prompt)
-                    }
-                }
-            } label: {
-                Label("Regenerate", systemImage: "arrow.clockwise")
-                    .labelStyle(.iconOnly)
-                    .tint(.white)
-            }
-            .disabled(session.imageGenerations.isEmpty)
-            .controlSize(.large)
-            .fontWeight(.bold)
-            .buttonBorderShape(.circle)
-            .keyboardShortcut("r")
-            
-            TextField("Prompt", text: $session.prompt, axis: .vertical)
-                .onSubmit( { sendInput() } )
-                .textFieldStyle(.plain)
-                .padding(.leading, 6)
-                .focused($isFocused, equals: .imageInput)
-                .onKeyPress(.upArrow) {
-                    if session.prompt.isEmpty {
-                        if let lastPrompt = session.imageGenerations.last?.config.prompt {
-                            session.prompt = lastPrompt
-                            return .handled
+        HStack {
+            ImageSessionInputMenu(session: session)
+                            
+            HStack(spacing: 5) {
+                Button {
+                    Task {
+                        // Get the most recent generation's prompt (if any) and regenerate
+                        if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
+                            // copy prompt from the generation's config to session prompt
+                            await session.send(latest.config.prompt)
                         }
                     }
-                    return .ignored
+                } label: {
+                    Label("Regenerate", systemImage: "arrow.clockwise")
+                        .labelStyle(.iconOnly)
+                        .tint(.white)
                 }
-            
-            Button(action: sendInput) {
-                Image(systemName: "arrow.up")
+                .disabled(session.imageGenerations.isEmpty)
+                .controlSize(.large)
+                .fontWeight(.bold)
+                .buttonBorderShape(.circle)
+                .keyboardShortcut("r")
+                
+                TextField("Prompt", text: $session.prompt, axis: .vertical)
+                    .onSubmit( { sendInput() } )
+                    .textFieldStyle(.plain)
+                    .padding(.leading, 6)
+                    .focused($isFocused, equals: .imageInput)
+                    .onKeyPress(.upArrow) {
+                        if session.prompt.isEmpty {
+                            if let lastPrompt = session.imageGenerations.last?.config.prompt {
+                                session.prompt = lastPrompt
+                                return .handled
+                            }
+                        }
+                        return .ignored
+                    }
+                
+                Button(action: sendInput) {
+                    Image(systemName: "arrow.up")
+                }
+                .controlSize(.large)
+                .fontWeight(.bold)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.circle)
             }
-            .controlSize(.large)
-            .fontWeight(.bold)
-            .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.circle)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(4)
+            .glassEffect(in: .rect(cornerRadius: 20))
         }
-        .fixedSize(horizontal: false, vertical: true)
-        .padding(4)
-        .glassEffect(in: .rect(cornerRadius: 20))
         .ignoresSafeArea()
         .padding(11)
         #if os(macOS)

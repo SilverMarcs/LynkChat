@@ -21,14 +21,20 @@ struct GenerationView: View {
                     Text(generation.config.prompt)
                         .textSelection(.enabled)
                 }
-                    
                 .groupBoxStyle(PlatformGroupBox())
             }
             
             
             VStack(alignment: .leading) {
-                AssistantLabel(model: generation.config.model)
-                    .padding(.bottom, 4)
+                HStack {
+                    AssistantLabel(model: generation.mode == .editing ? generation.config.editingModel : generation.config.model)
+                    
+                    Text("Edit")
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 10)
+                        .background(Color.accentColor.opacity(0.12))
+                        .foregroundStyle(Color.accentColor)
+                }
                 
                 if generation.state == .error {
                     Text(generation.errorMessage)

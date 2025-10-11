@@ -70,24 +70,31 @@ struct ImageDetail: View {
                 }
             }
             .toolbar {
+//                ToolbarItem(placement: .bottomBar) {
+//                    Button {
+//                        Task {
+//                            // Get the most recent generation's prompt (if any) and regenerate
+//                            if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
+//                                // copy prompt from the generation's config to session prompt
+//                                await session.send(latest.config.prompt)
+//                            }
+//                        }
+//                    } label: {
+//                        Label("Regenerate", systemImage: "arrow.clockwise")
+//                    }
+//                    .disabled(session.imageGenerations.isEmpty)
+//                }
+                
+                // Add the same attachment menu into bottom bar on iOS as in chat view
                 ToolbarItem(placement: .bottomBar) {
-                    Button {
-                        Task {
-                            // Get the most recent generation's prompt (if any) and regenerate
-                            if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
-                                // copy prompt from the generation's config to session prompt
-                                await session.send(latest.config.prompt)
-                            }
-                        }
-                    } label: {
-                        Label("Regenerate", systemImage: "arrow.clockwise")
-                    }
-                    .disabled(session.imageGenerations.isEmpty)
+                    ImageSessionInputMenu(session: session)
                 }
                 
                 ToolbarSpacer(.fixed, placement: .bottomBar)
                 
                 DefaultToolbarItem(kind: .search, placement: .bottomBar)
+
+                ToolbarSpacer(.fixed, placement: .bottomBar)
             }
             .listStyle(.plain)
             .navigationTitle(session.config.model.name)

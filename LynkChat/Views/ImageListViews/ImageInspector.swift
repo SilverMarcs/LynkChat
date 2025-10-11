@@ -28,6 +28,12 @@ struct ImageInspector: View {
                     }
                 }
                 .labelStyle(.titleAndIcon)
+                
+                Picker("Editing Model", selection: $session.config.editingModel) {
+                    ForEach(ImageEditingModel.allCases, id: \.self) { model in
+                        Text(model.name).tag(model)
+                    }
+                }
             }
             
             Section("Parameters") {

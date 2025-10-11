@@ -19,6 +19,14 @@ struct ImageServiceSettings: View {
                             .tag(model)
                     }
                 }
+                
+                Picker("Default Editing Model", selection: $config.defaultEditingModel) {
+                    ForEach(ImageEditingModel.allCases) { model in
+//                        Label(model.name, image: "model.imageName")
+                        Text(model.name)
+                            .tag(model)
+                    }
+                }
             }
             
             Section(header: Text("Default Parameters")) {
@@ -37,6 +45,10 @@ struct ImageServiceSettings: View {
             Toggle(isOn: $config.saveToPhotos) {
                 Text("Save to Photos Library")
                 Text("Images will be saved to Downloads folder otherwise")
+            }
+            
+            Section(header: Text("API Keys")) {
+                TextField("Wavespeed API Key", text: $config.wavespeedApiKey)
             }
         }
         .formStyle(.grouped)
