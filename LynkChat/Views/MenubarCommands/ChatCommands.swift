@@ -11,16 +11,17 @@ import SwiftData
 struct ChatCommands: Commands {
     @Environment(\.modelContext) var modelContext
     @ObservedObject var config = AppConfig.shared
+    @Environment(ChatVM.self) var chatVM
     
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
             Button("New Chat") {
-                ChatVM.shared.createNewChat()
+                chatVM.createNewChat()
             }
             .keyboardShortcut("n")
             
             Button("Temporary Chat") {
-                ChatVM.shared.createTemporaryChat()
+                chatVM.createTemporaryChat()
             }
             .keyboardShortcut("n", modifiers: [.command, .shift])
         }

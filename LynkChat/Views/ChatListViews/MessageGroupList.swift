@@ -15,7 +15,7 @@ struct MessageGroupList: View {
     var searchText: String
     @State private var selectedGroupID: MessageGroup.ID?
     
-    private let chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM
     
     private var matchedGroupsByChat: [Chat: [MessageGroup]] {
         guard !searchText.isEmpty else { return [:] }

@@ -78,9 +78,6 @@
 				Views/ChatListViews/ChatListMac.swift = (
 					macos,
 				);
-				Views/InputViews/iOS/CameraView.swift = (
-					ios,
-				);
 				Views/InputViews/iOS/ExpandedSearchView.swift = (
 					ios,
 					xros,

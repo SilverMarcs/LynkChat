@@ -10,7 +10,7 @@ import SwiftData
 
 class QuickPanelWindow: NSPanel {
     private var heightConstraint: NSLayoutConstraint?
-    private let chatVM = ChatVM.shared
+    private var chatVM: ChatVM
     var chat: Chat? // The chat object for the quick panel
     private var currentHeightState: QuickPanelHeight = .collapsed()
 
@@ -18,13 +18,15 @@ class QuickPanelWindow: NSPanel {
     init(
         contentRect: NSRect = NSRect(x: 0, y: 0, width: 650, height: 57),
         backing: NSWindow.BackingStoreType = .buffered,
-        defer flag: Bool = false
+        defer flag: Bool = false,
+        chatVM: ChatVM
     ) {
-        super.init(contentRect: contentRect,
+        self.chatVM = chatVM
+        super.init(contentRect: NSRect(x: 0, y: 0, width: 650, height: 57),
                    styleMask: [.nonactivatingPanel, .closable, .fullSizeContentView, .titled],
                    backing: backing,
                    defer: flag)
-
+        
         self.identifier = NSUserInterfaceItemIdentifier("quickPanel")
         isFloatingPanel = true
         level = .floating
@@ -50,6 +52,7 @@ class QuickPanelWindow: NSPanel {
                     self?.setHeightState(heightState)
                 }
             )
+            .environment(chatVM)
             .ignoresSafeArea()
         )
 

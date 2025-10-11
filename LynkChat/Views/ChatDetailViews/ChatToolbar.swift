@@ -18,7 +18,7 @@ struct ChatToolbar: ToolbarContent {
     
     @FocusState private var isFocused: FocusedField?
     
-    private let chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM
     
     var body: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {

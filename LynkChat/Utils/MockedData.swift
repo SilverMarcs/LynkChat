@@ -34,10 +34,6 @@ extension Generation {
     static var mockGeneration: Generation = .init(config: .mockImageConfig, session: .mockImageSession)
 }
 
-extension ChatVM {
-    static var mockChatVM = ChatVM.shared
-}
-
 extension String {
     static let markdownContent = """
     Certainly! In Python, you can sort data using the built-in `sort()` method for lists or the `sorted()` function. Below are examples of both methods along with explanations.

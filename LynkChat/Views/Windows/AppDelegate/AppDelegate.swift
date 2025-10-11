@@ -7,9 +7,11 @@
 
 import UIKit
 
-class AppDelegate: NSObject, UIApplicationDelegate {
-    static let shared = AppDelegate()
+extension Notification.Name {
+    static let sharedContentReceived = Notification.Name("sharedContentReceived")
+}
 
+class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         let sceneConfig = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
         sceneConfig.delegateClass = SceneDelegate.self
@@ -28,15 +30,18 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         return false
     }
     
-    func checkForSharedContent() {
+    private func checkForSharedContent() {
         guard let ud = UserDefaults(suiteName: "group.com.temporary.lynkchat") else { return }
         guard let payload = ud.string(forKey: "sharedContent"), !payload.isEmpty else {
             return
         }
 
-        // Create new chat and set its input manager prompt to the received content
-        let newChat = ChatVM.shared.createNewChat(delay: true)
-        newChat.inputManager.prompt = payload
+        // Post notification with the payload
+        NotificationCenter.default.post(
+            name: .sharedContentReceived,
+            object: nil,
+            userInfo: ["payload": payload]
+        )
 
         // Clear after handling
         ud.removeObject(forKey: "sharedContent")
@@ -65,29 +70,30 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
     }
     
     func sceneDidBecomeActive(_ scene: UIScene) { }
-
-    func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        handleQuickAction(shortcutItem: shortcutItem)
-        completionHandler(true)
-    }
     
-    func handleURL(_ url: URL) {
+    private func handleURL(_ url: URL) {
         // Check if it's from the share extension
         if url.scheme == "lynkchat" && url.host == "share" {
-            AppDelegate.shared.checkForSharedContent()
+            checkForSharedContent()
         }
     }
     
-    func handleQuickAction(shortcutItem: UIApplicationShortcutItem) {
-        switch shortcutItem.type {
-        case "camera":
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                AppSettings.shared.showCamera = true
-            }
-        case "newchat":
-            ChatVM.shared.createNewChat(delay: true)
-        default:
-            break
+    private func checkForSharedContent() {
+        guard let ud = UserDefaults(suiteName: "group.com.temporary.lynkchat") else { return }
+        guard let payload = ud.string(forKey: "sharedContent"), !payload.isEmpty else {
+            return
         }
+
+        // Post notification with the payload
+        NotificationCenter.default.post(
+            name: .sharedContentReceived,
+            object: nil,
+            userInfo: ["payload": payload]
+        )
+
+        // Clear after handling
+        ud.removeObject(forKey: "sharedContent")
+        ud.removeObject(forKey: "sharedContentDate")
+        ud.synchronize()
     }
 }

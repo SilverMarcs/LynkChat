@@ -11,6 +11,7 @@ import TipKit
 
 struct EmptyChat: View {
     @Bindable var chat: Chat
+    @Environment(ChatVM.self) var chatVM
     @Query(filter: #Predicate<Chat> { chat in
         chat.statusId == 1 || chat.statusId == 2
     }, sort: \Chat.date, order: .reverse)
@@ -55,7 +56,7 @@ struct EmptyChat: View {
                     HStack(alignment: .center) {
                         ForEach(chats.dropFirst().prefix(3)) { chat in
                             Button {
-                                ChatVM.shared.selections = [chat]
+                                chatVM.selections = [chat]
                             } label: {
                                 Label {
                                     Text(chat.title)

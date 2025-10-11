@@ -14,9 +14,11 @@ struct ChatListMac: View {
     var chats: [Chat]
     var deleteItems: (IndexSet) -> Void
     
-    @Bindable var chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM: ChatVM
     
     var body: some View {
+        @Bindable var chatVM = chatVM
+        
         List(selection: $chatVM.selections) {
             ChatListCards(chatCount: String(chats.count), imageSessionsCount: "↗")
             

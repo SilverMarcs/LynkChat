@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MessageContextMenu: View {
     @Environment(\.chat) var chat
+    @Environment(ChatVM.self) var chatVM
     @Bindable var group: MessageGroup
     var toggleTextSelection: (() -> Void)? = nil
 
@@ -84,7 +85,7 @@ struct MessageContextMenu: View {
                 Task {
                     let newChat = await chat.copy(from: group.activeMessage)
                     newChat.title = "(Ψ) " + newChat.title
-                    ChatVM.shared.fork(newChat: newChat)
+                    chatVM.fork(newChat: newChat)
                 }
             } label: {
                 Label("Fork Chat", systemImage: "arrow.branch")

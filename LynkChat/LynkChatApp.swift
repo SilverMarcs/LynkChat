@@ -16,6 +16,8 @@ struct LynkChatApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
     
+    @State private var chatVM = ChatVM()
+    
     var body: some Scene {
         Group {
             #if os(macOS)
@@ -24,6 +26,7 @@ struct LynkChatApp: App {
             IOSWindow()
             #endif
         }
+        .environment(chatVM)
         .commands { MenuCommands() }
         .modelContainer(globalContainer)
     }
@@ -38,9 +41,7 @@ struct LynkChatApp: App {
         try? Tips.configure()
 
         #if os(macOS)
-        QuickPanelWindow()
+        QuickPanelWindow(chatVM: chatVM)
         #endif
-        
-        LynkChatShortcuts.updateAppShortcutParameters()
     }
 }

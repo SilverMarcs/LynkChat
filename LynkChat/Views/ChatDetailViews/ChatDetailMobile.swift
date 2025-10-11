@@ -10,7 +10,7 @@ import TipKit
 
 struct ChatDetailMobile: View {
     private let config: AppSettings = AppSettings.shared
-    private let chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM
     
     @Bindable var chat: Chat
     
@@ -155,7 +155,7 @@ struct ChatDetailMobile: View {
     
     // Rest of the helper methods and computed properties
     func onAppearStuff(proxy: ScrollViewProxy) {
-        ChatVM.shared.activeChat = chat
+        chatVM.activeChat = chat
         config.expandColor = false
         config.proxy = proxy
         Scroller.scrollToBottom(animated: false)

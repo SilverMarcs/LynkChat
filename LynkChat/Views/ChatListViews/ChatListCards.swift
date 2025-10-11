@@ -19,7 +19,7 @@ struct ChatListCards: View {
     
     @State private var isFlashing = false
     
-    private let chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM
 
     var body: some View {
         HStack(spacing: 8) {

@@ -15,9 +15,11 @@ struct IOSWindow: Scene {
     @State var selection: ImageSession?
     @State var searchText: String = ""
     
-    @Bindable var chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM: ChatVM
     
     var body: some Scene {
+        @Bindable var chatVM = chatVM
+
         WindowGroup("Chats", id: "chats") {
             TabView {
                 Tab("Chats", systemImage: "message") {
@@ -60,9 +62,11 @@ struct IOSWindow: Scene {
             .fullScreenCover(isPresented: .constant(!config.hasCompletedOnboarding)) {
                 OnboardingView()
             }
-            .fullScreenCover(isPresented: $settings.showCamera) {
-                CameraView()
-                    .ignoresSafeArea()
+            .onReceive(NotificationCenter.default.publisher(for: .sharedContentReceived)) { notification in
+                if let payload = notification.userInfo?["payload"] as? String {
+                    let newChat = chatVM.createNewChat(delay: true)
+                    newChat.inputManager.prompt = payload
+                }
             }
 //            .onAppIntentExecution(CreateChatIntent.self) { intent in
 //                print("hiii")

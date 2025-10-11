@@ -14,7 +14,7 @@ struct ChatContentView: View {
     
     @ObservedObject var config = AppConfig.shared
     
-    @Bindable var chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM: ChatVM
     @State var searchText = ""
     
     var body: some View {

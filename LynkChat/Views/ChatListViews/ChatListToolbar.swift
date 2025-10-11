@@ -10,13 +10,14 @@ import SwiftUI
 struct ChatListToolbar: ToolbarContent {
     let chats: [Chat]
     let deleteItems: (IndexSet) -> Void
+    @Environment(ChatVM.self) var chatVM
     
     var body: some ToolbarContent {
         #if os(macOS)
         ToolbarItem(placement: .keyboard) {
             Button(action: {
                 // Get the indices of the selected chats
-                let indices = ChatVM.shared.selections.compactMap { chat in
+                let indices = chatVM.selections.compactMap { chat in
                     chats.firstIndex(of: chat)
                 }
                 // Create an IndexSet from the indices
@@ -27,7 +28,7 @@ struct ChatListToolbar: ToolbarContent {
                 Image(systemName: "trash")
             }
             .keyboardShortcut(.delete, modifiers: [.command, .shift])
-            .disabled(ChatVM.shared.selections.count <= 0)
+            .disabled(chatVM.selections.count <= 0)
         }
         #endif
         
@@ -35,7 +36,7 @@ struct ChatListToolbar: ToolbarContent {
             Menu {
                 ForEach(ChatModel.allCases) { model in
                     Button {
-                        ChatVM.shared.createNewChat(model: model)
+                        chatVM.createNewChat(model: model)
                     } label: {
                         Label(model.name, image: model.imageName)
                             .labelStyle(.titleAndIcon)
@@ -44,7 +45,7 @@ struct ChatListToolbar: ToolbarContent {
             } label: {
                 Label("New Chat", systemImage: "square.and.pencil")
             } primaryAction: {
-                ChatVM.shared.createNewChat()
+                chatVM.createNewChat()
             }
             .menuIndicator(.hidden)
         }

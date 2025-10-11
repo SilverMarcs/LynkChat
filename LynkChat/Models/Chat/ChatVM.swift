@@ -10,10 +10,7 @@ import SwiftData
 import SwiftUI
 import Combine
 
-@Observable class ChatVM {
-    static let shared = ChatVM()
-    
-    private init() {}
+@Observable class ChatVM {    
     var selections: Set<Chat> = []
     var chatPath: NavigationPath = NavigationPath()
     

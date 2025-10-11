@@ -13,7 +13,7 @@ struct ChatList: View {
     
     @Query var chats: [Chat] // see init method below
     
-    private let chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM
     
     var body: some View {
         Group {

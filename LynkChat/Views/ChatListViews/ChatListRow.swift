@@ -13,7 +13,7 @@ struct ChatListRow: View {
     
     @Bindable var chat: Chat
     
-    private let chatVM = ChatVM.shared
+    @Environment(ChatVM.self) var chatVM
 
     var body: some View {
         HStack {

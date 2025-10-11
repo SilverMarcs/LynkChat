@@ -13,6 +13,7 @@ struct QuickPanelView: View {
 
     @Bindable var chat: Chat
     var updateHeightState: (QuickPanelHeight) -> Void
+    @Environment(ChatVM.self) var chatVM
 
     @FocusState private var isFocused: Bool
     
@@ -150,7 +151,7 @@ struct QuickPanelView: View {
         Task {
             let newChat = await chat.copy()
             newChat.title = "(↯) " + newChat.title
-            ChatVM.shared.fork(newChat: newChat)
+            chatVM.fork(newChat: newChat)
             resetChat()
             
             if let mainWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == "chats" }) {
