@@ -32,10 +32,10 @@ struct ImageDetail: View {
                 AppSettings.shared.proxy = proxy
                 Scroller.scrollToBottom(animated: false)
             }
-            #if os(macOS)
             .safeAreaBar(edge: .bottom) {
                 ImageInputView(session: session)
             }
+            #if os(macOS)
             .navigationTitle(session.title)
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {

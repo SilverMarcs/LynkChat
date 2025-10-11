@@ -12,39 +12,60 @@ struct ImageInputView: View {
     @FocusState var isFocused: FocusedField?
     
     var body: some View {
-        HStack {
-            ImageSessionInputMenu(session: session)
-                
-            TextField("Prompt", text: $session.prompt, axis: .vertical)
-                .onSubmit( { sendInput() } )
-                .textFieldStyle(.plain)
-                .focused($isFocused, equals: .imageInput)
-                .onKeyPress(.upArrow) {
-                    if session.prompt.isEmpty {
-                        if let lastPrompt = session.imageGenerations.last?.config.prompt {
-                            session.prompt = lastPrompt
-                            return .handled
+        VStack(alignment: .leading) {
+            FlowLayout {
+                ForEach(session.inputImages, id: \.self) { image in
+                    ImageViewerData(data: image, enableSave: false, size: 100)
+                        .overlay(alignment: .topTrailing) {
+                            Button {
+                                if let index = session.inputImages.firstIndex(of: image) {
+                                    session.inputImages.remove(at: index)
+                                }
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .buttonStyle(.glass)
+                            }
                         }
-                    }
-                    return .ignored
                 }
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 9)
-                .glassEffect(in: .rect(cornerRadius: 24))
-                
-            Button {
-                sendInput()
-            } label: {
-                Image(systemName: "arrow.up")
-                    .font(.system(size: 15)).fontWeight(.bold)
             }
-            .opacity(0.85)
-            .controlSize(.large)
-            .tint(.accent)
-            .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.circle)
-//                .keyboardShortcut(chat.isReplying ? "d" : .return)
+            .padding(.leading, 3)
+            
+            #if os(macOS)
+            HStack {
+                ImageSessionInputMenu(session: session)
+                
+                TextField("Prompt", text: $session.prompt, axis: .vertical)
+                    .onSubmit( { sendInput() } )
+                    .textFieldStyle(.plain)
+                    .focused($isFocused, equals: .imageInput)
+                    .onKeyPress(.upArrow) {
+                        if session.prompt.isEmpty {
+                            if let lastPrompt = session.imageGenerations.last?.config.prompt {
+                                session.prompt = lastPrompt
+                                return .handled
+                            }
+                        }
+                        return .ignored
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 9)
+                    .glassEffect(in: .rect(cornerRadius: 24))
+                
+                Button {
+                    sendInput()
+                } label: {
+                    Image(systemName: "arrow.up")
+                        .font(.system(size: 15)).fontWeight(.bold)
+                }
+                .opacity(0.85)
+                .controlSize(.large)
+                .tint(.accent)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.circle)
+                //                .keyboardShortcut(chat.isReplying ? "d" : .return)
+            }
+            #endif
         }
         .ignoresSafeArea()
         .padding(11)

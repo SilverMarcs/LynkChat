@@ -16,7 +16,7 @@ enum ImageEditingService {
         }
 
         let prompt = latest.config.prompt
-        let previousOutputs = allHistory.dropLast().flatMap { $0.images }
+        let previousOutputs = allHistory.flatMap { $0.images + $0.inputImages }
 
         switch model {
         case .seedream:
