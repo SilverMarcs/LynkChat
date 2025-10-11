@@ -29,7 +29,8 @@ struct ToolButton: View {
         .popover(isPresented: $showArguments) {
             ScrollView {
 //                Text(try! AttributedString(markdown: chatTool.args))
-                NativeMarkdownView(text: chatTool.result?.textContent ?? chatTool.args)
+                NativeMarkdownView(text: chatTool.args)
+//                NativeMarkdownView(text: chatTool.args ?? chatTool.result?.textContent ?? "Tool Args")
                     .textSelection(.enabled)
             }
             .presentationDragIndicator(.visible)

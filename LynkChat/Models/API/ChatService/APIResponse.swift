@@ -81,6 +81,10 @@ struct ToolResultResponse: Decodable {
         case .reasoning:
             let content = try container.decode(String.self, forKey: .result)
             result = .reasoning(content)
+        case .mcp:
+            let anyValue = try container.decode(AnyDecodable.self, forKey: .result)
+            let jsonData = try JSONSerialization.data(withJSONObject: anyValue.value, options: [])
+            result = .mcp(String(data: jsonData, encoding: .utf8) ?? "{}")
         }
     }
     

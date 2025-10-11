@@ -11,33 +11,21 @@ struct ToolResultView: View {
     let chatTool: ChatTool
     
     var body: some View {
-        if let result = chatTool.result {
-            switch result {
-            case .scrapeLinks:
-                EmptyView()
-            case .imageGeneration(let imageGenResult):
-                ToolImageView(imageResult: imageGenResult)
-            case .webSearch(let searchResult):
-                ToolSearchResultView(searchResult: searchResult)
-            case .rag(let ragResponse):
-                ToolRagView(ragResponse: ragResponse)
-            case .processFile(let content), .reasoning(let content):
-                FileProcessingView(content: content)
-            }
-        } else {
-            // Show placeholder based on tool type
-            switch chatTool.tool {
-            case .scrapeLinks:
-                EmptyView()
-            case .imageGeneration:
-                ToolImageView(imageResult: nil)
-            case .webSearch:
-                ToolSearchResultView(searchResult: nil)
-            case .rag:
-                ToolRagView(ragResponse: nil)
-            case .processFile, .reasoning:
-                FileProcessingView(content: nil)
-            }
+        switch chatTool.result {
+        case .scrapeLinks:
+            EmptyView()
+        case .imageGeneration(let imageGenResult):
+            ToolImageView(imageResult: imageGenResult)
+        case .webSearch(let searchResult):
+            ToolSearchResultView(searchResult: searchResult)
+        case .rag(let ragResponse):
+            ToolRagView(ragResponse: ragResponse)
+        case .processFile(let content), .reasoning(let content):
+            FileProcessingView(content: content)
+        case .mcp(let content):
+            Text(content)
+        case .none:
+            EmptyView()
         }
     }
 }

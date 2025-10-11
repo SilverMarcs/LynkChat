@@ -16,6 +16,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
     
     case processFile
     case reasoning
+    case mcp
     
     var id: Self { self }
     
@@ -27,6 +28,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .rag: "RAG"
         case .processFile: "File Analysis"
         case .reasoning: "Reasoning"
+        case .mcp: "MCP"
         }
     }
     
@@ -38,6 +40,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .rag: "RAG"
         case .processFile: "File"
         case .reasoning: "Think"
+        case .mcp: "MCP"
         }
     }
     
@@ -49,6 +52,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .rag: "circle.hexagongrid"
         case .processFile: "doc.text"
         case .reasoning: "circle.hexagonpath"
+        case .mcp: "puzzlepiece"
         }
     }
     
@@ -59,6 +63,7 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
         case .rag: .blue
         case .processFile: .purple
         case .reasoning: .orange
+        case .mcp: .green
         }
     }
     
@@ -74,6 +79,8 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
             "Generate an image based on a text description"
         case .reasoning:
             "Use advanced reasoning capabilities for complex problem solving"
+        case .mcp:
+            "Model Context Protocol"
         }
     }
     
@@ -91,6 +98,8 @@ enum Tool: String, Identifiable, CaseIterable, Codable, Sendable {
             "File Analysis"
         case .reasoning:
             "Reasoning"
+        case .mcp:
+            "Model Context Protocol"
         }
     }
 }

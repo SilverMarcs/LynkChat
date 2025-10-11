@@ -14,6 +14,7 @@ enum ToolResult: Codable {
     case rag(RAGResult)
     case processFile(String) // Text content
     case reasoning(String) // Text content
+    case mcp(String) // Text content
     
     var textContent: String {
         switch self {
@@ -44,6 +45,8 @@ enum ToolResult: Codable {
             return "File text content:\n\(content)"
         case .reasoning(let content):
             return "Reasoning:\n\(content)"
+        case .mcp(let content):
+            return "MCP:\n\(content)"
         }
     }
 }
