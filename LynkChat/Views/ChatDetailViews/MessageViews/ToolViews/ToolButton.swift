@@ -39,7 +39,6 @@ struct ToolButton: View {
             #endif
         }
     }
-    
 }
 
 #Preview {

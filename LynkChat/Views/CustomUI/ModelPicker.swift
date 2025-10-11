@@ -19,7 +19,7 @@ struct ModelPicker: View {
                     .tag(model)
             }
         } label: {
-            Label("Model", image: selectedModel.imageName)
+            Label(label, image: selectedModel.imageName)
                 .labelStyle(.titleAndIcon)
         }
         .menuOrder(.fixed)

@@ -17,7 +17,7 @@ let globalContainer: ModelContainer = {
         Generation.self,
     ])
     
-    let modelConfiguration = ModelConfiguration("LynkChatDB", schema: schema, isStoredInMemoryOnly: false)
+    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
     do {
         let container = try ModelContainer(for: schema, configurations: [modelConfiguration])

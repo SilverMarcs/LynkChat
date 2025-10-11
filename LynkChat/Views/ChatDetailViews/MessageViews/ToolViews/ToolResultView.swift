@@ -22,7 +22,7 @@ struct ToolResultView: View {
             ToolRagView(ragResponse: ragResponse)
         case .processFile(let content), .reasoning(let content):
             FileProcessingView(content: content)
-        case .mcp(let content):
+        case .mcp(_):
             EmptyView()
         case .none:
             EmptyView()
