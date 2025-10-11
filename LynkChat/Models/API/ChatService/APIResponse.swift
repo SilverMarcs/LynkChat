@@ -46,6 +46,7 @@ struct ToolCallResponse: Decodable {
     let type: String
     let toolCallId: String
     let tool: Tool
+    let toolName: String
     let args: String
 }
 

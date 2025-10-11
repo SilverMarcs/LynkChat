@@ -16,7 +16,7 @@ struct ToolButton: View {
         Button {
             showArguments.toggle()
         } label: {
-            Label(chatTool.tool.title, systemImage: chatTool.tool.iconName)
+            Label(chatTool.tool == .mcp ? chatTool.toolName : chatTool.tool.title, systemImage: chatTool.tool.iconName)
                 .fontWeight(.semibold)
                 .foregroundStyle(chatTool.tool.color)
         }
@@ -34,7 +34,9 @@ struct ToolButton: View {
             .presentationDragIndicator(.visible)
             .presentationDetents([.medium])
             .contentMargins(20, for: .scrollContent)
-            .frame(maxWidth: 500, maxHeight: 500)
+            #if os(macOS)
+            .frame(width: 500, height: 500)
+            #endif
         }
     }
     

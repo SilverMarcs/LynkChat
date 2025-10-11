@@ -14,13 +14,13 @@ extension Message {
 }
 
 extension ChatTool {
-    static let mockTool = ChatTool(toolCallId: "scrapeLinks123", tool: .scrapeLinks, args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: .processFile("This is the result of the tool url scraping of page"))
+    static let mockTool = ChatTool(toolCallId: "scrapeLinks123", tool: .scrapeLinks, toolName: "scrapeLinks", args: "{urls : [https://9to5mac.com/how-to-fast-charge-the-apple-watch/]}", result: .processFile("This is the result of the tool url scraping of page"))
     
 //    static let mockImageTool = ChatTool(toolCallId: "imageTool123", tool: .imageGeneration, args: "{url : https://www.google.com}", result: .imageGeneration("https://picsum.photos/200"))
     
-    static let mockGoogleTool2 = ChatTool(toolCallId: "googleTool123", tool: .webSearch, args: "{query : How to fast charge Apple Watch}", result: nil)
+    static let mockGoogleTool2 = ChatTool(toolCallId: "googleTool123", tool: .webSearch, toolName: "webSearch", args: "{query : How to fast charge Apple Watch}", result: nil)
 
-    static let mockTranscribeTool = ChatTool(toolCallId: "transcribel123", tool: .processFile, args: "{key : ddgyusadg67ygyisdgiyas}", result: nil)
+    static let mockTranscribeTool = ChatTool(toolCallId: "transcribel123", tool: .processFile, toolName: "processFile", args: "{key : ddgyusadg67ygyisdgiyas}", result: nil)
 }
 
 extension MessageGroup {

@@ -10,6 +10,7 @@ import Foundation
 struct ChatTool: Identifiable, Codable {
     let toolCallId: String
     let tool: Tool
+    let toolName: String
     let args: String
     var result: ToolResult?
     

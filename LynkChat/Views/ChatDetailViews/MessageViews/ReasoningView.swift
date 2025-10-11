@@ -13,7 +13,7 @@ struct ReasoningView: View {
     
     init(reason: String) {
         self.reason = reason
-        self.tool = ChatTool(toolCallId: UUID().uuidString, tool: .reasoning, args: reason, result: .reasoning("Not Shown for Brevity"))
+        self.tool = ChatTool(toolCallId: UUID().uuidString, tool: .reasoning, toolName: "reasoning", args: reason, result: .reasoning("Not Shown for Brevity"))
     }
     
     var body: some View {

@@ -121,6 +121,7 @@ struct StreamHandler {
         assistant.tools?.append(.init(
             toolCallId: toolCallResponse.toolCallId,
             tool: toolCallResponse.tool,
+            toolName: toolCallResponse.toolName,
             args: toolCallResponse.args,
             result: nil
         ))
