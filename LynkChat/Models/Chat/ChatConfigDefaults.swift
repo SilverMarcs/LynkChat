@@ -14,7 +14,22 @@ struct ChatConfigDefaults {
     
     @AppStorage("thinkingBudget") var thinkingBudget: ThinkingBudget = .none
     
-    @AppStorage("mcpServers") var mcpServers: String = ""
+    @AppStorage("mcpServersData") private var mcpServersData: Data = Data()
+    
+    var mcpServers: [MCPServer] {
+        get {
+            guard !mcpServersData.isEmpty,
+                  let servers = try? JSONDecoder().decode([MCPServer].self, from: mcpServersData) else {
+                return []
+            }
+            return servers
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                mcpServersData = encoded
+            }
+        }
+    }
     
     @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses fairly concise."
     #if os(macOS)
@@ -32,21 +47,4 @@ extension String {
     static let toolExtras = """
     The assistant has access to tools like Web Search for finding latest information beyond your knowledge cutoff, Image Generation to generate images as per user request. If the user made a request that requires usage of such tools but did not pass such tools to you, you may notify the user to enable them in settings. But unless you are most certain that user's messages do not require using tools, make no mention of these tools.
     """
-    
-    static let mcpServersExample = """
-{
-  "sosumi": {
-    "type": "stdio",
-    "command": "npx",
-    "args": ["-y", "mcp-remote", "https://sosumi.ai/mcp"]
-  },
-  "context7": {
-    "type": "http",
-    "url": "https://mcp.context7.com/mcp",
-    "headers": {
-      "CONTEXT7_API_KEY": "YOUR_CONTEXT7_API_KEY"
-    }
-  }
-}
-"""
 }

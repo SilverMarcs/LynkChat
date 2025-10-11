@@ -65,6 +65,10 @@ struct ChatInspector: View {
                 ToolsToggleView(config: $chat.config)
             }
             
+            Section("MCP Servers") {
+                MCPServersToggleView(config: $chat.config)
+            }
+            
             Section("System Prompt") {
                 sysPrompt
             }

@@ -41,6 +41,7 @@ struct ChatConfig: Identifiable, Codable, Sendable {
     var systemPrompt: String
     var models: Set<ChatModel> = []
     var enabledTools: Set<Tool> = []
+    var enabledMCPServerIds: Set<UUID> = []
     
     // Helper methods to check and modify model states
     func isModelEnabled(_ model: ChatModel) -> Bool {
@@ -83,6 +84,27 @@ struct ChatConfig: Identifiable, Codable, Sendable {
             enableTool(tool)
         }
     }
+    
+    // Helper methods for MCP servers
+    func isMCPServerEnabled(_ serverId: UUID) -> Bool {
+        enabledMCPServerIds.contains(serverId)
+    }
+    
+    mutating func enableMCPServer(_ serverId: UUID) {
+        enabledMCPServerIds.insert(serverId)
+    }
+    
+    mutating func disableMCPServer(_ serverId: UUID) {
+        enabledMCPServerIds.remove(serverId)
+    }
+    
+    mutating func toggleMCPServer(_ serverId: UUID) {
+        if isMCPServerEnabled(serverId) {
+            disableMCPServer(serverId)
+        } else {
+            enableMCPServer(serverId)
+        }
+    }
 }
 
 extension ChatConfig {
@@ -93,6 +115,7 @@ extension ChatConfig {
         newConfig.systemPrompt = self.systemPrompt
         newConfig.models = self.models
         newConfig.enabledTools = self.enabledTools
+        newConfig.enabledMCPServerIds = self.enabledMCPServerIds
         return newConfig
     }
 }
