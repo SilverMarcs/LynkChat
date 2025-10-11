@@ -30,10 +30,13 @@ struct ImageInspector: View {
                 .labelStyle(.titleAndIcon)
                 
                 Picker("Editing Model", selection: $session.config.editingModel) {
-                    ForEach(ImageEditingModel.allCases, id: \.self) { model in
-                        Text(model.name).tag(model)
+                    ForEach(ImageEditingModel.allCases) { model in
+                        Label(model.name, image: model.imageName)
+                            .tag(model)
                     }
                 }
+                .labelStyle(.titleAndIcon)
+
             }
             
             Section("Parameters") {

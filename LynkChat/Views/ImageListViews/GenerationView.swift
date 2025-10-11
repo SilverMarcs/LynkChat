@@ -29,11 +29,15 @@ struct GenerationView: View {
                 HStack {
                     AssistantLabel(model: generation.mode == .editing ? generation.config.editingModel : generation.config.model)
                     
-                    Text("Edit")
-                        .padding(.vertical, 6)
-                        .padding(.horizontal, 10)
-                        .background(Color.accentColor.opacity(0.12))
-                        .foregroundStyle(Color.accentColor)
+                    if generation.mode == .editing {
+                        Text("Edit")
+                            .font(.caption)
+                            .padding(.vertical, 6)
+                            .padding(.horizontal, 10)
+                            .background(Color.accentColor.opacity(0.12))
+                            .foregroundStyle(Color.accentColor)
+                            .clipShape(.capsule)
+                    }
                 }
                 
                 if generation.state == .error {

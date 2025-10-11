@@ -49,13 +49,26 @@ struct ImageDetail: View {
             }
             #else
             .toolbarTitleMenu {
-                Picker("Model", selection: $session.config.model) {
-                    ForEach(ImageModel.allCases) { model in
-                        Label(model.name, image: model.imageName)
-                            .tag(model)
+                Menu {
+                    Picker("Model", selection: $session.config.model) {
+                        ForEach(ImageModel.allCases) { model in
+                            Label(model.name, image: model.imageName)
+                                .tag(model)
+                        }
                     }
+                    .labelStyle(.titleAndIcon)
+                    
+                    Picker("Editing Model", selection: $session.config.editingModel) {
+                        ForEach(ImageEditingModel.allCases) { model in
+                            Label(model.name, image: model.imageName)
+                                .tag(model)
+                        }
+                    }
+                    .labelStyle(.titleAndIcon)
+
+                } label: {
+                    Text(session.title)
                 }
-                .labelStyle(.titleAndIcon)
             }
             .toolbar(.hidden, for: .tabBar)
             .searchable(text: $session.prompt, isPresented: $isFocused, prompt: "Generate Images")

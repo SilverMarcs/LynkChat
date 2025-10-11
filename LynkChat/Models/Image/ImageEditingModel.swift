@@ -39,6 +39,6 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
     }
     
     var imageName: String {
-        "flux.symbols"
+        "storm.SFSymbol"
     }
 }
