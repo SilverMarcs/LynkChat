@@ -14,7 +14,7 @@ struct GenerationView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            VStack {
+            VStack(alignment: .trailing) {
 //                LazyVGrid(columns: gridColumns, alignment: .leading, spacing: spacing) {
                 FlowLayout {
                     ForEach(generation.inputImages, id: \.self) { image in
@@ -24,7 +24,7 @@ struct GenerationView: View {
                 }
                 
                 Text(generation.config.prompt)
-                    .padding(9)
+                    .padding(13)
                     .glassEffect(in: .rect(cornerRadius: 24))
                     .textSelection(.enabled)
             }
@@ -86,6 +86,7 @@ struct GenerationView: View {
             Section {
                 Button {
                     generation.images = []
+                    generation.config = generation.session?.config ?? ImageConfig()
                     Task { await generation.send() }
                 } label: {
                     Label("Regenerate", systemImage: "arrow.trianglehead.2.clockwise")

@@ -49,26 +49,21 @@ struct ImageDetail: View {
             }
             #else
             .toolbarTitleMenu {
-                Menu {
-                    Picker("Model", selection: $session.config.model) {
-                        ForEach(ImageModel.allCases) { model in
-                            Label(model.name, image: model.imageName)
-                                .tag(model)
-                        }
+                Picker("Model", selection: $session.config.model) {
+                    ForEach(ImageModel.allCases) { model in
+                        Label(model.name, image: model.imageName)
+                            .tag(model)
                     }
-                    .labelStyle(.titleAndIcon)
-                    
-                    Picker("Editing Model", selection: $session.config.editingModel) {
-                        ForEach(ImageEditingModel.allCases) { model in
-                            Label(model.name, image: model.imageName)
-                                .tag(model)
-                        }
-                    }
-                    .labelStyle(.titleAndIcon)
-
-                } label: {
-                    Text(session.title)
                 }
+                .labelStyle(.titleAndIcon)
+                
+                Picker("Editing Model", selection: $session.config.editingModel) {
+                    ForEach(ImageEditingModel.allCases) { model in
+                        Label(model.name, image: model.imageName)
+                            .tag(model)
+                    }
+                }
+                .labelStyle(.titleAndIcon)
             }
             .toolbar(.hidden, for: .tabBar)
             .searchable(text: $session.prompt, isPresented: $isFocused, prompt: "Generate Images")
@@ -110,7 +105,7 @@ struct ImageDetail: View {
                 ToolbarSpacer(.fixed, placement: .bottomBar)
             }
             .listStyle(.plain)
-            .navigationTitle(session.config.model.name)
+            .navigationTitle(session.title)
             .toolbarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem {
