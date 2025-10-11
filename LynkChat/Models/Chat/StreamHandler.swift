@@ -111,7 +111,7 @@ struct StreamHandler {
             messages: messages,
             temperature: chat.config.temperature.value,
             thinkingBudget: chat.config.thinkingBudget.rawValue,
-            system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras,
+            system: date + "\n" + chat.config.systemPrompt,
             mcpServers: mcpServersDict
         )
     }

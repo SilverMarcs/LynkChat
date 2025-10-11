@@ -23,7 +23,7 @@ struct MCPServerRow: View {
                         
                         Text(server.type.displayName)
                             .font(.caption)
-                            .padding(.horizontal, 6)
+                            .padding(.horizontal, 4)
                             .padding(.vertical, 2)
                             .background(.background.secondary, in: .rect(cornerRadius: 4))
                     }

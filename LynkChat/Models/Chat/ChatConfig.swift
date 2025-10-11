@@ -37,45 +37,16 @@ struct ChatConfig: Identifiable, Codable, Sendable {
     var models: Set<ChatModel> = []
     var enabledMCPServerIds: Set<UUID> = []
     
-    // Helper methods to check and modify model states
-    func isModelEnabled(_ model: ChatModel) -> Bool {
-        models.contains(model)
-    }
-    
-    mutating func enableModel(_ model: ChatModel) {
-        models.insert(model)
-    }
-    
-    mutating func disableModel(_ model: ChatModel) {
-        models.remove(model)
-    }
-    
-    mutating func toggleModel(_ model: ChatModel) {
-        if isModelEnabled(model) {
-            disableModel(model)
-        } else {
-            enableModel(model)
-        }
-    }
-    
     // Helper methods for MCP servers
     func isMCPServerEnabled(_ serverId: UUID) -> Bool {
         enabledMCPServerIds.contains(serverId)
     }
     
-    mutating func enableMCPServer(_ serverId: UUID) {
-        enabledMCPServerIds.insert(serverId)
-    }
-    
-    mutating func disableMCPServer(_ serverId: UUID) {
-        enabledMCPServerIds.remove(serverId)
-    }
-    
     mutating func toggleMCPServer(_ serverId: UUID) {
         if isMCPServerEnabled(serverId) {
-            disableMCPServer(serverId)
+            enabledMCPServerIds.remove(serverId)
         } else {
-            enableMCPServer(serverId)
+            enabledMCPServerIds.insert(serverId)
         }
     }
 }

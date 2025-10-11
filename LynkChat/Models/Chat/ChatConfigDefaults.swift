@@ -9,13 +9,10 @@ import SwiftUI
 
 struct ChatConfigDefaults {
     @AppStorage("defaultModel") var defaultModel: ChatModel = .gemini_flash
-    
     @AppStorage("temperature") var temperature: Temperature = .balanced
-    
     @AppStorage("thinkingBudget") var thinkingBudget: ThinkingBudget = .none
     
     @AppStorage("mcpServersData") private var mcpServersData: Data = Data()
-    
     var mcpServers: [MCPServer] {
         get {
             guard !mcpServersData.isEmpty,
@@ -42,9 +39,5 @@ struct ChatConfigDefaults {
 extension String {
     static let systemPrompt = """
     You are a helpful assistant.
-    """
-    
-    static let toolExtras = """
-    The assistant has access to tools like Web Search for finding latest information beyond your knowledge cutoff, Image Generation to generate images as per user request. If the user made a request that requires usage of such tools but did not pass such tools to you, you may notify the user to enable them in settings. But unless you are most certain that user's messages do not require using tools, make no mention of these tools.
     """
 }
