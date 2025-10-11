@@ -15,10 +15,9 @@ struct GenerationView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             VStack(alignment: .trailing) {
-//                LazyVGrid(columns: gridColumns, alignment: .leading, spacing: spacing) {
                 FlowLayout {
                     ForEach(generation.inputImages, id: \.self) { image in
-                        ImageViewerData(data: image, size: 200)
+                        ImageViewerData(data: image, enableSave: false, size: 150)
                             .backgroundExtensionEffect()
                     }
                 }
@@ -86,7 +85,8 @@ struct GenerationView: View {
             Section {
                 Button {
                     generation.images = []
-                    generation.config.model = generation.session?.config.model ?? .seedream
+                    generation.config.model = generation.session.config.model
+                    generation.config.editingModel = generation.session.config.editingModel
                     Task { await generation.send() }
                 } label: {
                     Label("Regenerate", systemImage: "arrow.trianglehead.2.clockwise")

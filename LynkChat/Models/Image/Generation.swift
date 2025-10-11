@@ -14,7 +14,7 @@ class Generation {
     var id: UUID = UUID()
     var date: Date = Date()
     
-    var session: ImageSession?
+    var session: ImageSession
     
     var errorMessage: String = ""
     
@@ -54,7 +54,7 @@ class Generation {
                 case .generation:
                     dataObjects = try await APIService.generateImages(config: config)
                 case .editing:
-                    let history = session?.imageGenerations ?? []
+                    let history = session.imageGenerations
                     dataObjects = try await ImageEditingService.editImages(
                         using: config.editingModel,
                         allHistory: history
@@ -99,7 +99,7 @@ class Generation {
     }
     
     func deleteSelf() {
-        session?.deleteGeneration(self)
+        session.deleteGeneration(self)
     }
 }
 
