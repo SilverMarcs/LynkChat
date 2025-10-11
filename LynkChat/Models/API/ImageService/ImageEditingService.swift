@@ -16,8 +16,23 @@ enum ImageEditingService {
         }
 
         let prompt = latest.config.prompt
-        let previousOutputs = allHistory.flatMap { $0.images + $0.inputImages }
-
+        
+        // Use the second-to-last generation's images
+        var previousOutputs: [Data] = []
+        if allHistory.count >= 2 {
+            let secondLast = allHistory[allHistory.count - 2]
+            if !secondLast.images.isEmpty {
+                previousOutputs = secondLast.images
+            } else if !secondLast.inputImages.isEmpty {
+                previousOutputs = secondLast.inputImages
+            }
+        }
+        
+        // Add latest generation's input images if they exist
+        if !latest.inputImages.isEmpty {
+            previousOutputs.append(contentsOf: latest.inputImages)
+        }
+        
         switch model {
         case .seedream:
             return try await editWithSeedream(prompt: prompt, images: previousOutputs)
