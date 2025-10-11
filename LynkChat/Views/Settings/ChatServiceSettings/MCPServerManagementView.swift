@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct MCPServerManagementView: View {
-    @Binding var servers: [MCPServer]
+    @State var config: ChatConfigDefaults = .init()
     @State private var showingAddServer = false
+    @State private var trigger = 0
     
     var body: some View {
         List {
-            ForEach($servers) { $server in
+            ForEach($config.mcpServers) { $server in
                 MCPServerRow(server: $server)
             }
             .onDelete { indexSet in
-                servers.remove(atOffsets: indexSet)
+                config.mcpServers.remove(atOffsets: indexSet)
+                trigger += 1
             }
         }
+        .id(trigger)
         .navigationTitle("MCP Servers")
         .toolbarTitleDisplayMode(.inline)
         .toolbar {
@@ -33,17 +36,9 @@ struct MCPServerManagementView: View {
         }
         .sheet(isPresented: $showingAddServer) {
             MCPServerEditView(server: .constant(MCPServer(name: "", type: .http, url: ""))) { newServer in
-                servers.append(newServer)
+                config.mcpServers.append(newServer)
+                trigger += 1
             }
         }
-    }
-}
-
-#Preview {
-    NavigationStack {
-        MCPServerManagementView(servers: .constant([
-            MCPServer.examples[0],
-            MCPServer.examples[1]
-        ]))
     }
 }

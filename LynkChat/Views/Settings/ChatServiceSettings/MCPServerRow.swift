@@ -25,7 +25,7 @@ struct MCPServerRow: View {
                             .font(.caption)
                             .padding(.horizontal, 4)
                             .padding(.vertical, 2)
-                            .background(.background.secondary, in: .rect(cornerRadius: 4))
+                            .background(.background.tertiary, in: .rect(cornerRadius: 4))
                     }
                     
                     Text(server.url)

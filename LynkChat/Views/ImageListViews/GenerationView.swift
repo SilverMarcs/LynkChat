@@ -86,7 +86,7 @@ struct GenerationView: View {
             Section {
                 Button {
                     generation.images = []
-                    generation.config = generation.session?.config ?? ImageConfig()
+                    generation.config.model = generation.session?.config.model ?? .seedream
                     Task { await generation.send() }
                 } label: {
                     Label("Regenerate", systemImage: "arrow.trianglehead.2.clockwise")

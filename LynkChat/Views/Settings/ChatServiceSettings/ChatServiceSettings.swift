@@ -25,13 +25,13 @@ struct ChatServiceSettings: View {
                 
                 Section("MCP Servers") {
                     NavigationLink {
-                        MCPServerManagementView(servers: $config.mcpServers)
+                        MCPServerManagementView()
                     } label: {
                         HStack {
                             Label("Manage Servers", systemImage: "server.rack")
                             Spacer()
                             Text("\(config.mcpServers.count) configured")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .font(.subheadline)
                         }
                     }
