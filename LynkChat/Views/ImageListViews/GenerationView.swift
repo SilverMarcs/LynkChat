@@ -31,9 +31,9 @@ struct GenerationView: View {
                     
                     if generation.mode == .editing {
                         Text("Edit")
-                            .font(.caption)
-                            .padding(.vertical, 6)
-                            .padding(.horizontal, 10)
+                            .font(.caption.bold())
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
                             .background(Color.accentColor.opacity(0.12))
                             .foregroundStyle(Color.accentColor)
                             .clipShape(.capsule)

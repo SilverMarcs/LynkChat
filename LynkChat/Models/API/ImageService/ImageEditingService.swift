@@ -23,6 +23,9 @@ enum ImageEditingService {
             return try await editWithSeedream(prompt: prompt, images: previousOutputs)
         case .nanoBanana:
             return try await editWithNanoBanana(prompt: prompt, images: previousOutputs)
+        case .qwen:
+            return try await editWithQwenPlus(prompt: prompt, images: previousOutputs)
+        }
         case .gpt:
             // GPT Image 1 expects a single image input. Prefer any user-provided inputImages
             // attached to the latest generation; otherwise fall back to previous outputs.
@@ -32,7 +35,6 @@ enum ImageEditingService {
             }
 
             return try await editWithGpt(prompt: prompt, image: imageData)
-        }
     }
     
     private static func editWithSeedream(prompt: String, images: [Data]) async throws -> [Data] {
@@ -43,7 +45,7 @@ enum ImageEditingService {
         let requestBody: [String: Any] = [
             "prompt": prompt,
             "images": imageUrls,
-            "size": "2048*3072",
+//            "size": "2048*3072",
             "enable_sync_mode": true,
             "enable_base64_output": true
         ]
@@ -59,7 +61,7 @@ enum ImageEditingService {
         let requestBody: [String: Any] = [
             "prompt": prompt,
             "images": imageUrls,
-            "aspect_ratio": "9:16",
+//            "aspect_ratio": "9:16",
             "output_format": "jpeg",
             "enable_sync_mode": true,
             "enable_base64_output": true
@@ -81,6 +83,40 @@ enum ImageEditingService {
         ]
 
         return try await performEditRequest(path: ImageEditingModel.gpt.apiPath, body: requestBody)
+    }
+    
+    private static func editWithQwen(prompt: String, image: Data) async throws -> [Data] {
+        let imageUrl = "data:image/png;base64,\(image.base64EncodedString())"
+
+        let requestBody: [String: Any] = [
+            "prompt": prompt,
+            "image": imageUrl,
+//            "size": "1024*1536",
+            "seed": -1,
+            "output_format": "jpeg",
+            "enable_sync_mode": true,
+            "enable_base64_output": true
+        ]
+
+        return try await performEditRequest(path: ImageEditingModel.qwen.apiPath, body: requestBody)
+    }
+    
+    private static func editWithQwenPlus(prompt: String, images: [Data]) async throws -> [Data] {
+        let imageUrls = images.compactMap { data -> String? in
+            "data:image/png;base64,\(data.base64EncodedString())"
+        }
+        
+        let requestBody: [String: Any] = [
+            "prompt": prompt,
+            "images": imageUrls,
+//            "size": "1024*1024",
+            "seed": -1,
+            "output_format": "jpeg",
+            "enable_sync_mode": true,
+            "enable_base64_output": true
+        ]
+        
+        return try await performEditRequest(path: ImageEditingModel.qwen.apiPath, body: requestBody)
     }
     
     private static func performEditRequest(path: String, body: [String: Any]) async throws -> [Data] {

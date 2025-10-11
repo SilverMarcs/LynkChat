@@ -16,9 +16,9 @@ enum ImageModelSelector {
         if hasInputImages { return .editing }
 
         // Try using Apple FoundationModels tool if available; otherwise use heuristic
-        if let mode = await selectUsingFoundationModels(prompt: prompt, history: history) {
-            return mode
-        }
+//        if let mode = await selectUsingFoundationModels(prompt: prompt, history: history) {
+//            return mode
+//        }
         return heuristic(prompt: prompt)
     }
 

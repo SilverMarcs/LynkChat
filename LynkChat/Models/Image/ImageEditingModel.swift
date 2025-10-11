@@ -8,9 +8,10 @@
 import Foundation
 
 enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
-    case seedream = "bytedance/seedream-v4/edit"
-    case nanoBanana = "google/nano-banana/edit"
-    case gpt = "openai/gpt-image-1"
+    case seedream
+    case nanoBanana
+    case gpt
+    case qwen
 
     var id: String { rawValue }
 
@@ -19,6 +20,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
         case .seedream: "Seedream"
         case .nanoBanana: "Nano Banana"
         case .gpt: "GPT Image 1"
+        case .qwen: "Qwen Image Edit Plus"
         }
     }
     
@@ -27,6 +29,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
         case .seedream: "/api/v3/bytedance/seedream-v4/edit"
         case .nanoBanana: "/api/v3/google/nano-banana/edit"
         case .gpt: "/api/v3/openai/gpt-image-1"
+        case .qwen: "/api/v3/wavespeed-ai/qwen-image/edit-plus"
         }
     }
     
@@ -35,6 +38,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
         case .gpt: "#00947A"
         case .nanoBanana: "#E64335"
         case .seedream: "#6431e2"
+        case .qwen: "#007BFF"
         }
     }
     
