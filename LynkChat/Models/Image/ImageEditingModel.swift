@@ -19,8 +19,8 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
         switch self {
         case .seedream: "Seedream"
         case .nanoBanana: "Nano Banana"
-        case .gpt: "GPT Image 1"
-        case .qwen: "Qwen Image Edit Plus"
+        case .gpt: "GPT"
+        case .qwen: "Qwen"
         }
     }
     

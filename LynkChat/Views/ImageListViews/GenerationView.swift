@@ -14,16 +14,21 @@ struct GenerationView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Spacer()
-
-                GroupBox {
-                    Text(generation.config.prompt)
-                        .textSelection(.enabled)
+            VStack {
+//                LazyVGrid(columns: gridColumns, alignment: .leading, spacing: spacing) {
+                FlowLayout {
+                    ForEach(generation.inputImages, id: \.self) { image in
+                        ImageViewerData(data: image, size: 200)
+                            .backgroundExtensionEffect()
+                    }
                 }
-                .groupBoxStyle(PlatformGroupBox())
+                
+                Text(generation.config.prompt)
+                    .padding(9)
+                    .glassEffect(in: .rect(cornerRadius: 24))
+                    .textSelection(.enabled)
             }
-            
+            .frame(maxWidth: .infinity, alignment: .trailing)
             
             VStack(alignment: .leading) {
                 HStack {

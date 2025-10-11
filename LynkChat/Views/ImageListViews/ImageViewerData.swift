@@ -40,7 +40,7 @@ struct ImageViewerData: View {
                         .font(.largeTitle)
                         .rotationEffect(.degrees(showCheckmark ? 0 : 180))
                         .foregroundStyle(.primary, .clear)
-                        .glassEffect()
+                        .glassEffect(in: .circle)
                 }
                 .buttonStyle(.plain)
                 .padding(10)

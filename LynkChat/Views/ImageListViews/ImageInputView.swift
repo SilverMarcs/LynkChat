@@ -14,53 +14,37 @@ struct ImageInputView: View {
     var body: some View {
         HStack {
             ImageSessionInputMenu(session: session)
-                            
-            HStack(spacing: 5) {
-                Button {
-                    Task {
-                        // Get the most recent generation's prompt (if any) and regenerate
-                        if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
-                            // copy prompt from the generation's config to session prompt
-                            await session.send(latest.config.prompt)
+                
+            TextField("Prompt", text: $session.prompt, axis: .vertical)
+                .onSubmit( { sendInput() } )
+                .textFieldStyle(.plain)
+                .focused($isFocused, equals: .imageInput)
+                .onKeyPress(.upArrow) {
+                    if session.prompt.isEmpty {
+                        if let lastPrompt = session.imageGenerations.last?.config.prompt {
+                            session.prompt = lastPrompt
+                            return .handled
                         }
                     }
-                } label: {
-                    Label("Regenerate", systemImage: "arrow.clockwise")
-                        .labelStyle(.iconOnly)
-                        .tint(.white)
+                    return .ignored
                 }
-                .disabled(session.imageGenerations.isEmpty)
-                .controlSize(.large)
-                .fontWeight(.bold)
-                .buttonBorderShape(.circle)
-                .keyboardShortcut("r")
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 9)
+                .glassEffect(in: .rect(cornerRadius: 24))
                 
-                TextField("Prompt", text: $session.prompt, axis: .vertical)
-                    .onSubmit( { sendInput() } )
-                    .textFieldStyle(.plain)
-                    .padding(.leading, 6)
-                    .focused($isFocused, equals: .imageInput)
-                    .onKeyPress(.upArrow) {
-                        if session.prompt.isEmpty {
-                            if let lastPrompt = session.imageGenerations.last?.config.prompt {
-                                session.prompt = lastPrompt
-                                return .handled
-                            }
-                        }
-                        return .ignored
-                    }
-                
-                Button(action: sendInput) {
-                    Image(systemName: "arrow.up")
-                }
-                .controlSize(.large)
-                .fontWeight(.bold)
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.circle)
+            Button {
+                sendInput()
+            } label: {
+                Image(systemName: "arrow.up")
+                    .font(.system(size: 15)).fontWeight(.bold)
             }
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(4)
-            .glassEffect(in: .rect(cornerRadius: 20))
+            .opacity(0.85)
+            .controlSize(.large)
+            .tint(.accent)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.circle)
+//                .keyboardShortcut(chat.isReplying ? "d" : .return)
         }
         .ignoresSafeArea()
         .padding(11)
