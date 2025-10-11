@@ -83,6 +83,15 @@ struct GenerationView: View {
         }
         .contentShape(.rect)
         .contextMenu {
+            Section {
+                Button {
+                    generation.images = []
+                    Task { await generation.send() }
+                } label: {
+                    Label("Regenerate", systemImage: "arrow.trianglehead.2.clockwise")
+                }
+            }
+            
             Button {
                 generation.config.prompt.copyToPasteboard()
             } label: {

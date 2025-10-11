@@ -16,19 +16,7 @@ struct ImageSessionInputMenu: View {
     @State private var addingPhoto: Bool = false
 
     var body: some View {
-        Menu {
-            Section {
-                Button {
-                    Task {
-                        if let latest = session.imageGenerations.sorted(by: { $0.date < $1.date }).last {
-                            await session.send(latest.config.prompt)
-                        }
-                    }
-                } label: {
-                    Label("Regenerate", systemImage: "arrow.clockwise")
-                }
-            }
-            
+        Menu {            
             Button {
                 showPhotosPicker = true
             } label: {
