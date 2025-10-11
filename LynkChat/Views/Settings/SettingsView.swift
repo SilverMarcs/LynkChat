@@ -45,7 +45,7 @@ struct SettingsView: View {
             
             Section("Services") {
 //                NavigationLink(destination: RAGSettings()) {
-//                    Label("RAG Service", systemImage: Tool.rag.iconName)
+//                    Label("RAG Service", systemImage: "circle.hexagongrid")
 //                }
                 
                 NavigationLink(destination: AudioServiceSettings()) {

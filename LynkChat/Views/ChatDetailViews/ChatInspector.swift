@@ -61,10 +61,6 @@ struct ChatInspector: View {
                 }
             }
             
-            Section("Plugins") {
-                ToolsToggleView(config: $chat.config)
-            }
-            
             Section("MCP Servers") {
                 MCPServersToggleView(config: $chat.config)
             }

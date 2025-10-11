@@ -115,10 +115,10 @@ extension Message {
         // Create tool usage texts
         let toolTexts = tools?.map { tool -> String in
             return """
-                Used \(tool.tool.rawValue) tool
+                Used \(tool.toolName) tool
                 Arguments: \(tool.args)
                 Tool Result:
-                \(tool.result?.textContent ?? "No result")
+                \(tool.result ?? "No result")
                 """
         } ?? []
         

@@ -22,17 +22,6 @@ struct ChatServiceSettings: View {
                 }
             }
             
-            Section("Plugins") {
-                ForEach([Tool.webSearch, Tool.imageGeneration], id: \.self) { tool in
-                    Label {
-                        Text(tool.title)
-                        Text(tool.description)
-                    } icon: {
-                        Image(systemName: tool.iconName)
-                    }
-                }
-            }
-            
             Section("MCP Servers") {
                 NavigationLink {
                     MCPServerManagementView(servers: $config.mcpServers)

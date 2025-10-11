@@ -15,7 +15,6 @@ struct APIRequest: Encodable {
     let temperature: Double
     let thinkingBudget: String
     let system: String?
-    let tools: [String]
     let mcpServers: [String: [String: Any]]?
     
     enum CodingKeys: String, CodingKey {
@@ -30,7 +29,6 @@ struct APIRequest: Encodable {
         try container.encode(temperature, forKey: .temperature)
         try container.encode(thinkingBudget, forKey: .thinkingBudget)
         try container.encodeIfPresent(system, forKey: .system)
-        try container.encode(tools, forKey: .tools)
         
         if let mcpServers = mcpServers {
             // Encode the dictionary as a nested container

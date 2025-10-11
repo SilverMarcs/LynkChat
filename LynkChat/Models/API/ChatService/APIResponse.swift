@@ -45,7 +45,6 @@ struct FileResponse: Decodable {
 struct ToolCallResponse: Decodable {
     let type: String
     let toolCallId: String
-    let tool: Tool
     let toolName: String
     let args: String
 }
@@ -53,44 +52,21 @@ struct ToolCallResponse: Decodable {
 struct ToolResultResponse: Decodable {
     let type: String
     let toolCallId: String
-    let tool: Tool
-    let result: ToolResult
+    let result: String
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         type = try container.decode(String.self, forKey: .type)
         toolCallId = try container.decode(String.self, forKey: .toolCallId)
-        tool = try container.decode(Tool.self, forKey: .tool)
         
-        // Decode result based on tool type - much simpler now!
-        switch tool {
-        case .webSearch:
-            let searchResult = try container.decode(SearchResult.self, forKey: .result)
-            result = .webSearch(searchResult)
-        case .scrapeLinks:
-            let fetchResult = try container.decode(ScrapeLinksResult.self, forKey: .result)
-            result = .scrapeLinks(fetchResult)
-        case .imageGeneration:
-            let imageGenResult = try container.decode(ImageGenerationResult.self, forKey: .result)
-            result = .imageGeneration(imageGenResult)
-        case .rag:
-            let ragResponse = try container.decode(RAGResult.self, forKey: .result)
-            result = .rag(ragResponse)
-        case .processFile:
-            let content = try container.decode(String.self, forKey: .result)
-            result = .processFile(content)
-        case .reasoning:
-            let content = try container.decode(String.self, forKey: .result)
-            result = .reasoning(content)
-        case .mcp:
-            let anyValue = try container.decode(AnyDecodable.self, forKey: .result)
-            let jsonData = try JSONSerialization.data(withJSONObject: anyValue.value, options: [])
-            result = .mcp(String(data: jsonData, encoding: .utf8) ?? "{}")
-        }
+        // Decode result as JSON string
+        let anyValue = try container.decode(AnyDecodable.self, forKey: .result)
+        let jsonData = try JSONSerialization.data(withJSONObject: anyValue.value, options: [])
+        result = String(data: jsonData, encoding: .utf8) ?? "{}"
     }
     
     private enum CodingKeys: String, CodingKey {
-        case type, toolCallId, tool, result
+        case type, toolCallId, result
     }
 }
 

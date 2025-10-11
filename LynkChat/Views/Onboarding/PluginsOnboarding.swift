@@ -18,23 +18,7 @@ struct PluginsOnboarding: View {
             content: {
                 Form {
                     Section {
-                        HStack {
-                            Label("Web Search", systemImage: Tool.webSearch.iconName)
-                            if horizontalSize != .compact {
-                                Spacer()
-                                Text("Access up-to-date information")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        
-                        HStack {
-                            Label("Image Generate", systemImage: Tool.imageGeneration.iconName)
-                            if horizontalSize != .compact {
-                                Spacer()
-                                Text("Generate images from text")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
+            
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))

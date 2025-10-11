@@ -18,11 +18,6 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         self.thinkingBudget = defaults.thinkingBudget
         self.systemPrompt = defaults.systemPrompt
         self.models = [defaults.defaultModel]
-        #if os(macOS)
-        self.enabledTools = []
-        #else
-        self.enabledTools = [.scrapeLinks, .webSearch]
-        #endif
     }
     
     var model: ChatModel {
@@ -40,7 +35,6 @@ struct ChatConfig: Identifiable, Codable, Sendable {
     var thinkingBudget: ThinkingBudget
     var systemPrompt: String
     var models: Set<ChatModel> = []
-    var enabledTools: Set<Tool> = []
     var enabledMCPServerIds: Set<UUID> = []
     
     // Helper methods to check and modify model states
@@ -61,27 +55,6 @@ struct ChatConfig: Identifiable, Codable, Sendable {
             disableModel(model)
         } else {
             enableModel(model)
-        }
-    }
-    
-    // Helper methods to check and modify tool states
-    func isToolEnabled(_ tool: Tool) -> Bool {
-        enabledTools.contains(tool)
-    }
-    
-    mutating func enableTool(_ tool: Tool) {
-        enabledTools.insert(tool)
-    }
-    
-    mutating func disableTool(_ tool: Tool) {
-        enabledTools.remove(tool)
-    }
-    
-    mutating func toggleTool(_ tool: Tool) {
-        if isToolEnabled(tool) {
-            disableTool(tool)
-        } else {
-            enableTool(tool)
         }
     }
     
@@ -114,7 +87,6 @@ extension ChatConfig {
         newConfig.thinkingBudget = self.thinkingBudget
         newConfig.systemPrompt = self.systemPrompt
         newConfig.models = self.models
-        newConfig.enabledTools = self.enabledTools
         newConfig.enabledMCPServerIds = self.enabledMCPServerIds
         return newConfig
     }

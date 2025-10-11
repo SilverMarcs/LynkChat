@@ -111,8 +111,7 @@ struct StreamHandler {
             messages: messages,
             temperature: chat.config.temperature.value,
             thinkingBudget: chat.config.thinkingBudget.rawValue,
-            system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
-            tools: chat.config.enabledTools.map { $0.rawValue },
+            system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras,
             mcpServers: mcpServersDict
         )
     }
@@ -120,7 +119,6 @@ struct StreamHandler {
     private func updateTools(with toolCallResponse: ToolCallResponse) {
         assistant.tools?.append(.init(
             toolCallId: toolCallResponse.toolCallId,
-            tool: toolCallResponse.tool,
             toolName: toolCallResponse.toolName,
             args: toolCallResponse.args,
             result: nil

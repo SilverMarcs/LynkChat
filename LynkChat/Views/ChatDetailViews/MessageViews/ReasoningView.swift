@@ -9,15 +9,35 @@ import SwiftUI
 
 struct ReasoningView: View {
     let reason: String
-    let tool: ChatTool
     
-    init(reason: String) {
-        self.reason = reason
-        self.tool = ChatTool(toolCallId: UUID().uuidString, tool: .reasoning, toolName: "reasoning", args: reason, result: .reasoning("Not Shown for Brevity"))
-    }
+    @State private var showArguments = false
     
     var body: some View {
-        ToolButton(chatTool: tool)
+        Button {
+            showArguments.toggle()
+        } label: {
+            Label("Reasoning", systemImage: "circle.hexagonpath")
+                .fontWeight(.semibold)
+                .foregroundStyle(.orange)
+        }
+        .labelStyle(.titleAndIcon)
+        .buttonStyle(.bordered)
+        #if os(macOS)
+        .controlSize(.large)
+        #endif
+        .buttonBorderShape(.roundedRectangle)
+        .popover(isPresented: $showArguments) {
+            ScrollView {
+                NativeMarkdownView(text: reason)
+                    .textSelection(.enabled)
+            }
+            .presentationDragIndicator(.visible)
+            .presentationDetents([.medium])
+            .contentMargins(20, for: .scrollContent)
+            #if os(macOS)
+            .frame(width: 500, height: 500)
+            #endif
+        }
     }
 }
 

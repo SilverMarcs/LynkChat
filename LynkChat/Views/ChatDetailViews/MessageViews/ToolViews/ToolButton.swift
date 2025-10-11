@@ -16,9 +16,9 @@ struct ToolButton: View {
         Button {
             showArguments.toggle()
         } label: {
-            Label(chatTool.tool == .mcp ? chatTool.toolName : chatTool.tool.title, systemImage: chatTool.tool.iconName)
+            Label(chatTool.toolName, systemImage: "puzzlepiece")
                 .fontWeight(.semibold)
-                .foregroundStyle(chatTool.tool.color)
+                .foregroundStyle(.green)
         }
         .labelStyle(.titleAndIcon)
         .buttonStyle(.bordered)
@@ -28,7 +28,7 @@ struct ToolButton: View {
         .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
             ScrollView {
-                NativeMarkdownView(text: chatTool.result?.textContent ?? chatTool.args)
+                NativeMarkdownView(text: chatTool.result ?? chatTool.args)
                     .textSelection(.enabled)
             }
             .presentationDragIndicator(.visible)
@@ -39,8 +39,4 @@ struct ToolButton: View {
             #endif
         }
     }
-}
-
-#Preview {
-    ToolButton(chatTool: .mockTool)
 }
