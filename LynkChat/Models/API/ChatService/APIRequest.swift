@@ -16,6 +16,7 @@ struct APIRequest: Encodable {
     let thinkingBudget: String
     let system: String?
     let tools: [String]
+    let mcpServers: String?
 }
 
 struct APIMessage: Encodable {

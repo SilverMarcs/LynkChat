@@ -103,6 +103,8 @@ struct StreamHandler {
     private func createAPIRequest(with messages: [APIMessage]) -> APIRequest {
         let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
         
+        let mcpServers = ChatConfigDefaults().mcpServers.trimmingCharacters(in: .whitespacesAndNewlines)
+        
         return APIRequest(
             userId: "zabir",
             model: AppConfig.shared.sendDebugModel ? "debug" : chat.config.model.id,
@@ -110,7 +112,8 @@ struct StreamHandler {
             temperature: chat.config.temperature.value,
             thinkingBudget: chat.config.thinkingBudget.rawValue,
             system: date + "\n" + chat.config.systemPrompt + "\n" + String.toolExtras + chat.config.enabledTools.map { $0.toolPrompt }.joined(separator: "\n"),
-            tools: chat.config.enabledTools.map { $0.rawValue }
+            tools: chat.config.enabledTools.map { $0.rawValue },
+            mcpServers: mcpServers.isEmpty ? nil : mcpServers
         )
     }
     

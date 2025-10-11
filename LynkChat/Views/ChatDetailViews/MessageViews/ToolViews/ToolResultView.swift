@@ -23,7 +23,7 @@ struct ToolResultView: View {
         case .processFile(let content), .reasoning(let content):
             FileProcessingView(content: content)
         case .mcp(let content):
-            Text(content)
+            EmptyView()
         case .none:
             EmptyView()
         }
