@@ -26,11 +26,6 @@ struct MCPServer: Identifiable, Codable, Hashable {
         }
     }
     
-//    init(name: String, type: MCPServerType) {
-//        self.name = name
-//        self.type = type
-//    }
-    
     // HTTP initializer
     init(name: String, type: MCPServerType = .http,  url: String, headers: [String: String]? = nil) {
         self.name = name
