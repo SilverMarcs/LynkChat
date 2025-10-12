@@ -24,7 +24,10 @@ struct ImageInputView: View {
                             } label: {
                                 Image(systemName: "xmark")
                             }
+                            .padding(5)
                             .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                            .controlSize(.small)
                         }
                 }
             }

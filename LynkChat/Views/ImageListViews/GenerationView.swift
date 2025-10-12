@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct GenerationView: View {
     var generation: Generation
     private let spacing: CGFloat = 10
     private let size: CGFloat = 300
+    
+    @State private var isEditingPrompt = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -84,6 +87,13 @@ struct GenerationView: View {
         .contextMenu {
             Section {
                 Button {
+//                    editPrompt = generation.config.prompt
+                    isEditingPrompt = true
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+                
+                Button {
                     generation.images = []
                     generation.config.model = generation.session.config.model
                     generation.config.editingModel = generation.session.config.editingModel
@@ -105,6 +115,9 @@ struct GenerationView: View {
                 Label("Delete Generation", systemImage: "trash")
             }
         }
+        .sheet(isPresented: $isEditingPrompt) {
+            EditGenerationView(generation: generation)
+        }
     }
     
     private var gridColumns: [GridItem] {
@@ -117,7 +130,3 @@ struct GenerationView: View {
     }
 }
 
-
-#Preview {
-    GenerationView(generation: .mockGeneration)
-}

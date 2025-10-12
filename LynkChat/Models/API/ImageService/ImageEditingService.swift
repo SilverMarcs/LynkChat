@@ -37,7 +37,7 @@ enum ImageEditingService {
             requestBody = [
                 "prompt": prompt,
                 "images": convertToBase64URLs(previousOutputs),
-                "size": "2048*2048",
+                // "size": "1024*1536",
                 "enable_sync_mode": false,
                 "enable_base64_output": true
             ]
@@ -47,6 +47,16 @@ enum ImageEditingService {
             requestBody = [
                 "prompt": prompt,
                 "images": convertToBase64URLs(previousOutputs),
+                "output_format": "jpeg",
+                "enable_sync_mode": false,
+                "enable_base64_output": true
+            ]
+        case .qwen:
+            apiPath = model.apiPath
+            requestBody = [
+                "prompt": prompt,
+                "images": convertToBase64URLs(previousOutputs),
+                "seed": -1,
                 "output_format": "jpeg",
                 "enable_sync_mode": false,
                 "enable_base64_output": true
