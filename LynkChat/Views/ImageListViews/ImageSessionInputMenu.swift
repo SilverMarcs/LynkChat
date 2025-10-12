@@ -40,9 +40,11 @@ struct ImageSessionInputMenu: View {
 #endif
             } else {
                 ProgressView()
+                #if os(macOS)
                     .controlSize(.small)
                     .padding(8)
                     .glassEffect()
+                #endif
             }
         }
         .menuStyle(.button)

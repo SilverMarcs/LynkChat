@@ -10,115 +10,68 @@ import Foundation
 enum ImageEditingService {
     /// Unified entry point for editing.
     static func editImages(using model: ImageEditingModel, allHistory: [Generation]) async throws -> [Data] {
-        // Latest generation contains the current prompt
         guard let latest = allHistory.last else {
             throw RuntimeError("No generation history available")
         }
 
         let prompt = latest.config.prompt
         
-        // Use the second-to-last generation's images
+        // Collect previous images
         var previousOutputs: [Data] = []
         if allHistory.count >= 2 {
             let secondLast = allHistory[allHistory.count - 2]
-            if !secondLast.images.isEmpty {
-                previousOutputs = secondLast.images
-            } else if !secondLast.inputImages.isEmpty {
-                previousOutputs = secondLast.inputImages
-            }
+            previousOutputs = secondLast.images.isEmpty ? secondLast.inputImages : secondLast.images
         }
         
-        // Add latest generation's input images if they exist
         if !latest.inputImages.isEmpty {
             previousOutputs.append(contentsOf: latest.inputImages)
         }
         
+        // Build request body based on model
+        let requestBody: [String: Any]
+        let apiPath: String
+        
         switch model {
         case .seedream:
-            return try await editWithSeedream(prompt: prompt, images: previousOutputs)
-        case .nanoBanana:
-            return try await editWithNanoBanana(prompt: prompt, images: previousOutputs)
-        case .qwen:
-            return try await editWithQwenPlus(prompt: prompt, images: previousOutputs)
-        case .gpt:
-            // GPT Image 1 expects a single image input. Prefer any user-provided inputImages
-            // attached to the latest generation; otherwise fall back to previous outputs.
-            let imageData = latest.inputImages.first ?? previousOutputs.first
-            guard let imageData = imageData else {
-                throw RuntimeError("No input image provided for GPT editing")
-            }
+            apiPath = model.apiPath
+            requestBody = [
+                "prompt": prompt,
+                "images": convertToBase64URLs(previousOutputs),
+                "size": "2048*2048",
+                "enable_sync_mode": false,
+                "enable_base64_output": true
+            ]
             
-            return try await editWithGpt(prompt: prompt, image: imageData)
-        }
-    }
-    
-    private static func editWithSeedream(prompt: String, images: [Data]) async throws -> [Data] {
-        let imageUrls = images.compactMap { data -> String? in
-            "data:image/png;base64,\(data.base64EncodedString())"
-        }
-        
-        let requestBody: [String: Any] = [
-            "prompt": prompt,
-            "images": imageUrls,
-//            "size": "2048*3072",
-            "enable_sync_mode": true,
-            "enable_base64_output": true
-        ]
-        
-        return try await performEditRequest(path: ImageEditingModel.seedream.apiPath, body: requestBody)
-    }
-    
-    private static func editWithNanoBanana(prompt: String, images: [Data]) async throws -> [Data] {
-        let imageUrls = images.compactMap { data -> String? in
-            "data:image/png;base64,\(data.base64EncodedString())"
+        case .nanoBanana:
+            apiPath = model.apiPath
+            requestBody = [
+                "prompt": prompt,
+                "images": convertToBase64URLs(previousOutputs),
+                "output_format": "jpeg",
+                "enable_sync_mode": false,
+                "enable_base64_output": true
+            ]
         }
         
-        let requestBody: [String: Any] = [
-            "prompt": prompt,
-            "images": imageUrls,
-//            "aspect_ratio": "9:16",
-            "output_format": "jpeg",
-            "enable_sync_mode": true,
-            "enable_base64_output": true
-        ]
-        
-        return try await performEditRequest(path: ImageEditingModel.nanoBanana.apiPath, body: requestBody)
+        // Submit task and poll for result
+        return try await submitAndPollTask(path: apiPath, body: requestBody)
     }
     
+    // MARK: - Helper Functions
     
-    private static func editWithGpt(prompt: String, image: Data) async throws -> [Data] {
-        let imageUrl = "data:image/png;base64,\(image.base64EncodedString())"
-
-        let requestBody: [String: Any] = [
-            "prompt": prompt,
-            "image": imageUrl,
-            "quality": "medium",
-            "enable_sync_mode": true,
-            "enable_base64_output": true
-        ]
-
-        return try await performEditRequest(path: ImageEditingModel.gpt.apiPath, body: requestBody)
+    private static func convertToBase64URLs(_ images: [Data]) -> [String] {
+        images.map { "data:image/png;base64,\($0.base64EncodedString())" }
     }
     
-    private static func editWithQwenPlus(prompt: String, images: [Data]) async throws -> [Data] {
-        let imageUrls = images.compactMap { data -> String? in
-            "data:image/png;base64,\(data.base64EncodedString())"
-        }
+    private static func submitAndPollTask(path: String, body: [String: Any]) async throws -> [Data] {
+        // Step 1: Submit the task
+        let requestId = try await submitTask(path: path, body: body)
         
-        let requestBody: [String: Any] = [
-            "prompt": prompt,
-            "images": imageUrls,
-//            "size": "1024*1024",
-            "seed": -1,
-            "output_format": "jpeg",
-            "enable_sync_mode": true,
-            "enable_base64_output": true
-        ]
-        
-        return try await performEditRequest(path: ImageEditingModel.qwen.apiPath, body: requestBody)
+        // Step 2: Poll for the result
+        return try await pollForResult(requestId: requestId)
     }
     
-    private static func performEditRequest(path: String, body: [String: Any]) async throws -> [Data] {
+    private static func submitTask(path: String, body: [String: Any]) async throws -> String {
         guard let url = URL(string: "https://api.wavespeed.ai\(path)") else {
             throw URLError(.badURL)
         }
@@ -137,19 +90,90 @@ enum ImageEditingService {
         
         if !(200...299).contains(httpResponse.statusCode) {
             let errorText = String(data: data, encoding: .utf8) ?? "Unknown error"
-            throw RuntimeError("Image editing failed: \(errorText)")
+            throw RuntimeError("Failed to submit task: \(errorText)")
         }
         
         // Parse response
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
         guard let responseData = json?["data"] as? [String: Any],
-              let outputs = responseData["outputs"] as? [String] else {
-            throw RuntimeError("Invalid response format")
+              let requestId = responseData["id"] as? String else {
+            let responseText = String(data: data, encoding: .utf8) ?? "Unable to decode"
+            throw RuntimeError("No requestId in response: \(responseText)")
         }
         
-        // Decode base64 images
-        return outputs.compactMap { base64String -> Data? in
-            Data(base64Encoded: base64String)
+        return requestId
+    }
+    
+    private static func pollForResult(
+        requestId: String,
+        maxAttempts: Int = 60,
+        delaySeconds: UInt64 = 2
+    ) async throws -> [Data] {
+        guard let url = URL(string: "https://api.wavespeed.ai/api/v3/predictions/\(requestId)/result") else {
+            throw URLError(.badURL)
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(ImageConfigDefaults().wavespeedApiKey)", forHTTPHeaderField: "Authorization")
+        
+        for _ in 1...maxAttempts {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw RuntimeError("Invalid response")
+            }
+            
+            if !(200...299).contains(httpResponse.statusCode) {
+                let errorText = String(data: data, encoding: .utf8) ?? "Unknown error"
+                throw RuntimeError("Failed to query result: \(errorText)")
+            }
+            
+            // Parse response
+            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            guard let responseData = json?["data"] as? [String: Any] else {
+                let responseText = String(data: data, encoding: .utf8) ?? "Unable to decode"
+                throw RuntimeError("Invalid response format: \(responseText)")
+            }
+            
+            let status = responseData["status"] as? String ?? "unknown"
+            
+            switch status {
+            case "completed":
+                // Extract and decode outputs
+                guard let outputs = responseData["outputs"] as? [String], !outputs.isEmpty else {
+                    throw RuntimeError("No outputs in completed response")
+                }
+                
+                // Try to decode as base64, if that fails assume they're URLs and download
+                var images: [Data] = []
+                for output in outputs {
+                    if let imageData = Data(base64Encoded: output) {
+                        images.append(imageData)
+                    } else if let url = URL(string: output) {
+                        let (downloadedData, _) = try await URLSession.shared.data(from: url)
+                        images.append(downloadedData)
+                    }
+                }
+                
+                if images.isEmpty {
+                    throw RuntimeError("No valid images in outputs")
+                }
+                
+                return images
+                
+            case "failed":
+                let error = responseData["error"] as? String ?? "Unknown error"
+                throw RuntimeError("Task failed: \(error)")
+                
+            case "processing", "created":
+                try await Task.sleep(nanoseconds: delaySeconds * 1_000_000_000)
+                
+            default:
+                throw RuntimeError("Unknown status: \(status)")
+            }
+        }
+        
+        throw RuntimeError("Polling timeout after \(maxAttempts) attempts")
     }
 }

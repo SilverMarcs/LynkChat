@@ -23,8 +23,8 @@ struct ImageInputView: View {
                                 }
                             } label: {
                                 Image(systemName: "xmark")
-                                    .buttonStyle(.glass)
                             }
+                            .buttonStyle(.glass)
                         }
                 }
             }

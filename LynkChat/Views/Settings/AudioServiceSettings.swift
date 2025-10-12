@@ -12,7 +12,7 @@ struct AudioServiceSettings: View {
     
     var body: some View {
         Form {
-            TextField("Enter Gemini API Key", text: $config.geminiApiKey)
+            TextField("Gemini API Key", text: $config.geminiApiKey)
         }
         .formStyle(.grouped)
         .navigationTitle("Audio Service")
