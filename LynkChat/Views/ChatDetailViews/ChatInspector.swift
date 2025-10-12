@@ -31,13 +31,9 @@ struct ChatInspector: View {
             
             Section("Model") {
                 #if os(macOS)
-                LabeledContent {
-                    ModelMenuPicker(selectedModels: $chat.config.models)
-                } label: {
-                    Text("Models")
-                }
+                ModelMenuPicker(selectedModels: $chat.config.models)
                 #else
-                ModelSinglePicker(selectedModel: $chat.config.model)
+                ModelPicker(selectedModel: $chat.config.model)
                 #endif
             }
             
@@ -136,10 +132,10 @@ struct ChatInspector: View {
             isExportingMarkdown = true
         } label: {
             Text("Export Markdown")
-                .frame(maxWidth: .infinity)
         }
         .foregroundStyle(.accent)
         .buttonStyle(.borderless)
+        .buttonSizing(.flexible)
         .fileExporter(
             isPresented: $isExportingMarkdown,
             document: MarkdownBackup(chat: chat),

@@ -27,9 +27,11 @@ struct ToolButton: View {
         #endif
         .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
-            ScrollView {
-                NativeMarkdownView(text: chatTool.result ?? chatTool.args)
+            ScrollView([.horizontal, .vertical]) {
+                Text(prettyPrintJSON(chatTool.result ?? chatTool.args))
                     .textSelection(.enabled)
+                    .font(.system(.body, design: .monospaced))
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             .presentationDragIndicator(.visible)
             .presentationDetents([.medium])
@@ -38,5 +40,15 @@ struct ToolButton: View {
             .frame(width: 500, height: 500)
             #endif
         }
+    }
+    
+    private func prettyPrintJSON(_ jsonString: String) -> String {
+        guard let data = jsonString.data(using: .utf8),
+              let jsonObject = try? JSONSerialization.jsonObject(with: data),
+              let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted, .sortedKeys]),
+              let prettyString = String(data: prettyData, encoding: .utf8) else {
+            return jsonString // Return original if parsing fails
+        }
+        return prettyString
     }
 }

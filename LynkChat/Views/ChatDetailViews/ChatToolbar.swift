@@ -67,7 +67,7 @@ struct ChatToolbar: ToolbarContent {
             
             if chat.config.models.count > 1 {
                 ToolbarItem {
-                    Button("+\(chat.config.models.count)") {}
+                    Button("+\(chat.config.models.count - 1)") {}
                 }
             }
             
