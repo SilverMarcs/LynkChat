@@ -11,51 +11,49 @@ struct ChatServiceSettings: View {
     @State var config: ChatConfigDefaults = .init()
 
     var body: some View {
-        NavigationStack {
-            Form {
-                ModelPicker(selectedModel: $config.defaultModel, label: "Default Model")
-                
-                Section("Parameters") {
-                    Picker("Behaviour", selection: $config.temperature) {
-                        ForEach(Temperature.allCases, id: \.self) { option in
-                            Text(option.name).tag(option)
-                        }
-                    }
-                }
-                
-                Section("MCP Servers") {
-                    NavigationLink {
-                        MCPServerManagementView()
-                    } label: {
-                        HStack {
-                            Label("Manage Servers", systemImage: "server.rack")
-                            Spacer()
-                            Text("\(config.mcpServers.count) configured")
-                                .foregroundStyle(.secondary)
-                                .font(.subheadline)
-                        }
-                    }
-                }
-                
-                Section {
-                    sysPrompt
-                } header: {
-                    HStack {
-                        Text("System Prompt")
-                        Spacer()
-                        Button {
-                            config.systemPrompt = String.systemPrompt
-                        } label: {
-                            Text("Default")
-                                .fontWeight(.regular)
-                        }
+        Form {
+            ModelPicker(selectedModel: $config.defaultModel, label: "Default Model")
+            
+            Section("Parameters") {
+                Picker("Behaviour", selection: $config.temperature) {
+                    ForEach(Temperature.allCases, id: \.self) { option in
+                        Text(option.name).tag(option)
                     }
                 }
             }
-            .navigationTitle("Chat Parameters")
-            .toolbarTitleDisplayMode(.inline)
-            .formStyle(.grouped)
+            
+            Section("MCP Servers") {
+                NavigationLink {
+                    MCPServerManagementView()
+                } label: {
+                    HStack {
+                        Label("Manage Servers", systemImage: "server.rack")
+                        Spacer()
+                        Text("\(config.mcpServers.count) configured")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline)
+                    }
+                }
+            }
+            
+            Section {
+                sysPrompt
+            } header: {
+                HStack {
+                    Text("System Prompt")
+                    Spacer()
+                    Button {
+                        config.systemPrompt = String.systemPrompt
+                    } label: {
+                        Text("Default")
+                            .fontWeight(.regular)
+                    }
+                }
+            }
         }
+        .navigationTitle("Chat Parameters")
+        .toolbarTitleDisplayMode(.inline)
+        .formStyle(.grouped)
     }
     
     var sysPrompt: some View {

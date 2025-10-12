@@ -5,18 +5,42 @@
 //  Created by Zabir Raihan on 08/11/2024.
 //
 
-import Foundation
+import SwiftUI
 
-enum SettingsTab: String, Codable {
-    case general
-    #if os(macOS)
-    case quickPanel
-    case shortcuts
-    #endif
-    case rag
-    case audio
-    case chat
-    case image
-    case about
-    case debug
+enum SettingsCategory: String, Hashable, CaseIterable {
+    case general = "General"
+    case quickPanel = "Quick Panel"
+    case shortcuts = "Shortcuts"
+    case audioService = "Audio Service"
+    case chatService = "Chat Service"
+    case imageService = "Image Service"
+    case about = "About"
+    case debug = "Debug"
+    
+    var systemImage: String {
+        switch self {
+        case .general: return "gear"
+        case .quickPanel: return "bolt.fill"
+        case .shortcuts: return "command"
+        case .audioService: return "waveform"
+        case .chatService: return "quote.bubble"
+        case .imageService: return "photo"
+        case .about: return "info.circle"
+        case .debug: return "ladybug"
+        }
+    }
+    
+    @ViewBuilder
+    var destination: some View {
+        switch self {
+        case .general: GeneralSettings()
+        case .quickPanel: QuickPanelSettings()
+        case .shortcuts: ShortcutSettings()
+        case .audioService: AudioServiceSettings()
+        case .chatService: ChatServiceSettings()
+        case .imageService: ImageServiceSettings()
+        case .about: AboutSettings()
+        case .debug: DebugSettings()
+        }
+    }
 }

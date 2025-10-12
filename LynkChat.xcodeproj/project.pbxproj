@@ -107,12 +107,6 @@
 				Views/Onboarding/QuickPanelOnboarding.swift = (
 					macos,
 				);
-				Views/Settings/QuickPanelSettings.swift = (
-					macos,
-				);
-				Views/Settings/Shortcut/ShortcutSettings.swift = (
-					macos,
-				);
 				Views/Windows/AboutWindow.swift = (
 					macos,
 				);

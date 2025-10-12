@@ -6,17 +6,18 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct SettingsView: View {
+    @SceneStorage("selectedCategory") var selectedCategory: SettingsCategory = .general
+    
     var body: some View {
         #if os(macOS)
         NavigationSplitView {
             list
         } detail: {
-            Text("Select a category from the sidebar to view its settings.")
-                .foregroundStyle(.secondary)
-                .padding()
+            NavigationStack {
+                selectedCategory.destination
+            }
         }
         #else
         NavigationStack {
@@ -26,56 +27,65 @@ struct SettingsView: View {
     }
     
     var list: some View {
-        List {
-            Section("Config") {
-                NavigationLink(destination: GeneralSettings()) {
-                    Label("General", systemImage: "gear")
-                }
-                
-                #if os(macOS)
-                NavigationLink(destination: QuickPanelSettings()) {
-                    Label("Quick Panel", systemImage: "bolt.fill")
-                }
-                
-                NavigationLink(destination: ShortcutSettings()) {
-                    Label("Shortcuts", systemImage: "command")
-                }
-                #endif
+        Group {
+            #if os(macOS)
+            List(selection: $selectedCategory) {
+                listItems
             }
-            
-            Section("Services") {
-//                NavigationLink(destination: RAGSettings()) {
-//                    Label("RAG Service", systemImage: "circle.hexagongrid")
-//                }
-                
-                NavigationLink(destination: AudioServiceSettings()) {
-                   Label("Audio Service", systemImage: "waveform")
-               }
-                
-                NavigationLink(destination: ChatServiceSettings()) {
-                    Label("Chat Service", systemImage: "quote.bubble")
+            .toolbar(removing: .sidebarToggle)
+            .toolbar {
+                Button {
+                    
+                } label: {
+                    Image(systemName: "info")
                 }
-                
-                NavigationLink(destination: ImageServiceSettings()) {
-                    Label("Image Service", systemImage: "photo")
-                }
+                .hidden()
             }
-            
-            Section("Info") {
-                NavigationLink(destination: AboutSettings()) {
-                    Label("About", systemImage: "info.circle")
-                }
-                
-                NavigationLink(destination: DebugSettings()) {
-                    Label("Debug", systemImage: "ladybug")
-                }
+            #else
+            List {
+                listItems
             }
+            .navigationDestination(for: SettingsCategory.self) { category in
+               category.destination
+            }
+            .scrollDismissesKeyboard(.immediately)
+            #endif
         }
         .toolbarTitleDisplayMode(.inlineLarge)
         .navigationTitle("Settings")
         .scrollContentBackground(.visible)
-        #if !os(macOS) && !os(visionOS)
-        .scrollDismissesKeyboard(.immediately)
-        #endif
+    }
+    
+    @ViewBuilder
+    var listItems: some View {
+        Section("Config") {
+            #if os(macOS)
+            ForEach([SettingsCategory.general, .quickPanel, .shortcuts], id: \.self) { category in
+                NavigationLink(value: category) {
+                    Label(category.rawValue, systemImage: category.systemImage)
+                }
+            }
+            #else
+            NavigationLink(value: SettingsCategory.general) {
+                Label(SettingsCategory.general.rawValue, systemImage: SettingsCategory.general.systemImage)
+            }
+            #endif
+        }
+        
+        Section("Services") {
+            ForEach([SettingsCategory.audioService, .chatService, .imageService], id: \.self) { category in
+                NavigationLink(value: category) {
+                    Label(category.rawValue, systemImage: category.systemImage)
+                }
+            }
+        }
+        
+        Section("Info") {
+            ForEach([SettingsCategory.about, .debug], id: \.self) { category in
+                NavigationLink(value: category) {
+                    Label(category.rawValue, systemImage: category.systemImage)
+                }
+            }
+        }
     }
 }
