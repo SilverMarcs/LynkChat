@@ -18,7 +18,7 @@ struct PluginsOnboarding: View {
             content: {
                 Form {
                     Section {
-            
+                        Text("Setup MCP Servers")
                     }
                     #if os(iOS)
                     .listRowBackground(Color(.secondarySystemBackground))

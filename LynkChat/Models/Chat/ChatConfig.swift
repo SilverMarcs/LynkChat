@@ -18,6 +18,7 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         self.thinkingBudget = defaults.thinkingBudget
         self.systemPrompt = defaults.systemPrompt
         self.models = [defaults.defaultModel]
+        self.enabledMCPServerIds = defaults.defaultEnabledMCPServerIds
     }
     
     var model: ChatModel {

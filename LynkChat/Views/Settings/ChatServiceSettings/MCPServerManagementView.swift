@@ -15,12 +15,24 @@ struct MCPServerManagementView: View {
     var body: some View {
         Form {
             ForEach($config.mcpServers) { $server in
-                MCPServerRow(server: $server)
+                let isDefaultEnabled = Binding<Bool>(
+                    get: { self.config.defaultEnabledMCPServerIds.contains(server.id) },
+                    set: { isOn in
+                        if isOn {
+                            self.config.defaultEnabledMCPServerIds.insert(server.id)
+                        } else {
+                            self.config.defaultEnabledMCPServerIds.remove(server.id)
+                        }
+                    }
+                )
+                
+                MCPServerRow(server: $server, isDefaultEnabled: isDefaultEnabled)
                     .contextMenu {
                         Button(role: .destructive) {
-                            if let index = config.mcpServers.firstIndex(where: { $0.id == server.id }) {
-                                config.mcpServers.remove(at: index)
-                                trigger += 1
+                            if let index = self.config.mcpServers.firstIndex(where: { $0.id == server.id }) {
+                                self.config.mcpServers.remove(at: index)
+                                self.config.defaultEnabledMCPServerIds.remove(server.id)
+                                self.trigger += 1
                             }
                         } label: {
                             Label("Delete", systemImage: "trash")

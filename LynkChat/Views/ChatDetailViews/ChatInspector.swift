@@ -45,7 +45,7 @@ struct ChatInspector: View {
                             .tag(budget)
                     }
                 } label: {
-                    Label("Thinking Budget", systemImage: "timer")
+                    Label("Reasoning Effort", systemImage: "timer")
                 }
                 
                 Picker(selection: $chat.config.temperature) {

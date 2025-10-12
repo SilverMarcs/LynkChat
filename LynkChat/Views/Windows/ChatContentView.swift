@@ -40,6 +40,11 @@ struct ChatContentView: View {
             OnboardingView()
         }
         .searchable(text: $searchText, placement: .sidebar)
+//        .inspector(isPresented: .constant(true)) {
+//            if chatVM.selections.count == 1, let first = chatVM.selections.first {
+//                ChatInspector(chat: first)
+//            }
+//        }
     }
 }
 

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MCPServerRow: View {
     @Binding var server: MCPServer
+    @Binding var isDefaultEnabled: Bool
     @State var showEditSheet: Bool = false
     
     var body: some View {
@@ -43,6 +44,9 @@ struct MCPServerRow: View {
                 }
                 
                 Spacer()
+                
+                Toggle("Default", isOn: $isDefaultEnabled)
+                    .labelsHidden()
             }
             .contentShape(.rect)
         }
