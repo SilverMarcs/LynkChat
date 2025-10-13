@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import PhotosUI
+import SwiftMediaViewer
+
 
 struct GenerationView: View {
     var generation: Generation
@@ -18,11 +19,9 @@ struct GenerationView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             VStack(alignment: .trailing) {
-                FlowLayout {
-                    ForEach(generation.inputImages, id: \.self) { image in
-                        ImageViewerData(data: image, enableSave: false, size: 150)
-                            .backgroundExtensionEffect()
-                    }
+                ForEach(generation.inputImages, id: \.self) { image in
+                    ImageViewerData(data: image, enableSave: false, size: 150)
+                        .backgroundExtensionEffect()
                 }
                 
                 Text(generation.config.prompt)
@@ -35,16 +34,6 @@ struct GenerationView: View {
             VStack(alignment: .leading) {
                 HStack {
                     AssistantLabel(model: generation.mode == .editing ? generation.config.editingModel : generation.config.model)
-                    
-                    if generation.mode == .editing {
-                        Text("Edit")
-                            .font(.caption.bold())
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
-                            .background(Color.accentColor.opacity(0.12))
-                            .foregroundStyle(Color.accentColor)
-                            .clipShape(.capsule)
-                    }
                 }
                 
                 if generation.state == .error {
@@ -56,21 +45,21 @@ struct GenerationView: View {
                         .padding(.top, 1)
 
                 } else {
-                    LazyVGrid(columns: gridColumns, alignment: .leading, spacing: spacing) {
-                        if generation.state == .generating {
+                    if generation.state == .generating {
+//                        LazyVGrid(columns: gridColumns, alignment: .leading, spacing: spacing) {
                             ForEach(1 ... generation.config.numImages, id: \.self) { image in
                                 ProgressView()
                                     .frame(width: size, height: size)
                                     .background(.background.secondary, in: .rect(cornerRadius: 15))
                             }
-                        } else if generation.state == .success {
-                            ForEach(generation.images, id: \.self) { image in
-                                ImageViewerData(data: image)
-                                    .backgroundExtensionEffect()
-                            }
+//                        }
+                    } else {
+                        ForEach(generation.images, id: \.self) { image in
+                            ImageViewerData(data: image, size: size)
+                                .backgroundExtensionEffect()
                         }
                     }
-                    
+                
                     if generation.state == .generating {
                         Button(role: .destructive) {
                             generation.stopGenerating()

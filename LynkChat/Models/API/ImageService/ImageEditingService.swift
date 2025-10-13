@@ -37,7 +37,6 @@ enum ImageEditingService {
             requestBody = [
                 "prompt": prompt,
                 "images": convertToBase64URLs(previousOutputs),
-                // "size": "1024*1536",
                 "enable_sync_mode": false,
                 "enable_base64_output": true
             ]
