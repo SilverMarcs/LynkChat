@@ -30,7 +30,7 @@ class OpenAIClient {
         AsyncThrowingStream { continuation in
             Task {
                 do {
-                    let reasoning: Reasoning? = thinkingBudget != .none ? Reasoning(effort: thinkingBudget) : nil
+                    let reasoning: ChatCompletionRequest.Reasoning? = thinkingBudget != .none ? ChatCompletionRequest.Reasoning(effort: thinkingBudget) : nil
                     
                     let request = ChatCompletionRequest(
                         model: model,

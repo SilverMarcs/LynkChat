@@ -28,10 +28,55 @@ struct ChatCompletionRequest: Codable {
             let parameters: [String: AnyCodable]?
         }
     }
+    
+    struct Reasoning: Codable {
+        let effort: ThinkingBudget
+    }
 }
 
-struct Reasoning: Codable {
-    let effort: ThinkingBudget
+struct ChatStreamResponse: Codable {
+    let id: String?
+    let object: String?
+    let created: Int?
+    let model: String?
+    let choices: [StreamChoice]
+    let usage: Usage?
+    
+    struct StreamChoice: Codable {
+        let index: Int
+        let delta: Delta
+        let finish_reason: String?
+        
+        struct Delta: Codable {
+            let role: String?
+            let content: String?
+            let reasoning: String?
+            let tool_calls: [ToolCall]?
+            
+            struct ToolCall: Codable {
+                let index: Int?
+                let id: String?
+                let type: String?
+                let function: FunctionCall?
+                
+                struct FunctionCall: Codable {
+                    let name: String?
+                    let arguments: String?
+                }
+            }
+        }
+    }
+    
+    struct Usage: Codable {
+        let prompt_tokens: Int?
+        let completion_tokens: Int?
+        let total_tokens: Int?
+        let completion_tokens_details: CompletionTokensDetails?
+        
+        struct CompletionTokensDetails: Codable {
+            let reasoning_tokens: Int?
+        }
+    }
 }
 
 struct AnyCodable: Codable {
@@ -81,51 +126,6 @@ struct AnyCodable: Codable {
             try container.encode(dictionary.mapValues { AnyCodable($0) })
         default:
             try container.encodeNil()
-        }
-    }
-}
-
-struct ChatStreamResponse: Codable {
-    let id: String?
-    let object: String?
-    let created: Int?
-    let model: String?
-    let choices: [StreamChoice]
-    let usage: Usage?
-    
-    struct StreamChoice: Codable {
-        let index: Int
-        let delta: Delta
-        let finish_reason: String?
-    }
-    
-    struct Delta: Codable {
-        let role: String?
-        let content: String?
-        let reasoning: String?
-        let tool_calls: [ToolCall]?
-    }
-    
-    struct ToolCall: Codable {
-        let index: Int?
-        let id: String?
-        let type: String?
-        let function: FunctionCall?
-        
-        struct FunctionCall: Codable {
-            let name: String?
-            let arguments: String?
-        }
-    }
-    
-    struct Usage: Codable {
-        let prompt_tokens: Int?
-        let completion_tokens: Int?
-        let total_tokens: Int?
-        let completion_tokens_details: CompletionTokensDetails?
-        
-        struct CompletionTokensDetails: Codable {
-            let reasoning_tokens: Int?
         }
     }
 }

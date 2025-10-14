@@ -27,7 +27,7 @@ struct ToolButton: View {
         #endif
         .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
-            ScrollView([.horizontal, .vertical]) {
+            ScrollView {
                 Text(prettyPrintJSON(chatTool.result ?? chatTool.args))
                     .textSelection(.enabled)
                     .font(.system(.body, design: .monospaced))
