@@ -16,4 +16,11 @@ struct ChatTool: Identifiable, Codable {
     var id: String {
         toolCallId
     }
+    
+    init(toolCallId: String, toolName: String, args: String, result: String? = nil) {
+        self.toolCallId = toolCallId
+        self.toolName = toolName
+        self.args = args
+        self.result = result
+    }
 }

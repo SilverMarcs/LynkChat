@@ -140,22 +140,12 @@ extension Message {
 //        return APIMessage(role: role, content: contentItems)
 //    }
     
-    func toChatRequestMessage() -> ChatRequestMessage {
+    func toChatRequestMessage() -> [ChatRequestMessage] {
         var messageContents = [MessageContent]()
         
-        // Process text content with reasoning and tools
-        let toolTexts = tools?.map { tool -> String in
-            return """
-                Used \(tool.toolName) tool
-                Arguments: \(tool.args)
-                Tool Result:
-                \(tool.result ?? "No result")
-                """
-        } ?? []
-        
+        // Process text content with reasoning (but NOT tools - they're handled separately)
         let messageComponents = [content]
             + (reasoning.map { ["Reasoning: \($0)"] } ?? [])
-            + toolTexts
         
         let userText = messageComponents
             .filter { !$0.isEmpty }
@@ -183,6 +173,41 @@ extension Message {
         }
         
         let messageRole: MessageRole = role == .user ? .user : .assistant
-        return ChatRequestMessage(role: messageRole, content: messageContents)
+        var messages: [ChatRequestMessage] = []
+        
+        // For assistant messages with tool calls, create assistant message with tool_calls
+        if role == .assistant, let tools = tools, !tools.isEmpty {
+            let toolCalls = tools.map { tool in
+                ChatRequestMessage.ToolCallInfo(
+                    id: tool.toolCallId,
+                    type: "function",
+                    function: ChatRequestMessage.ToolCallInfo.FunctionInfo(
+                        name: tool.toolName,
+                        arguments: tool.args
+                    )
+                )
+            }
+            
+            // Assistant message with tool calls
+            messages.append(ChatRequestMessage(
+                role: .assistant,
+                content: messageContents,
+                toolCalls: toolCalls
+            ))
+            
+            // Tool result messages (only if results exist)
+            for tool in tools where tool.result != nil {
+                messages.append(ChatRequestMessage(
+                    role: .tool,
+                    content: [MessageContent(text: tool.result!)],
+                    toolCallId: tool.toolCallId
+                ))
+            }
+        } else {
+            // Regular message without tools
+            messages.append(ChatRequestMessage(role: messageRole, content: messageContents))
+        }
+        
+        return messages
     }
 }
