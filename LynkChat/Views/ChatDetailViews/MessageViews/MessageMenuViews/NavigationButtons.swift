@@ -51,8 +51,7 @@ struct NavigationButtons: View {
                 // Model icons for all messages except the currently active one
                 if message.role == .assistant {
                     FlowLayout(spacing: 0) {
-                        ForEach(message.allMessages.indices, id: \.self) { index in
-                            let msg = message.allMessages[index]
+                        ForEach(message.allMessages) { msg in
                             if msg != message.activeMessage {
                                 Image(msg.model.imageName)
                                     .foregroundStyle(.white)
@@ -65,6 +64,7 @@ struct NavigationButtons: View {
                                     .opacity(0.8)
                             }
                         }
+
                     }
                 }
             }
