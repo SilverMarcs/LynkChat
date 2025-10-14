@@ -33,8 +33,8 @@ enum APIService {
         if !(200...299).contains(httpResponse.statusCode) {
             AppLogger.critical("\(context) error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
             
-            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
-            throw RuntimeError(errorResponse.error)
+//            let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
+            throw RuntimeError("errorResponse.error")
         }
     }
     

@@ -9,6 +9,9 @@ import SwiftUI
 
 struct ChatServiceSettings: View {
     @State var config: ChatConfigDefaults = .init()
+    
+    @AppStorage("openrouterApiKey") private var openrouterApiKey: String = ""
+    @AppStorage("vercelApiKey") private var vercelApiKey: String = ""
 
     var body: some View {
         Form {
@@ -20,6 +23,11 @@ struct ChatServiceSettings: View {
                         Text(option.name).tag(option)
                     }
                 }
+            }
+            
+            Section("API Keys") {
+                SecureField("Enter Openrouter API Key", text: $openrouterApiKey)
+                SecureField("Enter Vercel API Key", text: $vercelApiKey)
             }
             
             Section("MCP Servers") {

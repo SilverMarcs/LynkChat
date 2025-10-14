@@ -106,13 +106,44 @@ final class Message: Equatable, Identifiable, Hashable {
 }
 
 extension Message {
-    func toAPIMessage() -> APIMessage {
-        var contentItems = [ContentItem]()
+//    func toAPIMessage() -> APIMessage {
+//        var contentItems = [ContentItem]()
+//        
+//        // Process data files
+//        let processedDataFiles = TypedData.processDataFiles(dataFiles)
+//        
+//        // Create tool usage texts
+//        let toolTexts = tools?.map { tool -> String in
+//            return """
+//                Used \(tool.toolName) tool
+//                Arguments: \(tool.args)
+//                Tool Result:
+//                \(tool.result ?? "No result")
+//                """
+//        } ?? []
+//        
+//        // Add the original message content, reasoning (if exists), and tool texts
+//        let messageComponents = [content]
+//            + (reasoning.map { ["Reasoning: \($0)"] } ?? [])
+//            + toolTexts
+//        
+//        let userText = messageComponents
+//            .filter { !$0.isEmpty }
+//            .joined(separator: "\n\n")
+//        
+//        if !userText.isEmpty {
+//            contentItems.append(.text(userText))
+//        }
+//        
+//        contentItems.append(contentsOf: processedDataFiles)
+//        
+//        return APIMessage(role: role, content: contentItems)
+//    }
+    
+    func toChatRequestMessage() -> ChatRequestMessage {
+        var messageContents = [MessageContent]()
         
-        // Process data files
-        let processedDataFiles = TypedData.processDataFiles(dataFiles)
-        
-        // Create tool usage texts
+        // Process text content with reasoning and tools
         let toolTexts = tools?.map { tool -> String in
             return """
                 Used \(tool.toolName) tool
@@ -122,7 +153,6 @@ extension Message {
                 """
         } ?? []
         
-        // Add the original message content, reasoning (if exists), and tool texts
         let messageComponents = [content]
             + (reasoning.map { ["Reasoning: \($0)"] } ?? [])
             + toolTexts
@@ -132,11 +162,27 @@ extension Message {
             .joined(separator: "\n\n")
         
         if !userText.isEmpty {
-            contentItems.append(.text(userText))
+            messageContents.append(MessageContent(text: userText))
         }
         
-        contentItems.append(contentsOf: processedDataFiles)
+        // Process data files
+        for dataFile in dataFiles {
+            if dataFile.fileType.conforms(to: .text) {
+                messageContents.append(MessageContent(text: dataFile.formattedTextContent))
+            } else if dataFile.fileType.conforms(to: .image) {
+                let dataURL = OpenAIClient.imageDataURL(from: dataFile.data, mimeType: dataFile.mimeType)
+                let imageURL = MessageContent.ImageURL(url: dataURL, detail: nil)
+                messageContents.append(MessageContent(image: imageURL))
+            }
+            // Other file types (PDF, audio, video) are not yet supported by OpenAI API
+        }
         
-        return APIMessage(role: role, content: contentItems)
+        // Ensure we always have at least one content item (API requirement)
+        if messageContents.isEmpty {
+            messageContents.append(MessageContent(text: " "))
+        }
+        
+        let messageRole: MessageRole = role == .user ? .user : .assistant
+        return ChatRequestMessage(role: messageRole, content: messageContents)
     }
 }

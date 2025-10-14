@@ -254,8 +254,8 @@ final class Chat: Equatable, Identifiable, Hashable {
         let formattedPrompt = TitleFormatter.formatMessagesForTitleGeneration(messages: adjustedContext)
         
         do {
-            let newTitle = try await APIService.basicResponse(prompt: formattedPrompt)
-            self.title = newTitle
+//            let newTitle = try await APIService.basicResponse(prompt: formattedPrompt)
+            self.title = "newTitle"
         } catch {
             await AppLogger.error("Error generating title: \(error)")
         }

@@ -18,15 +18,14 @@ struct StreamHandler {
         AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
         
-        let apiRequest = await createAPIRequest()
-        try await processStream(from: apiRequest)
+        try await processStreamWithOpenAI()
         
         finishResponse()
     }
     
-    // MARK: - Stream Processing
+    // MARK: - Stream Processing with OpenAI Client
     
-    private func processStream(from request: APIRequest) async throws {
+    private func processStreamWithOpenAI() async throws {
         // Local buffers for batching updates
         var contentBuffer = ""
         var reasoningBuffer = assistant.reasoning ?? ""
@@ -41,43 +40,63 @@ struct StreamHandler {
             assistant.reasoning = reasoningBuffer.isEmpty ? nil : reasoningBuffer
         }
         
-        for try await response in APIService.streamResponse(from: request) {
-            switch response {
-            case .text(let textResponse):
-                contentBuffer += textResponse.content
-                
-            case .reasoning(let reasoningResponse):
-                reasoningBuffer += reasoningResponse.reasoning
-                
-            case .reasoningEnd(_):
-                break
-                
-            case .toolCall(let toolCallResponse):
-                updateTools(with: toolCallResponse)
-                
-            case .toolResult(let toolResultResponse):
-                updateToolResult(for: toolResultResponse)
-                
-            case .file(let fileResponse):
-                if let data = Data(base64Encoded: fileResponse.base64),
-                   let utType = UTType(mimeType: fileResponse.mimeType) {
-                    let fileExtension = utType.preferredFilenameExtension ?? "dat"
-                    let fileName = "file_\(UUID().uuidString).\(fileExtension)"
-                    let typedData = TypedData(
-                        data: data,
-                        fileType: utType,
-                        fileName: fileName
-                    )
-                    assistant.dataFiles.append(typedData)
+        // Create OpenAI client
+        let model = chat.config.model
+        let client = OpenAIClient(
+            apiKey: model.apiKey,
+            baseURL: model.baseURL,
+            model: model.id
+        )
+        
+        // Prepare messages
+        let adjustedContext = chat.adjustedContext.dropLast() // removing last user msg
+        // Filter out assistant messages with empty content (these are local messages being updated)
+        let messages = adjustedContext
+            .filter { !($0.role == .assistant && $0.content.isEmpty) }
+            .map { $0.toChatRequestMessage() }
+        
+        // Add system message with date
+        let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
+        let systemMessage = ChatRequestMessage(
+            role: .system,
+            content: [MessageContent(text: date + "\n" + chat.config.systemPrompt)]
+        )
+        let allMessages = [systemMessage] + messages
+        
+        // Stream chat completion
+        // Note: MCP servers are not yet supported, passing empty tools array
+        let stream = client.streamChatCompletion(
+            messages: allMessages,
+            temperature: chat.config.temperature.value,
+            maxTokens: nil,
+            tools: nil,
+            thinkingBudget: chat.config.thinkingBudget
+        )
+        
+        for try await response in stream {
+            guard let choice = response.choices.first else { continue }
+            
+            // Handle content
+            if let content = choice.delta.content {
+                contentBuffer += content
+            }
+            
+            // Handle reasoning
+            if let reasoning = choice.delta.reasoning {
+                reasoningBuffer += reasoning
+            }
+            
+            // Handle usage tokens (only comes at the end with finish_reason)
+            if let usage = response.usage {
+                if let promptTokens = usage.prompt_tokens {
+                    user.inputTokens = promptTokens
                 }
-                
-            case .finish(let finishResponse):
-                user.inputTokens += finishResponse.inputTokens
-                assistant.outputTokens += finishResponse.outputTokens
-                assistant.reasoningTokens += finishResponse.reasoningTokens
-                
-            case .error(let errorResponse):
-                throw RuntimeError(errorResponse.content)
+                if let completionTokens = usage.completion_tokens {
+                    assistant.outputTokens = completionTokens
+                }
+                if let reasoningTokens = usage.completion_tokens_details?.reasoning_tokens {
+                    assistant.reasoningTokens = reasoningTokens
+                }
             }
             
             // Periodic UI updates
@@ -93,43 +112,6 @@ struct StreamHandler {
     }
     
     // MARK: - Helper Methods
-    
-    private func createAPIRequest() async -> APIRequest {
-        let adjustedContext = chat.adjustedContext.dropLast() // removing last assistant msg
-        let apiMessages = adjustedContext.map { $0.toAPIMessage() }
-        return createAPIRequest(with: apiMessages)
-    }
-    
-    private func createAPIRequest(with messages: [APIMessage]) -> APIRequest {
-        let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
-        
-        let mcpServersDict = ChatConfigDefaults().mcpServers.toDictionary(enabledIds: chat.config.enabledMCPServerIds)
-        
-        return APIRequest(
-            userId: "zabir",
-            model: AppConfig().sendDebugModel ? "debug" : chat.config.model.id,
-            messages: messages,
-            temperature: chat.config.temperature.value,
-            thinkingBudget: chat.config.thinkingBudget.rawValue,
-            system: date + "\n" + chat.config.systemPrompt,
-            mcpServers: mcpServersDict
-        )
-    }
-    
-    private func updateTools(with toolCallResponse: ToolCallResponse) {
-        assistant.tools?.append(.init(
-            toolCallId: toolCallResponse.toolCallId,
-            toolName: toolCallResponse.toolName,
-            args: toolCallResponse.args,
-            result: nil
-        ))
-    }
-    
-    private func updateToolResult(for toolResultResponse: ToolResultResponse) {
-        if let index = assistant.tools?.firstIndex(where: { $0.toolCallId == toolResultResponse.toolCallId }) {
-            assistant.tools?[index].result = toolResultResponse.result
-        }
-    }
     
     private func finishResponse() {
         assistant.isReplying = false

@@ -18,12 +18,33 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     
     var id: String {
         switch self {
-        case .gemini_flash: "gemini-flash"
-        case .gemini_pro: "gemini-pro"
-        case .gpt: "gpt"
-        case .gpt_mini: "gpt-mini"
-        case .claude_sonnet: "claude-sonnet"
-        case .claude_opus: "claude-opus"
+        case .gemini_flash: "google/gemini-2.5-flash"
+        case .gemini_pro: "google/gemini-2.5-pro"
+        case .gpt: "openai/gpt-5"
+        case .gpt_mini: "openai/gpt-5-mini"
+        case .claude_sonnet: "anthropic/claude-sonnet-4.5"
+        case .claude_opus: "anthropic/claude-opus-4"
+        }
+    }
+    
+    var baseURL: String {
+        switch self {
+        case .gemini_flash, .gemini_pro: "https://openrouter.ai/api/v1"
+        case .claude_sonnet, .claude_opus: "https://openrouter.ai/api/v1"
+        case .gpt, .gpt_mini: "https://ai-gateway.vercel.sh/v1"
+        }
+    }
+    
+    var apiKey: String {
+        let key = apiKeyKey
+        return UserDefaults.standard.string(forKey: key) ?? ""
+    }
+    
+    private var apiKeyKey: String {
+        switch self {
+        case .gemini_flash, .gemini_pro: "openrouterApiKey"
+        case .claude_opus, .claude_sonnet: "openrouterApiKey"
+        case .gpt, .gpt_mini: "vercelApiKey"
         }
     }
     
