@@ -15,7 +15,7 @@ struct ModelPicker: View {
     var body: some View {
         Picker(selection: $selectedModel) {
             ForEach(enabledModels, id: \.id) { modelInfo in
-                Label(modelInfo.displayName, image: modelInfo.theme.imageName)
+                Label(modelInfo.name, image: modelInfo.theme.imageName)
                     .labelStyle(.titleAndIcon)
                     .tag(modelInfo)
             }

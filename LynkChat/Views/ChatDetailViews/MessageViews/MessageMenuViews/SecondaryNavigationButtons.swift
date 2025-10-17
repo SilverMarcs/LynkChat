@@ -31,7 +31,3 @@ struct SecondaryNavigationButtons: View {
         }
     }
 }
-
-#Preview {
-    SecondaryNavigationButtons(group: .mockUserGroup)
-}

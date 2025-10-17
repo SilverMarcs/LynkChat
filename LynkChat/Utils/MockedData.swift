@@ -7,21 +7,21 @@
 
 import Foundation
 
-extension Message {
-    static let mockAssistantMessage: Message = {
-        let registry = ModelRegistry.shared
-        let enabledModels = registry.getEnabledModels()
-        let modelInfo = enabledModels.first ?? ModelInfo(providerId: UUID(), modelString: "mock", displayName: "Mock")
-        return Message.assistant(model: modelInfo, content: String.codeBlock)
-    }()
-    
-    static let mockUserMessage = Message.user(content: String.shortContent)
-}
-
-extension MessageGroup {
-    static var mockUserGroup = MessageGroup(message: .mockUserMessage)
-    static var mockAssistantGroup = MessageGroup(message: .mockAssistantMessage)
-}
+//extension Message {
+//    static let mockAssistantMessage: Message = {
+//        let registry = ModelRegistry.shared
+//        let enabledModels = registry.getEnabledModels()
+//        let modelInfo = enabledModels.first ?? ModelInfo(providerId: UUID(), modelString: "mock", name: <#T##String#>: "Mock")
+//        return Message.assistant(model: modelInfo, content: String.codeBlock)
+//    }()
+//    
+//    static let mockUserMessage = Message.user(content: String.shortContent)
+//}
+//
+//extension MessageGroup {
+//    static var mockUserGroup = MessageGroup(message: .mockUserMessage)
+//    static var mockAssistantGroup = MessageGroup(message: .mockAssistantMessage)
+//}
 
 extension ImageConfig {
     static var mockImageConfig = ImageConfig()

@@ -123,12 +123,3 @@ struct MessageContextMenu: View {
         allMessagesText.copyToPasteboard()
     }
 }
-
-#Preview {
-    VStack {
-        MessageContextMenu(group: .mockUserGroup)
-        MessageContextMenu(group: .mockAssistantGroup)
-    }
-    .frame(width: 500)
-    .padding()
-}

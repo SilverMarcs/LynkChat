@@ -79,7 +79,7 @@ final class Message: Equatable, Identifiable, Hashable {
         return Message(
             role: .user,
             content: content,
-            model: ModelInfo(providerId: UUID(), modelString: "", displayName: ""),
+            model: ModelInfo(providerId: UUID(), modelString: "", name: ""),
             dataFiles: dataFiles,
             tools: nil,
             isReplying: false,

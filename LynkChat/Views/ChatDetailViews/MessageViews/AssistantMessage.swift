@@ -89,8 +89,3 @@ struct AssistantMessage: View {
         #endif
     }
 }
-
-#Preview {
-    AssistantMessage(message: .mockAssistantMessage, group: .mockAssistantGroup)
-        .frame(width: 600, height: 300)
-}

@@ -28,9 +28,3 @@ var body: some View {
     #endif
     }
 }
-
-#Preview {
-    MDView(content: Message.mockAssistantMessage.content)
-        .frame(width: 600, height: 500)
-        .padding()
-}

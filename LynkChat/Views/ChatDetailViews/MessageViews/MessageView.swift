@@ -30,13 +30,3 @@ struct MessageView: View {
         #endif
     }
 }
-
-
-#Preview {
-    VStack {
-        MessageView(group: .mockUserGroup)
-        MessageView(group: .mockAssistantGroup)
-    }
-    .frame(width: 400)
-    .padding()
-}

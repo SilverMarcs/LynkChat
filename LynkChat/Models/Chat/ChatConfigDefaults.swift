@@ -31,7 +31,7 @@ struct ChatConfigDefaults {
             if let model = models.first {
                 return model
             }
-            return ModelInfo(providerId: UUID(), modelString: "", displayName: "")
+            return ModelInfo(providerId: UUID(), modelString: "", name: "")
         }
         return first
     }

@@ -75,11 +75,9 @@ struct StreamHandler {
         } else {
             chat.adjustedContext.dropLast().flatMap { $0.toChatRequestMessage() }
         }
+        
         let allMessages = buildMessagesWithSystem(messages)
-        let label = isFollowUp ? "Follow-up Request" : "Initial Request"
-        
-        printMessageStructure(allMessages, label: label)
-        
+
         // Stream chat completion
         let stream = client.streamChatCompletion(
             messages: allMessages,
@@ -212,39 +210,5 @@ struct StreamHandler {
         }
         
         withAnimation(.easeInOut(duration: 1)) { AppSettings.shared.expandColor = false }
-    }
-    
-    private func printMessageStructure(_ messages: [ChatRequestMessage], label: String) {
-        print("\n=== \(label) (Count: \(messages.count)) ===")
-        for (index, message) in messages.enumerated() {
-            print("\n[\(index)] role: \(message.role.rawValue)")
-            
-            if let toolCallId = message.tool_call_id {
-                print("    tool_call_id: \(toolCallId)")
-            }
-            
-            print("    content items: \(message.content.count)")
-            for (contentIndex, content) in message.content.enumerated() {
-                print("      [\(contentIndex)] type: \(content.type.rawValue)")
-                if let text = content.text {
-                    let preview = String(text.prefix(10))
-                    print("          text: \"\(preview)...\" (length: \(text.count))")
-                }
-                if let imageUrl = content.image_url {
-                    print("          image_url: \(String(imageUrl.url.prefix(30)))...")
-                }
-            }
-            
-            if let toolCalls = message.tool_calls {
-                print("    tool_calls: \(toolCalls.count)")
-                for (toolIndex, toolCall) in toolCalls.enumerated() {
-                    print("      [\(toolIndex)] id: \(toolCall.id)")
-                    print("          function.name: \(toolCall.function.name)")
-                    let argsPreview = String(toolCall.function.arguments.prefix(5))
-                    print("          function.arguments: \"\(argsPreview)...\" (length: \(toolCall.function.arguments.count))")
-                }
-            }
-        }
-        print("\n=================================\n")
     }
 }

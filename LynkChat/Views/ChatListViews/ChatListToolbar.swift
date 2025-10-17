@@ -36,7 +36,7 @@ struct ChatListToolbar: ToolbarContent {
                      Button {
                          chatVM.createNewChat(model: modelInfo)
                      } label: {
-                         Label(modelInfo.displayName, image: modelInfo.theme.imageName)
+                         Label(modelInfo.name, image: modelInfo.theme.imageName)
                              .labelStyle(.titleAndIcon)
                      }
                  }

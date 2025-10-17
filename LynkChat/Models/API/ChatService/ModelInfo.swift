@@ -5,25 +5,21 @@ struct ModelInfo: Identifiable, Hashable, Codable, Equatable, Sendable, ModelIma
     var id: UUID = UUID()
     var providerId: UUID
     var modelString: String
-    var displayName: String
+    var name: String
     var isEnabled: Bool = true
     var theme: ModelTheme = .openai
     
-    init(id: UUID = UUID(), providerId: UUID, modelString: String, displayName: String, isEnabled: Bool = true, theme: ModelTheme = .openai) {
+    init(id: UUID = UUID(), providerId: UUID, modelString: String, name: String, isEnabled: Bool = true, theme: ModelTheme = .openai) {
         self.id = id
         self.providerId = providerId
         self.modelString = modelString
-        self.displayName = displayName
+        self.name = name
         self.isEnabled = isEnabled
         self.theme = theme
     }
     
     var provider: ModelProvider {
         ModelRegistry.shared.getProvider(providerId)!
-    }
-    
-    var name: String {
-        displayName
     }
     
     var imageName: String {

@@ -10,7 +10,7 @@ import SwiftUI
 struct AddModelView: View {
     let providerId: UUID
     @State private var registry = ModelRegistry.shared
-    @State private var displayName = ""
+    @State private var name = ""
     @State private var modelString = ""
     @State private var selectedTheme: ModelTheme = .openai
     @Environment(\.dismiss) var dismiss
@@ -19,7 +19,7 @@ struct AddModelView: View {
         NavigationStack {
             Form {
                 Section("Model Details") {
-                    TextField("Display Name", text: $displayName)
+                    TextField("Display Name", text: $name)
                     TextField("Model String", text: $modelString)
                 }
                 
@@ -42,7 +42,7 @@ struct AddModelView: View {
                         let model = ModelInfo(
                             providerId: providerId,
                             modelString: modelString,
-                            displayName: displayName,
+                            name: name,
                             theme: selectedTheme
                         )
                         registry.addModel(model)
@@ -53,7 +53,7 @@ struct AddModelView: View {
                             .labelStyle(.titleOnly)
                         #endif
                     }
-                    .disabled(displayName.isEmpty || modelString.isEmpty)
+                    .disabled(name.isEmpty || modelString.isEmpty)
                 }
             }
         }

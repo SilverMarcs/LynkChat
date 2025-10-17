@@ -36,10 +36,3 @@ struct ListRowImage: View {
         #endif
     }
 }
-
-#Preview {
-    let registry = ModelRegistry.shared
-    let enabledModels = registry.getEnabledModels()
-    let modelInfo = enabledModels.first ?? ModelInfo(providerId: UUID(), modelString: "mock", displayName: "Mock")
-    ListRowImage(model: modelInfo)
-}

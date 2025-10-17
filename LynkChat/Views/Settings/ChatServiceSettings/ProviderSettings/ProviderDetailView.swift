@@ -30,7 +30,7 @@ struct ProviderDetailView: View {
                 ForEach(registry.models.filter { $0.providerId == provider.id }) { model in
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(model.displayName)
+                            Text(model.name)
                                 .font(.headline)
                             Text(model.modelString)
                                 .font(.caption)
@@ -42,12 +42,12 @@ struct ProviderDetailView: View {
                             set: { _ in registry.toggleModel(model.id) }
                         ))
                     }
-                }
-                .onDelete { offsets in
-                    offsets.forEach { index in
-                        let providersModels = registry.models.filter { $0.providerId == provider.id }
-                        let model = providersModels[index]
-                        registry.removeModel(model.id)
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            registry.removeModel(model.id)
+                        } label: {
+                            Label("Delete Model", systemImage: "trash")
+                        }
                     }
                 }
             } header: {
