@@ -16,6 +16,10 @@ struct MCPServer: Identifiable, Codable, Hashable {
     var url: String
     var headers: [String: String]?
     
+    // Cached tools
+    var cachedTools: [MCPServerTool]?
+    var lastToolsFetchTime: Date?
+    
     enum MCPServerType: String, Codable, CaseIterable {
         case http = "http"
         
@@ -57,6 +61,15 @@ struct MCPServer: Identifiable, Codable, Hashable {
         case .http:
             !url.isEmpty
         }
+    }
+    
+    var hasToolsCached: Bool {
+        cachedTools != nil && !cachedTools!.isEmpty
+    }
+    
+    var isToolsCacheStale: Bool {
+        guard let lastFetch = lastToolsFetchTime else { return true }
+        return Date().timeIntervalSince(lastFetch) > 3600
     }
     
     // Static examples

@@ -200,7 +200,7 @@ struct StreamHandler {
         // Make a follow-up API request to get the assistant's response based on tool results
         
         // Clear the assistant content for the follow-up response
-        assistant.content = ""
+//        assistant.content = ""
         assistant.isReplying = true
         
         var contentBuffer = ""

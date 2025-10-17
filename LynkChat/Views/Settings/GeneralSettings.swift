@@ -22,7 +22,9 @@ struct GeneralSettings: View {
             }
             
             Section("Behaviour") {
-                LabeledContent("Restart Onboarding") {
+                HStack {
+                    Text("Restart Onboarding")
+                    Spacer()
                     Button("Launch") {
                         config.hasCompletedOnboarding = false
                     }

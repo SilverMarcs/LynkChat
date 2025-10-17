@@ -150,9 +150,8 @@ private struct MCPListToolsResponse: Codable {
 
 enum MCPToolAdapter {
     /// Fetch tools from enabled MCP HTTP servers and map them to OpenAI ChatCompletionRequest.Tool
-    /// Returns a dict of tool name to server for execution
+    /// Uses cached tools if available, otherwise returns empty tools
     static func fetchOpenAITools(enabledServerIds: Set<UUID>) async -> ([ChatCompletionRequest.Tool], [String: MCPServer]) {
-        // Load configured servers
         let allServers = ChatConfigDefaults().mcpServers
         let servers = allServers.filter { enabledServerIds.contains($0.id) && $0.type == .http && $0.isValid }
 
@@ -161,45 +160,32 @@ enum MCPToolAdapter {
             return ([], [:])
         }
 
-        AppLogger.info("MCPToolAdapter: Fetching tools from \(servers.count) servers")
+        AppLogger.info("MCPToolAdapter: Building tools from \(servers.count) servers (using cache)")
 
         var allTools: [ChatCompletionRequest.Tool] = []
         var toolToServer: [String: MCPServer] = [:]
 
-        await withTaskGroup(of: ([ChatCompletionRequest.Tool], [String: MCPServer]).self) { group in
-            for server in servers {
-                group.addTask {
-                    do {
-                        let mcpTools = try await listToolsHTTP(server: server)
-                        AppLogger.info("MCPToolAdapter: Got \(mcpTools.count) tools from \(server.name)")
-                        // Map to OpenAI tool format
-                        let openAITools = mcpTools.map { t in
-                            ChatCompletionRequest.Tool(
-                                type: "function",
-                                function: .init(
-                                    name: sanitizeName(t.name),
-                                    description: t.description,
-                                    parameters: t.inputSchema
-                                )
-                            )
-                        }
-                        let nameToServer = Dictionary(uniqueKeysWithValues: mcpTools.map { (sanitizeName($0.name), server) })
-                        return (openAITools, nameToServer)
-                    } catch {
-                        AppLogger.error("MCPToolAdapter: Failed to fetch tools from \(server.name): \(error.localizedDescription)")
-                        // Best-effort: ignore failures per server
-                        return ([], [:])
-                    }
-                }
+        for server in servers {
+            guard let cachedTools = server.cachedTools, !cachedTools.isEmpty else {
+                AppLogger.info("MCPToolAdapter: No cached tools for \(server.name)")
+                continue
             }
 
-            for await (tools, nameToServer) in group {
-                allTools.append(contentsOf: tools)
-                toolToServer.merge(nameToServer) { (current, _) in current } // If duplicate, keep first
+            let openAITools = cachedTools.map { t in
+                ChatCompletionRequest.Tool(
+                    type: "function",
+                    function: .init(
+                        name: sanitizeName(t.name),
+                        description: t.description,
+                        parameters: t.inputSchema
+                    )
+                )
             }
+            
+            let nameToServer = Dictionary(uniqueKeysWithValues: cachedTools.map { (sanitizeName($0.name), server) })
+            allTools.append(contentsOf: openAITools)
+            toolToServer.merge(nameToServer) { (current, _) in current }
         }
-
-        AppLogger.info("MCPToolAdapter: Total tools before dedup: \(allTools.count)")
 
         // Deduplicate by function name
         var seen = Set<String>()
@@ -210,12 +196,21 @@ enum MCPToolAdapter {
             return true
         }
 
-        // Also dedup the map
         let dedupedMap = toolToServer.filter { seen.contains($0.key) }
 
-        AppLogger.info("MCPToolAdapter: Final tools after dedup: \(deduped.count)")
+        AppLogger.info("MCPToolAdapter: Total cached tools: \(deduped.count)")
 
         return (deduped, dedupedMap)
+    }
+    
+    /// Fetch tools from a specific MCP server for caching
+    static func listToolsForServer(server: MCPServer) async throws -> [MCPServerTool] {
+        guard server.type == .http && server.isValid else {
+            throw NSError(domain: "MCPToolAdapter", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid server configuration"])
+        }
+        
+        let tools = try await listToolsHTTP(server: server)
+        return tools.map { MCPServerTool(name: $0.name, description: $0.description, inputSchema: $0.inputSchema) }
     }
 
     // MARK: - Internals

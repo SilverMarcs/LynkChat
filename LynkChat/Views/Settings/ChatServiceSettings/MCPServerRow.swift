@@ -10,12 +10,9 @@ import SwiftUI
 struct MCPServerRow: View {
     @Binding var server: MCPServer
     @Binding var isDefaultEnabled: Bool
-    @State var showEditSheet: Bool = false
     
     var body: some View {
-        Button {
-            showEditSheet = true
-        } label: {
+        NavigationLink(destination: MCPServerDetailView(server: $server)) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
@@ -34,7 +31,6 @@ struct MCPServerRow: View {
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                     
-                    
                     if !server.isValid {
                         Label("Invalid configuration", systemImage: "exclamationmark.triangle")
                             .font(.caption)
@@ -49,12 +45,6 @@ struct MCPServerRow: View {
                     .labelsHidden()
             }
             .contentShape(.rect)
-        }
-        .buttonStyle(.plain)
-        .sheet(isPresented: $showEditSheet) {
-            MCPServerEditView(server: $server) { server in
-                
-            }
         }
     }
 }

@@ -13,6 +13,7 @@ struct ChatConfigDefaults {
     @AppStorage("thinkingBudget") var thinkingBudget: ThinkingBudget = .none
     
     @AppStorage("mcpServersData") private var mcpServersData: Data = Data()
+    
     var mcpServers: [MCPServer] {
         get {
             guard !mcpServersData.isEmpty,
