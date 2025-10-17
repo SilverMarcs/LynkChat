@@ -35,14 +35,12 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
         self.activeMessage = message
     }
     
-    func addMessage(_ message: Message, skipActive: Bool = false) {
+    func addMessage(_ message: Message) {
         if message.role == .assistant {
             message.isReplying = true
         }
         allMessages.append(message)
-        if !skipActive {
-            activeMessage = message
-        }
+        activeMessage = message
     }
     
     func copy() -> MessageGroup {
@@ -51,7 +49,7 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     
     // MARK: - computed message properties
     // TODO: dont really need all these props since we can just use the activeMessage directly and we shudnt expose all these props
-    var model: ChatModel {
+    var model: ModelInfo {
         activeMessage.model
     }
     

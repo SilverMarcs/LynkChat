@@ -17,35 +17,15 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         self.temperature = defaults.temperature
         self.thinkingBudget = defaults.thinkingBudget
         self.systemPrompt = defaults.systemPrompt
-        self.primaryModel = defaults.defaultModel
+        self.model = defaults.defaultModel
         self.enabledMCPServerIds = defaults.defaultEnabledMCPServerIds
-    }
-    
-    var model: ChatModel {
-        get {
-            primaryModel
-        }
-        set {
-            primaryModel = newValue
-        }
     }
     
     var temperature: Temperature
     var thinkingBudget: ThinkingBudget
     var systemPrompt: String
-    var primaryModel: ChatModel
+    var model: ModelInfo
     var enabledMCPServerIds: Set<UUID> = []
-    
-    var models: Set<ChatModel> {
-        get {
-            [primaryModel]
-        }
-        set {
-            if let first = newValue.first {
-                primaryModel = first
-            }
-        }
-    }
     
     func isMCPServerEnabled(_ serverId: UUID) -> Bool {
         enabledMCPServerIds.contains(serverId)
@@ -66,7 +46,7 @@ extension ChatConfig {
         newConfig.temperature = self.temperature
         newConfig.thinkingBudget = self.thinkingBudget
         newConfig.systemPrompt = self.systemPrompt
-        newConfig.primaryModel = self.primaryModel
+        newConfig.model = self.model
         newConfig.enabledMCPServerIds = self.enabledMCPServerIds
         return newConfig
     }

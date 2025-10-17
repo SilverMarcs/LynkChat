@@ -12,9 +12,7 @@ extension Message {
         let registry = ModelRegistry.shared
         let enabledModels = registry.getEnabledModels()
         let modelInfo = enabledModels.first ?? ModelInfo(providerId: UUID(), modelString: "mock", displayName: "Mock")
-        let provider = registry.getProvider(modelInfo.providerId) ?? ModelProvider(name: "Mock", baseURL: "mock", apiKey: "mock")
-        let chatModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
-        return Message.assistant(model: chatModel, content: String.codeBlock)
+        return Message.assistant(model: modelInfo, content: String.codeBlock)
     }()
     
     static let mockUserMessage = Message.user(content: String.shortContent)

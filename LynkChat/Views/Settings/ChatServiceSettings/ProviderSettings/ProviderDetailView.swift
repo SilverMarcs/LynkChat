@@ -12,7 +12,6 @@ struct ProviderDetailView: View {
     @State private var registry = ModelRegistry.shared
     @State private var editingProvider: ModelProvider
     @State private var showingAddModelSheet = false
-    @Environment(\.dismiss) var dismiss
     
     init(provider: ModelProvider) {
         self.provider = provider
@@ -67,7 +66,6 @@ struct ProviderDetailView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button(role: .confirm) {
                     registry.updateProvider(editingProvider)
-                    dismiss()
                 } label: {
                     Label("Save Changes", systemImage: "checkmark")
                 }

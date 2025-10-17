@@ -65,12 +65,6 @@ struct ChatToolbar: ToolbarContent {
                 ModelPicker(selectedModel: $chat.config.model)
             }
             
-            if chat.config.models.count > 1 {
-                ToolbarItem {
-                    Button("+\(chat.config.models.count - 1)") {}
-                }
-            }
-            
             if chat.status == .temporary {
                 ToolbarSpacer(.fixed)
                 

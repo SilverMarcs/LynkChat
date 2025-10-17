@@ -72,10 +72,9 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     @MainActor
     func processRequest(message: Message, user: Message) async {
-        // Cancel any existing task first and wait for it to complete
         streamingTask?.cancel()
         if let task = streamingTask {
-            try? await task.value // Wait for the task to finish after cancellation
+            try? await task.value
         }
         
         errorMessage = nil
@@ -84,11 +83,9 @@ final class Chat: Equatable, Identifiable, Hashable {
             guard let self else { return }
             
             do {
-                // Check if we have secondary models to process
                 if let assistantGroup = currentThread.last {
-                    // Always use MultiStreamHandler with all models
-                    let multiHandler = MultiStreamHandler(chat: self, assistantGroup: assistantGroup, user: user)
-                    try await multiHandler.handleMultipleRequests()
+                    let handler = StreamHandler(chat: self, assistant: message, user: user)
+                    try await handler.handleRequest()
                 }
                 
                 #if !os(macOS)
@@ -97,12 +94,10 @@ final class Chat: Equatable, Identifiable, Hashable {
                 }
 
                 defer {
-                    // Ensure we end the background task when done
                     UIApplication.shared.endBackgroundTask(backgroundTaskId)
                 }
                 #endif
                 
-                // Generate title after streaming is complete
                 if AppConfig().autogenTitle {
                     await generateTitle()
                 }

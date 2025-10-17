@@ -28,8 +28,8 @@ struct StreamHandler {
     private func processStreamWithOpenAI() async throws {
         let model = chat.config.model
         let client = OpenAIClient(
-            apiKey: model.apiKey,
-            baseURL: model.baseURL,
+            apiKey: model.provider.apiKey,
+            baseURL: model.provider.baseURL,
             model: model.modelString
         )
         
@@ -62,7 +62,7 @@ struct StreamHandler {
             // jsut do assistant.content = originalContent + contentBuffer. followupcheck not needed
 
             if isFollowUp {
-                assistant.content = originalContent + contentBuffer
+                assistant.content = originalContent + "\n" + contentBuffer
             } else {
                 assistant.content = contentBuffer
             }

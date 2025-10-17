@@ -48,7 +48,7 @@ import Combine
     }
 
     @discardableResult
-    func createNewChat(model: ChatModel? = nil, delay: Bool = false) -> Chat {
+    func createNewChat(model: ModelInfo? = nil, delay: Bool = false) -> Chat {
         let newChat = Chat()
 
         if let model = model {
@@ -107,9 +107,8 @@ import Combine
                 
                 let registry = ModelRegistry.shared
                 let enabledModels = registry.getEnabledModels()
-                if let modelInfo = enabledModels.first,
-                   let provider = registry.getProvider(modelInfo.providerId) {
-                    existingChat.config.primaryModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+                if let modelInfo = enabledModels.first {
+                    existingChat.config.model = modelInfo
                 }
                 
                 return existingChat
@@ -121,9 +120,8 @@ import Combine
                 
                 let registry = ModelRegistry.shared
                 let enabledModels = registry.getEnabledModels()
-                if let modelInfo = enabledModels.first,
-                   let provider = registry.getProvider(modelInfo.providerId) {
-                    newChat.config.primaryModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+                if let modelInfo = enabledModels.first {
+                    newChat.config.model = modelInfo
                 }
                 
                 modelContext.insert(newChat)

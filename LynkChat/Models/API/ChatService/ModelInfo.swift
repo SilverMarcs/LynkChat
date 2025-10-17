@@ -1,6 +1,7 @@
 import Foundation
+import UniformTypeIdentifiers
 
-struct ModelInfo: Identifiable, Codable, Sendable {
+struct ModelInfo: Identifiable, Hashable, Codable, Equatable, Sendable, ModelImageProvider {
     var id: UUID = UUID()
     var providerId: UUID
     var modelString: String
@@ -15,5 +16,25 @@ struct ModelInfo: Identifiable, Codable, Sendable {
         self.displayName = displayName
         self.isEnabled = isEnabled
         self.theme = theme
+    }
+    
+    var provider: ModelProvider {
+        ModelRegistry.shared.getProvider(providerId)!
+    }
+    
+    var name: String {
+        displayName
+    }
+    
+    var imageName: String {
+        theme.imageName
+    }
+    
+    var color: String {
+        theme.color
+    }
+    
+    var supportedTypes: Set<UTType> {
+        [.text, .image]
     }
 }

@@ -8,36 +8,32 @@
 import SwiftUI
 
 struct ChatConfigDefaults {
-    @AppStorage("defaultModelProviderId") private var defaultModelProviderId: String = ""
     @AppStorage("defaultModelInfoId") private var defaultModelInfoId: String = ""
     
-    var defaultModel: ChatModel {
+    var defaultModel: ModelInfo {
         get {
-            guard let providerId = UUID(uuidString: defaultModelProviderId),
-                  let modelInfoId = UUID(uuidString: defaultModelInfoId) else {
+            guard let modelInfoId = UUID(uuidString: defaultModelInfoId) else {
                 return getFirstEnabledModel()
             }
-            return ChatModel(providerId: providerId, modelInfoId: modelInfoId)
+            if let modelInfo = ModelRegistry.shared.getModel(modelInfoId) {
+                return modelInfo
+            }
+            return getFirstEnabledModel()
         }
         set {
-            defaultModelProviderId = newValue.providerId.uuidString
-            defaultModelInfoId = newValue.modelInfoId.uuidString
+            defaultModelInfoId = newValue.id.uuidString
         }
     }
     
-    private func getFirstEnabledModel() -> ChatModel {
+    private func getFirstEnabledModel() -> ModelInfo {
         guard let first = ModelRegistry.shared.getEnabledModels().first else {
-            let providers = ModelRegistry.shared.providers
             let models = ModelRegistry.shared.models
-            if let provider = providers.first, let model = models.first {
-                return ChatModel(providerId: provider.id, modelInfoId: model.id)
+            if let model = models.first {
+                return model
             }
-            return ChatModel(providerId: UUID(), modelInfoId: UUID())
+            return ModelInfo(providerId: UUID(), modelString: "", displayName: "")
         }
-        if let provider = ModelRegistry.shared.getProvider(first.providerId) {
-            return ChatModel(providerId: provider.id, modelInfoId: first.id)
-        }
-        return ChatModel(providerId: UUID(), modelInfoId: UUID())
+        return first
     }
     
     @AppStorage("temperature") var temperature: Temperature = .balanced

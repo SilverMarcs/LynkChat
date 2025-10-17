@@ -33,14 +33,11 @@ struct ChatListToolbar: ToolbarContent {
          ToolbarItem {
              Menu {
                  ForEach(enabledModels, id: \.id) { modelInfo in
-                     if let provider = ModelRegistry.shared.getProvider(modelInfo.providerId) {
-                         let chatModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
-                         Button {
-                             chatVM.createNewChat(model: chatModel)
-                         } label: {
-                             Label(modelInfo.displayName, image: modelInfo.theme.imageName)
-                                 .labelStyle(.titleAndIcon)
-                         }
+                     Button {
+                         chatVM.createNewChat(model: modelInfo)
+                     } label: {
+                         Label(modelInfo.displayName, image: modelInfo.theme.imageName)
+                             .labelStyle(.titleAndIcon)
                      }
                  }
              } label: {

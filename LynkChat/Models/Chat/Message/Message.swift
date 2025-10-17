@@ -13,7 +13,7 @@ final class Message: Equatable, Identifiable, Hashable {
     var id: UUID = UUID()
     var date: Date = Date()
     
-    var model: ChatModel
+    var model: ModelInfo
     var role: Role
     var content: String
     var reasoning: String?
@@ -38,7 +38,7 @@ final class Message: Equatable, Identifiable, Hashable {
     private init(role: Role,
                  content: String = "",
                  reasoning: String? = nil,
-                 model: ChatModel,
+                 model: ModelInfo,
                  dataFiles: [TypedData],
                  tools: [ChatTool]?,
                  isReplying: Bool = false,
@@ -79,7 +79,7 @@ final class Message: Equatable, Identifiable, Hashable {
         return Message(
             role: .user,
             content: content,
-            model: .init(providerId: UUID(), modelInfoId: UUID()),
+            model: ModelInfo(providerId: UUID(), modelString: "", displayName: ""),
             dataFiles: dataFiles,
             tools: nil,
             isReplying: false,
@@ -87,7 +87,7 @@ final class Message: Equatable, Identifiable, Hashable {
         )
     }
     
-    static func assistant(model: ChatModel, content: String = "") -> Message {
+    static func assistant(model: ModelInfo, content: String = "") -> Message {
         Message(
             role: .assistant,
             content: content,
