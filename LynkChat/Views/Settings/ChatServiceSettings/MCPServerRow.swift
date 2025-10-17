@@ -1,49 +1,29 @@
-//
-//  MCPServerRow.swift
-//  LynkChat
-//
-//  Created by Zabir Raihan on 11/10/2025.
-//
-
 import SwiftUI
 
 struct MCPServerRow: View {
-    @Binding var server: MCPServer
-    @Binding var isDefaultEnabled: Bool
-    @Environment(MCPConfigVM.self) var configVM
+    let server: MCPServer
     
     var body: some View {
-        NavigationLink(destination: MCPServerDetailView(server: $server)) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text(server.name)
-                            .font(.headline)
-                        
-                        Text(server.type.displayName)
-                            .font(.caption)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 2)
-                            .background(.background.tertiary, in: .rect(cornerRadius: 4))
-                    }
-                    
-                    Text(server.url)
+        NavigationLink(destination: MCPServerDetailView(server: server)) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(server.name).font(.headline)
+                    Text(server.type.displayName)
                         .font(.caption)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
-                    
-                    if !server.isValid {
-                        Label("Invalid configuration", systemImage: "exclamationmark.triangle")
-                            .font(.caption)
-                            .foregroundStyle(.orange)
-                            .labelStyle(.iconOnly)
-                    }
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 2)
+                        .background(.background.tertiary, in: .rect(cornerRadius: 4))
                 }
-                
-                Spacer()
-                
-                Toggle("Default", isOn: $isDefaultEnabled)
-                    .labelsHidden()
+                Text(server.url)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+                if !server.isValid {
+                    Label("Invalid configuration", systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .labelStyle(.iconOnly)
+                }
             }
             .contentShape(.rect)
         }
