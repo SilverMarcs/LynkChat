@@ -37,6 +37,12 @@ struct AddModelView: View {
             .navigationTitle("Add Model")
             .formStyle(.grouped)
             .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(role: .cancel) {
+                        dismiss()
+                    }
+                }
+                
                 ToolbarItem(placement: .confirmationAction) {
                     Button(role: .confirm) {
                         let model = ModelInfo(

@@ -42,6 +42,7 @@ struct ProviderDetailView: View {
                             set: { _ in registry.toggleModel(model.id) }
                         ))
                     }
+                    .contentShape(.rect)
                     .contextMenu {
                         Button(role: .destructive) {
                             registry.removeModel(model.id)

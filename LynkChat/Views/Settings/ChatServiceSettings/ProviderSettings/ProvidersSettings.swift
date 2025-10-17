@@ -21,12 +21,14 @@ struct ProvidersSettings: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
+                    .contentShape(.rect)
                 }
-            }
-            .onDelete { offsets in
-                offsets.forEach { index in
-                    let provider = registry.providers[index]
-                    registry.removeProvider(provider.id)
+                .contextMenu {
+                    Button(role: .destructive) {
+                        registry.removeProvider(provider.id)
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
                 }
             }
         }
