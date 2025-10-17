@@ -8,31 +8,27 @@
 import SwiftUI
 
 struct MCPServerManagementView: View {
-    @State var config: ChatConfigDefaults = .init()
+    @Environment(MCPConfigVM.self) var configVM
     @State private var showingAddServer = false
     
     var body: some View {
         NavigationStack {
             Form {
-                ForEach($config.mcpServers) { $server in
+                ForEach(configVM.mcpServers.indices, id: \.self) { index in
                     let isDefaultEnabled = Binding<Bool>(
-                        get: { self.config.defaultEnabledMCPServerIds.contains(server.id) },
+                        get: { configVM.isServerEnabled(configVM.mcpServers[index].id) },
                         set: { isOn in
-                            if isOn {
-                                self.config.defaultEnabledMCPServerIds.insert(server.id)
-                            } else {
-                                self.config.defaultEnabledMCPServerIds.remove(server.id)
-                            }
+                            configVM.toggleServerEnabled(configVM.mcpServers[index].id, enabled: isOn)
                         }
                     )
                     
-                    MCPServerRow(server: $server, isDefaultEnabled: isDefaultEnabled)
+                    MCPServerRow(server: Binding(
+                        get: { configVM.mcpServers[index] },
+                        set: { configVM.mcpServers[index] = $0 }
+                    ), isDefaultEnabled: isDefaultEnabled)
                         .contextMenu {
                             Button(role: .destructive) {
-                                if let index = self.config.mcpServers.firstIndex(where: { $0.id == server.id }) {
-                                    self.config.mcpServers.remove(at: index)
-                                    self.config.defaultEnabledMCPServerIds.remove(server.id)
-                                }
+                                configVM.removeServer(withId: configVM.mcpServers[index].id)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -54,7 +50,7 @@ struct MCPServerManagementView: View {
             .sheet(isPresented: $showingAddServer) {
                 NavigationStack {
                     MCPServerEditView(server: .constant(MCPServer(name: "", type: .http, url: ""))) { newServer in
-                        config.mcpServers.append(newServer)
+                        configVM.addServer(newServer)
                     }
                 }
             }

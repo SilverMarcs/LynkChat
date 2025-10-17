@@ -10,6 +10,7 @@ import SwiftUI
 struct MCPServerRow: View {
     @Binding var server: MCPServer
     @Binding var isDefaultEnabled: Bool
+    @Environment(MCPConfigVM.self) var configVM
     
     var body: some View {
         NavigationLink(destination: MCPServerDetailView(server: $server)) {

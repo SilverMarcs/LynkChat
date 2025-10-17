@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MCPServerDetailView: View {
     @Binding var server: MCPServer
+    @Environment(MCPConfigVM.self) var configVM
     @State private var showEditSheet = false
     @State private var isFetchingTools = false
     
@@ -29,7 +30,6 @@ struct MCPServerDetailView: View {
                 }
             }
             
-            // isExpanded init
             Section {
                 if let tools = server.cachedTools, !tools.isEmpty {
                     ForEach(tools, id: \.name) { tool in
@@ -39,13 +39,18 @@ struct MCPServerDetailView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
-                 }
+                } else if !isFetchingTools {
+                    Text("No tools cached")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             } header: {
                 Text("Tools")
             } footer: {
                 HStack {
                     Button(action: fetchTools) {
                         Label("Fetch Tools", systemImage: "opticaldiscdrive")
+
                     }
                     .disabled(isFetchingTools)
                     
@@ -80,8 +85,14 @@ struct MCPServerDetailView: View {
         Task {
             do {
                 let tools = try await MCPToolAdapter.listToolsForServer(server: server)
+                
                 server.cachedTools = tools
                 server.lastToolsFetchTime = Date()
+                
+                if let index = configVM.mcpServers.firstIndex(where: { $0.id == server.id }) {
+                    configVM.mcpServers[index] = server
+                }
+                
                 isFetchingTools = false
             } catch {
                 isFetchingTools = false
