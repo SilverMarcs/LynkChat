@@ -59,6 +59,8 @@ struct StreamHandler {
         let originalContent = isFollowUp ? assistant.content : ""
         
         func updateUI() {
+            // jsut do assistant.content = originalContent + contentBuffer. followupcheck not needed
+
             if isFollowUp {
                 assistant.content = originalContent + contentBuffer
             } else {
@@ -99,9 +101,7 @@ struct StreamHandler {
             }
             
             if let usage = response.usage {
-                if !isFollowUp {
-                    user.inputTokens = usage.prompt_tokens ?? 0
-                }
+                user.inputTokens = usage.prompt_tokens ?? 0
                 assistant.outputTokens = usage.completion_tokens ?? 0
                 assistant.reasoningTokens = usage.completion_tokens_details?.reasoning_tokens ?? 0
             }
@@ -147,11 +147,7 @@ struct StreamHandler {
                 )
             }
             
-            if let existingTools = assistant.tools {
-                assistant.tools = existingTools + newChatTools
-            } else {
-                assistant.tools = newChatTools
-            }
+            assistant.tools?.append(contentsOf: newChatTools)
             
             try await executeToolCalls(toolToServer: toolToServer)
             
