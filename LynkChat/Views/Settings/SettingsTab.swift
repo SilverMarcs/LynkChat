@@ -15,7 +15,6 @@ enum SettingsCategory: String, Hashable, CaseIterable {
     case chatService = "Chat Service"
     case imageService = "Image Service"
     case about = "About"
-    case debug = "Debug"
     
     var systemImage: String {
         switch self {
@@ -26,7 +25,6 @@ enum SettingsCategory: String, Hashable, CaseIterable {
         case .chatService: return "quote.bubble"
         case .imageService: return "photo"
         case .about: return "info.circle"
-        case .debug: return "ladybug"
         }
     }
     
@@ -40,7 +38,6 @@ enum SettingsCategory: String, Hashable, CaseIterable {
         case .chatService: ChatServiceSettings()
         case .imageService: ImageServiceSettings()
         case .about: AboutSettings()
-        case .debug: DebugSettings()
         }
     }
 }

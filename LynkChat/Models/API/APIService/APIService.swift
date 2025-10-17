@@ -9,13 +9,13 @@ import Foundation
 
 enum APIService {
     static func makeRequest(path: APIPath, method: HTTPMethod) -> URLRequest? {
-        guard let url = URL(string: "\(String.apiHost)\(path.pathString)") else {
+        guard let url = URL(string: "\("String.apiHost")\(path.pathString)") else {
             return nil
         }
         
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        request.setValue(AppConfig().myApiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue("AppConfig().myApiKey", forHTTPHeaderField: "x-api-key")
         
         if method == .POST && path != .upload {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")

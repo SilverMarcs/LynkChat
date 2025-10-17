@@ -1,75 +1,36 @@
-//
-//  ChatServiceSettings.swift
-//  LynkChat
-//
-//  Created by Zabir Raihan on 28/12/2024.
-//
-
 import SwiftUI
 
 struct ChatServiceSettings: View {
-    @State var config: ChatConfigDefaults = .init()
+    @State private var selectedTab: ChatServiceTab = .general
     
-    @AppStorage("openrouterApiKey") private var openrouterApiKey: String = ""
-    @AppStorage("vercelApiKey") private var vercelApiKey: String = ""
-
-    var body: some View {
-        Form {
-            ModelPicker(selectedModel: $config.defaultModel, label: "Default Model")
-            
-            Section("Parameters") {
-                Picker("Behaviour", selection: $config.temperature) {
-                    ForEach(Temperature.allCases, id: \.self) { option in
-                        Text(option.name).tag(option)
-                    }
-                }
-            }
-            
-            Section("API Keys") {
-                SecureField("Enter Openrouter API Key", text: $openrouterApiKey)
-                SecureField("Enter Vercel API Key", text: $vercelApiKey)
-            }
-            
-            Section("MCP Servers") {
-                NavigationLink {
-                    MCPServerManagementView()
-                } label: {
-                    HStack {
-                        Label("Manage Servers", systemImage: "server.rack")
-                        Spacer()
-                        Text("\(config.mcpServers.count) configured")
-                            .foregroundStyle(.secondary)
-                            .font(.subheadline)
-                    }
-                }
-            }
-            
-            Section {
-                sysPrompt
-            } header: {
-                HStack {
-                    Text("System Prompt")
-                    Spacer()
-                    Button {
-                        config.systemPrompt = String.systemPrompt
-                    } label: {
-                        Text("Default")
-                            .fontWeight(.regular)
-                    }
-                }
-            }
-        }
-        .navigationTitle("Chat Parameters")
-        .toolbarTitleDisplayMode(.inline)
-        .formStyle(.grouped)
+    enum ChatServiceTab: String, CaseIterable {
+        case general = "General"
+        case providers = "Models"
+        case mcp = "MCP"
     }
     
-    var sysPrompt: some View {
-        TextEditor(text: $config.systemPrompt)
-            .font(.body)
-            .scrollContentBackground(.hidden)
-            .labelsHidden()
-            .frame(maxHeight: 275)
+    var body: some View {
+        Group {
+            switch selectedTab {
+            case .general:
+                GeneralChatSettings()
+            case .providers:
+                ProvidersSettings()
+            case .mcp:
+                MCPServerManagementView()
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Picker("Settings", selection: $selectedTab) {
+                    ForEach(ChatServiceTab.allCases, id: \.self) { tab in
+                        Text(tab.rawValue)
+                            .tag(tab)
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
+        }
     }
 }
 

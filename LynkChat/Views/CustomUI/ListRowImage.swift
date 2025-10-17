@@ -38,5 +38,10 @@ struct ListRowImage: View {
 }
 
 #Preview {
-    ListRowImage(model: ChatModel.gemini_flash)
+    let registry = ModelRegistry.shared
+    let enabledModels = registry.getEnabledModels()
+    let modelInfo = enabledModels.first ?? ModelInfo(providerId: UUID(), modelString: "mock", displayName: "Mock")
+    let provider = registry.getProvider(modelInfo.providerId) ?? ModelProvider(name: "Mock", baseURL: "mock", apiKey: "mock")
+    let chatModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+    ListRowImage(model: chatModel)
 }

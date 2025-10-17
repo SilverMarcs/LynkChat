@@ -11,18 +11,16 @@ struct ChatListToolbar: ToolbarContent {
     let chats: [Chat]
     let deleteItems: (IndexSet) -> Void
     @Environment(ChatVM.self) var chatVM
+    @State private var enabledModels: [ModelInfo] = []
     
     var body: some ToolbarContent {
         #if os(macOS)
         ToolbarItem(placement: .keyboard) {
             Button(action: {
-                // Get the indices of the selected chats
                 let indices = chatVM.selections.compactMap { chat in
                     chats.firstIndex(of: chat)
                 }
-                // Create an IndexSet from the indices
                 let indexSet = IndexSet(indices)
-                // Perform the delete operation
                 deleteItems(indexSet)
             }) {
                 Image(systemName: "trash")
@@ -32,22 +30,28 @@ struct ChatListToolbar: ToolbarContent {
         }
         #endif
         
-        ToolbarItem {
-            Menu {
-                ForEach(ChatModel.allCases) { model in
-                    Button {
-                        chatVM.createNewChat(model: model)
-                    } label: {
-                        Label(model.name, image: model.imageName)
-                            .labelStyle(.titleAndIcon)
-                    }
-                }
-            } label: {
-                Label("New Chat", systemImage: "square.and.pencil")
-            } primaryAction: {
-                chatVM.createNewChat()
-            }
-            .menuIndicator(.hidden)
-        }
+         ToolbarItem {
+             Menu {
+                 ForEach(enabledModels, id: \.id) { modelInfo in
+                     if let provider = ModelRegistry.shared.getProvider(modelInfo.providerId) {
+                         let chatModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+                         Button {
+                             chatVM.createNewChat(model: chatModel)
+                         } label: {
+                             Label(modelInfo.displayName, image: modelInfo.theme.imageName)
+                                 .labelStyle(.titleAndIcon)
+                         }
+                     }
+                 }
+             } label: {
+                 Label("New Chat", systemImage: "square.and.pencil")
+             } primaryAction: {
+                 chatVM.createNewChat()
+             }
+             .menuIndicator(.hidden)
+             .onAppear {
+                 enabledModels = ModelRegistry.shared.getEnabledModels()
+             }
+         }
     }
 }

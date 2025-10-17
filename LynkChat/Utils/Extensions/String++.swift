@@ -11,14 +11,6 @@ extension String {
     nonisolated static let bottomID = "bottomID"
     static let testPrompt = "Respond with just the word Test"
     
-    static var apiHost: String {
-        if AppConfig().useLocalhost {
-            "http://localhost:3000/api"
-        } else {
-            "https://lynkchat-server.vercel.app/api"
-        }
-    }
-    
     func copyToPasteboard() {
         #if os(macOS)
         NSPasteboard.general.clearContents()

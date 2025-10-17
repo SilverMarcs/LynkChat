@@ -81,7 +81,7 @@ struct SettingsView: View {
         }
         
         Section("Info") {
-            ForEach([SettingsCategory.about, .debug], id: \.self) { category in
+            ForEach([SettingsCategory.about], id: \.self) { category in
                 NavigationLink(value: category) {
                     Label(category.rawValue, systemImage: category.systemImage)
                 }

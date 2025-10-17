@@ -48,7 +48,7 @@ struct StreamHandler {
         let client = OpenAIClient(
             apiKey: model.apiKey,
             baseURL: model.baseURL,
-            model: model.id
+            model: model.modelString
         )
         
         // Prepare messages
@@ -92,15 +92,9 @@ struct StreamHandler {
             }
             
             if let usage = response.usage {
-                if let promptTokens = usage.prompt_tokens {
-                    user.inputTokens = promptTokens
-                }
-                if let completionTokens = usage.completion_tokens {
-                    assistant.outputTokens = completionTokens
-                }
-                if let reasoningTokens = usage.completion_tokens_details?.reasoning_tokens {
-                    assistant.reasoningTokens = reasoningTokens
-                }
+                user.inputTokens = usage.prompt_tokens ?? 0
+                assistant.outputTokens = usage.completion_tokens ?? 0
+                assistant.reasoningTokens = usage.completion_tokens_details?.reasoning_tokens ?? 0
             }
             
             // Handle tool calls
@@ -163,19 +157,15 @@ struct StreamHandler {
         
         // Execute each tool and update its result
         for (index, tool) in tools.enumerated() {
-            AppLogger.info("Executing tool: \(tool.toolName) with args: \(tool.args)")
-            
             // Parse arguments
             guard let argumentsData = tool.args.data(using: .utf8),
                   let arguments = try? JSONDecoder().decode([String: AnyCodable].self, from: argumentsData) else {
-                AppLogger.error("Invalid arguments for tool \(tool.toolName): \(tool.args)")
                 assistant.tools?[index].result = "Error: Invalid arguments"
                 continue
             }
             
             // Find server
             guard let server = toolToServer[tool.toolName] else {
-                AppLogger.error("No server found for tool \(tool.toolName)")
                 assistant.tools?[index].result = "Error: No server configured for this tool"
                 continue
             }
@@ -186,21 +176,14 @@ struct StreamHandler {
                     name: tool.toolName,
                     arguments: arguments
                 )
-                AppLogger.info("Tool \(tool.toolName) result: \(resultJSON)")
                 assistant.tools?[index].result = resultJSON
             } catch {
-                AppLogger.error("Error calling tool \(tool.toolName): \(error.localizedDescription)")
                 assistant.tools?[index].result = "Error: \(error.localizedDescription)"
             }
         }
     }
     
     private func getToolResponseFromAssistant() async throws {
-        // The assistant message now has tools with results
-        // Make a follow-up API request to get the assistant's response based on tool results
-        
-        // Clear the assistant content for the follow-up response
-//        assistant.content = ""
         assistant.isReplying = true
         
         var contentBuffer = ""
@@ -215,7 +198,7 @@ struct StreamHandler {
         let client = OpenAIClient(
             apiKey: model.apiKey,
             baseURL: model.baseURL,
-            model: model.id
+            model: model.modelString
         )
         
         // Prepare messages including the assistant's tool calls and results

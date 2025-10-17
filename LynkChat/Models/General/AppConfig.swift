@@ -21,6 +21,8 @@ struct AppConfig {
     // Onboarding
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
     
+    @AppStorage("geminiApiKey") var geminiApiKey: String = ""
+    
     func resetFontSize() {
         #if os(macOS)
         fontSize = 13
@@ -28,11 +30,4 @@ struct AppConfig {
         fontSize = 17
         #endif
     }
-    
-    // DEBUG
-    @AppStorage("myApiKey") var myApiKey: String = ""
-    @AppStorage("geminiApiKey") var geminiApiKey: String = ""
-    @AppStorage("useLocalhost") var useLocalhost = false
-    @AppStorage("printDebgLogs") var printDebgLogs = false
-    @AppStorage("sendDebugModel") var sendDebugModel = false
 }

@@ -86,6 +86,7 @@ import Combine
     var isQuickPanelPresented: Bool = false
 
     func getOrCreateQuickPanelChat() -> Chat {
+        // TODO: use generic model here
         if let existingChat = quickPanelChat {
             return existingChat
         }
@@ -101,21 +102,30 @@ import Combine
         do {
             let quickChats = try modelContext.fetch(descriptor)
             if let existingChat = quickChats.first {
-                existingChat.deleteAllMessages() // Clear existing messages
+                existingChat.deleteAllMessages()
                 existingChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-                existingChat.config.models = [.gemini_flash]
                 
-//                existingChat.config.enableTool(.scrapeLinks)
-//                existingChat.config.enableTool(.webSearch)
+                let registry = ModelRegistry.shared
+                let enabledModels = registry.getEnabledModels()
+                if let modelInfo = enabledModels.first,
+                   let provider = registry.getProvider(modelInfo.providerId) {
+                    existingChat.config.primaryModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+                }
+                
                 return existingChat
             } else {
                 let newChat = Chat()
                 newChat.statusId = statusId
                 newChat.status = ChatStatus.quick
                 newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-                newChat.config.models = [.gemini_flash]
-//                newChat.config.enableTool(.scrapeLinks)
-//                newChat.config.enableTool(.webSearch)
+                
+                let registry = ModelRegistry.shared
+                let enabledModels = registry.getEnabledModels()
+                if let modelInfo = enabledModels.first,
+                   let provider = registry.getProvider(modelInfo.providerId) {
+                    newChat.config.primaryModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+                }
+                
                 modelContext.insert(newChat)
                 quickPanelChat = newChat
                 return newChat

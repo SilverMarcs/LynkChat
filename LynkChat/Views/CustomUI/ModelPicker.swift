@@ -10,37 +10,48 @@ import SwiftUI
 struct ModelPicker: View {
     @Binding var selectedModel: ChatModel
     var label: String = "Model"
+    @State private var enabledModels: [ModelInfo] = []
     
     var body: some View {
         Picker(selection: $selectedModel) {
-            ForEach(ChatModel.allCases, id: \.self) { model in
-                Label(model.name, image: model.imageName)
-                    .labelStyle(.titleAndIcon)
-                    .tag(model)
+            ForEach(enabledModels, id: \.id) { modelInfo in
+                if let provider = ModelRegistry.shared.getProvider(modelInfo.providerId) {
+                    let chatModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+                    Label(modelInfo.displayName, image: modelInfo.theme.imageName)
+                        .labelStyle(.titleAndIcon)
+                        .tag(chatModel)
+                }
             }
         } label: {
             Label(label, image: selectedModel.imageName)
-                .labelStyle(.titleAndIcon)
+                .labelStyle(.titleOnly)
         }
         .menuOrder(.fixed)
+        .onAppear {
+            enabledModels = ModelRegistry.shared.getEnabledModels()
+        }
     }
 }
 
 struct ModelSinglePicker: View {
     @Binding var selectedModel: ChatModel
+    @State private var enabledModels: [ModelInfo] = []
     
     var body: some View {
         Menu {
-            ForEach(ChatModel.allCases, id: \.self) { model in
-                Button(action: {
-                    selectedModel = model
-                }) {
-                    HStack {
-                        Label(model.name, image: model.imageName)
-                            .labelStyle(.titleAndIcon)
-                        
-                        if model == selectedModel {
-                            Image(systemName: "checkmark")
+            ForEach(enabledModels, id: \.id) { modelInfo in
+                if let provider = ModelRegistry.shared.getProvider(modelInfo.providerId) {
+                    let chatModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+                    Button(action: {
+                        selectedModel = chatModel
+                    }) {
+                        HStack {
+                            Label(modelInfo.displayName, image: modelInfo.theme.imageName)
+                                .labelStyle(.titleAndIcon)
+                            
+                            if chatModel == selectedModel {
+                                Image(systemName: "checkmark")
+                            }
                         }
                     }
                 }
@@ -49,19 +60,21 @@ struct ModelSinglePicker: View {
             Label(selectedModel.name, image: selectedModel.imageName)
                 .labelStyle(.titleAndIcon)
         }
+        .onAppear {
+            enabledModels = ModelRegistry.shared.getEnabledModels()
+        }
     }
 }
-
-
 
 struct ModelMenuPicker: View {
     @Binding var selectedModels: Set<ChatModel>
     @State var showingPopover: Bool = false
+    @State private var enabledModels: [ModelInfo] = []
     
     var body: some View {
         HStack {
             Text("Models")
-            ForEach(selectedModels.sortedByName()) { model in
+            ForEach(sortedSelectedModels()) { model in
                 Label(labelText, image: model.imageName)
                     .foregroundStyle(Color(hex: model.color))
                     .labelStyle(.iconOnly)
@@ -76,24 +89,30 @@ struct ModelMenuPicker: View {
             }
             .popover(isPresented: $showingPopover) {
                 VStack(alignment: .leading) {
-                    ForEach(ChatModel.allCases, id: \.self) { model in
-                        Toggle(isOn: Binding(
-                            get: { selectedModels.contains(model) },
-                            set: { isOn in
-                                if isOn {
-                                    selectedModels.insert(model)
-                                } else {
-                                    selectedModels.remove(model)
+                    ForEach(enabledModels, id: \.id) { modelInfo in
+                        if let provider = ModelRegistry.shared.getProvider(modelInfo.providerId) {
+                            let chatModel = ChatModel(providerId: provider.id, modelInfoId: modelInfo.id)
+                            Toggle(isOn: Binding(
+                                get: { selectedModels.contains(chatModel) },
+                                set: { isOn in
+                                    if isOn {
+                                        selectedModels.insert(chatModel)
+                                    } else {
+                                        selectedModels.remove(chatModel)
+                                    }
                                 }
+                            )) {
+                                Label(modelInfo.displayName, image: modelInfo.theme.imageName)
                             }
-                        )) {
-                            Label(model.name, image: model.imageName)
+                            .disabled(selectedModels.count == 1 && selectedModels.contains(chatModel))
                         }
-                        .disabled(selectedModels.count == 1 && selectedModels.contains(model))
                     }
                 }
                 .padding(8)
             }        
+        }
+        .onAppear {
+            enabledModels = ModelRegistry.shared.getEnabledModels()
         }
     }
     
@@ -106,6 +125,10 @@ struct ModelMenuPicker: View {
         default:
             return "\(selectedModels.count) Models"
         }
+    }
+    
+    private func sortedSelectedModels() -> [ChatModel] {
+        Array(selectedModels).sorted { $0.name < $1.name }
     }
 }
 

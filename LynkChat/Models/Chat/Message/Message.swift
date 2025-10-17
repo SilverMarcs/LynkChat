@@ -76,10 +76,10 @@ final class Message: Equatable, Identifiable, Hashable {
     }
     
     static func user(content: String, dataFiles: [TypedData] = []) -> Message {
-        Message(
+        return Message(
             role: .user,
             content: content,
-            model: .gemini_flash,
+            model: .init(providerId: UUID(), modelInfoId: UUID()),
             dataFiles: dataFiles,
             tools: nil,
             isReplying: false,
@@ -106,40 +106,6 @@ final class Message: Equatable, Identifiable, Hashable {
 }
 
 extension Message {
-//    func toAPIMessage() -> APIMessage {
-//        var contentItems = [ContentItem]()
-//        
-//        // Process data files
-//        let processedDataFiles = TypedData.processDataFiles(dataFiles)
-//        
-//        // Create tool usage texts
-//        let toolTexts = tools?.map { tool -> String in
-//            return """
-//                Used \(tool.toolName) tool
-//                Arguments: \(tool.args)
-//                Tool Result:
-//                \(tool.result ?? "No result")
-//                """
-//        } ?? []
-//        
-//        // Add the original message content, reasoning (if exists), and tool texts
-//        let messageComponents = [content]
-//            + (reasoning.map { ["Reasoning: \($0)"] } ?? [])
-//            + toolTexts
-//        
-//        let userText = messageComponents
-//            .filter { !$0.isEmpty }
-//            .joined(separator: "\n\n")
-//        
-//        if !userText.isEmpty {
-//            contentItems.append(.text(userText))
-//        }
-//        
-//        contentItems.append(contentsOf: processedDataFiles)
-//        
-//        return APIMessage(role: role, content: contentItems)
-//    }
-    
     func toChatRequestMessage() -> [ChatRequestMessage] {
         var messageContents = [MessageContent]()
         
