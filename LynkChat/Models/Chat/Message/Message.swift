@@ -165,9 +165,12 @@ extension Message {
             for tool in tools where tool.result != nil {
                 messages.append(ChatRequestMessage(
                     role: .tool,
-                    content: [MessageContent(text: tool.result!)],
+                    content: [MessageContent(text: String(tool.result!.prefix(20000)))],
                     toolCallId: tool.toolCallId
                 ))
+//                if tool.result!.count >= 20000 {
+//                    print("tool result", tool.result)
+//                }
             }
         } else {
             // Regular message without tools
