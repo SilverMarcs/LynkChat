@@ -14,8 +14,6 @@ struct ChatInspector: View {
     @Bindable var chat: Chat
     
     @State var isGeneratingTtile: Bool = false
-    @State var showingDeleteConfirmation: Bool = false
-    @State private var isExportingJSON = false
     @State private var isExportingMarkdown = false
 
     var body: some View {

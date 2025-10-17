@@ -14,7 +14,7 @@ class OpenAIClient {
     let baseURL: String
     let model: String
     
-    init(apiKey: String, baseURL: String = "https://api.openai.com/v1", model: String = "gpt-5-nano") {
+    init(apiKey: String, baseURL: String, model: String) {
         self.apiKey = apiKey
         self.baseURL = baseURL.hasSuffix("/") ? String(baseURL.dropLast()) : baseURL
         self.model = model

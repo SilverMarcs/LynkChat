@@ -10,7 +10,7 @@ import SwiftUI
 struct ModelPicker: View {
     @Binding var selectedModel: ModelInfo
     var label: String = "Model"
-    @State private var enabledModels: [ModelInfo] = []
+    let enabledModels: [ModelInfo] = ModelRegistry.shared.getEnabledModels()
     
     var body: some View {
         Picker(selection: $selectedModel) {
@@ -24,8 +24,5 @@ struct ModelPicker: View {
                 .labelStyle(.titleOnly)
         }
         .menuOrder(.fixed)
-        .onAppear {
-            enabledModels = ModelRegistry.shared.getEnabledModels()
-        }
     }
 }

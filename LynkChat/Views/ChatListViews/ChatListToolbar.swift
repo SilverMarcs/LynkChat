@@ -11,7 +11,7 @@ struct ChatListToolbar: ToolbarContent {
     let chats: [Chat]
     let deleteItems: (IndexSet) -> Void
     @Environment(ChatVM.self) var chatVM
-    @State private var enabledModels: [ModelInfo] = []
+    let enabledModels: [ModelInfo] = ModelRegistry.shared.getEnabledModels()
     
     var body: some ToolbarContent {
         #if os(macOS)
@@ -46,9 +46,6 @@ struct ChatListToolbar: ToolbarContent {
                  chatVM.createNewChat()
              }
              .menuIndicator(.hidden)
-             .onAppear {
-                 enabledModels = ModelRegistry.shared.getEnabledModels()
-             }
          }
     }
 }

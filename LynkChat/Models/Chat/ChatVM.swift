@@ -86,7 +86,6 @@ import Combine
     var isQuickPanelPresented: Bool = false
 
     func getOrCreateQuickPanelChat() -> Chat {
-        // TODO: use generic model here
         if let existingChat = quickPanelChat {
             return existingChat
         }
@@ -101,28 +100,20 @@ import Combine
 
         do {
             let quickChats = try modelContext.fetch(descriptor)
+            let defaults = ChatConfigDefaults()
+            
             if let existingChat = quickChats.first {
                 existingChat.deleteAllMessages()
-                existingChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-                
-                let registry = ModelRegistry.shared
-                let enabledModels = registry.getEnabledModels()
-                if let modelInfo = enabledModels.first {
-                    existingChat.config.model = modelInfo
-                }
+                existingChat.config.systemPrompt = defaults.quickSystemPrompt
+                existingChat.config.model = defaults.quickPanelDefaultModel
                 
                 return existingChat
             } else {
                 let newChat = Chat()
                 newChat.statusId = statusId
                 newChat.status = ChatStatus.quick
-                newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-                
-                let registry = ModelRegistry.shared
-                let enabledModels = registry.getEnabledModels()
-                if let modelInfo = enabledModels.first {
-                    newChat.config.model = modelInfo
-                }
+                newChat.config.systemPrompt = defaults.quickSystemPrompt
+                newChat.config.model = defaults.quickPanelDefaultModel
                 
                 modelContext.insert(newChat)
                 quickPanelChat = newChat
@@ -130,14 +121,13 @@ import Combine
             }
         } catch {
             print("Error fetching or creating quick panel chat: \(error)")
-            // Handle the error appropriately (e.g., show an alert)
-            // For now, return a new chat to prevent the app from crashing
-            // ideally, this should never happen
+            let defaults = ChatConfigDefaults()
             let newChat = Chat()
             newChat.statusId = ChatStatus.quick.id
             newChat.status = ChatStatus.quick
-            newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-            modelContext.insert(newChat)  // Insert into SwiftData
+            newChat.config.systemPrompt = defaults.quickSystemPrompt
+            newChat.config.model = defaults.quickPanelDefaultModel
+            modelContext.insert(newChat)
             quickPanelChat = newChat
             return newChat
         }

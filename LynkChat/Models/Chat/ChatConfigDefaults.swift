@@ -25,6 +25,23 @@ struct ChatConfigDefaults {
         }
     }
     
+    @AppStorage("quickPanelDefaultModelInfoId") private var quickPanelDefaultModelInfoId: String = ""
+    
+    var quickPanelDefaultModel: ModelInfo {
+        get {
+            guard let modelInfoId = UUID(uuidString: quickPanelDefaultModelInfoId) else {
+                return getFirstEnabledModel()
+            }
+            if let modelInfo = ModelRegistry.shared.getModel(modelInfoId) {
+                return modelInfo
+            }
+            return getFirstEnabledModel()
+        }
+        set {
+            quickPanelDefaultModelInfoId = newValue.id.uuidString
+        }
+    }
+    
     private func getFirstEnabledModel() -> ModelInfo {
         guard let first = ModelRegistry.shared.getEnabledModels().first else {
             let models = ModelRegistry.shared.models

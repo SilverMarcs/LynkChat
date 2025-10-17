@@ -23,6 +23,10 @@ struct QuickPanelSettings: View {
                     Text("Access from anywhere in the OS")
                 }
             }
+            
+            Section("Default Model") {
+                ModelPicker(selectedModel: $config.quickPanelDefaultModel, label: "Model")
+            }
                 
             Section("System Prompt") {
                 TextEditor(text: $config.quickSystemPrompt)
