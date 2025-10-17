@@ -12,16 +12,15 @@ import Foundation
 class OpenAIClient {
     let apiKey: String
     let baseURL: String
-    let model: String
     
-    init(apiKey: String, baseURL: String, model: String) {
+    init(apiKey: String, baseURL: String) {
         self.apiKey = apiKey
         self.baseURL = baseURL.hasSuffix("/") ? String(baseURL.dropLast()) : baseURL
-        self.model = model
     }
     
     func streamChatCompletion(
         messages: [ChatRequestMessage],
+        model: String,
         temperature: Double? = 0.3,
         maxTokens: Int? = nil,
         tools: [ChatCompletionRequest.Tool]? = nil,
@@ -123,6 +122,18 @@ class OpenAIClient {
                 }
             }
         }
+    }
+    
+    func sendSingleMessage(messages: [ChatRequestMessage], model: String) async throws -> String {
+        var fullResponse = ""
+        
+        for try await chunk in streamChatCompletion(messages: messages, model: model) {
+            if let content = chunk.choices.first?.delta.content {
+                fullResponse.append(content)
+            }
+        }
+        
+        return fullResponse
     }
     
     // Helper to convert image data to base64 data URL

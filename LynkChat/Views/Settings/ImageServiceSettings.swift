@@ -12,15 +12,15 @@ struct ImageServiceSettings: View {
     
     var body: some View {
         Form {
-            Section {
-                Picker("Default Model", selection: $config.defaultModel) {
+            Section("Default Models") {
+                Picker("Generation Model", selection: $config.defaultModel) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
                     }
                 }
                 
-                Picker("Default Editing Model", selection: $config.defaultEditingModel) {
+                Picker("Editing Model", selection: $config.defaultEditingModel) {
                     ForEach(ImageEditingModel.allCases) { model in
 //                        Label(model.name, image: "model.imageName")
                         Text(model.name)

@@ -22,6 +22,8 @@ nonisolated enum TitleFormatter {
         \("---BEGIN Message---")
         \(conversationsString)
         \("---END Message---")
+        
+        Summarise the above chat to create a title of the topic in 3 words or less. Don't add quotations or any additional characters. Return just the title as is.
         """
     }
 }

@@ -21,8 +21,7 @@ struct GeneralChatSettings: View {
                 TextEditor(text: $config.systemPrompt)
                     .font(.body)
                     .scrollContentBackground(.hidden)
-                    .labelsHidden()
-                    .frame(maxHeight: 275)
+                    .frame(height: 70)
             } header: {
                 HStack {
                     Text("System Prompt")

@@ -30,7 +30,6 @@ struct StreamHandler {
         let client = OpenAIClient(
             apiKey: model.provider.apiKey,
             baseURL: model.provider.baseURL,
-            model: model.modelString
         )
         
         let (openAITools, toolToServer) = await MCPToolAdapter.fetchOpenAITools(enabledServerIds: chat.config.enabledMCPServerIds)
@@ -81,6 +80,7 @@ struct StreamHandler {
         // Stream chat completion
         let stream = client.streamChatCompletion(
             messages: allMessages,
+            model: chat.config.model.modelString,
             temperature: chat.config.temperature.value,
             maxTokens: nil,
             tools: openAITools.isEmpty ? nil : openAITools,

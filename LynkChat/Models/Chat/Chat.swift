@@ -83,10 +83,10 @@ final class Chat: Equatable, Identifiable, Hashable {
             guard let self else { return }
             
             do {
-                if let assistantGroup = currentThread.last {
+//                if let assistantGroup = currentThread.last {
                     let handler = StreamHandler(chat: self, assistant: message, user: user)
                     try await handler.handleRequest()
-                }
+//                }
                 
                 #if !os(macOS)
                 let backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
@@ -97,16 +97,18 @@ final class Chat: Equatable, Identifiable, Hashable {
                     UIApplication.shared.endBackgroundTask(backgroundTaskId)
                 }
                 #endif
-                
-                if AppConfig().autogenTitle {
-                    await generateTitle()
-                }
             } catch {
                 handleError(error)
             }
             
             streamingTask?.cancel()
             streamingTask = nil
+        }
+        
+        if AppConfig().autogenTitle {
+            Task { [weak self] in
+                await self?.generateTitle()
+            }
         }
     }
 
@@ -242,6 +244,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         self.stopStreaming()
     }
     
+    @MainActor
     func generateTitle(forced: Bool = false) async {
         guard status != .quick else { return }
         guard forced || adjustedContext.count <= 2 else { return }
@@ -249,10 +252,26 @@ final class Chat: Equatable, Identifiable, Hashable {
         let formattedPrompt = TitleFormatter.formatMessagesForTitleGeneration(messages: adjustedContext)
         
         do {
-//            let newTitle = try await APIService.basicResponse(prompt: formattedPrompt)
-            self.title = "newTitle"
+            let quickPanelModel = ChatConfigDefaults().quickPanelDefaultModel
+            
+            let userMessage = ChatRequestMessage(
+                role: .user,
+                content: [MessageContent(text: formattedPrompt)]
+            )
+            
+            let client = OpenAIClient(
+                apiKey: quickPanelModel.provider.apiKey,
+                baseURL: quickPanelModel.provider.baseURL
+            )
+            
+            let newTitle = try await client.sendSingleMessage(
+                messages: [userMessage],
+                model: quickPanelModel.modelString
+            )
+            
+            title = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         } catch {
-            await AppLogger.error("Error generating title: \(error)")
+            AppLogger.error("Error generating title: \(error)")
         }
     }
 
