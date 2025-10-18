@@ -183,16 +183,13 @@ struct StreamHandler {
                 continue
             }
             
-            do {
-                let resultJSON = try await MCPToolAdapter.callToolHTTP(
-                    server: server,
-                    name: tool.toolName,
-                    arguments: arguments
-                )
-                assistant.tools?[index].result = resultJSON
-            } catch {
-                assistant.tools?[index].result = "Error: \(error.localizedDescription)"
-            }
+            let resultJSON = try await MCPToolAdapter.callToolHTTP(
+                server: server,
+                name: tool.toolName,
+                arguments: arguments
+            )
+            
+            assistant.tools?[index].result = resultJSON
         }
      }
      

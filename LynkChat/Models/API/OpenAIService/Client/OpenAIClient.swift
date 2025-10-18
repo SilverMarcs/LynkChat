@@ -87,41 +87,46 @@ class OpenAIClient {
                     
                     var buffer = ""
                     
-                    for try await byte in asyncBytes {
-                        let char = Character(UnicodeScalar(byte))
-                        buffer.append(char)
-                        
-                        // SSE format: data: {...}\n\n
-                        if buffer.hasSuffix("\n\n") || buffer.hasSuffix("\r\n\r\n") {
-                            let lines = buffer.components(separatedBy: .newlines)
-                            
-                            for line in lines {
-                                let trimmed = line.trimmingCharacters(in: .whitespaces)
-                                
-                                if trimmed.hasPrefix("data: ") {
-                                    let data = trimmed.dropFirst(6)
-                                    
-                                    if data == "[DONE]" {
-                                        continuation.finish()
-                                        return
-                                    }
-                                    
-                                    if let jsonData = data.data(using: .utf8) {
-                                        do {
-                                            let streamResponse = try JSONDecoder().decode(ChatStreamResponse.self, from: jsonData)
-                                            continuation.yield(streamResponse)
-                                        } catch let decodingError {
-                                            AppLogger.critical("OpenAI client decoding error for model \(model): \(decodingError.localizedDescription)")
-                                            // Skip malformed chunks
-                                            continue
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            buffer = ""
-                        }
-                    }
+                     var dataBuffer = Data()
+
+                     for try await byte in asyncBytes {
+                         dataBuffer.append(byte)
+                         
+                         // Try to decode as UTF-8 so far
+                         if let textChunk = String(data: dataBuffer, encoding: .utf8) {
+                             buffer += textChunk
+                             dataBuffer.removeAll(keepingCapacity: true)
+                             
+                             // Process complete events
+                             if buffer.contains("\n\n") {
+                                 let lines = buffer.components(separatedBy: .newlines)
+                                 for line in lines {
+                                     let trimmed = line.trimmingCharacters(in: .whitespaces)
+                                     
+                                     if trimmed.hasPrefix("data: ") {
+                                         let data = trimmed.dropFirst(6)
+                                         
+                                         if data == "[DONE]" {
+                                             continuation.finish()
+                                             return
+                                         }
+                                         
+                                         if let jsonData = data.data(using: .utf8) {
+                                             do {
+                                                 let streamResponse = try JSONDecoder().decode(ChatStreamResponse.self, from: jsonData)
+                                                 continuation.yield(streamResponse)
+                                             } catch {
+                                                 AppLogger.critical("Decoding error: \(error.localizedDescription)")
+                                                 continue
+                                             }
+                                         }
+                                     }
+                                 }
+                                 buffer = ""
+                             }
+                         }
+                     }
+
                     
                     continuation.finish()
                 } catch let error as OpenAIError {

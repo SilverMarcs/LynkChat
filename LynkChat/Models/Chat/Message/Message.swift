@@ -111,72 +111,63 @@ final class Message: Equatable, Identifiable, Hashable {
 }
 
 extension Message {
-      func toChatRequestMessage() -> [ChatRequestMessage] {
-          var messageContents = [MessageContent]()
-          
-          let userText = content.isEmpty ? "" : content
-          
-          if !userText.isEmpty {
-              messageContents.append(MessageContent(text: userText))
-          }
-          
-          for dataFile in dataFiles {
-              if dataFile.fileType.conforms(to: .text) {
-                  messageContents.append(MessageContent(text: dataFile.formattedTextContent))
-              } else if dataFile.fileType.conforms(to: .image) {
-                  let dataURL = OpenAIClient.imageDataURL(from: dataFile.data, mimeType: dataFile.mimeType)
-                  let imageURL = MessageContent.ImageURL(url: dataURL, detail: nil)
-                  messageContents.append(MessageContent(image: imageURL))
-              } else if dataFile.fileType.conforms(to: .pdf) {
-                  let dataURL = OpenAIClient.pdfDataURL(from: dataFile.data)
-                  let pdfFile = PDFFile(filename: dataFile.fileName, file_data: dataURL)
-                  messageContents.append(MessageContent(file: pdfFile))
-              }
-          }
-          
-          if messageContents.isEmpty {
-              messageContents.append(MessageContent(text: " "))
-          }
-          
-          let messageRole: MessageRole = role == .user ? .user : .assistant
-          var messages: [ChatRequestMessage] = []
-          
-          if role == .assistant, let tools = tools, !tools.isEmpty {
-              let toolCalls = tools.map { tool in
-                  ChatRequestMessage.ToolCallInfo(
-                      id: tool.toolCallId,
-                      type: "function",
-                      function: ChatRequestMessage.ToolCallInfo.FunctionInfo(
-                          name: tool.toolName,
-                          arguments: tool.args
-                      )
-                  )
-              }
-              
-              messages.append(ChatRequestMessage(
-                  role: .assistant,
-                  content: messageContents,
-                  toolCalls: toolCalls,
-                  reasoningDetails: reasoningDetails,
-                  annotations: fileAnnotations
-              ))
-              
-              for tool in tools where tool.result != nil {
-                  messages.append(ChatRequestMessage(
-                      role: .tool,
-                      content: [MessageContent(text: String(tool.result!.prefix(20000)))],
-                      toolCallId: tool.toolCallId
-                  ))
-              }
-          } else {
-              messages.append(ChatRequestMessage(
-                  role: messageRole,
-                  content: messageContents,
-                  reasoningDetails: reasoningDetails,
-                  annotations: fileAnnotations
-              ))
-          }
-          
-          return messages
-      }
+    func toChatRequestMessage() -> [ChatRequestMessage] {
+        var messageContents = [MessageContent]()
+        
+        messageContents.append(MessageContent(text: content))
+        
+        for dataFile in dataFiles {
+            if dataFile.fileType.conforms(to: .text) {
+                messageContents.append(MessageContent(text: dataFile.formattedTextContent))
+            } else if dataFile.fileType.conforms(to: .image) {
+                let dataURL = OpenAIClient.imageDataURL(from: dataFile.data, mimeType: dataFile.mimeType)
+                let imageURL = MessageContent.ImageURL(url: dataURL, detail: nil)
+                messageContents.append(MessageContent(image: imageURL))
+            } else if dataFile.fileType.conforms(to: .pdf) {
+                let dataURL = OpenAIClient.pdfDataURL(from: dataFile.data)
+                let pdfFile = PDFFile(filename: dataFile.fileName, file_data: dataURL)
+                messageContents.append(MessageContent(file: pdfFile))
+            }
+        }
+        
+        var messages: [ChatRequestMessage] = []
+        
+        if role == .assistant, let tools = tools, !tools.isEmpty {
+            let toolCalls = tools.map { tool in
+                ChatRequestMessage.ToolCallInfo(
+                    id: tool.toolCallId,
+                    type: "function",
+                    function: ChatRequestMessage.ToolCallInfo.FunctionInfo(
+                        name: tool.toolName,
+                        arguments: tool.args
+                    )
+                )
+            }
+            
+            messages.append(ChatRequestMessage(
+                role: .assistant,
+                content: messageContents,
+                toolCalls: toolCalls,
+                reasoningDetails: reasoningDetails,
+                annotations: fileAnnotations
+            ))
+            
+            for tool in tools where tool.result != nil {
+                messages.append(ChatRequestMessage(
+                    role: .tool,
+                    content: [MessageContent(text: String(tool.result!.prefix(20000)))],
+                    toolCallId: tool.toolCallId
+                ))
+            }
+        } else {
+            messages.append(ChatRequestMessage(
+                role: .user,
+                content: messageContents,
+                reasoningDetails: reasoningDetails,
+                annotations: fileAnnotations
+            ))
+        }
+        
+        return messages
+    }
 }
