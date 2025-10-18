@@ -127,7 +127,7 @@ class OpenAIClient {
     func sendSingleMessage(messages: [ChatRequestMessage], model: String) async throws -> String {
         var fullResponse = ""
         
-        for try await chunk in streamChatCompletion(messages: messages, model: model) {
+        for try await chunk in streamChatCompletion(messages: messages, model: model, maxTokens: 20) {
             if let content = chunk.choices.first?.delta.content {
                 fullResponse.append(content)
             }

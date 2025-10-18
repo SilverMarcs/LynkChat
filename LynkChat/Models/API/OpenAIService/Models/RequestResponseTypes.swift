@@ -35,37 +35,38 @@ struct ChatCompletionRequest: Codable {
 }
 
 struct ChatStreamResponse: Codable {
-    let id: String?
-    let object: String?
-    let created: Int?
-    let model: String?
-    let choices: [StreamChoice]
-    let usage: Usage?
-    
-    struct StreamChoice: Codable {
-        let index: Int
-        let delta: Delta
-        let finish_reason: String?
-        
-        struct Delta: Codable {
-            let role: String?
-            let content: String?
-            let reasoning: String?
-            let tool_calls: [ToolCall]?
-            
-            struct ToolCall: Codable {
-                let index: Int?
-                let id: String?
-                let type: String?
-                let function: FunctionCall?
-                
-                struct FunctionCall: Codable {
-                    let name: String?
-                    let arguments: String?
-                }
-            }
-        }
-    }
+     let id: String?
+     let object: String?
+     let created: Int?
+     let model: String?
+     let choices: [StreamChoice]
+     let usage: Usage?
+     
+     struct StreamChoice: Codable {
+         let index: Int
+         let delta: Delta
+         let finish_reason: String?
+         
+         struct Delta: Codable {
+             let role: String?
+             let content: String?
+             let reasoning: String?
+             let reasoning_details: [ReasoningDetail]?
+             let tool_calls: [ToolCall]?
+             
+             struct ToolCall: Codable {
+                 let index: Int?
+                 let id: String?
+                 let type: String?
+                 let function: FunctionCall?
+                 
+                 struct FunctionCall: Codable {
+                     let name: String?
+                     let arguments: String?
+                 }
+             }
+         }
+     }
     
     struct Usage: Codable {
         let prompt_tokens: Int?
@@ -76,56 +77,27 @@ struct ChatStreamResponse: Codable {
         struct CompletionTokensDetails: Codable {
             let reasoning_tokens: Int?
         }
-    }
+     }
 }
 
-struct AnyCodable: Codable {
-    let value: Any
-    
-    init(_ value: Any) {
-        self.value = value
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        
-        if let bool = try? container.decode(Bool.self) {
-            value = bool
-        } else if let int = try? container.decode(Int.self) {
-            value = int
-        } else if let double = try? container.decode(Double.self) {
-            value = double
-        } else if let string = try? container.decode(String.self) {
-            value = string
-        } else if let array = try? container.decode([AnyCodable].self) {
-            value = array.map { $0.value }
-        } else if let dictionary = try? container.decode([String: AnyCodable].self) {
-            value = dictionary.mapValues { $0.value }
-        } else {
-            value = NSNull()
-        }
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        
-        switch value {
-        case let bool as Bool:
-            try container.encode(bool)
-        case let int as Int:
-            try container.encode(int)
-        case let double as Double:
-            try container.encode(double)
-        case let string as String:
-            try container.encode(string)
-        case let array as [Any]:
-            try container.encode(array.map { AnyCodable($0) })
-        case let array as [Any]:
-            try container.encode(array.map { AnyCodable($0) })
-        case let dictionary as [String: Any]:
-            try container.encode(dictionary.mapValues { AnyCodable($0) })
-        default:
-            try container.encodeNil()
-        }
-    }
+struct ReasoningDetail: Codable, Equatable, Hashable {
+     enum ReasoningType: String, Codable {
+         case summary = "reasoning.summary"
+         case text = "reasoning.text"
+         case encrypted = "reasoning.encrypted"
+     }
+     
+     let type: ReasoningType
+     let id: String?
+     let format: String?
+     let index: Int?
+     
+     var summary: String?
+     var text: String?
+     let signature: String?
+     var data: String?
+     
+     enum CodingKeys: String, CodingKey {
+         case type, id, format, index, summary, text, signature, data
+     }
 }

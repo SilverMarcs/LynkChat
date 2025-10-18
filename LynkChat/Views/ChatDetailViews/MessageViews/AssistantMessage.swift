@@ -25,8 +25,10 @@ struct AssistantMessage: View {
                     ChatToolView(tools: tools)
                 }
                 
-                if let reason = message.reasoning, !reason.isEmpty {
-                    ReasoningView(reason: reason)
+                if let reasons = message.reasoningDetails {
+                    ForEach(reasons, id: \.index) { reason in
+                        ReasoningView(reason: reason)
+                    }
                 }
             
                 MDView(content: message.content, calculatedHeight: $height)

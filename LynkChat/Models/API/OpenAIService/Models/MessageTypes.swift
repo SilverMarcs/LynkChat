@@ -45,26 +45,28 @@ struct MessageContent: Codable {
 }
 
 struct ChatRequestMessage: Codable {
-    let role: MessageRole
-    let content: [MessageContent]
-    let tool_calls: [ToolCallInfo]?
-    let tool_call_id: String?
-    
-    struct ToolCallInfo: Codable {
-        let id: String
-        let type: String
-        let function: FunctionInfo
-        
-        struct FunctionInfo: Codable {
-            let name: String
-            let arguments: String
-        }
-    }
-    
-    init(role: MessageRole, content: [MessageContent], toolCalls: [ToolCallInfo]? = nil, toolCallId: String? = nil) {
-        self.role = role
-        self.content = content
-        self.tool_calls = toolCalls
-        self.tool_call_id = toolCallId
-    }
+     let role: MessageRole
+     let content: [MessageContent]
+     let tool_calls: [ToolCallInfo]?
+     let tool_call_id: String?
+     let reasoning_details: [ReasoningDetail]?
+     
+     struct ToolCallInfo: Codable {
+         let id: String
+         let type: String
+         let function: FunctionInfo
+         
+         struct FunctionInfo: Codable {
+             let name: String
+             let arguments: String
+         }
+     }
+     
+     init(role: MessageRole, content: [MessageContent], toolCalls: [ToolCallInfo]? = nil, toolCallId: String? = nil, reasoningDetails: [ReasoningDetail]? = nil) {
+         self.role = role
+         self.content = content
+         self.tool_calls = toolCalls
+         self.tool_call_id = toolCallId
+         self.reasoning_details = reasoningDetails
+     }
 }
