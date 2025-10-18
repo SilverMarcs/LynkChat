@@ -31,6 +31,6 @@ struct ModelInfo: Identifiable, Hashable, Codable, Equatable, Sendable, ModelIma
     }
     
     var supportedTypes: Set<UTType> {
-        [.text, .image]
+        [.text, .image, .pdf]
     }
 }

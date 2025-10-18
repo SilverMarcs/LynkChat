@@ -19,27 +19,38 @@ class OpenAIClient {
     }
     
     func streamChatCompletion(
-        messages: [ChatRequestMessage],
-        model: String,
-        temperature: Double? = 0.3,
-        maxTokens: Int? = nil,
-        tools: [ChatCompletionRequest.Tool]? = nil,
-        thinkingBudget: ThinkingBudget = .none
-    ) -> AsyncThrowingStream<ChatStreamResponse, Error> {
-        AsyncThrowingStream { continuation in
-            Task {
-                do {
-                    let reasoning: ChatCompletionRequest.Reasoning? = thinkingBudget != .none ? ChatCompletionRequest.Reasoning(effort: thinkingBudget) : nil
-                    
-                    let request = ChatCompletionRequest(
-                        model: model,
-                        messages: messages,
-                        stream: true,
-                        temperature: temperature,
-                        max_tokens: maxTokens,
-                        tools: tools,
-                        reasoning: reasoning
-                    )
+         messages: [ChatRequestMessage],
+         model: String,
+         temperature: Double? = 0.3,
+         maxTokens: Int? = nil,
+         tools: [ChatCompletionRequest.Tool]? = nil,
+         thinkingBudget: ThinkingBudget = .none,
+     ) -> AsyncThrowingStream<ChatStreamResponse, Error> {
+         AsyncThrowingStream { continuation in
+             Task {
+                 do {
+                     let reasoning: ChatCompletionRequest.Reasoning? = thinkingBudget != .none ? ChatCompletionRequest.Reasoning(effort: thinkingBudget) : nil
+                     
+                     var plugins: [ChatCompletionRequest.Plugin]? = nil
+                     
+                     if self.baseURL.contains("openrouter") {
+                         let engine: PDFEngine = model.lowercased().contains("gemini") ? .native : .pdfText
+                         plugins = [ChatCompletionRequest.Plugin(
+                             id: "file-parser",
+                             pdf: ChatCompletionRequest.Plugin.PDFConfig(engine: engine)
+                         )]
+                     }
+                     
+                     let request = ChatCompletionRequest(
+                         model: model,
+                         messages: messages,
+                         stream: true,
+                         temperature: temperature,
+                         max_tokens: maxTokens,
+                         tools: tools,
+                         reasoning: reasoning,
+                         plugins: plugins
+                     )
                     
                     let url = URL(string: "\(baseURL)/chat/completions")!
                     var urlRequest = URLRequest(url: url)
@@ -137,8 +148,19 @@ class OpenAIClient {
     }
     
     // Helper to convert image data to base64 data URL
-    static func imageDataURL(from data: Data, mimeType: String = "image/jpeg") -> String {
-        let base64 = data.base64EncodedString()
-        return "data:\(mimeType);base64,\(base64)"
-    }
+     static func imageDataURL(from data: Data, mimeType: String = "image/jpeg") -> String {
+         let base64 = data.base64EncodedString()
+         return "data:\(mimeType);base64,\(base64)"
+     }
+     
+     // Helper to convert PDF data to base64 data URL
+     static func pdfDataURL(from data: Data) -> String {
+         let base64 = data.base64EncodedString()
+         return "data:application/pdf;base64,\(base64)"
+     }
+     
+     // Helper to determine PDF engine based on model
+     static func getPDFEngine(for model: String) -> PDFEngine {
+         return model.lowercased().contains("gemini") ? .pdfText : .pdfText
+     }
 }

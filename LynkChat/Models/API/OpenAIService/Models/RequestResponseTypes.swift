@@ -10,28 +10,38 @@ import Foundation
 // MARK: - Request/Response Types
 
 struct ChatCompletionRequest: Codable {
-    let model: String
-    let messages: [ChatRequestMessage]
-    let stream: Bool
-    let temperature: Double?
-    let max_tokens: Int?
-    let tools: [Tool]?
-    let reasoning: Reasoning?
-    
-    struct Tool: Codable {
-        let type: String
-        let function: Function
-        
-        struct Function: Codable {
-            let name: String
-            let description: String?
-            let parameters: [String: AnyCodable]?
-        }
-    }
-    
-    struct Reasoning: Codable {
-        let effort: ThinkingBudget
-    }
+     let model: String
+     let messages: [ChatRequestMessage]
+     let stream: Bool
+     let temperature: Double?
+     let max_tokens: Int?
+     let tools: [Tool]?
+     let reasoning: Reasoning?
+     let plugins: [Plugin]?
+     
+     struct Tool: Codable {
+         let type: String
+         let function: Function
+         
+         struct Function: Codable {
+             let name: String
+             let description: String?
+             let parameters: [String: AnyCodable]?
+         }
+     }
+     
+     struct Reasoning: Codable {
+         let effort: ThinkingBudget
+     }
+     
+     struct Plugin: Codable {
+         let id: String
+         let pdf: PDFConfig
+         
+         struct PDFConfig: Codable {
+             let engine: PDFEngine
+         }
+     }
 }
 
 struct ChatStreamResponse: Codable {
@@ -42,31 +52,36 @@ struct ChatStreamResponse: Codable {
      let choices: [StreamChoice]
      let usage: Usage?
      
-     struct StreamChoice: Codable {
-         let index: Int
-         let delta: Delta
-         let finish_reason: String?
-         
-         struct Delta: Codable {
-             let role: String?
-             let content: String?
-             let reasoning: String?
-             let reasoning_details: [ReasoningDetail]?
-             let tool_calls: [ToolCall]?
-             
-             struct ToolCall: Codable {
-                 let index: Int?
-                 let id: String?
-                 let type: String?
-                 let function: FunctionCall?
-                 
-                 struct FunctionCall: Codable {
-                     let name: String?
-                     let arguments: String?
-                 }
-             }
-         }
-     }
+      struct StreamChoice: Codable {
+          let index: Int
+          let delta: Delta
+          let finish_reason: String?
+          var message: Message?
+          
+          struct Message: Codable {
+              let annotations: [FileAnnotation]?
+          }
+          
+          struct Delta: Codable {
+              let role: String?
+              let content: String?
+              let reasoning: String?
+              let reasoning_details: [ReasoningDetail]?
+              let tool_calls: [ToolCall]?
+              
+              struct ToolCall: Codable {
+                  let index: Int?
+                  let id: String?
+                  let type: String?
+                  let function: FunctionCall?
+                  
+                  struct FunctionCall: Codable {
+                      let name: String?
+                      let arguments: String?
+                  }
+              }
+          }
+      }
     
     struct Usage: Codable {
         let prompt_tokens: Int?

@@ -81,59 +81,63 @@ struct StreamHandler {
              thinkingBudget: chat.config.thinkingBudget
          )
          
-         for try await response in stream {
-             guard let choice = response.choices.first else { continue }
-             
-             if let content = choice.delta.content {
-                 contentBuffer += content
-             }
-             
-              if let reasoningDetails = choice.delta.reasoning_details {
-                  if assistant.reasoningDetails == nil {
-                      assistant.reasoningDetails = []
-                  }
-                  for detail in reasoningDetails {
-                      let key = detail.index ?? 0
-                      if key < assistant.reasoningDetails?.count ?? 0 {
-                          assistant.reasoningDetails?[key] = mergeReasoningDetails(assistant.reasoningDetails![key], detail)
-                      } else {
-                          assistant.reasoningDetails?.append(detail)
+          for try await response in stream {
+              guard let choice = response.choices.first else { continue }
+              
+              if let content = choice.delta.content {
+                  contentBuffer += content
+              }
+              
+               if let reasoningDetails = choice.delta.reasoning_details {
+                   if assistant.reasoningDetails == nil {
+                       assistant.reasoningDetails = []
+                   }
+                   for detail in reasoningDetails {
+                       let key = detail.index ?? 0
+                       if key < assistant.reasoningDetails?.count ?? 0 {
+                           assistant.reasoningDetails?[key] = mergeReasoningDetails(assistant.reasoningDetails![key], detail)
+                       } else {
+                           assistant.reasoningDetails?.append(detail)
+                       }
+                   }
+               }
+              
+              if let usage = response.usage {
+                  user.inputTokens = usage.prompt_tokens ?? 0
+                  assistant.outputTokens = usage.completion_tokens ?? 0
+                  assistant.reasoningTokens = usage.completion_tokens_details?.reasoning_tokens ?? 0
+              }
+              
+              if let annotations = choice.message?.annotations {
+                  assistant.fileAnnotations = annotations
+              }
+              
+              if let toolCalls = choice.delta.tool_calls {
+                  for toolCall in toolCalls {
+                      let index = toolCall.index ?? 0
+                      
+                      if toolCallsAccumulator[index] == nil {
+                          toolCallsAccumulator[index] = (id: nil, name: nil, arguments: nil)
+                      }
+                      
+                      if let id = toolCall.id {
+                          toolCallsAccumulator[index]!.id = id
+                      }
+                      if let name = toolCall.function?.name {
+                          toolCallsAccumulator[index]!.name = (toolCallsAccumulator[index]!.name ?? "") + name
+                      }
+                      if let args = toolCall.function?.arguments {
+                          toolCallsAccumulator[index]!.arguments = (toolCallsAccumulator[index]!.arguments ?? "") + args
                       }
                   }
               }
-             
-             if let usage = response.usage {
-                 user.inputTokens = usage.prompt_tokens ?? 0
-                 assistant.outputTokens = usage.completion_tokens ?? 0
-                 assistant.reasoningTokens = usage.completion_tokens_details?.reasoning_tokens ?? 0
-             }
-             
-             if let toolCalls = choice.delta.tool_calls {
-                 for toolCall in toolCalls {
-                     let index = toolCall.index ?? 0
-                     
-                     if toolCallsAccumulator[index] == nil {
-                         toolCallsAccumulator[index] = (id: nil, name: nil, arguments: nil)
-                     }
-                     
-                     if let id = toolCall.id {
-                         toolCallsAccumulator[index]!.id = id
-                     }
-                     if let name = toolCall.function?.name {
-                         toolCallsAccumulator[index]!.name = (toolCallsAccumulator[index]!.name ?? "") + name
-                     }
-                     if let args = toolCall.function?.arguments {
-                         toolCallsAccumulator[index]!.arguments = (toolCallsAccumulator[index]!.arguments ?? "") + args
-                     }
-                 }
-             }
-             
-             let now = Date()
-             if now.timeIntervalSince(lastUpdateTime) >= updateInterval {
-                 updateUI()
-                 lastUpdateTime = now
-             }
-         }
+              
+              let now = Date()
+              if now.timeIntervalSince(lastUpdateTime) >= updateInterval {
+                  updateUI()
+                  lastUpdateTime = now
+              }
+          }
          
          updateUI()
          
