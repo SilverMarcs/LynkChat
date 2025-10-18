@@ -37,6 +37,7 @@ enum ImageEditingService {
             requestBody = [
                 "prompt": prompt,
                 "images": convertToBase64URLs(previousOutputs),
+                "size": inferredSizeString(from: previousOutputs.first ?? Data()) ?? "2176*3840",
                 "enable_sync_mode": false,
                 "enable_base64_output": true
             ]
@@ -184,5 +185,54 @@ enum ImageEditingService {
         }
         
         throw RuntimeError("Polling timeout after \(maxAttempts) attempts")
+    }
+}
+
+import Foundation
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
+
+extension ImageEditingService {
+    /// Infers aspect-correct size string (e.g. "2176*3840") from image data.
+    /// Both dimensions are clamped to 4096 max.
+    static func inferredSizeString(from imageData: Data) -> String? {
+        #if canImport(UIKit)
+        guard let image = UIImage(data: imageData) else { return nil }
+        let width = image.size.width * image.scale
+        let height = image.size.height * image.scale
+        #elseif canImport(AppKit)
+        guard let image = NSImage(data: imageData),
+              let rep = image.representations.first else { return nil }
+        let width = Double(rep.pixelsWide)
+        let height = Double(rep.pixelsHigh)
+        #endif
+        
+        guard width > 0, height > 0 else { return nil }
+        
+        // Compute aspect ratio
+        let aspect = width / height
+        
+        // Scale so neither dimension exceeds 4096
+        var scaledWidth = width
+        var scaledHeight = height
+        
+        if scaledWidth > 4096 || scaledHeight > 4096 {
+            if aspect >= 1 {
+                scaledWidth = 4096
+                scaledHeight = 4096 / aspect
+            } else {
+                scaledHeight = 4096
+                scaledWidth = 4096 * aspect
+            }
+        }
+        
+        // Round to nearest even integer (some APIs prefer this)
+        let finalW = Int(round(scaledWidth / 2) * 2)
+        let finalH = Int(round(scaledHeight / 2) * 2)
+        
+        return "\(finalW)*\(finalH)"
     }
 }
