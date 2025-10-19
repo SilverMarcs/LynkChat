@@ -32,9 +32,7 @@ struct StreamHandler {
             baseURL: model.baseURL
         )
         
-        let (openAITools, toolToServer) = await MCPToolAdapter.fetchOpenAITools(
-            enabledServerIds: chat.config.enabledMCPServerIds
-        )
+        let (openAITools, toolToServer) = await MCPToolAdapter.fetchOpenAITools(servers: chat.config.enabledMCPServers)
         
         try await streamLoop(
             client: client,

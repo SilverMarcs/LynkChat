@@ -1,13 +1,7 @@
 import Foundation
 
 enum MCPToolAdapter {
-    static func fetchOpenAITools(enabledServerIds: Set<UUID>) async -> ([ChatCompletionRequest.Tool], [String: MCPServer]) {
-        let servers = ChatConfigDefaults().mcpServers.filter {
-            enabledServerIds.contains($0.id) && $0.type == .http && $0.isValid
-        }
-        
-        guard !servers.isEmpty else { return ([], [:]) }
-        
+    static func fetchOpenAITools(servers: [MCPServer]) async -> ([ChatCompletionRequest.Tool], [String: MCPServer]) {
         var allTools: [ChatCompletionRequest.Tool] = []
         var toolToServer: [String: MCPServer] = [:]
         

@@ -1,10 +1,3 @@
-//
-//  OldChatConfig.swift
-//  LynkChat
-//
-//  Created by Zabir Raihan on 06/07/2024.
-//
-
 import Foundation
 import SwiftData
 
@@ -18,24 +11,24 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         self.thinkingBudget = defaults.thinkingBudget
         self.systemPrompt = defaults.systemPrompt
         self.model = defaults.defaultModel
-        self.enabledMCPServerIds = defaults.defaultEnabledMCPServerIds
+        self.enabledMCPServers = defaults.enabledMCPServers
     }
     
     var temperature: Temperature
     var thinkingBudget: ThinkingBudget
     var systemPrompt: String
     var model: ChatModel
-    var enabledMCPServerIds: Set<UUID> = []
+    var enabledMCPServers: [MCPServer] = []
     
     func isMCPServerEnabled(_ serverId: UUID) -> Bool {
-        enabledMCPServerIds.contains(serverId)
+        enabledMCPServers.contains { $0.id == serverId }
     }
     
     mutating func toggleMCPServer(_ serverId: UUID) {
         if isMCPServerEnabled(serverId) {
-            enabledMCPServerIds.remove(serverId)
-        } else {
-            enabledMCPServerIds.insert(serverId)
+            enabledMCPServers.removeAll { $0.id == serverId }
+        } else if let server = ChatConfigDefaults().mcpServers.first(where: { $0.id == serverId }) {
+            enabledMCPServers.append(server)
         }
     }
 }
@@ -47,7 +40,7 @@ extension ChatConfig {
         newConfig.thinkingBudget = self.thinkingBudget
         newConfig.systemPrompt = self.systemPrompt
         newConfig.model = self.model
-        newConfig.enabledMCPServerIds = self.enabledMCPServerIds
+        newConfig.enabledMCPServers = self.enabledMCPServers
         return newConfig
     }
 }

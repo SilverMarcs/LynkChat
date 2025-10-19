@@ -59,14 +59,8 @@ struct ChatConfigDefaults {
         }
     }
     
-    @AppStorage("defaultEnabledMCPServerIdsData") private var defaultEnabledMCPServerIdsData: Data = Data()
-    var defaultEnabledMCPServerIds: Set<UUID> {
-        get {
-            (try? JSONDecoder().decode(Set<UUID>.self, from: defaultEnabledMCPServerIdsData)) ?? []
-        }
-        set {
-            defaultEnabledMCPServerIdsData = (try? JSONEncoder().encode(newValue)) ?? Data()
-        }
+    var enabledMCPServers: [MCPServer] {
+        mcpServers.filter { $0.isEnabled }
     }
     
     @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses fairly concise."

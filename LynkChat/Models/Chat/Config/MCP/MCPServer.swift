@@ -13,18 +13,21 @@ struct MCPServer: Identifiable, Codable, Hashable {
     var type: MCPServerType
     var url: String
     var headers: [String: String]?
-    var tools: [MCPServerTool]    
+    var tools: [MCPServerTool]
+    var isEnabled: Bool = true
     enum MCPServerType: String, Codable, CaseIterable {
         case http = "http"
         var displayName: String { "HTTP" }
     }
     
-    init(name: String, type: MCPServerType = .http, url: String, headers: [String: String]? = nil, tools: [MCPServerTool] = []) {
+    init(id: UUID = UUID(), name: String, type: MCPServerType = .http, url: String, headers: [String: String]? = nil, tools: [MCPServerTool] = [], isEnabled: Bool = true) {
+        self.id = id
         self.name = name
         self.type = type
         self.url = url
         self.headers = headers
         self.tools = tools
+        self.isEnabled = isEnabled
     }
     
     var isValid: Bool {

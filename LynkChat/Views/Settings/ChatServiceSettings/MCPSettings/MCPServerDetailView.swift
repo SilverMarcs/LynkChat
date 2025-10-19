@@ -29,6 +29,7 @@ struct MCPServerDetailView: View {
                         Text(tool.description ?? "No description")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
             }
@@ -37,16 +38,5 @@ struct MCPServerDetailView: View {
         .formStyle(.grouped)
         .navigationTitle("Server Details")
         .toolbarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Toggle(isOn: Binding(
-                    get: { configVM.isServerEnabled(server.id) },
-                    set: { configVM.toggleServerEnabled(server.id, enabled: $0) }
-                )) {
-                    Label("Default", systemImage: "checkmark")
-                        .labelStyle(.titleOnly)
-                }
-            }
-        }
     }
 }
