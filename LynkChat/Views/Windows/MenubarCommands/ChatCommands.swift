@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct ChatCommands: Commands {
-    @Environment(\.modelContext) var modelContext
     @State var config = AppConfig()
     @Environment(ChatVM.self) var chatVM
     @AppStorage("fontSize") var fontSize: Double = Double.defaultFontSize

@@ -11,7 +11,6 @@ import AppIntents
 
 struct ChatListIos: View {
     @Bindable var config = AppSettings.shared
-    @Environment(\.modelContext) var modelContext
     
     var chats: [Chat]
     var deleteItems: (IndexSet) -> Void

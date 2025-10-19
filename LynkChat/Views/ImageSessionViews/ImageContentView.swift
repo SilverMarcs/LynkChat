@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ImageContentView: View {
+    @Environment(\.undoManager) var undoManager
+    @Environment(\.modelContext) var modelContext
+    
     @State var showingInspector: Bool = true
     @State var selection: ImageSession?
     
@@ -25,6 +28,9 @@ struct ImageContentView: View {
                 Text("Select or create an image session")
                     .font(.title)
             }
+        }
+        .onAppear {
+            modelContext.undoManager = undoManager
         }
         .inspector(isPresented: $showingInspector) {
             if let imageSession = selection {

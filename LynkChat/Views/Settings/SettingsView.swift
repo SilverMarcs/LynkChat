@@ -14,6 +14,7 @@ struct SettingsView: View {
         #if os(macOS)
         NavigationSplitView {
             list
+                .navigationSplitViewColumnWidth(min: 220, ideal: 220, max: 220)
         } detail: {
             NavigationStack {
                 selectedCategory.destination

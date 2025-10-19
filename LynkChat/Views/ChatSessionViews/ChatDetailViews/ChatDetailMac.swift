@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ChatDetailMac: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    @Environment(\.modelContext) var modelContext
     var config: AppSettings = AppSettings.shared
     
     var chat: Chat

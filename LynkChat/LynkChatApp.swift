@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 import TipKit
-import AppIntents
 
 @main
 struct LynkChatApp: App {

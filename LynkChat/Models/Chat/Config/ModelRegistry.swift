@@ -31,10 +31,6 @@ final class ModelRegistry: Sendable {
         models.removeAll { $0.id == id }
     }
     
-//    func getModel(_ id: UUID) -> ModelInfo? {
-//        models.first { $0.id == id }
-//    }
-    
     func getEnabledModels() -> [ChatModel] {
         models.filter { $0.isEnabled }
     }
