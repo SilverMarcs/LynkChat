@@ -32,12 +32,11 @@ struct StreamHandler {
             baseURL: model.baseURL
         )
         
-        let (openAITools, toolToServer) = await MCPToolAdapter.fetchOpenAITools(servers: chat.config.enabledMCPServers)
+        let openAITools = await MCPToolAdapter.fetchOpenAITools(servers: chat.config.enabledMCPServers)
         
         try await streamLoop(
             client: client,
             openAITools: openAITools,
-            toolToServer: toolToServer,
             isFollowUp: false
         )
     }
@@ -45,7 +44,6 @@ struct StreamHandler {
     private func streamLoop(
         client: OpenAIClient,
         openAITools: [ChatCompletionRequest.Tool],
-        toolToServer: [String: MCPServer],
         isFollowUp: Bool
     ) async throws {
         var contentBuffer = ""
@@ -167,19 +165,26 @@ struct StreamHandler {
             
             assistant.tools?.append(contentsOf: newChatTools)
             
-            try await executeToolCalls(toolToServer: toolToServer)
+            try await executeToolCalls()
             
             try await streamLoop(
                 client: client,
                 openAITools: openAITools,
-                toolToServer: toolToServer,
                 isFollowUp: true
             )
         }
     }
     
-    private func executeToolCalls(toolToServer: [String: MCPServer]) async throws {
+    private func executeToolCalls() async throws {
         guard let tools = assistant.tools else { return }
+        
+        let serversByToolName = Dictionary(
+            uniqueKeysWithValues: chat.config.enabledMCPServers.flatMap { server in
+                server.tools.map { tool in
+                    (MCPToolAdapter.sanitizeName(tool.name), server)
+                }
+            }
+        )
         
         for (index, tool) in tools.enumerated() {
             if tool.result != nil {
@@ -192,7 +197,7 @@ struct StreamHandler {
                 continue
             }
             
-            guard let server = toolToServer[tool.toolName] else {
+            guard let server = serversByToolName[tool.toolName] else {
                 assistant.tools?[index].result = "Error: No server configured for this tool"
                 continue
             }
