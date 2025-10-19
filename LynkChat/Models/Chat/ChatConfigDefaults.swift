@@ -11,13 +11,13 @@ struct ChatConfigDefaults {
     @AppStorage("defaultModelInfoId") private var defaultModelInfoId: String = ""
     @AppStorage("defaultModelInfoData") private var defaultModelInfoData: Data = Data()
     
-    var defaultModel: ModelInfo {
+    var defaultModel: ChatModel {
         get {
             if !defaultModelInfoData.isEmpty,
-               let model = try? JSONDecoder().decode(ModelInfo.self, from: defaultModelInfoData) {
+               let model = try? JSONDecoder().decode(ChatModel.self, from: defaultModelInfoData) {
                 return model
             }
-            return ModelInfo(modelString: "", name: "No Model", baseURL: "", apiKey: "", isEnabled: false)
+            return ChatModel(modelString: "", name: "No Model", baseURL: "", apiKey: "", isEnabled: false)
         }
         set {
             defaultModelInfoId = newValue.id.uuidString
@@ -30,13 +30,13 @@ struct ChatConfigDefaults {
     @AppStorage("quickPanelDefaultModelInfoId") private var quickPanelDefaultModelInfoId: String = ""
     @AppStorage("quickPanelDefaultModelInfoData") private var quickPanelDefaultModelInfoData: Data = Data()
     
-    var quickPanelDefaultModel: ModelInfo {
+    var quickPanelDefaultModel: ChatModel {
         get {
             if !quickPanelDefaultModelInfoData.isEmpty,
-               let model = try? JSONDecoder().decode(ModelInfo.self, from: quickPanelDefaultModelInfoData) {
+               let model = try? JSONDecoder().decode(ChatModel.self, from: quickPanelDefaultModelInfoData) {
                 return model
             }
-            return ModelInfo(modelString: "", name: "No Model", baseURL: "", apiKey: "", isEnabled: false)
+            return ChatModel(modelString: "", name: "No Model", baseURL: "", apiKey: "", isEnabled: false)
         }
         set {
             quickPanelDefaultModelInfoId = newValue.id.uuidString

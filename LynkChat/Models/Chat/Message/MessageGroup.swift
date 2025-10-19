@@ -49,7 +49,7 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     
     // MARK: - computed message properties
     // TODO: dont really need all these props since we can just use the activeMessage directly and we shudnt expose all these props
-    var model: ModelInfo {
+    var model: ChatModel {
         activeMessage.model
     }
     

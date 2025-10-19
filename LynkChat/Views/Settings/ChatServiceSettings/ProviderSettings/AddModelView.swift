@@ -49,7 +49,7 @@ struct AddModelView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button(role: .confirm) {
-                        let model = ModelInfo(
+                        let model = ChatModel(
                             modelString: modelString,
                             name: name,
                             baseURL: baseURL,

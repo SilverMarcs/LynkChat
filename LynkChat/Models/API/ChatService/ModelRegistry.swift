@@ -6,7 +6,7 @@ final class ModelRegistry: Sendable {
     
     private let modelsKey = "modelInfos"
     
-    var models: [ModelInfo] {
+    var models: [ChatModel] {
         didSet {
             saveModels()
         }
@@ -17,11 +17,11 @@ final class ModelRegistry: Sendable {
         self.loadModels()
     }
     
-    func addModel(_ model: ModelInfo) {
+    func addModel(_ model: ChatModel) {
         models.append(model)
     }
     
-    func updateModel(_ model: ModelInfo) {
+    func updateModel(_ model: ChatModel) {
         if let index = models.firstIndex(where: { $0.id == model.id }) {
             models[index] = model
         }
@@ -35,7 +35,7 @@ final class ModelRegistry: Sendable {
 //        models.first { $0.id == id }
 //    }
     
-    func getEnabledModels() -> [ModelInfo] {
+    func getEnabledModels() -> [ChatModel] {
         models.filter { $0.isEnabled }
     }
     
@@ -53,7 +53,7 @@ final class ModelRegistry: Sendable {
     
     private func loadModels() {
         if let data = defaults.data(forKey: modelsKey),
-           let decoded = try? JSONDecoder().decode([ModelInfo].self, from: data) {
+           let decoded = try? JSONDecoder().decode([ChatModel].self, from: data) {
             self.models = decoded
         }
     }

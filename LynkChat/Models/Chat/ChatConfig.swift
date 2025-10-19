@@ -24,7 +24,7 @@ struct ChatConfig: Identifiable, Codable, Sendable {
     var temperature: Temperature
     var thinkingBudget: ThinkingBudget
     var systemPrompt: String
-    var model: ModelInfo
+    var model: ChatModel
     var enabledMCPServerIds: Set<UUID> = []
     
     func isMCPServerEnabled(_ serverId: UUID) -> Bool {

@@ -1,7 +1,7 @@
 import Foundation
 import UniformTypeIdentifiers
 
-struct ModelInfo: Identifiable, Hashable, Codable, Equatable, Sendable, ModelImageProvider {
+struct ChatModel: Identifiable, Hashable, Codable, Equatable, Sendable, ModelImageProvider {
     var id: UUID
     var modelString: String
     var name: String

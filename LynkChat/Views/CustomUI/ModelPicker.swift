@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ModelPicker: View {
-    @Binding var selectedModel: ModelInfo
+    @Binding var selectedModel: ChatModel
     var label: String = "Model"
     @Environment(ModelRegistry.self) var registry
     

@@ -48,7 +48,7 @@ import Combine
     }
 
     @discardableResult
-    func createNewChat(model: ModelInfo? = nil, delay: Bool = false) -> Chat {
+    func createNewChat(model: ChatModel? = nil, delay: Bool = false) -> Chat {
         let newChat = Chat()
 
         if let model = model {
