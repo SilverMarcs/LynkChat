@@ -16,7 +16,7 @@ class Generation {
     
     var session: ImageSession
     
-    var errorMessage: String = ""
+    var errorMessage: String?
     
     @Relationship(deleteRule: .nullify)
     var config: ImageConfig
@@ -32,82 +32,73 @@ class Generation {
     var mode: GenerationMode = GenerationMode.generation
     
     @Attribute(.ephemeral)
-    var state: GenerationState
+    var isGenerating: Bool = false
     
     @Transient
     var generatingTask: Task<Void, Error>?
 
     init(config: ImageConfig, session: ImageSession) {
-        self.config = config
-        self.session = session
-        self.state = .generating
+         self.config = config
+         self.session = session
     }
     
     @MainActor
     func send() async {
-        state = .generating
+         isGenerating = true
+         errorMessage = nil
 
-        generatingTask = Task { @MainActor in
-            do {
-                let dataObjects: [Data]
-                switch mode {
-                case .generation:
-                    dataObjects = try await ImageGenerationService.generateImages(config: config)
-                case .editing:
-                    let history = session.imageGenerations
-                    dataObjects = try await ImageEditingService.editImages(
-                        using: config.editingModel,
-                        allHistory: history
-                    )
-                }
+         generatingTask = Task { @MainActor in
+             do {
+                 let dataObjects: [Data]
+                 switch mode {
+                 case .generation:
+                     dataObjects = try await ImageGenerationService.generateImages(config: config)
+                 case .editing:
+                     let history = session.imageGenerations
+                     dataObjects = try await ImageEditingService.editImages(
+                         using: config.editingModel,
+                         allHistory: history
+                     )
+                 }
 
-                self.images = dataObjects
-                state = .success
-            } catch {
-                if state != .error {
-                    errorMessage = "\(error.localizedDescription)"
-                    state = .error
-                }
-            }
-        }
+                 self.images = dataObjects
+                 isGenerating = false
+             } catch {
+                 errorMessage = error.localizedDescription
+                 isGenerating = false
+             }
+         }
 
-        do {
-            #if os(macOS)
-            try await generatingTask?.value
-            #else
-            let application = UIApplication.shared
-            let taskId = application.beginBackgroundTask {
-                // Handle expiration of background task here
-            }
+         do {
+             #if os(macOS)
+             try await generatingTask?.value
+             #else
+             let application = UIApplication.shared
+             let taskId = application.beginBackgroundTask {
+                 // Handle expiration of background task here
+             }
 
-            try await generatingTask?.value
+             try await generatingTask?.value
 
-            application.endBackgroundTask(taskId)
-            #endif
-        } catch {
-            errorMessage = error.localizedDescription
-            state = .error
-        }
-    
-        Scroller.scrollToBottom(delay: 0.1)
-    }
+             application.endBackgroundTask(taskId)
+             #endif
+         } catch {
+             errorMessage = error.localizedDescription
+             isGenerating = false
+         }
+     
+        Scroller.scroll(to: .bottom, of: self)
+     }
     
     func stopGenerating() {
-        generatingTask?.cancel()
-        state = .error
-        errorMessage = "Generation was stopped"
+         generatingTask?.cancel()
+         isGenerating = false
+         errorMessage = "Generation was stopped"
     }
     
     func deleteSelf() {
         session.deleteGeneration(self)
     }
-}
-
-// TODO: get rid of this and use vars for laodign and for error
-enum GenerationState: Codable, Sendable {
-    case generating
-    case success
-    case error
 }
 
 enum GenerationMode: String, Codable, Sendable {

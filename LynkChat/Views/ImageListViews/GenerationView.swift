@@ -36,16 +36,15 @@ struct GenerationView: View {
                     AssistantLabel(model: generation.mode == .editing ? generation.config.editingModel : generation.config.model)
                 }
                 
-                if generation.state == .error {
-                    Text(generation.errorMessage)
-                        .foregroundStyle(.white)
-                        .textSelection(.enabled)
+                if let errorMessage = generation.errorMessage {
+                    Text(errorMessage)
                         .foregroundStyle(.red)
+                        .textSelection(.enabled)
                         .padding(.leading, 5)
                         .padding(.top, 1)
 
                 } else {
-                    if generation.state == .generating {
+                    if generation.isGenerating {
 //                        LazyVGrid(columns: gridColumns, alignment: .leading, spacing: spacing) {
                             ForEach(1 ... generation.config.numImages, id: \.self) { image in
                                 ProgressView()
@@ -60,7 +59,7 @@ struct GenerationView: View {
                         }
                     }
                 
-                    if generation.state == .generating {
+                    if generation.isGenerating {
                         Button(role: .destructive) {
                             generation.stopGenerating()
                         } label: {
