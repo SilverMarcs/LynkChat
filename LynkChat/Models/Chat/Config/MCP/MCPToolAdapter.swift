@@ -1,7 +1,7 @@
 import Foundation
 
 enum MCPToolAdapter {
-    static func fetchOpenAITools(servers: [MCPServer]) async -> [ChatCompletionRequest.Tool] {
+    static func fetchOpenAITools(servers: [MCPServer]) -> [ChatCompletionRequest.Tool] {
         var allTools: [ChatCompletionRequest.Tool] = []
         
         for server in servers {
@@ -21,6 +21,7 @@ enum MCPToolAdapter {
             allTools.append(contentsOf: openAITools)
         }
         
+        // TODO: might not be necessary
         var seen = Set<String>()
         let deduped = allTools.filter { tool in
             let name = tool.function.name

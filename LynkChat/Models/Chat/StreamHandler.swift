@@ -18,7 +18,7 @@ struct StreamHandler {
         AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
         
-        try await streamLoop(isFollowUp: false)
+        try await streamLoop(iteration: 0)
         
         assistant.isReplying = false
         
@@ -32,15 +32,14 @@ struct StreamHandler {
     }
     
     // MARK: - Stream Processing with OpenAI Client
-    private func streamLoop(
-        isFollowUp: Bool
-    ) async throws {
+    private func streamLoop(iteration: Int) async throws {
         var contentBuffer = ""
         var toolCallsAccumulator: [Int: (id: String?, name: String?, arguments: String?)] = [:]
         
         let updateInterval: TimeInterval = 0.2
         var lastUpdateTime = Date()
         
+        let isFollowUp = iteration > 0
         let originalContent = isFollowUp ? assistant.content : ""
         
         func updateUI() {
@@ -58,7 +57,15 @@ struct StreamHandler {
         }
         
         let allMessages = buildMessagesWithSystem(messages)
-        let openAITools = await MCPToolAdapter.fetchOpenAITools(servers: chat.config.enabledMCPServers)
+        
+        // After 3 iterations, pass nil for tools to prevent infinite loops
+        let openAITools: [ChatCompletionRequest.Tool]?
+        if iteration >= 3 {
+            openAITools = nil
+        } else {
+            let tools = MCPToolAdapter.fetchOpenAITools(servers: chat.config.enabledMCPServers)
+            openAITools = tools.isEmpty ? nil : tools
+        }
         
         let client = OpenAIClient(
             apiKey: chat.config.model.apiKey,
@@ -70,7 +77,7 @@ struct StreamHandler {
             model: chat.config.model.modelString,
             temperature: chat.config.temperature.value,
             maxTokens: nil,
-            tools: openAITools.isEmpty ? nil : openAITools,
+            tools: openAITools,
             thinkingBudget: chat.config.thinkingBudget
         )
         
@@ -143,7 +150,7 @@ struct StreamHandler {
         
         updateUI()
         
-        // Handle tool execution and follow-up
+        // Handle tool execution and follow-up (only if under iteration limit)
         if !toolCallsAccumulator.isEmpty {
             let newChatTools = toolCallsAccumulator.values.compactMap { toolCall -> ChatTool? in
                 guard let id = toolCall.id, let name = toolCall.name else { return nil }
@@ -162,7 +169,8 @@ struct StreamHandler {
             
             try await executeToolCalls()
             
-            try await streamLoop(isFollowUp: true)
+            // Continue the loop with incremented iteration count
+            try await streamLoop(iteration: iteration + 1)
         }
     }
     
