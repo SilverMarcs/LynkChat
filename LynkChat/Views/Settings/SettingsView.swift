@@ -60,7 +60,7 @@ struct SettingsView: View {
     var listItems: some View {
         Section("Config") {
             #if os(macOS)
-            ForEach([SettingsCategory.general, .quickPanel, .shortcuts], id: \.self) { category in
+            ForEach([SettingsCategory.general, .shortcuts], id: \.self) { category in
                 NavigationLink(value: category) {
                     Label(category.rawValue, systemImage: category.systemImage)
                 }

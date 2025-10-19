@@ -10,11 +10,11 @@ import SwiftUI
 struct ShortcutSettings: View {
     var body: some View {
         Form {
-            LabeledContent {
-                Text("⌥ + Space")
-            } label: {
-                Text("Quick Panel Shortcut")
+            #if os(macOS)
+            ForEach(Shortcut.quickPanelShortcuts, id: \.id) { shortcut in
+                ShortcutRow(shortcut: shortcut)
             }
+            #endif
 
             Section("Chat Interaction") {
                 ForEach(Shortcut.chatInteractionShortcuts, id: \.id) { shortcut in

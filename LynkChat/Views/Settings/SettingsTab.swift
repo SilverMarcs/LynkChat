@@ -9,7 +9,6 @@ import SwiftUI
 
 enum SettingsCategory: String, Hashable, CaseIterable {
     case general = "General"
-    case quickPanel = "Quick Panel"
     case shortcuts = "Shortcuts"
     case audioService = "Audio Service"
     case chatService = "Chat Service"
@@ -19,7 +18,6 @@ enum SettingsCategory: String, Hashable, CaseIterable {
     var systemImage: String {
         switch self {
         case .general: return "gear"
-        case .quickPanel: return "bolt.fill"
         case .shortcuts: return "command"
         case .audioService: return "waveform"
         case .chatService: return "quote.bubble"
@@ -32,7 +30,6 @@ enum SettingsCategory: String, Hashable, CaseIterable {
     var destination: some View {
         switch self {
         case .general: GeneralSettings()
-        case .quickPanel: QuickPanelSettings()
         case .shortcuts: ShortcutSettings()
         case .audioService: AudioServiceSettings()
         case .chatService: ChatServiceSettings()

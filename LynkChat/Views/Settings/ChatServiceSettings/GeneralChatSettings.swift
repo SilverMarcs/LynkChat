@@ -5,8 +5,9 @@ struct GeneralChatSettings: View {
     
     var body: some View {
         Form {
-            Section("Default Model") {
-                ModelPicker(selectedModel: $config.defaultModel, label: "Model")
+            Section("Default Models") {
+                ModelPicker(selectedModel: $config.defaultModel, label: "Chat")
+                ModelPicker(selectedModel: $config.quickPanelDefaultModel, label: "Quick Panel")
             }
             
             Section("Parameters") {
