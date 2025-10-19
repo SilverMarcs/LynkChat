@@ -84,7 +84,7 @@ final class Message: Equatable, Identifiable, Hashable {
         return Message(
             role: .user,
             content: content,
-            model: ModelInfo(providerId: UUID(), modelString: "", name: ""),
+            model: ModelInfo(modelString: "", name: "", baseURL: "", apiKey: ""),
             dataFiles: dataFiles,
             tools: nil,
             isReplying: false,
@@ -146,7 +146,7 @@ extension Message {
             
             messages.append(ChatRequestMessage(
                 role: .assistant,
-                content: messageContents,
+                content: content.isEmpty ? [] : messageContents,
                 toolCalls: toolCalls,
                 reasoningDetails: reasoningDetails,
                 annotations: fileAnnotations
@@ -159,6 +159,13 @@ extension Message {
                     toolCallId: tool.toolCallId
                 ))
             }
+        } else if role == .assistant {
+            messages.append(ChatRequestMessage(
+                role: .assistant,
+                content: messageContents,
+                reasoningDetails: reasoningDetails,
+                annotations: fileAnnotations
+            ))
         } else {
             messages.append(ChatRequestMessage(
                 role: .user,

@@ -10,11 +10,11 @@ import SwiftUI
 struct ModelPicker: View {
     @Binding var selectedModel: ModelInfo
     var label: String = "Model"
-    let enabledModels: [ModelInfo] = ModelRegistry.shared.getEnabledModels()
+    @Environment(ModelRegistry.self) var registry
     
     var body: some View {
         Picker(selection: $selectedModel) {
-            ForEach(enabledModels, id: \.id) { modelInfo in
+            ForEach(registry.getEnabledModels(), id: \.id) { modelInfo in
                 Label(modelInfo.name, image: modelInfo.theme.imageName)
                     .labelStyle(.titleAndIcon)
                     .tag(modelInfo)

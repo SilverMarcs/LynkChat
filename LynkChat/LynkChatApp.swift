@@ -18,6 +18,7 @@ struct LynkChatApp: App {
     
     @State private var chatVM = ChatVM()
     @State private var mcpConfigVM = MCPConfigVM()
+    @State private var modelRegistry = ModelRegistry()
     
     var body: some Scene {
         Group {
@@ -29,6 +30,7 @@ struct LynkChatApp: App {
         }
         .environment(chatVM)
         .environment(mcpConfigVM)
+        .environment(modelRegistry)
         .commands { MenuCommands() }
         .modelContainer(globalContainer)
     }

@@ -9,48 +9,41 @@ import SwiftUI
 
 struct ChatConfigDefaults {
     @AppStorage("defaultModelInfoId") private var defaultModelInfoId: String = ""
+    @AppStorage("defaultModelInfoData") private var defaultModelInfoData: Data = Data()
     
     var defaultModel: ModelInfo {
         get {
-            guard let modelInfoId = UUID(uuidString: defaultModelInfoId) else {
-                return getFirstEnabledModel()
+            if !defaultModelInfoData.isEmpty,
+               let model = try? JSONDecoder().decode(ModelInfo.self, from: defaultModelInfoData) {
+                return model
             }
-            if let modelInfo = ModelRegistry.shared.getModel(modelInfoId) {
-                return modelInfo
-            }
-            return getFirstEnabledModel()
+            return ModelInfo(modelString: "", name: "No Model", baseURL: "", apiKey: "", isEnabled: false)
         }
         set {
             defaultModelInfoId = newValue.id.uuidString
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                defaultModelInfoData = encoded
+            }
         }
     }
     
     @AppStorage("quickPanelDefaultModelInfoId") private var quickPanelDefaultModelInfoId: String = ""
+    @AppStorage("quickPanelDefaultModelInfoData") private var quickPanelDefaultModelInfoData: Data = Data()
     
     var quickPanelDefaultModel: ModelInfo {
         get {
-            guard let modelInfoId = UUID(uuidString: quickPanelDefaultModelInfoId) else {
-                return getFirstEnabledModel()
+            if !quickPanelDefaultModelInfoData.isEmpty,
+               let model = try? JSONDecoder().decode(ModelInfo.self, from: quickPanelDefaultModelInfoData) {
+                return model
             }
-            if let modelInfo = ModelRegistry.shared.getModel(modelInfoId) {
-                return modelInfo
-            }
-            return getFirstEnabledModel()
+            return ModelInfo(modelString: "", name: "No Model", baseURL: "", apiKey: "", isEnabled: false)
         }
         set {
             quickPanelDefaultModelInfoId = newValue.id.uuidString
-        }
-    }
-    
-    private func getFirstEnabledModel() -> ModelInfo {
-        guard let first = ModelRegistry.shared.getEnabledModels().first else {
-            let models = ModelRegistry.shared.models
-            if let model = models.first {
-                return model
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                quickPanelDefaultModelInfoData = encoded
             }
-            return ModelInfo(providerId: UUID(), modelString: "", name: "")
         }
-        return first
     }
     
     @AppStorage("temperature") var temperature: Temperature = .balanced

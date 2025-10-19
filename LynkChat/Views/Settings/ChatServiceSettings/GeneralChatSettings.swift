@@ -35,6 +35,7 @@ struct GeneralChatSettings: View {
                 }
             }
         }
+        .navigationTitle("Chat Settings")
         .formStyle(.grouped)
     }
 }

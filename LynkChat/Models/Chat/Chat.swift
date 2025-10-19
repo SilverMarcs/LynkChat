@@ -260,8 +260,8 @@ final class Chat: Equatable, Identifiable, Hashable {
             )
             
             let client = OpenAIClient(
-                apiKey: quickPanelModel.provider.apiKey,
-                baseURL: quickPanelModel.provider.baseURL
+                apiKey: quickPanelModel.apiKey,
+                baseURL: quickPanelModel.baseURL
             )
             
             let newTitle = try await client.sendSingleMessage(

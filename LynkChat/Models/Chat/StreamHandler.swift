@@ -28,8 +28,8 @@ struct StreamHandler {
     private func processStreamWithOpenAI() async throws {
         let model = chat.config.model
         let client = OpenAIClient(
-            apiKey: model.provider.apiKey,
-            baseURL: model.provider.baseURL
+            apiKey: model.apiKey,
+            baseURL: model.baseURL
         )
         
         let (openAITools, toolToServer) = await MCPToolAdapter.fetchOpenAITools(
@@ -161,6 +161,10 @@ struct StreamHandler {
                     toolName: name,
                     args: toolCall.arguments ?? "{}"
                 )
+            }
+            
+            if assistant.tools == nil {
+                assistant.tools = []
             }
             
             assistant.tools?.append(contentsOf: newChatTools)

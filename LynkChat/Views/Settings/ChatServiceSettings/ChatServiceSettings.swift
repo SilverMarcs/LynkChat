@@ -5,7 +5,7 @@ struct ChatServiceSettings: View {
     
     enum ChatServiceTab: String, CaseIterable {
         case general = "General"
-        case providers = "Models"
+        case models = "Models"
         case mcp = "MCP"
     }
     
@@ -14,8 +14,8 @@ struct ChatServiceSettings: View {
             switch selectedTab {
             case .general:
                 GeneralChatSettings()
-            case .providers:
-                ProvidersSettings()
+            case .models:
+                ModelSettings()
             case .mcp:
                 MCPServerManagementView()
             }

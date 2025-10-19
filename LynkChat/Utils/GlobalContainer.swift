@@ -14,6 +14,8 @@ let globalContainer: ModelContainer = {
         Chat.self,
         Message.self,
         MessageGroup.self,
+        
+        ImageSession.self,
         Generation.self,
     ])
     
@@ -22,7 +24,12 @@ let globalContainer: ModelContainer = {
     do {
         let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
 //        try container.mainContext.delete(model: ImageSession.self)
+//        try container.mainContext.delete(model: Generation.self)
+        
 //        try container.mainContext.delete(model: Chat.self)
+//        try container.mainContext.delete(model: Message.self)
+//        try container.mainContext.delete(model: MessageGroup.self)
+        
         let modelContext = container.mainContext
         
         // fetch chats with temporary status

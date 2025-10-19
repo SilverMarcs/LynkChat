@@ -103,6 +103,7 @@ class Generation {
     }
 }
 
+// TODO: get rid of this and use vars for laodign and for error
 enum GenerationState: Codable, Sendable {
     case generating
     case success

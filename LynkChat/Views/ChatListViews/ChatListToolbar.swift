@@ -11,7 +11,7 @@ struct ChatListToolbar: ToolbarContent {
     let chats: [Chat]
     let deleteItems: (IndexSet) -> Void
     @Environment(ChatVM.self) var chatVM
-    let enabledModels: [ModelInfo] = ModelRegistry.shared.getEnabledModels()
+    @Environment(ModelRegistry.self) var registry
     
     var body: some ToolbarContent {
         #if os(macOS)
@@ -32,7 +32,7 @@ struct ChatListToolbar: ToolbarContent {
         
          ToolbarItem {
              Menu {
-                 ForEach(enabledModels, id: \.id) { modelInfo in
+                 ForEach(registry.getEnabledModels(), id: \.id) { modelInfo in
                      Button {
                          chatVM.createNewChat(model: modelInfo)
                      } label: {

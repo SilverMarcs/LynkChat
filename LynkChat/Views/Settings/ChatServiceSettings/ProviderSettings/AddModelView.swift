@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct AddModelView: View {
-    let providerId: UUID
-    @State private var registry = ModelRegistry.shared
+    @Environment(ModelRegistry.self) var registry
+    @Environment(\.dismiss) var dismiss
+    
     @State private var name = ""
     @State private var modelString = ""
+    @State private var baseURL = ""
+    @State private var apiKey = ""
     @State private var selectedTheme: ModelTheme = .openai
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack {
@@ -21,6 +23,8 @@ struct AddModelView: View {
                 Section("Model Details") {
                     TextField("Display Name", text: $name)
                     TextField("Model String", text: $modelString)
+                    TextField("Base URL", text: $baseURL)
+                    SecureField("API Key", text: $apiKey)
                 }
                 
                 Section("Theme") {
@@ -46,20 +50,21 @@ struct AddModelView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(role: .confirm) {
                         let model = ModelInfo(
-                            providerId: providerId,
                             modelString: modelString,
                             name: name,
+                            baseURL: baseURL,
+                            apiKey: apiKey,
                             theme: selectedTheme
                         )
                         registry.addModel(model)
                         dismiss()
                     } label: {
                         Label("Add", systemImage: "checkmark")
-                        #if os(macOS)
-                            .labelStyle(.titleOnly)
-                        #endif
+//                        #if os(macOS)
+//                            .labelStyle(.titleOnly)
+//                        #endif
                     }
-                    .disabled(name.isEmpty || modelString.isEmpty)
+                    .disabled(name.isEmpty || modelString.isEmpty || baseURL.isEmpty || apiKey.isEmpty)
                 }
             }
         }
