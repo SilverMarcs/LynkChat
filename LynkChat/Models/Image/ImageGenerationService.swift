@@ -20,7 +20,7 @@ enum NanoBananaGenerator {
         let body: [String: Any] = [
             "prompt": prompt,
             "aspect_ratio": "9:16",
-            "output_format": "png",
+            "output_format": "jpeg",
             "enable_base64_output": true,
             "enable_sync_mode": true
         ]
