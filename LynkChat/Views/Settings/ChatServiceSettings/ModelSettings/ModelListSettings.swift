@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ModelSettings: View {
+struct ModelListSettings: View {
     @State private var showAddModel = false
     @State private var selectedModel: ChatModel?
     @Environment(ModelRegistry.self) var registry
@@ -57,6 +57,6 @@ struct ModelSettings: View {
 }
 
 #Preview {
-    ModelSettings()
+    ModelListSettings()
         .environment(ModelRegistry())
 }

@@ -15,11 +15,12 @@ struct ChatServiceSettings: View {
             case .general:
                 GeneralChatSettings()
             case .models:
-                ModelSettings()
+                ModelListSettings()
             case .mcp:
                 MCPServerManagementView()
             }
         }
+        .toolbarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Picker("Settings", selection: $selectedTab) {

@@ -65,7 +65,7 @@ struct ChatDetailMobile: View {
 //            }
             .scrollDismissesKeyboard(.interactively)
             .safeAreaBar(edge: .bottom) {
-                InputArea(chat: chat)
+                IosInputArea(chat: chat)
             }
             .navigationTitle(chat.config.model.name)
             .toolbarTitleMenu {

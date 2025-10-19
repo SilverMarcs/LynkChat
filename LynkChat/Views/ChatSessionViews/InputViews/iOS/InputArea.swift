@@ -8,7 +8,7 @@
 import SwiftUI
 import TipKit
 
-struct InputArea: View {
+struct IosInputArea: View {
     var chat: Chat
     
     var body: some View {

@@ -24,6 +24,18 @@ struct InputEditor: View {
                 .frame(maxHeight: 350)
                 .fixedSize(horizontal: false, vertical: true)
                 .scrollContentBackground(.hidden)
+            // ios
+//                .onSubmit {
+//                    if config.enterToSend {
+//                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//                        Task {
+//                            await chat.sendInput()
+//                        }
+//                    } else {
+//                        chat.inputManager.prompt += "\n"
+//                    }
+//                }
+            // macos
 //                .apply {
 //                    if config.enterToSend {
 //                        $0.onChange(of: chat.inputManager.prompt) { oldValue, newValue in

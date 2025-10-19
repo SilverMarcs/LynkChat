@@ -19,7 +19,6 @@ struct MCPServerManagementView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("MCP Servers")
-        .toolbarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { showingAddServer = true }) {

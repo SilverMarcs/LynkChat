@@ -22,14 +22,13 @@ struct ImageServiceSettings: View {
                 
                 Picker("Editing Model", selection: $config.defaultEditingModel) {
                     ForEach(ImageEditingModel.allCases) { model in
-//                        Label(model.name, image: "model.imageName")
-                        Text(model.name)
+                        Label(model.name, image: model.imageName)
                             .tag(model)
                     }
                 }
             }
             
-            Section(header: Text("Default Parameters")) {
+            Section("Default Parameters") {
                 Stepper(
                     label,
                     value: Binding<Double>(

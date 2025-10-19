@@ -9,8 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct GeneralSettings: View {
-    @Environment(\.modelContext) var modelContext
-    
     @State var config = AppConfig()
     
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false

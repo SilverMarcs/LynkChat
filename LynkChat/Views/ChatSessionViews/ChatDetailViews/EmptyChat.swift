@@ -35,7 +35,7 @@ struct EmptyChat: View {
                 .opacity(0.9)
             
             VStack {
-                InputArea(chat: chat)
+                MacInputArea(chat: chat)
                     .matchedGeometryEffect(id: "input", in: namespace)
                     .multilineTextAlignment(.leading)
                 

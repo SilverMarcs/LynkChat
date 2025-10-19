@@ -1,5 +1,5 @@
 //
-//  InputArea.swift
+//  MacInputArea.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 19/12/2024.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import TipKit
 
-struct InputArea: View {
+struct MacInputArea: View {
     @Bindable var chat: Chat
 
     @FocusState var isFocused: FocusedField?

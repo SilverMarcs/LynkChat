@@ -50,7 +50,7 @@ struct ChatDetailMac: View {
             }
             .safeAreaBar(edge: .bottom) {
                 if !chat.isEmpty && chat.status != .quick {
-                    InputArea(chat: chat)
+                    MacInputArea(chat: chat)
                         .matchedGeometryEffect(id: "input", in: inputNS)
                 }
             }

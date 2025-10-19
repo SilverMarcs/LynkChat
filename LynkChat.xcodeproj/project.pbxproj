@@ -53,53 +53,58 @@
 				Utils/HotKeyManager.swift = (
 					macos,
 				);
-				Views/ChatDetailViews/ChatDetailMac.swift = (
+				Views/ChatSessionViews/ChatDetailViews/ChatDetailMac.swift = (
 					macos,
 				);
-				Views/ChatDetailViews/ChatDetailMobile.swift = (
+				Views/ChatSessionViews/ChatDetailViews/ChatDetailMobile.swift = (
 					ios,
 					xros,
 				);
-				Views/ChatDetailViews/ChatToolbar.swift = (
+				Views/ChatSessionViews/ChatDetailViews/ChatToolbar.swift = (
 					macos,
 				);
-				Views/ChatDetailViews/MessageViews/TextSelectionView.swift = (
-					ios,
-					xros,
-				);
-				Views/ChatDetailViews/PasteHandler.swift = (
+				Views/ChatSessionViews/ChatDetailViews/EmptyChat.swift = (
 					macos,
 				);
-				Views/ChatListViews/ChatListCards.swift = (
+				Views/ChatSessionViews/ChatDetailViews/MessageViews/TextSelectionView.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatSessionViews/ChatDetailViews/PasteHandler.swift = (
 					macos,
 				);
-				Views/ChatListViews/ChatListIos.swift = (
-					ios,
-					xros,
-				);
-				Views/ChatListViews/ChatListMac.swift = (
+				Views/ChatSessionViews/ChatListViews/ChatContentView.swift = (
 					macos,
 				);
-				Views/InputViews/iOS/CameraView.swift = (
-					ios,
-					xros,
-				);
-				Views/InputViews/iOS/ExpandedSearchView.swift = (
-					ios,
-					xros,
-				);
-				Views/InputViews/iOS/InputArea.swift = (
-					ios,
-					xros,
-				);
-				Views/InputViews/iOS/InputEditor.swift = (
-					ios,
-					xros,
-				);
-				Views/InputViews/macOS/InputArea.swift = (
+				Views/ChatSessionViews/ChatListViews/ChatListCards.swift = (
 					macos,
 				);
-				Views/InputViews/macOS/InputEditor.swift = (
+				Views/ChatSessionViews/ChatListViews/ChatListIos.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatSessionViews/ChatListViews/ChatListMac.swift = (
+					macos,
+				);
+				Views/ChatSessionViews/InputViews/iOS/CameraView.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatSessionViews/InputViews/iOS/ExpandedSearchView.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatSessionViews/InputViews/iOS/InputArea.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatSessionViews/InputViews/macOS/MacInputArea.swift = (
+					macos,
+				);
+				Views/ChatSessionViews/InputViews/macOS/MacInputEditor.swift = (
+					macos,
+				);
+				Views/ImageSessionViews/ImageContentView.swift = (
 					macos,
 				);
 				Views/Onboarding/PermissionsOnboarding.swift = (
@@ -112,14 +117,11 @@
 				Views/Windows/AboutWindow.swift = (
 					macos,
 				);
-				Views/Windows/AppDelegate/AppDelegate.swift = (
+				Views/Windows/AppDelegate.swift = (
 					ios,
 					xros,
 				);
 				Views/Windows/AudioWindow.swift = (
-					macos,
-				);
-				Views/Windows/ChatContentView.swift = (
 					macos,
 				);
 				Views/Windows/ChatWindow.swift = (
@@ -131,9 +133,6 @@
 				Views/Windows/IOSWindow.swift = (
 					ios,
 					xros,
-				);
-				Views/Windows/ImageContentView.swift = (
-					macos,
 				);
 				Views/Windows/ImageWindow.swift = (
 					macos,
