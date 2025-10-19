@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct ChatConfigDefaults {
-    @AppStorage("defaultModelInfoId") private var defaultModelInfoId: String = ""
     @AppStorage("defaultModelInfoData") private var defaultModelInfoData: Data = Data()
-    
     var defaultModel: ChatModel {
         get {
             if !defaultModelInfoData.isEmpty,
@@ -20,16 +18,13 @@ struct ChatConfigDefaults {
             return ChatModel(modelString: "", name: "No Model", baseURL: "", apiKey: "", isEnabled: false)
         }
         set {
-            defaultModelInfoId = newValue.id.uuidString
             if let encoded = try? JSONEncoder().encode(newValue) {
                 defaultModelInfoData = encoded
             }
         }
     }
     
-    @AppStorage("quickPanelDefaultModelInfoId") private var quickPanelDefaultModelInfoId: String = ""
     @AppStorage("quickPanelDefaultModelInfoData") private var quickPanelDefaultModelInfoData: Data = Data()
-    
     var quickPanelDefaultModel: ChatModel {
         get {
             if !quickPanelDefaultModelInfoData.isEmpty,
@@ -39,7 +34,6 @@ struct ChatConfigDefaults {
             return ChatModel(modelString: "", name: "No Model", baseURL: "", apiKey: "", isEnabled: false)
         }
         set {
-            quickPanelDefaultModelInfoId = newValue.id.uuidString
             if let encoded = try? JSONEncoder().encode(newValue) {
                 quickPanelDefaultModelInfoData = encoded
             }
@@ -50,7 +44,6 @@ struct ChatConfigDefaults {
     @AppStorage("thinkingBudget") var thinkingBudget: ThinkingBudget = .none
     
     @AppStorage("mcpServersData") private var mcpServersData: Data = Data()
-    
     var mcpServers: [MCPServer] {
         get {
             guard !mcpServersData.isEmpty,
