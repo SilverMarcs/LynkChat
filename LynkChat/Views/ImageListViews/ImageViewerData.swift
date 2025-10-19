@@ -29,7 +29,7 @@ struct ImageViewerData: View {
                     }
                     .buttonStyle(.glass)
                     .buttonBorderShape(.circle)
-                    .controlSize(.large)
+                    .controlSize(.extraLarge)
                     .padding(10)
             }
         }
