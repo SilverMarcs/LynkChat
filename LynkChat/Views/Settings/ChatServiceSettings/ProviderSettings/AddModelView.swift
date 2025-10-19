@@ -11,11 +11,32 @@ struct AddModelView: View {
     @Environment(ModelRegistry.self) var registry
     @Environment(\.dismiss) var dismiss
     
+    var modelToEdit: ChatModel?
+    
     @State private var name = ""
     @State private var modelString = ""
     @State private var baseURL = ""
     @State private var apiKey = ""
     @State private var selectedTheme: ModelTheme = .openai
+    
+    private let isEditing: Bool
+    private let buttonTitle: String
+    private let navTitle: String
+    
+    init(modelToEdit: ChatModel? = nil) {
+        self.modelToEdit = modelToEdit
+        self.isEditing = modelToEdit != nil
+        self.buttonTitle = modelToEdit != nil ? "Save" : "Add"
+        self.navTitle = modelToEdit != nil ? "Edit Model" : "Add Model"
+        
+        if let model = modelToEdit {
+            _name = State(initialValue: model.name)
+            _modelString = State(initialValue: model.modelString)
+            _baseURL = State(initialValue: model.baseURL)
+            _apiKey = State(initialValue: model.apiKey)
+            _selectedTheme = State(initialValue: model.theme)
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -38,7 +59,7 @@ struct AddModelView: View {
                     .pickerStyle(.menu)
                 }
             }
-            .navigationTitle("Add Model")
+            .navigationTitle(navTitle)
             .formStyle(.grouped)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -49,24 +70,38 @@ struct AddModelView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button(role: .confirm) {
-                        let model = ChatModel(
-                            modelString: modelString,
-                            name: name,
-                            baseURL: baseURL,
-                            apiKey: apiKey,
-                            theme: selectedTheme
-                        )
-                        registry.addModel(model)
-                        dismiss()
+                        saveModel()
                     } label: {
-                        Label("Add", systemImage: "checkmark")
-//                        #if os(macOS)
-//                            .labelStyle(.titleOnly)
-//                        #endif
+                        Label(buttonTitle, systemImage: "checkmark")
                     }
                     .disabled(name.isEmpty || modelString.isEmpty || baseURL.isEmpty || apiKey.isEmpty)
                 }
             }
         }
+    }
+    
+    private func saveModel() {
+        if isEditing, let original = modelToEdit {
+            let updated = ChatModel(
+                id: original.id,
+                modelString: modelString,
+                name: name,
+                baseURL: baseURL,
+                apiKey: apiKey,
+                isEnabled: original.isEnabled,
+                theme: selectedTheme
+            )
+            registry.updateModel(updated)
+        } else {
+            let model = ChatModel(
+                modelString: modelString,
+                name: name,
+                baseURL: baseURL,
+                apiKey: apiKey,
+                theme: selectedTheme
+            )
+            registry.addModel(model)
+        }
+        dismiss()
     }
 }

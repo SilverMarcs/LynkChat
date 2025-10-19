@@ -43,9 +43,9 @@ struct MCPServerDetailView: View {
                     get: { configVM.isServerEnabled(server.id) },
                     set: { configVM.toggleServerEnabled(server.id, enabled: $0) }
                 )) {
-                    Label("Enabled", systemImage: "checkmark")
+                    Label("Default", systemImage: "checkmark")
+                        .labelStyle(.titleOnly)
                 }
-                .labelsHidden()
             }
         }
     }
