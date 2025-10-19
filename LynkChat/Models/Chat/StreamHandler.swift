@@ -18,32 +18,21 @@ struct StreamHandler {
         AppSettings.shared.expandColor = true
         Scroller.scrollToBottom()
         
-        try await processStreamWithOpenAI()
+        try await streamLoop(isFollowUp: false)
         
-        finishResponse()
+        assistant.isReplying = false
+        
+        if assistant.content.isEmpty && assistant.dataFiles.isEmpty && assistant.tools == nil {
+            chat.errorDeleteLast()
+        }
+        
+        withAnimation(.easeInOut(duration: 1)) {
+            AppSettings.shared.expandColor = false
+        }
     }
     
     // MARK: - Stream Processing with OpenAI Client
-    
-    private func processStreamWithOpenAI() async throws {
-        let model = chat.config.model
-        let client = OpenAIClient(
-            apiKey: model.apiKey,
-            baseURL: model.baseURL
-        )
-        
-        let openAITools = await MCPToolAdapter.fetchOpenAITools(servers: chat.config.enabledMCPServers)
-        
-        try await streamLoop(
-            client: client,
-            openAITools: openAITools,
-            isFollowUp: false
-        )
-    }
-    
     private func streamLoop(
-        client: OpenAIClient,
-        openAITools: [ChatCompletionRequest.Tool],
         isFollowUp: Bool
     ) async throws {
         var contentBuffer = ""
@@ -69,7 +58,13 @@ struct StreamHandler {
         }
         
         let allMessages = buildMessagesWithSystem(messages)
+        let openAITools = await MCPToolAdapter.fetchOpenAITools(servers: chat.config.enabledMCPServers)
         
+        let client = OpenAIClient(
+            apiKey: chat.config.model.apiKey,
+            baseURL: chat.config.model.baseURL
+        )
+
         let stream = client.streamChatCompletion(
             messages: allMessages,
             model: chat.config.model.modelString,
@@ -167,11 +162,7 @@ struct StreamHandler {
             
             try await executeToolCalls()
             
-            try await streamLoop(
-                client: client,
-                openAITools: openAITools,
-                isFollowUp: true
-            )
+            try await streamLoop(isFollowUp: true)
         }
     }
     
@@ -238,17 +229,5 @@ struct StreamHandler {
             content: [MessageContent(text: date + "\n" + chat.config.systemPrompt)]
         )
         return [systemMessage] + messages
-    }
-    
-    private func finishResponse() {
-        assistant.isReplying = false
-        
-        if assistant.content.isEmpty && assistant.dataFiles.isEmpty && assistant.tools == nil {
-            chat.errorDeleteLast()
-        }
-        
-        withAnimation(.easeInOut(duration: 1)) {
-            AppSettings.shared.expandColor = false
-        }
     }
 }

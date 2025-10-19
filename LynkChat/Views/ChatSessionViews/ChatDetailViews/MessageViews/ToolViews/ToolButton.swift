@@ -28,10 +28,14 @@ struct ToolButton: View {
         .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
             ScrollView {
-                Text(prettyPrintJSON(chatTool.result ?? chatTool.args))
-                    .textSelection(.enabled)
-                    .font(.system(.body, design: .monospaced))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                LazyVStack(alignment: .leading) {
+                    Text(prettyPrintJSON(chatTool.args))
+                    Divider()
+                    Text(prettyPrintJSON(chatTool.result ?? "Failed to get results"))
+                        .textSelection(.enabled)
+                        .font(.system(.body, design: .monospaced))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
             .presentationDragIndicator(.visible)
             .presentationDetents([.medium])
