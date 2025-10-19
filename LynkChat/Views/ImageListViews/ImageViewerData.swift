@@ -21,18 +21,16 @@ struct ImageViewerData: View {
         SMVImageData(data: data)
             .scaledToFill()
             .frame(width: size, height: size)
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .clipShape(.rect(cornerRadius: 10))
             .overlay(alignment: .topTrailing) {
                 if enableSave {
                     Button(action: saveImage) {
-                        Image(systemName: showCheckmark ? "checkmark.circle.fill" : "square.and.arrow.up.circle.fill")
-                            .font(.largeTitle)
-                            .rotationEffect(.degrees(showCheckmark ? 0 : 180))
-                            .foregroundStyle(.primary, .clear)
-                            .glassEffect(in: .circle)
+                        Image(systemName: showCheckmark ? "checkmark" : "square.and.arrow.down")
                     }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
+                    .controlSize(.large)
                     .padding(10)
-                
             }
         }
     }

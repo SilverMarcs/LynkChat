@@ -18,7 +18,7 @@ struct ImageDetail: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                ForEach(session.imageGenerations.sorted(by: { $0.date < $1.date }), id: \.self) { generation in
+                ForEach(session.imageGenerations.sorted(by: { $0.date < $1.date }), id: \.self.id) { generation in
                     GenerationView(generation: generation)
                         .padding(.bottom)
                 }

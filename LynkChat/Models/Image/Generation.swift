@@ -87,7 +87,7 @@ class Generation {
              isGenerating = false
          }
      
-        Scroller.scroll(to: .bottom, of: self)
+        Scroller.scroll(to: .bottom, of: self.id, delay: 0.2)
      }
     
     func stopGenerating() {

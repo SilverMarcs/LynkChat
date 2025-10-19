@@ -46,7 +46,6 @@ enum ImageSaveUtil {
     
     private static func saveToDownloads(data: Data, completion: @escaping (Bool) -> Void) {
         guard let downloadsDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
-//            print("Unable to access Downloads directory")
             completion(false)
             return
         }

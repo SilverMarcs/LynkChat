@@ -45,13 +45,11 @@ struct GenerationView: View {
 
                 } else {
                     if generation.isGenerating {
-//                        LazyVGrid(columns: gridColumns, alignment: .leading, spacing: spacing) {
-                            ForEach(1 ... generation.config.numImages, id: \.self) { image in
-                                ProgressView()
-                                    .frame(width: size, height: size)
-                                    .background(.background.secondary, in: .rect(cornerRadius: 15))
-                            }
-//                        }
+                        ForEach(1 ... generation.config.numImages, id: \.self) { image in
+                            ProgressView()
+                                .frame(width: size, height: size)
+                                .background(.background.secondary, in: .rect(cornerRadius: 15))
+                        }
                     } else {
                         ForEach(generation.images, id: \.self) { image in
                             ImageViewerData(data: image, size: size)
@@ -75,7 +73,6 @@ struct GenerationView: View {
         .contextMenu {
             Section {
                 Button {
-//                    editPrompt = generation.config.prompt
                     isEditingPrompt = true
                 } label: {
                     Label("Edit", systemImage: "pencil")
