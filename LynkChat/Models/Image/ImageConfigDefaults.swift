@@ -11,7 +11,7 @@ struct ImageConfigDefaults {
     @AppStorage("numImages") var numImages: Int = 1
     @AppStorage("saveToPhotos") var saveToPhotos = true
     
-    @AppStorage("defaultModel") var defaultModel: ImageModel = .flux
+    @AppStorage("defaultModel") var defaultModel: ImageModel = .gpt
     @AppStorage("defaultEditingModel") var defaultEditingModel: ImageEditingModel = .seedream
     
     @AppStorage("wavespeedApiKey") var wavespeedApiKey: String = ""

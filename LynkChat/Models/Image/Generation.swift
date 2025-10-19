@@ -52,7 +52,7 @@ class Generation {
                 let dataObjects: [Data]
                 switch mode {
                 case .generation:
-                    dataObjects = try await APIService.generateImages(config: config)
+                    dataObjects = try await ImageGenerationService.generateImages(config: config)
                 case .editing:
                     let history = session.imageGenerations
                     dataObjects = try await ImageEditingService.editImages(
