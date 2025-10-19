@@ -9,7 +9,7 @@ import SwiftData
 import Foundation
 
 let globalContainer: ModelContainer = {
-    print((URL.applicationSupportDirectory.path(percentEncoded: false)))
+//    print((URL.applicationSupportDirectory.path(percentEncoded: false)))
     let schema = Schema([
         Chat.self,
         Message.self,
@@ -31,17 +31,7 @@ let globalContainer: ModelContainer = {
 //        try container.mainContext.delete(model: MessageGroup.self)
         
         let modelContext = container.mainContext
-        
-        // fetch chats with temporary status
-        var fetchTempChats = FetchDescriptor<Chat>()
-        let tempId = ChatStatus.temporary.id
-        fetchTempChats.predicate = #Predicate { $0.statusId == tempId }
-        if let tempChats = try? modelContext.fetch(fetchTempChats) {
-            for chat in tempChats {
-                modelContext.delete(chat)
-            }
-        }
-        
+
         return container
     } catch {
         fatalError("Could not create ModelContainer: \(error)")

@@ -6,13 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ChatDetailMac: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.modelContext) var modelContext
+    
     var config: AppSettings = AppSettings.shared
-    
+
     var chat: Chat
-    
+
     @Namespace var inputNS
     
     var body: some View {
@@ -51,6 +54,11 @@ struct ChatDetailMac: View {
                 if !chat.isEmpty && chat.status != .quick {
                     MacInputArea(chat: chat)
                         .matchedGeometryEffect(id: "input", in: inputNS)
+                }
+            }
+            .onDisappear {
+                if chat.status == .temporary {
+                    modelContext.delete(chat)
                 }
             }
 //            .onScrollPhaseChange { oldPhase, newPhase in
