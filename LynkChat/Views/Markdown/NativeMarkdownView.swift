@@ -21,7 +21,7 @@ struct ListItem: Equatable, Identifiable {
 
 struct NativeMarkdownView: View {
     private let parts: [MarkdownPart]
-    @State var config = AppConfig()
+    @AppStorage("fontSize") var fontSize: Double = Double.defaultFontSize
     
     init(text: String) {
         self.parts = NativeMarkdownView.parseMarkdown(text)
@@ -35,14 +35,15 @@ struct NativeMarkdownView: View {
                 case .text(let string):
                     Text(LocalizedStringKey(string))
                         .lineSpacing(2)
-                        .font(.system(size: config.fontSize + 1))
+                        .font(.system(size: fontSize + 1))
 
                 case .codeBlock(let code):
                     GroupBox {
                         ScrollView(.horizontal, showsIndicators: false) {
                             Text(code)
-                                .font(.system(size: config.fontSize - 1, weight: .regular, design: .monospaced))
-                                .textSelection(.enabled)                        }
+                                .font(.system(size: fontSize - 1, weight: .regular, design: .monospaced))
+                                .textSelection(.enabled)
+                        }
                     }
                     #if os(macOS)
                     .groupBoxStyle(PlatformGroupBox())
@@ -66,12 +67,12 @@ struct NativeMarkdownView: View {
         // Map Markdown heading levels to SwiftUI fonts
         let font: Font = {
             switch level {
-            case 1: return .system(size: config.fontSize + 10, weight: .bold)
-            case 2: return .system(size: config.fontSize + 8, weight: .bold)
-            case 3: return .system(size: config.fontSize + 6, weight: .semibold)
-            case 4: return .system(size: config.fontSize + 4, weight: .semibold)
-            case 5: return .system(size: config.fontSize + 2, weight: .medium)
-            default: return .system(size: config.fontSize + 1, weight: .medium)
+            case 1: return .system(size: fontSize + 10, weight: .bold)
+            case 2: return .system(size: fontSize + 8, weight: .bold)
+            case 3: return .system(size: fontSize + 6, weight: .semibold)
+            case 4: return .system(size: fontSize + 4, weight: .semibold)
+            case 5: return .system(size: fontSize + 2, weight: .medium)
+            default: return .system(size: fontSize + 1, weight: .medium)
             }
         }()
         Text(LocalizedStringKey(text))
@@ -86,7 +87,7 @@ struct NativeMarkdownView: View {
         VStack(alignment: .leading, spacing: 4) {
             ForEach(items) { item in
                 ListItemView(
-                    config: config,
+                    fontSize: fontSize,
                     item: item,
                     markerViewProvider: { marker in AnyView(markerView(for: marker)) },
                     childViewProvider: { children in AnyView(listView(items: children)) }
@@ -105,7 +106,7 @@ struct NativeMarkdownView: View {
                 .offset(y: -2)
         case .ordered(let n):
             Text("\(n).")
-                .font(.system(size: config.fontSize + 1, weight: .regular, design: .default))
+                .font(.system(size: fontSize + 1, weight: .regular, design: .default))
                 .foregroundStyle(.primary)
         }
     }
@@ -338,7 +339,7 @@ struct NativeMarkdownView: View {
 
 
 struct ListItemView: View {
-    @State var config = AppConfig()
+    let fontSize: Double
     let item: ListItem
     let markerViewProvider: (ListItem.Marker) -> AnyView
     let childViewProvider: ([ListItem]) -> AnyView
@@ -352,7 +353,7 @@ struct ListItemView: View {
 
                 Text(LocalizedStringKey(item.content))
                     .lineSpacing(2)
-                    .font(.system(size: config.fontSize + 1))
+                    .font(.system(size: fontSize + 1))
             }
             if !item.children.isEmpty {
                 childViewProvider(item.children)

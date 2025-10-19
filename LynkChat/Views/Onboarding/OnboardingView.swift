@@ -9,8 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct OnboardingView: View {
-    @State var config = AppConfig()
-    
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
+
     @Namespace private var skipButtonSpace
     
     @State private var currentPage = OnboardingPage.welcome
@@ -28,7 +28,7 @@ struct OnboardingView: View {
             
             if currentPage != .welcome && currentPage != .ready {
                 Button("Skip") {
-                    config.hasCompletedOnboarding = true
+                    hasCompletedOnboarding = true
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
@@ -37,7 +37,7 @@ struct OnboardingView: View {
         }
         .presentationBackground(.background)
         .padding()
-        .interactiveDismissDisabled(!config.hasCompletedOnboarding)
+        .interactiveDismissDisabled(!hasCompletedOnboarding)
         #if os(macOS)
         .frame(width: 500, height: 500)
         #endif
@@ -88,7 +88,7 @@ struct OnboardingView: View {
                 
                 if currentPage == .welcome {
                     Button("Skip") {
-                        config.hasCompletedOnboarding = true
+                        hasCompletedOnboarding = true
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(.secondary)
@@ -104,7 +104,7 @@ struct OnboardingView: View {
                             currentPage = OnboardingPage(rawValue: currentPage.rawValue + 1) ?? .ready
                         }
                     } else {
-                        config.hasCompletedOnboarding = true
+                        hasCompletedOnboarding = true
                     }
                 }
                 .keyboardShortcut(currentPage == .ready ? .defaultAction : nil)

@@ -12,6 +12,7 @@ struct ChatCommands: Commands {
     @Environment(\.modelContext) var modelContext
     @State var config = AppConfig()
     @Environment(ChatVM.self) var chatVM
+    @AppStorage("fontSize") var fontSize: Double = Double.defaultFontSize
     
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
@@ -47,14 +48,14 @@ struct ChatCommands: Commands {
     }
     
     private func increaseFontSize() {
-        config.fontSize = min(config.fontSize + 1, 25)
+        fontSize = min(fontSize + 1, 25)
     }
     
     private func decreaseFontSize() {
-        config.fontSize = max(config.fontSize - 1, 8)
+        fontSize = max(fontSize - 1, 8)
     }
     
     private func resetFontSize() {
-        config.fontSize = 13
+        fontSize = Double.defaultFontSize
     }
 }

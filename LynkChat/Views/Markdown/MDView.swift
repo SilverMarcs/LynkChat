@@ -11,7 +11,7 @@ import SwiftMarkdownView
 #endif
 
 struct MDView: View {
-    @State var config = AppConfig()
+    @AppStorage("fontSize") var fontSize: Double = Double.defaultFontSize
     var content: String
     var calculatedHeight: Binding<CGFloat>? = nil
 
@@ -20,7 +20,7 @@ var body: some View {
     SwiftMarkdownView(
         content,
         calculatedHeight: calculatedHeight,
-        fontSize: CGFloat(config.fontSize),
+        fontSize: CGFloat(fontSize),
         baseURL: "LynkChat Web Content",
     )
     #else

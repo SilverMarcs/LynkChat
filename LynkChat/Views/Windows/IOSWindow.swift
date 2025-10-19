@@ -9,7 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct IOSWindow: Scene {
-    @State var config = AppConfig()
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
+
     @Bindable var settings = AppSettings.shared
     
     @State var selection: ImageSession?
@@ -54,7 +55,7 @@ struct IOSWindow: Scene {
                     SettingsView()
                 }
             }
-            .fullScreenCover(isPresented: .constant(!config.hasCompletedOnboarding)) {
+            .fullScreenCover(isPresented: .constant(!hasCompletedOnboarding)) {
                 OnboardingView()
             }
             .onReceive(NotificationCenter.default.publisher(for: .sharedContentReceived)) { notification in

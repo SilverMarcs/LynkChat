@@ -12,6 +12,9 @@ struct GeneralSettings: View {
     @Environment(\.modelContext) var modelContext
     
     @State var config = AppConfig()
+    
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
+    @AppStorage("fontSize") var fontSize: Double = Double.defaultFontSize
 
     var body: some View {
         Form {
@@ -26,31 +29,39 @@ struct GeneralSettings: View {
                     Text("Restart Onboarding")
                     Spacer()
                     Button("Launch") {
-                        config.hasCompletedOnboarding = false
+                        hasCompletedOnboarding = false
                     }
                 }
             }
             
             Section("Appearance") {
-                Slider(value: $config.fontSize, in: 8...25, step: 1) {
+                Slider(value: $fontSize, in: 8...25, step: 1) {
                     Text("Font Size")
                 } minimumValueLabel: {
                     Text("")
                         .monospacedDigit()
                 } maximumValueLabel: {
-                    Text("\(Int(config.fontSize))")
+                    Text("\(Int(fontSize))")
                         .monospacedDigit()
                 }
             }
             .sectionActions {
                 Button("Reset") {
-                    config.resetFontSize()
+                    resetFontSize()
                 }
             }
         }
         .formStyle(.grouped)
         .navigationTitle("General")
         .toolbarTitleDisplayMode(.inline)
+    }
+    
+    func resetFontSize() {
+        #if os(macOS)
+        fontSize = 13
+        #else
+        fontSize = 17
+        #endif
     }
 }
 
