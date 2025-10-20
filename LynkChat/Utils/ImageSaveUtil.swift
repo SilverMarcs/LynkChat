@@ -19,6 +19,16 @@ enum ImageSaveUtil {
         }
     }
     
+    static func saveImageFromURL(url: URL, completion: @escaping (Bool) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(false)
+                return
+            }
+            saveImage(data: data, completion: completion)
+        }.resume()
+    }
+    
     private static func saveToPhotos(data: Data, completion: @escaping (Bool) -> Void) {
         guard let image = PlatformImage(data: data) else {
             completion(false)

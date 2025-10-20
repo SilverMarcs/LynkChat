@@ -21,8 +21,7 @@ class Generation {
     @Relationship(deleteRule: .nullify)
     var config: ImageConfig
     
-    @Relationship(deleteRule: .cascade)
-    var images: [Data] = []
+    var imageURLs: [URL] = []
 
     // Any user-provided input images used for editing in this step
     @Relationship(deleteRule: .cascade)
@@ -48,25 +47,25 @@ class Generation {
          errorMessage = nil
 
          generatingTask = Task { @MainActor in
-             do {
-                 let dataObjects: [Data]
-                 switch mode {
-                 case .generation:
-                     dataObjects = try await ImageGenerationService.generateImages(config: config)
-                 case .editing:
-                     let history = session.imageGenerations
-                     dataObjects = try await ImageEditingService.editImages(
-                         using: config.editingModel,
-                         allHistory: history
-                     )
-                 }
+              do {
+                  let urlList: [URL]
+                  switch mode {
+                  case .generation:
+                      urlList = try await ImageGenerationService.generateImages(config: config)
+                  case .editing:
+                      let history = session.imageGenerations
+                      urlList = try await ImageEditingService.editImages(
+                          using: config.editingModel,
+                          allHistory: history
+                      )
+                  }
 
-                 self.images = dataObjects
-                 isGenerating = false
-             } catch {
-                 errorMessage = error.localizedDescription
-                 isGenerating = false
-             }
+                  self.imageURLs = urlList
+                  isGenerating = false
+              } catch {
+                  errorMessage = error.localizedDescription
+                  isGenerating = false
+              }
          }
 
          do {

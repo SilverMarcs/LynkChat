@@ -82,7 +82,7 @@ struct EditGenerationView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(role: .confirm) {
                         // inputImages are already set
-                        generation.images = []
+                        generation.imageURLs = []
                         //                    generation.mode = .editing
                         Task { await generation.send() }
                         dismiss()

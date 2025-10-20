@@ -51,9 +51,8 @@ struct GenerationView: View {
                                 .background(.background.secondary, in: .rect(cornerRadius: 15))
                         }
                     } else {
-                        ForEach(generation.images, id: \.self) { image in
-                            ImageViewerData(data: image, size: size)
-                                .backgroundExtensionEffect()
+                        ForEach(generation.imageURLs, id: \.self) { url in
+                            ImageViewer(url: url, size: size)
                         }
                     }
                 
@@ -79,7 +78,7 @@ struct GenerationView: View {
                 }
                 
                 Button {
-                    generation.images = []
+                    generation.imageURLs = []
                     generation.config.model = generation.session.config.model
                     generation.config.editingModel = generation.session.config.editingModel
                     Task { await generation.send() }
