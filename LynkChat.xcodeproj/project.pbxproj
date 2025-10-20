@@ -107,6 +107,13 @@
 				Views/ImageSessionViews/ImageContentView.swift = (
 					macos,
 				);
+				Views/ImageSessionViews/ImageDetailMac.swift = (
+					macos,
+				);
+				Views/ImageSessionViews/ImageDetailMobile.swift = (
+					ios,
+					xros,
+				);
 				Views/Onboarding/PermissionsOnboarding.swift = (
 					ios,
 					xros,

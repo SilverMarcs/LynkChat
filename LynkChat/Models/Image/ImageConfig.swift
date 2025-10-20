@@ -24,5 +24,4 @@ struct ImageConfig: Identifiable, Codable, Sendable {
         self.editingModel = .seedream
         self.numImages = defaults.numImages
     }
-    
 }

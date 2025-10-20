@@ -43,51 +43,69 @@ class Generation {
     
     @MainActor
     func send() async {
-         isGenerating = true
-         errorMessage = nil
+        isGenerating = true
+        errorMessage = nil
 
-         generatingTask = Task { @MainActor in
-              do {
-                  let urlList: [URL]
-                  switch mode {
-                  case .generation:
-                      urlList = try await ImageGenerationService.generateImages(config: config)
-                  case .editing:
-                      let history = session.imageGenerations
-                      urlList = try await ImageEditingService.editImages(
-                          using: config.editingModel,
-                          allHistory: history
-                      )
-                  }
+        generatingTask = Task { @MainActor in
+            do {
+                let urlList: [URL]
+                switch mode {
+                case .generation:
+                    urlList = try await ImageGenerationService.generateImages(config: config)
+                case .editing:
+                    urlList = try await ImageEditingService.editImages(
+                        using: config.editingModel,
+                        prompt: config.prompt,
+                        imageURLs:  getImageListForEditing()
+                    )
+                }
 
-                  self.imageURLs = urlList
-                  isGenerating = false
-              } catch {
-                  errorMessage = error.localizedDescription
-                  isGenerating = false
-              }
-         }
+                self.imageURLs = urlList
+                isGenerating = false
+            } catch {
+                errorMessage = error.localizedDescription
+                isGenerating = false
+            }
+        }
 
-         do {
-             #if os(macOS)
-             try await generatingTask?.value
-             #else
-             let application = UIApplication.shared
-             let taskId = application.beginBackgroundTask {
-                 // Handle expiration of background task here
-             }
+        do {
+            #if os(macOS)
+            try await generatingTask?.value
+            #else
+            let application = UIApplication.shared
+            let taskId = application.beginBackgroundTask {
+                // Handle expiration of background task here
+            }
 
-             try await generatingTask?.value
+            try await generatingTask?.value
 
-             application.endBackgroundTask(taskId)
-             #endif
-         } catch {
-             errorMessage = error.localizedDescription
-             isGenerating = false
-         }
-     
+            application.endBackgroundTask(taskId)
+            #endif
+        } catch {
+            errorMessage = error.localizedDescription
+            isGenerating = false
+        }
+        
         Scroller.scroll(to: .bottom, of: self.id, delay: 0.2)
-     }
+    }
+
+    private func getImageListForEditing() -> [String] {
+        if !inputImages.isEmpty {
+            // Convert Data to base64 strings
+            return inputImages.map { imageData in
+                "data:image/jpeg;base64," + imageData.base64EncodedString()
+            }
+        } else {
+            // Get images from previous generation
+            if let currentIndex = session.imageGenerations.firstIndex(where: { $0.id == self.id }),
+               currentIndex > 0 {
+                let previousGeneration = session.imageGenerations[currentIndex - 1]
+                return previousGeneration.imageURLs.map { $0.absoluteString }
+            } else {
+                return []
+            }
+        }
+    }
     
     func stopGenerating() {
          generatingTask?.cancel()

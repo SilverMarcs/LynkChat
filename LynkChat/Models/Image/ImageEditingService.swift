@@ -8,30 +8,18 @@
 import SwiftUI
 
 enum ImageEditingService {
-    static func editImages(using model: ImageEditingModel, allHistory: [Generation]) async throws -> [URL] {
-        guard let latest = allHistory.last else {
-            throw RuntimeError("No generation history available")
-        }
-
-        let prompt = latest.config.prompt
-        
-        var imageList: [String] = []
-        if allHistory.count >= 2 {
-            let secondLast = allHistory[allHistory.count - 2]
-            imageList = secondLast.imageURLs.map { $0.absoluteString }
-        }
-        
-        if !latest.imageURLs.isEmpty {
-            imageList.append(contentsOf: latest.imageURLs.map { $0.absoluteString })
-        }
-        
+    static func editImages(
+        using model: ImageEditingModel,
+        prompt: String,
+        imageURLs: [String]
+    ) async throws -> [URL] {
         switch model {
         case .seedream:
-            return try await SeedreamV4Editor.edit(prompt: prompt, imageURLs: imageList)
+            return try await SeedreamV4Editor.edit(prompt: prompt, imageURLs: imageURLs)
         case .nanoBanana:
-            return try await NanoBananaEditor.edit(prompt: prompt, imageURLs: imageList)
+            return try await NanoBananaEditor.edit(prompt: prompt, imageURLs: imageURLs)
         case .qwen:
-            return try await QwenEditor.edit(prompt: prompt, imageURLs: imageList)
+            return try await QwenEditor.edit(prompt: prompt, imageURLs: imageURLs)
         }
     }
 }

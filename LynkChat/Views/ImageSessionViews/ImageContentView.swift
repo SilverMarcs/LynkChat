@@ -22,7 +22,7 @@ struct ImageContentView: View {
                 #endif
         } detail: {
             if let imageSession = selection {
-                ImageDetail(session: imageSession)
+                ImageDetailMac(session: imageSession)
                     .id(imageSession.id)
             } else {
                 Text("Select or create an image session")

@@ -67,7 +67,7 @@ struct ImageList: View {
                 toolbar
             }
             .navigationDestination(for: ImageSession.self) { session in
-                ImageDetail(session: session)
+                ImageDetailMobile(session: session)
             }
         }
         #endif
