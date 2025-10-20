@@ -3,12 +3,6 @@ import SwiftUI
 struct ChatServiceSettings: View {
     @State private var selectedTab: ChatServiceTab = .general
     
-    enum ChatServiceTab: String, CaseIterable {
-        case general = "General"
-        case models = "Models"
-        case mcp = "MCP"
-    }
-    
     var body: some View {
         Group {
             switch selectedTab {
@@ -25,11 +19,13 @@ struct ChatServiceSettings: View {
             ToolbarItem(placement: .principal) {
                 Picker("Settings", selection: $selectedTab) {
                     ForEach(ChatServiceTab.allCases, id: \.self) { tab in
-                        Text(tab.rawValue)
+                        Label(tab.rawValue, systemImage: tab.imageName)
                             .tag(tab)
                     }
                 }
                 .pickerStyle(.segmented)
+                .controlSize(.large)
+                .labelStyle(.titleOnly)
             }
         }
     }
@@ -37,4 +33,21 @@ struct ChatServiceSettings: View {
 
 #Preview {
     ChatServiceSettings()
+}
+
+enum ChatServiceTab: String, CaseIterable {
+    case general = "General"
+    case models = "Models"
+    case mcp = "MCP"
+    
+    var imageName: String {
+        switch self {
+        case .general:
+            return "gearshape"
+        case .models:
+            return "cube.box"
+        case .mcp:
+            return "server.rack"
+        }
+    }
 }

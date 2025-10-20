@@ -7,7 +7,9 @@ struct GeneralChatSettings: View {
         Form {
             Section("Default Models") {
                 ModelPicker(selectedModel: $config.defaultModel, label: "Chat")
+                #if os(macOS)
                 ModelPicker(selectedModel: $config.quickPanelDefaultModel, label: "Quick Panel")
+                #endif
             }
             
             Section("Parameters") {

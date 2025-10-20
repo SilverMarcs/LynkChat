@@ -83,19 +83,17 @@ final class Chat: Equatable, Identifiable, Hashable {
             guard let self else { return }
             
             do {
-//                if let assistantGroup = currentThread.last {
-                    let handler = StreamHandler(chat: self, assistant: message, user: user)
-                    try await handler.handleRequest()
-//                }
+                let handler = StreamHandler(chat: self, assistant: message, user: user)
+                try await handler.handleRequest()
                 
                 #if !os(macOS)
                 let backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
                     self?.streamingTask?.cancel()
                 }
 
-                defer {
+//                defer {
                     UIApplication.shared.endBackgroundTask(backgroundTaskId)
-                }
+//                }
                 #endif
             } catch {
                 handleError(error)
