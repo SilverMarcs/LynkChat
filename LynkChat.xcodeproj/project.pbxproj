@@ -10,6 +10,7 @@
 		08073FD02E9C1C5900C99B60 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08073FCF2E9C1C5900C99B60 /* SwiftMediaViewer */; };
 		085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 085E58772E700DD20024AA4B /* SwiftMarkdownView */; };
 		085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 085E587A2E70113F0024AA4B /* SwiftMarkdownView */; };
+		08674E892EA6D112008DA8C0 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08674E882EA6D112008DA8C0 /* SwiftMediaViewer */; };
 		08D203022EA63440006B6A40 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08D203012EA63440006B6A40 /* SwiftMediaViewer */; };
 		08D20B0D2EA6B90C006B6A40 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D20B0C2EA6B90C006B6A40 /* AVKit.framework */; };
 		08DAD9C62E908D3D00BC04A1 /* LynkShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -183,6 +184,7 @@
 				08073FD02E9C1C5900C99B60 /* SwiftMediaViewer in Frameworks */,
 				085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */,
 				08D20B0D2EA6B90C006B6A40 /* AVKit.framework in Frameworks */,
+				08674E892EA6D112008DA8C0 /* SwiftMediaViewer in Frameworks */,
 				085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */,
 				08D203022EA63440006B6A40 /* SwiftMediaViewer in Frameworks */,
 			);
@@ -251,6 +253,7 @@
 				085E587A2E70113F0024AA4B /* SwiftMarkdownView */,
 				08073FCF2E9C1C5900C99B60 /* SwiftMediaViewer */,
 				08D203012EA63440006B6A40 /* SwiftMediaViewer */,
+				08674E882EA6D112008DA8C0 /* SwiftMediaViewer */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -307,7 +310,7 @@
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
 				085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
-				08D203002EA63440006B6A40 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */,
+				08674E872EA6D112008DA8C0 /* XCRemoteSwiftPackageReference "SwiftMediaViewer" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -731,17 +734,18 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		08D203002EA63440006B6A40 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Frameworks/SwiftMediaViewer;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SilverMarcs/SwiftMarkdownView";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		08674E872EA6D112008DA8C0 /* XCRemoteSwiftPackageReference "SwiftMediaViewer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SilverMarcs/SwiftMediaViewer";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -762,6 +766,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */;
 			productName = SwiftMarkdownView;
+		};
+		08674E882EA6D112008DA8C0 /* SwiftMediaViewer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 08674E872EA6D112008DA8C0 /* XCRemoteSwiftPackageReference "SwiftMediaViewer" */;
+			productName = SwiftMediaViewer;
 		};
 		08D203012EA63440006B6A40 /* SwiftMediaViewer */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -76,7 +76,10 @@ struct EditGenerationView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .controlSize(.large)
                 }
+                .listRowBackground(Color.clear)
+                .listRowInsets(.init())
                 
                 Section("Prompt") {
                     TextField("Enter new prompt", text: $generation.config.prompt)

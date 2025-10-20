@@ -25,7 +25,8 @@ struct VideoViewer: View {
             
             if enableSave {
                 Button(action: saveVideo) {
-                    Image(systemName: showCheckmark ? "checkmark" : "square.and.arrow.down")
+                    Image(systemName: showCheckmark ? "checkmark" : "arrow.down")
+                        .frame(width: 12, height: 12)
                 }
                 .buttonStyle(.glass)
                 .buttonBorderShape(.circle)
