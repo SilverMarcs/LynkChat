@@ -42,11 +42,9 @@ class ImageSession {
         
         let generation = Generation(config: config, session: self)
         generation.config.prompt = promptToUse
-        // Attach current input images and decide mode
         generation.inputImages = inputImages
+        generation.mode = config.mode
         imageGenerations.append(generation)
-
-        generation.mode = await ImageModelSelector.selectMode(prompt: promptToUse, history: imageGenerations, hasInputImages: !inputImages.isEmpty)
 
         inputImages.removeAll()
     

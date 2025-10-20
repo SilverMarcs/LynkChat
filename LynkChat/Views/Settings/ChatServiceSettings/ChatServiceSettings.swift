@@ -24,8 +24,10 @@ struct ChatServiceSettings: View {
                     }
                 }
                 .pickerStyle(.segmented)
-                .controlSize(.large)
                 .labelStyle(.titleOnly)
+                #if !os(macOS)
+                .controlSize(.large)
+                #endif
             }
         }
     }

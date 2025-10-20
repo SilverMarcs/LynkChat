@@ -12,7 +12,7 @@ struct ImageDetailMac: View {
     
     var body: some View {
         ScrollViewReader { proxy in
-            ImageDetail(session: session, proxy: proxy)
+            ImageDetailCommon(session: session, proxy: proxy)
                 .navigationTitle(session.title)
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {

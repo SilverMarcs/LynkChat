@@ -13,6 +13,7 @@ struct ImageConfigDefaults {
     
     @AppStorage("defaultModel") var defaultModel: ImageModel = .gpt
     @AppStorage("defaultEditingModel") var defaultEditingModel: ImageEditingModel = .seedream
+    @AppStorage("defaultVideoModel") var defaultVideoModel: VideoGenerationModel = .seedance
     
     @AppStorage("wavespeedApiKey") var wavespeedApiKey: String = ""
 }

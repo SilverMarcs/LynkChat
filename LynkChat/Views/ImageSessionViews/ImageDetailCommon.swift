@@ -1,5 +1,5 @@
 //
-//  ImageDetail.swift
+//  ImageDetailCommon.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 18/07/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ImageDetail: View {
+struct ImageDetailCommon: View {
     var session: ImageSession
     var proxy: ScrollViewProxy
     

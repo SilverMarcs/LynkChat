@@ -68,6 +68,16 @@ struct EditGenerationView: View {
                     .buttonSizing(.flexible)
                 }
                 
+                Section {
+                    Picker("Mode", selection: $generation.session.config.mode) {
+                        ForEach(GenerationMode.allCases) { mode in
+                            Text(mode.rawValue)
+                                .tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+                
                 Section("Prompt") {
                     TextField("Enter new prompt", text: $generation.config.prompt)
                 }

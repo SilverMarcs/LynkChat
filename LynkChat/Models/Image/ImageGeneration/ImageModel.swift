@@ -32,7 +32,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         switch self {
         case .gpt: "openai.symbols"
         case .nanoBanana: "gemini.symbols"
-        case .seedream: "cohere.symbols"
+        case .seedream: "bytedance.symbols"
         }
     }
 
@@ -40,7 +40,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         switch self {
         case .gpt: "#00947A"
         case .nanoBanana: "#E64335"
-        case .seedream: "#6431e2"
+        case .seedream: "#00A8B2"
         }
     }
 }

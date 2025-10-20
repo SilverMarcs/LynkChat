@@ -16,27 +16,24 @@ struct ImageDetailMobile: View {
     
     var body: some View {
         ScrollViewReader { proxy in
-            ImageDetail(session: session, proxy: proxy)
-                .navigationTitle("Models")
+            ImageDetailCommon(session: session, proxy: proxy)
+                .navigationTitle(session.config.mode.rawValue)
                 .toolbarTitleMenu {
-                    Picker("Model", selection: $session.config.model) {
-                        ForEach(ImageModel.allCases) { model in
-                            Label(model.name, image: model.imageName)
-                                .tag(model)
+                    Picker("Mode", selection: $session.config.mode) {
+                        ForEach(GenerationMode.allCases) { mode in
+                            Label(mode.rawValue, systemImage: mode.imageName)
+                                .tag(mode)
                         }
                     }
-                    .labelStyle(.titleAndIcon)
-                    
-                    Picker("Editing Model", selection: $session.config.editingModel) {
-                        ForEach(ImageEditingModel.allCases) { model in
-                            Label(model.name, image: model.imageName)
-                                .tag(model)
-                        }
-                    }
-                    .labelStyle(.titleAndIcon)
                 }
                 .toolbar(.hidden, for: .tabBar)
                 .searchable(text: $session.prompt, isPresented: $isFocused, prompt: "Generate Images")
+                .searchScopes($session.config.mode, activation: .onSearchPresentation) {
+                    ForEach(GenerationMode.allCases) { mode in
+                        Text(mode.rawValue)
+                            .tag(mode)
+                    }
+                }
                 .onSubmit(of: .search) {
                     isFocused = false
                     

@@ -18,13 +18,12 @@ class Generation {
     
     var errorMessage: String?
     
-    @Relationship(deleteRule: .nullify)
+    @Relationship(deleteRule: .cascade)
     var config: ImageConfig
     
     var imageURLs: [URL] = []
+    var videoURLs: [URL] = []
 
-    // Any user-provided input images used for editing in this step
-    @Relationship(deleteRule: .cascade)
     var inputImages: [Data] = []
 
     // Track whether this step is generation or editing
@@ -47,21 +46,28 @@ class Generation {
         errorMessage = nil
 
         generatingTask = Task { @MainActor in
-            do {
-                let urlList: [URL]
-                switch mode {
-                case .generation:
-                    urlList = try await ImageGenerationService.generateImages(config: config)
-                case .editing:
-                    urlList = try await ImageEditingService.editImages(
-                        using: config.editingModel,
-                        prompt: config.prompt,
-                        imageURLs:  getImageListForEditing()
-                    )
-                }
+             do {
+                 let urlList: [URL]
+                 switch mode {
+                 case .generation:
+                     urlList = try await ImageGenerationService.generateImages(config: config)
+                     self.imageURLs = urlList
+                 case .editing:
+                     urlList = try await ImageEditingService.editImages(
+                         using: config.editingModel,
+                         prompt: config.prompt,
+                         imageURLs:  getImageListForEditing()
+                     )
+                     self.imageURLs = urlList
+                 case .video:
+                     urlList = try await VideoGenerationService.generateVideos(
+                         prompt: config.prompt,
+                         imageURLs: getImageListForEditing()
+                     )
+                     self.videoURLs = urlList
+                 }
 
-                self.imageURLs = urlList
-                isGenerating = false
+                 isGenerating = false
             } catch {
                 errorMessage = error.localizedDescription
                 isGenerating = false
@@ -116,9 +122,4 @@ class Generation {
     func deleteSelf() {
         session.deleteGeneration(self)
     }
-}
-
-enum GenerationMode: String, Codable, Sendable {
-    case generation
-    case editing
 }

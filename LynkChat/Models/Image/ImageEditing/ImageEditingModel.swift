@@ -33,12 +33,16 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
     var color: String {
         switch self {
         case .nanoBanana: "#E64335"
-        case .seedream: "#6431e2"
+        case .seedream: "#00A8B2"
         case .qwen: "#007BFF"
         }
     }
     
     var imageName: String {
-        "storm.SFSymbol"
+        switch self {
+        case .nanoBanana: "gemini.symbols"
+        case .seedream: "bytedance.symbols"
+        case .qwen: "qwen.symbols"
+        }
     }
 }

@@ -11,6 +11,7 @@
 		085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 085E58772E700DD20024AA4B /* SwiftMarkdownView */; };
 		085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 085E587A2E70113F0024AA4B /* SwiftMarkdownView */; };
 		08D203022EA63440006B6A40 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08D203012EA63440006B6A40 /* SwiftMediaViewer */; };
+		08D20B0D2EA6B90C006B6A40 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D20B0C2EA6B90C006B6A40 /* AVKit.framework */; };
 		08DAD9C62E908D3D00BC04A1 /* LynkShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		08A2227F2C2AB4FD00D76C8B /* LynkChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LynkChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		08D20B0C2EA6B90C006B6A40 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
 		08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LynkShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -180,6 +182,7 @@
 			files = (
 				08073FD02E9C1C5900C99B60 /* SwiftMediaViewer in Frameworks */,
 				085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */,
+				08D20B0D2EA6B90C006B6A40 /* AVKit.framework in Frameworks */,
 				085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */,
 				08D203022EA63440006B6A40 /* SwiftMediaViewer in Frameworks */,
 			);
@@ -200,6 +203,7 @@
 			children = (
 				08B067FF2D815C760020A9E7 /* LynkChat */,
 				08DAD9BD2E908D3D00BC04A1 /* LynkShare */,
+				08D20B0B2EA6B90C006B6A40 /* Frameworks */,
 				08A222802C2AB4FD00D76C8B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -211,6 +215,14 @@
 				08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		08D20B0B2EA6B90C006B6A40 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				08D20B0C2EA6B90C006B6A40 /* AVKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -27,6 +27,13 @@ struct ImageServiceSettings: View {
                             .tag(model)
                     }
                 }
+                
+                Picker("Video Model", selection: .constant(VideoGenerationModel.seedance)) {
+                    ForEach(VideoGenerationModel.allCases) { model in
+                        Label(model.name, image: model.imageName)
+                            .tag(model)
+                    }
+                }
             }
             
             Section("Default Parameters") {

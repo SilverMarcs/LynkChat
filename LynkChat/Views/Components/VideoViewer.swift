@@ -1,14 +1,14 @@
 //
-//  ImageViewer.swift
+//  VideoViewer.swift
 //  LynkChat
 //
-//  Created by Zabir Raihan on 20/10/2025.
+//  Created by Zabir Raihan on 21/10/2025.
 //
 
 import SwiftUI
 import SwiftMediaViewer
 
-struct ImageViewer: View {
+struct VideoViewer: View {
     let url: URL
     var enableSave: Bool = true
     var size: CGFloat = 300
@@ -18,13 +18,13 @@ struct ImageViewer: View {
     
     var body: some View {
         HStack {
-            SMVImage(url: url, targetSize: 4000)
-                .aspectRatio(contentMode: .fill)
+            SMVVideo(videoURL: url.absoluteString)
+                .aspectRatio(9/16, contentMode: .fit)
                 .frame(maxWidth: size)
                 .clipShape(.rect(cornerRadius: 10))
-
+            
             if enableSave {
-                Button(action: saveImage) {
+                Button(action: saveVideo) {
                     Image(systemName: showCheckmark ? "checkmark" : "square.and.arrow.down")
                 }
                 .buttonStyle(.glass)
@@ -35,8 +35,8 @@ struct ImageViewer: View {
         }
     }
 
-    func saveImage() {
-        ImageSaveUtil.saveImageFromURL(url: url) { success in
+    func saveVideo() {
+        VideoSaveUtil.saveVideoFromURL(url: url) { success in
             if success {
                 DispatchQueue.main.async {
                     showCheckmark = true

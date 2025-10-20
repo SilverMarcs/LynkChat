@@ -11,7 +11,7 @@ import SwiftMediaViewer
 
 struct GenerationView: View {
     var generation: Generation
-    private let spacing: CGFloat = 10
+    
     private let size: CGFloat = 300
     
     @State private var isEditingPrompt = false
@@ -33,7 +33,18 @@ struct GenerationView: View {
             
             VStack(alignment: .leading) {
                 HStack {
-                    AssistantLabel(model: generation.mode == .editing ? generation.config.editingModel : generation.config.model)
+                    switch generation.mode {
+                    case .editing:
+                        AssistantLabel(model: generation.config.editingModel)
+                    case .video:
+                        AssistantLabel(model: generation.config.videoModel)
+                    case .generation:
+                        AssistantLabel(model: generation.config.model)
+                    }
+                    
+                    Image(systemName: generation.mode.imageName)
+                        .foregroundStyle(generation.mode.color.gradient)
+                        .imageScale(.small)
                 }
                 
                 if let errorMessage = generation.errorMessage {
@@ -42,20 +53,24 @@ struct GenerationView: View {
                         .textSelection(.enabled)
                         .padding(.leading, 5)
                         .padding(.top, 1)
-
+                    
                 } else {
                     if generation.isGenerating {
-                        ForEach(1 ... generation.config.numImages, id: \.self) { image in
-                            ProgressView()
-                                .frame(width: size, height: size)
-                                .background(.background.secondary, in: .rect(cornerRadius: 15))
-                        }
+                        ProgressView()
+                            .frame(width: size, height: size)
+                            .background(.background.secondary, in: .rect(cornerRadius: 15))
                     } else {
-                        ForEach(generation.imageURLs, id: \.self) { url in
-                            ImageViewer(url: url, size: size)
+                        if generation.mode == .video {
+                            ForEach(generation.videoURLs, id: \.self) { url in
+                                VideoViewer(url: url, size: size)
+                            }
+                        } else {
+                            ForEach(generation.imageURLs, id: \.self) { url in
+                                ImageViewer(url: url, size: size)
+                            }
                         }
                     }
-                
+                    
                     if generation.isGenerating {
                         Button(role: .destructive) {
                             generation.stopGenerating()
@@ -102,15 +117,6 @@ struct GenerationView: View {
         .sheet(isPresented: $isEditingPrompt) {
             EditGenerationView(generation: generation)
         }
-    }
-    
-    private var gridColumns: [GridItem] {
-        #if os(iOS)
-        [GridItem(.fixed(size), spacing: spacing)]
-        #else
-        [GridItem(.fixed(size), spacing: spacing),
-        GridItem(.fixed(size), spacing: spacing)]
-        #endif
     }
 }
 
