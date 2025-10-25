@@ -31,7 +31,7 @@ enum SeedreamV4Editor {
         let body: [String: Any] = [
             "prompt": prompt,
             "images": imageURLs,
-            "size": "2176*3840",
+            "size": "2160*3840",
             "enable_sync_mode": true,
             "enable_base64_output": false
         ]
