@@ -9,20 +9,24 @@ import SwiftUI
 
 struct ImageTaskModal: View {
     let tasks: [ImageTask]
-    let startIndex: Int
+    let selectedID: UUID
     let namespace: Namespace.ID
     
-    @State private var currentIndex: Int
+    @State private var selectionID: UUID
     
-    init(tasks: [ImageTask], startIndex: Int, namespace: Namespace.ID) {
+    init(tasks: [ImageTask], selectedID: UUID, namespace: Namespace.ID) {
         self.tasks = tasks
-        self.startIndex = min(max(0, startIndex), max(0, tasks.count - 1))
+        self.selectedID = selectedID
         self.namespace = namespace
-        self._currentIndex = State(initialValue: self.startIndex)
+        self._selectionID = State(initialValue: selectedID)
     }
     
     private var currentTask: ImageTask? {
-        tasks[safe: currentIndex]
+        tasks.first(where: { $0.id == selectionID })
+    }
+    
+    private var currentIndex: Int {
+        tasks.firstIndex(where: { $0.id == selectionID }) ?? 0
     }
     
     public var body: some View {
@@ -35,30 +39,30 @@ struct ImageTaskModal: View {
     
     @ViewBuilder
     private var iOSContent: some View {
-        TabView(selection: $currentIndex) {
-            ForEach(Array(tasks.enumerated()), id: \.offset) { index, task in
+        TabView(selection: $selectionID) {
+            ForEach(tasks) { task in
                 if let imageData = task.imageData,
                    let platformImage = PlatformImage.from(data: imageData) {
                     Image(platformImage: platformImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .zoomable()
-                        .tag(index)
-#if !os(macOS)
+                        .tag(task.id)
+                        .overlay(alignment: .topTrailing) {
+                            SaveImageButton(data: task.imageData)
+                                .padding()
+                        }
+                        #if !os(macOS)
                         .matchedTransitionSource(id: task.id, in: namespace)
-#endif
+                        #endif
                 }
             }
         }
         .ignoresSafeArea()
         .tabViewStyle(.page)
-        .overlay(alignment: .topTrailing) {
-            SaveImageButton(data: currentTask?.imageData)
-                .padding()
-        }
-#if !os(macOS)
-        .navigationTransition(.zoom(sourceID: currentTask?.id ?? UUID(), in: namespace))
-#endif
+        #if !os(macOS)
+        .navigationTransition(.zoom(sourceID: selectionID, in: namespace))
+        #endif
     }
     
     @ViewBuilder
@@ -113,13 +117,13 @@ struct ImageTaskModal: View {
     }
     
     private func nextImage() {
-        guard currentIndex < tasks.count - 1 else { return }
-        currentIndex += 1
+        guard let idx = tasks.firstIndex(where: { $0.id == selectionID }), idx < tasks.count - 1 else { return }
+        selectionID = tasks[idx + 1].id
     }
     
     private func previousImage() {
-        guard currentIndex > 0 else { return }
-        currentIndex -= 1
+        guard let idx = tasks.firstIndex(where: { $0.id == selectionID }), idx > 0 else { return }
+        selectionID = tasks[idx - 1].id
     }
 }
 

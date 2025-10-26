@@ -42,6 +42,16 @@ class Generation {
             inputImageData: inputImageData
         )
         
+        task.onCompletion = { [weak self] task in
+            guard let self else { return }
+            // Remove failed tasks from the list
+            if task.error != nil {
+                if let idx = self.imageTasks.firstIndex(where: { $0.id == task.id }) {
+                    self.imageTasks.remove(at: idx)
+                }
+            }
+        }
+        
         imageTasks.append(task)
     }
 }

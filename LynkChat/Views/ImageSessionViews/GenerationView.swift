@@ -37,13 +37,11 @@ struct GenerationView: View {
             .padding()
         }
         .fullScreenCover(item: $selectedTaskID) { taskID in
-            if let startIndex = validTasks.firstIndex(where: { $0.id == taskID }) {
-                ImageTaskModal(
-                    tasks: validTasks,
-                    startIndex: startIndex,
-                    namespace: imageNamespace
-                )
-            }
+            ImageTaskModal(
+                tasks: validTasks,
+                selectedID: taskID,
+                namespace: imageNamespace
+            )
         }
         .scrollDismissesKeyboard(.interactively)
         .safeAreaBar(edge: .bottom) {

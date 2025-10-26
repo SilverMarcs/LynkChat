@@ -21,6 +21,7 @@ final class ImageTask {
     // Non-persisted properties
     @Transient var config: ImageConfigDefaults?
     @Transient var inputImageData: Data?
+    @Transient var onCompletion: ((ImageTask) -> Void)?
     
     init(prompt: String, mode: GenerationMode, config: ImageConfigDefaults, inputImageData: Data? = nil) {
         self.prompt = prompt
@@ -38,7 +39,7 @@ final class ImageTask {
     
     private func process() async {
         guard let config = config else {
-            updateState(imageData: nil, error: "Configuration not available")
+            await updateState(imageData: nil, error: "Configuration not available")
             return
         }
         
@@ -52,16 +53,18 @@ final class ImageTask {
                 imageData = try await editImage(prompt: prompt, config: config)
             }
             
-            updateState(imageData: imageData, error: nil)
+            await updateState(imageData: imageData, error: nil)
         } catch {
-            updateState(imageData: nil, error: error.localizedDescription)
+            await updateState(imageData: nil, error: error.localizedDescription)
         }
     }
     
+    @MainActor
     private func updateState(imageData: Data?, error: String?) {
         self.imageData = imageData
         self.error = error
         self.isProcessing = false
+        onCompletion?(self)
     }
     
     private func generateImage(prompt: String, config: ImageConfigDefaults) async throws -> Data {
