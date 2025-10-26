@@ -14,11 +14,11 @@ struct GenerationInputView: View {
     
     var body: some View {
         HStack(spacing: 5) {
-            if let imageData = generation.inputImageData {
+            if let imageData = generation.inputImage {
                 ImageViewerData(data: imageData, enableSave: false, size: 35)
                     .overlay(alignment: .topTrailing) {
                         Button {
-                            generation.inputImageData = nil
+                            generation.inputImage = nil
                         } label: {
                             Image(systemName: "xmark.circle.fill")
                         }
@@ -54,7 +54,7 @@ struct GenerationInputView: View {
     
     private var canSubmit: Bool {
         if generation.generationMode == .edit {
-            return generation.inputImageData != nil
+            return generation.inputImage != nil
         }
         return true
     }

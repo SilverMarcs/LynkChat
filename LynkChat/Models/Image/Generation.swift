@@ -20,37 +20,36 @@ class Generation {
     var prompt: String = ""
     var generationMode: GenerationMode = GenerationMode.create
     
-    var inputImageData: Data?
+    var inputImage: Data?
     
     var imageTasks: [ImageTask] = []
+    
+    var imageConfig: ImageConfig = ImageConfig()
     
     init() {}
     
     // MARK: - Business Logic
     
     var hasInputImage: Bool {
-        inputImageData != nil
+        inputImage != nil
     }
     
     func queueTask() {
-        let config: ImageConfigDefaults = ImageConfigDefaults()
-        
         let task = ImageTask(
             prompt: prompt,
             mode: generationMode,
-            config: config,
-            inputImageData: inputImageData
-        )
-        
-        task.onCompletion = { [weak self] task in
-            guard let self else { return }
-            // Remove failed tasks from the list
-            if task.error != nil {
-                if let idx = self.imageTasks.firstIndex(where: { $0.id == task.id }) {
-                    self.imageTasks.remove(at: idx)
+            config: imageConfig,
+            inputImage: inputImage,
+            onCompletion: { [weak self] task in
+                guard let self else { return }
+                // Remove failed tasks from the list
+                if task.error != nil {
+                    if let idx = self.imageTasks.firstIndex(where: { $0.id == task.id }) {
+                        self.imageTasks.remove(at: idx)
+                    }
                 }
             }
-        }
+        )
         
         imageTasks.append(task)
     }

@@ -65,7 +65,7 @@ struct GenerationInputMenu: View {
             if let firstItem = selectedPhotos.first {
                 do {
                     if let data = try await firstItem.loadTransferable(type: Data.self) {
-                        generation.inputImageData = data
+                        generation.inputImage = data
                         generation.generationMode = .edit
                     }
                 } catch {
@@ -93,7 +93,7 @@ struct GenerationInputMenu: View {
                         defer { url.stopAccessingSecurityScopedResource() }
                         
                         let data = try Data(contentsOf: url)
-                        generation.inputImageData = data
+                        generation.inputImage = data
                         generation.generationMode = .edit
                     } catch {
                         print("Failed to load file: \(error)")

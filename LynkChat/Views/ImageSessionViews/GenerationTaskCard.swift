@@ -82,7 +82,7 @@ struct GenerationTaskCard: View {
     }
     
     private func setAsSource() {
-        generation.inputImageData = task.imageData
+        generation.inputImage = task.imageData
         generation.generationMode = .edit
     }
     

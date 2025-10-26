@@ -12,6 +12,7 @@ struct GenerationView: View {
     
     @Namespace private var imageNamespace
     @State private var selectedTaskID: UUID?
+    @State private var showConfigSheet = false
     
     // Filter tasks with valid image data
     private var validTasks: [ImageTask] {
@@ -56,6 +57,22 @@ struct GenerationView: View {
                     Text(mode.rawValue).tag(mode)
                 }
             }
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showConfigSheet = true
+                } label: {
+                    Image(systemName: "info")
+                }
+            }
+        }
+        .sheet(isPresented: $showConfigSheet) {
+            ImageConfigSheet(
+                config: $generation.imageConfig,
+                mode: $generation.generationMode
+            )
+            .presentationDetents([.medium])
         }
     }
 }

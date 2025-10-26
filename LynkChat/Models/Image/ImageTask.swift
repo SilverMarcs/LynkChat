@@ -19,30 +19,30 @@ final class ImageTask {
     var createdAt: Date = Date()
     
     // Non-persisted properties
-    @Transient var config: ImageConfigDefaults?
-    @Transient var inputImageData: Data?
+    var config: ImageConfig
     @Transient var onCompletion: ((ImageTask) -> Void)?
     
-    init(prompt: String, mode: GenerationMode, config: ImageConfigDefaults, inputImageData: Data? = nil) {
+    init(
+        prompt: String,
+        mode: GenerationMode,
+        config: ImageConfig,
+        inputImage: Data? = nil,
+        onCompletion: ((ImageTask) -> Void)? = nil
+    ) {
         self.prompt = prompt
         self.mode = mode
         self.config = config
-        self.inputImageData = inputImageData
+        self.onCompletion = onCompletion
         
         // Start processing immediately
         Task {
-            await process()
+            await process(inputImage: inputImage)
         }
     }
     
     // MARK: - Processing
     
-    private func process() async {
-        guard let config = config else {
-            await updateState(imageData: nil, error: "Configuration not available")
-            return
-        }
-        
+    private func process(inputImage: Data?) async {
         do {
             let imageData: Data
             
@@ -50,7 +50,7 @@ final class ImageTask {
             case .create:
                 imageData = try await generateImage(prompt: prompt, config: config)
             case .edit:
-                imageData = try await editImage(prompt: prompt, config: config)
+                imageData = try await editImage(prompt: prompt, config: config, inputImage: inputImage)
             }
             
             await updateState(imageData: imageData, error: nil)
@@ -67,10 +67,10 @@ final class ImageTask {
         onCompletion?(self)
     }
     
-    private func generateImage(prompt: String, config: ImageConfigDefaults) async throws -> Data {
+    private func generateImage(prompt: String, config: ImageConfig) async throws -> Data {
         let urls = try await ImageGenerationService.generateImages(
             prompt: prompt,
-            model: config.defaultModel
+            model: config.generationModel
         )
         
         guard let firstURL = urls.first else {
@@ -81,8 +81,8 @@ final class ImageTask {
         return data
     }
     
-    private func editImage(prompt: String, config: ImageConfigDefaults) async throws -> Data {
-        guard let imageData = inputImageData else {
+    private func editImage(prompt: String, config: ImageConfig, inputImage: Data?) async throws -> Data {
+        guard let imageData = inputImage else {
             throw GenerationError.noInputImage
         }
         
@@ -90,7 +90,7 @@ final class ImageTask {
         let imageURLString = "data:image/png;base64,\(base64String)"
         
         let urls = try await ImageEditingService.editImages(
-            using: config.defaultEditingModel,
+            using: config.editModel,
             prompt: prompt,
             imageURLs: [imageURLString]
         )
