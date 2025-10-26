@@ -29,12 +29,12 @@ struct ImageList: View {
     private var list: some View {
         #if os(macOS)
         List(selection: $selection) {
-            ChatListCards(chatCount: "↗", imageSessionsCount: String(sessions.count))
+            ChatListCards(chatCount: "↗", imageSessionsCount: String(generations.count))
             
-            ForEach(sessions) { session in
-                ImageRow(session: session)
+            ForEach(generations) { generation in
+                ImageRow(generation: generation)
                     .environment(\.imageSearchText, searchText)
-                    .tag(session)
+                    .tag(generation)
                     .listRowSeparator(.visible)
             }
             .onDelete(perform: deleteItems)
@@ -45,7 +45,7 @@ struct ImageList: View {
             toolbar
         }
         .task {
-            if selection == nil, let first = sessions.first, !(horizontalSizeClass == .compact) {
+            if selection == nil, let first = generations.first, !(horizontalSizeClass == .compact) {
                 selection = first
             }
         }

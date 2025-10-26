@@ -12,7 +12,7 @@ struct ImageContentView: View {
     @Environment(\.modelContext) var modelContext
     
     @State var showingInspector: Bool = true
-    @State var selection: ImageSession?
+    @State var selection: Generation?
     
     var body: some View {
         NavigationSplitView {
@@ -21,9 +21,9 @@ struct ImageContentView: View {
                 .navigationSplitViewColumnWidth(min: 240, ideal: 280, max: 400)
                 #endif
         } detail: {
-            if let imageSession = selection {
-                ImageDetailMac(session: imageSession)
-                    .id(imageSession.id)
+            if let generation = selection {
+                GenerationView(generation: generation)
+                    .id(generation.id)
             } else {
                 Text("Select or create an image session")
                     .font(.title)
@@ -33,9 +33,10 @@ struct ImageContentView: View {
             modelContext.undoManager = undoManager
         }
         .inspector(isPresented: $showingInspector) {
-            if let imageSession = selection {
-                ImageInspector(session: imageSession, showingInspector: $showingInspector)
-                    .id(imageSession.id)
+            if let generation = selection {
+//                ImageInspector(session: imageSession, showingInspector: $showingInspector)
+                ImageConfigSheet(generation: generation)
+                    .id(generation.id)
             } else {
                 Image(systemName: "gear")
                     .imageScale(.large)

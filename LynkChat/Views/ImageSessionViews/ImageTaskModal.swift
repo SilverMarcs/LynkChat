@@ -59,8 +59,8 @@ struct ImageTaskModal: View {
             }
         }
         .ignoresSafeArea()
-        .tabViewStyle(.page)
         #if !os(macOS)
+        .tabViewStyle(.page)
         .navigationTransition(.zoom(sourceID: selectionID, in: namespace))
         #endif
     }

@@ -38,15 +38,22 @@ struct GenerationView: View {
             }
             .padding()
         }
-        .fullScreenCover(item: $selectedTaskID) { taskID in
-            ImageTaskModal(
-                tasks: validTasks,
-                selectedID: taskID,
-                namespace: imageNamespace
-            )
-        }
         .navigationTitle(generation.config.mode.rawValue)
         .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showConfigSheet = true
+                } label: {
+                    Image(systemName: "info")
+                }
+            }
+        }
+        #if os(macOS)
+        .safeAreaBar(edge: .bottom) {
+            GenerationInputView(generation: generation)
+        }
+        #else
         .toolbarVisibility(.hidden, for: .tabBar)
         .toolbarTitleMenu {
             Picker("Mode", selection: $generation.config.mode) {
@@ -54,6 +61,13 @@ struct GenerationView: View {
                     Text(mode.rawValue).tag(mode)
                 }
             }
+        }
+        .fullScreenCover(item: $selectedTaskID) { taskID in
+            ImageTaskModal(
+                tasks: validTasks,
+                selectedID: taskID,
+                namespace: imageNamespace
+            )
         }
         .scrollDismissesKeyboard(.interactively)
         .searchable(text: $generation.prompt, isPresented: $isFocused, prompt: "Generate or Edit Images")
@@ -72,19 +86,6 @@ struct GenerationView: View {
               DefaultToolbarItem(kind: .search, placement: .bottomBar)
 
               ToolbarSpacer(.fixed, placement: .bottomBar)
-        }
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showConfigSheet = true
-                } label: {
-                    Image(systemName: "info")
-                }
-            }
-        }
-        #if os(macOS)
-        .safeAreaBar(edge: .bottom) {
-            GenerationInputView(generation: generation)
         }
         #endif
         .sheet(isPresented: $showConfigSheet) {
