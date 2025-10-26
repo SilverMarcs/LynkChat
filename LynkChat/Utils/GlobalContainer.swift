@@ -14,9 +14,9 @@ let globalContainer: ModelContainer = {
         Chat.self,
         Message.self,
         MessageGroup.self,
-        
-        ImageSession.self,
+                
         Generation.self,
+        ImageTask.self
     ])
     
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)

@@ -1,14 +1,14 @@
 import Foundation
 
 enum ImageGenerationService {
-    static func generateImages(config: ImageConfig) async throws -> [URL] {
-        switch config.model {
+    static func generateImages(prompt: String, model: ImageModel) async throws -> [URL] {
+        switch model {
         case .nanoBanana:
-            return try await NanoBananaGenerator.generate(prompt: config.prompt)
+            return try await NanoBananaGenerator.generate(prompt: prompt)
         case .seedream:
-            return try await SeedreamV4Generator.generate(prompt: config.prompt)
+            return try await SeedreamV4Generator.generate(prompt: prompt)
         case .gpt:
-            return try await GPTImageGenerator.generate(prompt: config.prompt)
+            return try await GPTImageGenerator.generate(prompt: prompt)
         }
     }
 }

@@ -1,22 +1,23 @@
 //
-//  ImageSessionInputMenu.swift
+//  GenerationInputMenu.swift
 //  LynkChat
 //
-//  Created by GitHub Copilot on 11/10/2025.
+//  Created on 26/10/2025.
 //
 
 import SwiftUI
 import PhotosUI
 
-struct ImageSessionInputMenu: View {
-    @Bindable var session: ImageSession
+struct GenerationInputMenu: View {
+    var generation: Generation
+    
     @State private var showPhotosPicker = false
     @State private var selectedPhotos = [PhotosPickerItem]()
     @State private var isFilePickerPresented: Bool = false
     @State private var addingPhoto: Bool = false
 
     var body: some View {
-        Menu {            
+        Menu {
             Button {
                 showPhotosPicker = true
             } label: {
@@ -48,48 +49,59 @@ struct ImageSessionInputMenu: View {
             }
         }
         .menuStyle(.button)
-        .buttonStyle(.plain)
+        .buttonStyle(.glass)
+        .controlSize(.large)
+        .buttonBorderShape(.circle)
         .menuIndicator(.hidden)
         .fixedSize()
         .photosPicker(isPresented: $showPhotosPicker, selection: $selectedPhotos, matching: .images)
         .task(id: selectedPhotos) {
             guard !selectedPhotos.isEmpty else { return }
+            
             addingPhoto = true
-            do {
-                for item in selectedPhotos {
-                    if let data = try await item.loadTransferable(type: Data.self) {
-                        session.inputImages.append(data)
+            defer { addingPhoto = false }
+            
+            // Take first selected photo
+            if let firstItem = selectedPhotos.first {
+                do {
+                    if let data = try await firstItem.loadTransferable(type: Data.self) {
+                        generation.inputImageData = data
+                        generation.generationMode = .edit
                     }
+                } catch {
+                    print("Failed to load photo: \(error)")
                 }
-            } catch {
-                // Swallow errors for now; can surface in UI if needed
             }
+            
             selectedPhotos.removeAll()
-            addingPhoto = false
         }
         .fileImporter(
             isPresented: $isFilePickerPresented,
-            allowedContentTypes: [.item],
-            allowsMultipleSelection: true
+            allowedContentTypes: [.image],
+            allowsMultipleSelection: false
         ) { result in
             switch result {
             case .success(let urls):
+                guard let url = urls.first else { return }
+                
                 Task {
-                    for url in urls {
-                        guard url.startAccessingSecurityScopedResource() else { continue }
+                    addingPhoto = true
+                    defer { addingPhoto = false }
+                    
+                    do {
+                        let _ = url.startAccessingSecurityScopedResource()
                         defer { url.stopAccessingSecurityScopedResource() }
-                        if let data = try? Data(contentsOf: url) {
-                            session.inputImages.append(data)
-                        }
+                        
+                        let data = try Data(contentsOf: url)
+                        generation.inputImageData = data
+                        generation.generationMode = .edit
+                    } catch {
+                        print("Failed to load file: \(error)")
                     }
                 }
-            case .failure:
-                break
+            case .failure(let error):
+                print("File picker error: \(error)")
             }
         }
     }
-}
-
-#Preview {
-    ImageSessionInputMenu(session: .mockImageSession)
 }

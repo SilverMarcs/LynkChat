@@ -13,7 +13,7 @@ struct IOSWindow: Scene {
 
     @Bindable var settings = AppSettings.shared
     
-    @State var selection: ImageSession?
+    @State var selection: Generation?
     @State var searchText: String = ""
     
     @Environment(ChatVM.self) var chatVM: ChatVM

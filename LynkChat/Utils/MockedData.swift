@@ -7,20 +7,12 @@
 
 import Foundation
 
-extension ImageConfig {
-    static var mockImageConfig = ImageConfig()
-}
-
 extension Chat {
     static var mockChat = Chat()
 }
 
-extension ImageSession {
-    static var mockImageSession = ImageSession()
-}
-
 extension Generation {
-    static var mockGeneration: Generation = .init(config: .mockImageConfig, session: .mockImageSession)
+    static var mockGeneration: Generation = .init()
 }
 
 extension String {

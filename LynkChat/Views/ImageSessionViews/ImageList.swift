@@ -12,10 +12,10 @@ struct ImageList: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.modelContext) var modelContext
 
-    @Binding var selection: ImageSession?
+    @Binding var selection: Generation?
     
-    @Query(sort: \ImageSession.date, order: .reverse, animation: .default)
-    var sessions: [ImageSession]
+    @Query(sort: \Generation.date, order: .reverse, animation: .default)
+    var generations: [Generation]
     
     @State var searchText: String = ""
     @State var imagePath: NavigationPath = NavigationPath()
@@ -52,12 +52,11 @@ struct ImageList: View {
         #else
         NavigationStack(path: $imagePath) {
             List {
-                ForEach(sessions) { session in
-                    NavigationLink(value: session) {
-                        ImageRow(session: session)
+                ForEach(generations) { generation in
+                    NavigationLink(value: generation) {
+                        ImageRow(generation: generation)
                     }
                     .environment(\.imageSearchText, searchText)
-                    .tag(session)
                 }
                 .onDelete(perform: deleteItems)
             }
@@ -66,8 +65,8 @@ struct ImageList: View {
             .toolbar {
                 toolbar
             }
-            .navigationDestination(for: ImageSession.self) { session in
-                ImageDetailMobile(session: session)
+            .navigationDestination(for: Generation.self) { generation in
+                GenerationView(generation: generation)
             }
         }
         #endif
@@ -79,10 +78,10 @@ struct ImageList: View {
         
         ToolbarItem(placement: .primaryAction) {
             Button {
-                let imageSession = ImageSession()
-                modelContext.insert(imageSession)
-                selection = imageSession
-                imagePath.append(imageSession)
+                let generation = Generation()
+                modelContext.insert(generation)
+                selection = generation
+                imagePath.append(generation)
             } label: {
                 Label("Add Item", systemImage: "square.and.pencil")
             }
@@ -100,12 +99,12 @@ struct ImageList: View {
 
     private func deleteItems(offsets: IndexSet) {
         for index in offsets {
-            let session = sessions[index]
-            if selection == session {
+            let generation = generations[index]
+            if selection == generation {
                 selection = nil
             }
                 
-            modelContext.delete(session)
+            modelContext.delete(generation)
         }
     }
 }

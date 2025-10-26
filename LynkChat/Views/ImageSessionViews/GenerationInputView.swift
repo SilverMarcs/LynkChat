@@ -1,0 +1,71 @@
+//
+//  GenerationInputView.swift
+//  LynkChat
+//
+//  Created by Zabir Raihan on 26/10/2025.
+//
+
+import SwiftUI
+import SwiftMediaViewer
+
+struct GenerationInputView: View {
+    @Bindable var generation: Generation
+    
+    @FocusState private var isFocused: FocusedField?
+    
+    var body: some View {
+        HStack(spacing: 5) {
+            // Show thumbnail if image exists, otherwise show input menu
+            if let imageData = generation.inputImageData {
+                SMVImageData(data: imageData)
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 35, height: 35)
+                    .clipShape(.rect(cornerRadius: 8))
+                    .overlay(alignment: .topTrailing) {
+                        Button {
+                            generation.inputImageData = nil
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                        }
+                        .foregroundStyle(.white)
+                        .padding(-5)
+                    }
+            } else {
+                GenerationInputMenu(generation: generation)
+            }
+            
+            HStack() {
+                TextField(generation.generationMode == .edit ? "Edit prompt..." : "Generate prompt...", text: $generation.prompt, axis: .vertical)
+                    .lineLimit(1...5)
+                    .padding(.horizontal, 14)
+                    .focused($isFocused, equals: .imageInput)
+                
+                Button {
+                    handleSubmit()
+                } label: {
+                    Image(systemName: "sparkles")
+                }
+                .disabled(generation.prompt.isEmpty || !canSubmit)
+                .buttonStyle(.glassProminent)
+                .buttonBorderShape(.circle)
+                .padding(.trailing, 5)
+            }
+            .padding(.vertical, 6.5)
+            .glassEffect(in: .rect(cornerRadius: 30))
+        }
+        .padding(.horizontal, isFocused == nil ? 20 : 10)
+        .padding(.vertical, isFocused == nil ? -5 : 10)
+    }
+    
+    private var canSubmit: Bool {
+        if generation.generationMode == .edit {
+            return generation.inputImageData != nil
+        }
+        return true
+    }
+    
+    private func handleSubmit() {
+        generation.queueTask()
+        isFocused = nil
+    }
+}

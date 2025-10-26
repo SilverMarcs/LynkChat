@@ -9,38 +9,38 @@ import SwiftUI
 import SwiftData
 
 struct ImageInspector: View {
-    @Bindable var session: ImageSession
+    @Bindable var generation: Generation
     
     @Binding var showingInspector: Bool
     
     var body: some View {
         Form {
             Section("Title") {
-                TextField("Title", text: $session.title)
+                TextField("Title", text: $generation.title)
                     .labelsHidden()
             }
             
-            Section {
-                Picker("Mode", selection: $session.config.mode) {
-                    ForEach(GenerationMode.allCases) { mode in
-                        Label(mode.rawValue, systemImage: mode.imageName)
-                            .tag(mode)
-                    }
-                }
-            }
-            
-            Section("Models") {
-                ImageModelPickers(config: $session.config)
-            }
-            .labelStyle(.titleAndIcon)
-            
-            Section("Parameters") {
-                Picker("Number of Images", selection: $session.config.numImages) {
-                    ForEach(1 ... 4, id: \.self) { num in
-                        Text(String(num)).tag(num)
-                    }
-                }
-            }
+//            Section {
+//                Picker("Mode", selection: $session.config.mode) {
+//                    ForEach(GenerationMode.allCases) { mode in
+//                        Label(mode.rawValue, systemImage: mode.imageName)
+//                            .tag(mode)
+//                    }
+//                }
+//            }
+//            
+//            Section("Models") {
+//                ImageModelPickers(config: $session.config)
+//            }
+//            .labelStyle(.titleAndIcon)
+//            
+//            Section("Parameters") {
+//                Picker("Number of Images", selection: $session.config.numImages) {
+//                    ForEach(1 ... 4, id: \.self) { num in
+//                        Text(String(num)).tag(num)
+//                    }
+//                }
+//            }
         }
         .formStyle(.grouped)
         .toolbar {
@@ -58,8 +58,4 @@ struct ImageInspector: View {
         }
 
     }
-}
-
-#Preview {
-    ImageInspector(session: .mockImageSession, showingInspector: .constant(true))
 }

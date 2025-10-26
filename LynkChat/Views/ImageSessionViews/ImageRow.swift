@@ -11,27 +11,27 @@ import SwiftData
 struct ImageRow: View {
     @Environment(\.imageSearchText) var imageSearchText
     @Environment(\.modelContext) var modelContext
-    @Bindable var session: ImageSession
+    @Bindable var generation: Generation
     
     var body: some View {
         HStack {
-            ListRowImage(model: session.config.model)
+//            ListRowImage(model: session.config.model)
             
-            HighlightableTextView(session.title, highlightedText: imageSearchText)
+            HighlightableTextView(generation.title, highlightedText: imageSearchText)
                 .lineLimit(1)
                 .font(font)
                 .opacity(0.9)
             
             Spacer()
             
-            Text(session.config.model.name)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .fontWidth(.compressed)
+//            Text(session.config.model.name)
+//                .font(.subheadline)
+//                .foregroundStyle(.secondary)
+//                .fontWidth(.compressed)
         }
         .swipeActions {
             Button(role: .destructive) {
-                modelContext.delete(session)
+                modelContext.delete(generation)
             } label: {
                 Label("Delete", systemImage: "trash")
             }
@@ -45,8 +45,4 @@ struct ImageRow: View {
         return .headline.weight(.medium)
         #endif
     }
-}
-
-#Preview {
-    ImageRow(session: .mockImageSession)
 }
