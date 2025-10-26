@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct ImageConfigSheet: View {
-    @Binding var config: ImageConfig
-    @Binding var mode: GenerationMode
-    
-    @Environment(\.dismiss) private var dismiss
+    @Bindable var generation: Generation
     
     var body: some View {
         Form {
-            Picker("Mode", selection: $mode) {
+            Picker("Mode", selection: $generation.generationMode) {
                 ForEach(GenerationMode.allCases, id: \.self) { mode in
                     Text(mode.rawValue).tag(mode)
                 }
@@ -26,7 +23,7 @@ struct ImageConfigSheet: View {
             .listRowInsets(.init())
             
             Section("Models") {
-                Picker("Generation", selection: $config.generationModel) {
+                Picker("Generation", selection: $generation.imageConfig.generationModel) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
@@ -34,13 +31,20 @@ struct ImageConfigSheet: View {
                 }
                 
                 
-                Picker("Editing", selection: $config.editModel) {
+                Picker("Editing", selection: $generation.imageConfig.editModel) {
                     ForEach(ImageEditingModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
                     }
                 }
             }
+            
+            #if !os(macOS)
+            Section("Prompt") {
+                TextField("Enter your thoughts", text: $generation.prompt)
+                    .lineLimit(5, reservesSpace: true)
+            }
+            #endif
         }
         .formStyle(.grouped)
     }

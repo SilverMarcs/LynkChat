@@ -14,7 +14,8 @@ struct GenerationView: View {
     @State private var selectedTaskID: UUID?
     @State private var showConfigSheet = false
     
-    // Filter tasks with valid image data
+    @State private var isFocused: Bool = false
+
     private var validTasks: [ImageTask] {
         generation.imageTasks.reversed().filter { $0.imageData != nil }
     }
@@ -44,10 +45,6 @@ struct GenerationView: View {
                 namespace: imageNamespace
             )
         }
-        .scrollDismissesKeyboard(.interactively)
-        .safeAreaBar(edge: .bottom) {
-            GenerationInputView(generation: generation)
-        }
         .navigationTitle(generation.generationMode.rawValue)
         .toolbarTitleDisplayMode(.inline)
         .toolbarVisibility(.hidden, for: .tabBar)
@@ -58,6 +55,24 @@ struct GenerationView: View {
                 }
             }
         }
+        .scrollDismissesKeyboard(.interactively)
+        .searchable(text: $generation.prompt, isPresented: $isFocused, prompt: "Generate or Edit Images")
+        .onSubmit(of: .search) {
+            guard !generation.prompt.isEmpty else { return }
+            generation.queueTask()
+        }
+        .toolbar {
+              ToolbarItem(placement: .bottomBar) {
+                  GenerationInputMenu(generation: generation)
+              }
+              .sharedBackgroundVisibility(generation.inputImage == nil ? .visible : .hidden)
+              
+              ToolbarSpacer(.fixed, placement: .bottomBar)
+              
+              DefaultToolbarItem(kind: .search, placement: .bottomBar)
+
+              ToolbarSpacer(.fixed, placement: .bottomBar)
+        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -67,12 +82,14 @@ struct GenerationView: View {
                 }
             }
         }
+        #if os(macOS)
+        .safeAreaBar(edge: .bottom) {
+            GenerationInputView(generation: generation)
+        }
+        #endif
         .sheet(isPresented: $showConfigSheet) {
-            ImageConfigSheet(
-                config: $generation.imageConfig,
-                mode: $generation.generationMode
-            )
-            .presentationDetents([.medium])
+            ImageConfigSheet(generation: generation)
+                .presentationDetents([.medium])
         }
     }
 }

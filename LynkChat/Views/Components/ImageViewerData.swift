@@ -12,6 +12,7 @@ struct ImageViewerData: View {
     let data: Data
     var enableSave: Bool = true
     var size: CGFloat = 300
+    var radius: CGFloat = 10
     
     @State private var selectedFileURL: URL?
     @State private var showCheckmark = false
@@ -22,7 +23,7 @@ struct ImageViewerData: View {
                 .resizable()
                 .scaledToFill()
                 .frame(width: size, height: size)
-                .clipShape(.rect(cornerRadius: 10))
+                .clipShape(.rect(cornerRadius: radius))
                 .overlay(alignment: .topTrailing) {
                     if enableSave {
                         Button(action: saveImage) {

@@ -18,27 +18,43 @@ struct GenerationInputMenu: View {
 
     var body: some View {
         Menu {
-            Button {
-                showPhotosPicker = true
-            } label: {
-                Label("Photos Library", systemImage: "photo.on.rectangle.angled")
-            }
-
-            Button {
-                isFilePickerPresented = true
-            } label: {
-                Label("Attach Files", systemImage: "paperclip")
+            if generation.inputImage != nil {
+               Button(role: .destructive) {
+                   generation.inputImage = nil
+                   generation.generationMode = .create // or whatever default mode
+               } label: {
+                   Label("Remove Image", systemImage: "trash")
+               }
+           }
+            
+            Section {
+                Button {
+                    showPhotosPicker = true
+                } label: {
+                    Label("Photos Library", systemImage: "photo.on.rectangle.angled")
+                }
+                
+                Button {
+                    isFilePickerPresented = true
+                } label: {
+                    Label("Attach Files", systemImage: "paperclip")
+                }
             }
         } label: {
             if !addingPhoto {
-#if os(macOS)
-                Image(systemName: "plus.circle.fill")
-                    .foregroundStyle(.secondary, .clear)
-                    .font(.largeTitle).fontWeight(.semibold)
-                    .glassEffect()
-#else
-                Image(systemName: "plus")
-#endif
+                if let imageData = generation.inputImage {
+                    ImageViewerData(data: imageData, enableSave: false, size: 43, radius: 20)
+                } else {
+
+                    #if os(macOS)
+                    Image(systemName: "plus")
+                        .foregroundStyle(.secondary, .clear)
+                        .font(.largeTitle).fontWeight(.semibold)
+                        .glassEffect()
+                    #else
+                    Image(systemName: "plus")
+                    #endif
+                }
             } else {
                 ProgressView()
                 #if os(macOS)
@@ -49,7 +65,6 @@ struct GenerationInputMenu: View {
             }
         }
         .menuStyle(.button)
-        .buttonStyle(.glass)
         .controlSize(.large)
         .buttonBorderShape(.circle)
         .menuIndicator(.hidden)
