@@ -8,7 +8,6 @@
 import SwiftData
 import SwiftUI
 
-
 @Model
 final class ImageTask {
     var id: UUID = UUID()

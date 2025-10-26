@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GenerationTaskCard: View {
     let task: ImageTask
-    @Bindable var generation: Generation
+    var generation: Generation
     let namespace: Namespace.ID
     let onTap: () -> Void
     
@@ -19,46 +19,32 @@ struct GenerationTaskCard: View {
                 if let imageData = task.imageData, let platformImage = PlatformImage.from(data: imageData)  {
                     Image(platformImage: platformImage)
                         .resizable()
+                        .scaledToFit()
                 } else {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(.background.secondary)
+                        .aspectRatio(9/16, contentMode: .fit)
                 }
             }
-            .aspectRatio(9/16, contentMode: .fit)
-#if !os(macOS)
-            .matchedTransitionSource(id: task.id, in: namespace)
-#endif
             .overlay {
                 if task.isProcessing {
                     ProgressView()
+                } else if task.error != nil {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                        .imageScale(.large)
                 }
             }
-            .overlay(alignment: .bottom) {
-                LinearGradient(
-                    colors: [
-                        .clear,
-                        .black.opacity(0.3),
-                        .black.opacity(0.6)
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 60)
-                .overlay(alignment: .bottomLeading) {
-                    Text(task.prompt)
-                        .font(.caption)
-                        .foregroundStyle(.white)
-                        .lineLimit(2)
-                        .padding(10)
-                }
-            }
+            #if !os(macOS)
+            .matchedTransitionSource(id: task.id, in: namespace)
+            #endif
         }
         .clipShape(.rect(cornerRadius: 10))
         .contentShape(Rectangle())
         .onTapGesture {
             onTap()
         }
-        .contextMenu(menuItems: {
+        .contextMenu {
             Section {
                 Button {
                     task.prompt.copyToPasteboard()
@@ -80,7 +66,19 @@ struct GenerationTaskCard: View {
             } label: {
                 Label("Delete", systemImage: "trash")
             }
-        })
+        } preview: {
+            VStack {
+                if let imageData = task.imageData, let platformImage = PlatformImage.from(data: imageData)  {
+                    Image(platformImage: platformImage)
+                        .resizable()
+                }
+                
+                Text(task.prompt)
+                    .font(.subheadline)
+                    .padding(.horizontal)
+                    .padding(.bottom, 10)
+            }
+        }
     }
     
     private func setAsSource() {

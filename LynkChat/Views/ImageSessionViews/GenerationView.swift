@@ -20,7 +20,7 @@ struct GenerationView: View {
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 12) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 10) {
                 ForEach(generation.imageTasks.reversed()) { task in
                     GenerationTaskCard(
                         task: task,
