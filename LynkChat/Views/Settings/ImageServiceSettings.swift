@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftMediaViewer
 
 struct ImageServiceSettings: View {
     @State var config: ImageConfigDefaults = .init()
@@ -56,10 +55,6 @@ struct ImageServiceSettings: View {
             
             Section(header: Text("API Keys")) {
                 TextField("Wavespeed API Key", text: $config.wavespeedApiKey)
-            }
-            
-            Section("Cache") {
-                CacheManagerView()
             }
         }
         .formStyle(.grouped)

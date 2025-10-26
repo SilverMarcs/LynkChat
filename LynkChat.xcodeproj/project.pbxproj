@@ -7,13 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08073FD02E9C1C5900C99B60 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08073FCF2E9C1C5900C99B60 /* SwiftMediaViewer */; };
 		085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 085E58772E700DD20024AA4B /* SwiftMarkdownView */; };
 		085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 085E587A2E70113F0024AA4B /* SwiftMarkdownView */; };
-		08D203022EA63440006B6A40 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08D203012EA63440006B6A40 /* SwiftMediaViewer */; };
 		08D20B0D2EA6B90C006B6A40 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D20B0C2EA6B90C006B6A40 /* AVKit.framework */; };
 		08DAD9C62E908D3D00BC04A1 /* LynkShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		08F3FE2F2EAE611A00F4C703 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08F3FE2E2EAE611A00F4C703 /* SwiftMediaViewer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,12 +174,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08073FD02E9C1C5900C99B60 /* SwiftMediaViewer in Frameworks */,
 				085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */,
 				08D20B0D2EA6B90C006B6A40 /* AVKit.framework in Frameworks */,
-				08F3FE2F2EAE611A00F4C703 /* SwiftMediaViewer in Frameworks */,
 				085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */,
-				08D203022EA63440006B6A40 /* SwiftMediaViewer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,9 +241,6 @@
 			packageProductDependencies = (
 				085E58772E700DD20024AA4B /* SwiftMarkdownView */,
 				085E587A2E70113F0024AA4B /* SwiftMarkdownView */,
-				08073FCF2E9C1C5900C99B60 /* SwiftMediaViewer */,
-				08D203012EA63440006B6A40 /* SwiftMediaViewer */,
-				08F3FE2E2EAE611A00F4C703 /* SwiftMediaViewer */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -306,7 +297,6 @@
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
 				085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
-				08F3FE2D2EAE611A00F4C703 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -730,13 +720,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		08F3FE2D2EAE611A00F4C703 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Frameworks/SwiftMediaViewer;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -749,10 +732,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		08073FCF2E9C1C5900C99B60 /* SwiftMediaViewer */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SwiftMediaViewer;
-		};
 		085E58772E700DD20024AA4B /* SwiftMarkdownView */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SwiftMarkdownView;
@@ -761,14 +740,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */;
 			productName = SwiftMarkdownView;
-		};
-		08D203012EA63440006B6A40 /* SwiftMediaViewer */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SwiftMediaViewer;
-		};
-		08F3FE2E2EAE611A00F4C703 /* SwiftMediaViewer */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SwiftMediaViewer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
