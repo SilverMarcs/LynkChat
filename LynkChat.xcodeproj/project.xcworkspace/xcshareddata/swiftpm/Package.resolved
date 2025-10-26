@@ -1,5 +1,5 @@
 {
-  "originHash" : "59a7edfcc5ba2dcc8f3744c4831cd6d62abf63dd2ae46c6f01e77f5275149748",
+  "originHash" : "a79a9c4c8af64c75b002b2489f3fd297f74948ff2ad2ec519d4ce3507f81689f",
   "pins" : [
     {
       "identity" : "swiftmarkdownview",
@@ -8,15 +8,6 @@
       "state" : {
         "branch" : "main",
         "revision" : "560ea08fe9187aea8bd6caa9230969efc886ac64"
-      }
-    },
-    {
-      "identity" : "swiftmediaviewer",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SilverMarcs/SwiftMediaViewer",
-      "state" : {
-        "branch" : "main",
-        "revision" : "db0802895b4d72079b3242cc0e4a3ad49f02f69d"
       }
     }
   ],

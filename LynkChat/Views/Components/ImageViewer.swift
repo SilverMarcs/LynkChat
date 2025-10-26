@@ -1,53 +1,53 @@
+////
+////  ImageViewer.swift
+////  LynkChat
+////
+////  Created by Zabir Raihan on 20/10/2025.
+////
 //
-//  ImageViewer.swift
-//  LynkChat
+//import SwiftUI
+//import SwiftMediaViewer
 //
-//  Created by Zabir Raihan on 20/10/2025.
+//struct ImageViewer: View {
+//    let url: URL
+//    var enableSave: Bool = true
+//    var size: CGFloat = 300
+//    
+//    @State private var selectedFileURL: URL?
+//    @State private var showCheckmark = false
+//    
+//    var body: some View {
+//        HStack {
+//            SMVImage(url: url, targetSize: 4000)
+//                .aspectRatio(contentMode: .fill)
+//                .frame(maxWidth: size)
+//                .clipShape(.rect(cornerRadius: 10))
 //
-
-import SwiftUI
-import SwiftMediaViewer
-
-struct ImageViewer: View {
-    let url: URL
-    var enableSave: Bool = true
-    var size: CGFloat = 300
-    
-    @State private var selectedFileURL: URL?
-    @State private var showCheckmark = false
-    
-    var body: some View {
-        HStack {
-            SMVImage(url: url, targetSize: 4000)
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: size)
-                .clipShape(.rect(cornerRadius: 10))
-
-            if enableSave {
-                Button(action: saveImage) {
-                    Image(systemName: showCheckmark ? "checkmark" : "arrow.down")
-                        .frame(width: 12, height: 12)
-                }
-                .buttonStyle(.glass)
-                .buttonBorderShape(.circle)
-                .controlSize(.extraLarge)
-                .padding(10)
-            }
-        }
-    }
-
-    func saveImage() {
-        ImageSaveUtil.saveImageFromURL(url: url) { success in
-            if success {
-                DispatchQueue.main.async {
-                    showCheckmark = true
-                    
-                    // Revert back to the original icon after 2 seconds
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showCheckmark = false
-                    }
-                }
-            }
-        }
-    }
-}
+//            if enableSave {
+//                Button(action: saveImage) {
+//                    Image(systemName: showCheckmark ? "checkmark" : "arrow.down")
+//                        .frame(width: 12, height: 12)
+//                }
+//                .buttonStyle(.glass)
+//                .buttonBorderShape(.circle)
+//                .controlSize(.extraLarge)
+//                .padding(10)
+//            }
+//        }
+//    }
+//
+//    func saveImage() {
+//        ImageSaveUtil.saveImageFromURL(url: url) { success in
+//            if success {
+//                DispatchQueue.main.async {
+//                    showCheckmark = true
+//                    
+//                    // Revert back to the original icon after 2 seconds
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                        showCheckmark = false
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}

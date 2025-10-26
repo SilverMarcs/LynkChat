@@ -6,21 +6,46 @@
 //
 
 import SwiftUI
-import SwiftMediaViewer
 
 struct GenerationView: View {
     @Bindable var generation: Generation
+    
+    @Namespace private var imageNamespace
+    @State private var selectedTaskID: UUID?
+    
+    // Filter tasks with valid image data
+    private var validTasks: [ImageTask] {
+        generation.imageTasks.reversed().filter { $0.imageData != nil }
+    }
     
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 12) {
                 ForEach(generation.imageTasks.reversed()) { task in
-                    GenerationTaskCard(task: task, generation: generation)
+                    GenerationTaskCard(
+                        task: task,
+                        generation: generation,
+                        namespace: imageNamespace,
+                        onTap: {
+                            if task.imageData != nil {
+                                selectedTaskID = task.id
+                            }
+                        }
+                    )
                 }
             }
             .padding()
         }
-        .scrollDismissesKeyboard(.immediately)
+        .fullScreenCover(item: $selectedTaskID) { taskID in
+            if let startIndex = validTasks.firstIndex(where: { $0.id == taskID }) {
+                ImageTaskModal(
+                    tasks: validTasks,
+                    startIndex: startIndex,
+                    namespace: imageNamespace
+                )
+            }
+        }
+        .scrollDismissesKeyboard(.interactively)
         .safeAreaBar(edge: .bottom) {
             GenerationInputView(generation: generation)
         }
@@ -35,4 +60,8 @@ struct GenerationView: View {
             }
         }
     }
+}
+
+extension UUID: @retroactive Identifiable {
+    public var id: Self { self }
 }

@@ -6,28 +6,28 @@
 //
 
 import SwiftUI
-import SwiftMediaViewer
 
 struct GenerationTaskCard: View {
     let task: ImageTask
     @Bindable var generation: Generation
+    let namespace: Namespace.ID
+    let onTap: () -> Void
     
     var body: some View {
         VStack(alignment: .leading) {
-            VStack(spacing: 8) {
-                if let imageData = task.imageData {
-                    SMVImageData(data: imageData)
-                        .aspectRatio(9/16, contentMode: .fill)
+            Group {
+                if let imageData = task.imageData, let platformImage = PlatformImage.from(data: imageData)  {
+                    Image(platformImage: platformImage)
+                        .resizable()
                 } else {
-                    // Placeholder when image is loading
-                    Color.clear
-                        .aspectRatio(9/16, contentMode: .fit)
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(.background.secondary)
                 }
             }
-            .background {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background.secondary)
-            }
+            .aspectRatio(9/16, contentMode: .fit)
+#if !os(macOS)
+            .matchedTransitionSource(id: task.id, in: namespace)
+#endif
             .overlay {
                 if task.isProcessing {
                     ProgressView()
@@ -37,9 +37,8 @@ struct GenerationTaskCard: View {
                 LinearGradient(
                     colors: [
                         .clear,
-                        .black.opacity(0.1),
                         .black.opacity(0.3),
-                        .black.opacity(0.5)
+                        .black.opacity(0.6)
                     ],
                     startPoint: .top,
                     endPoint: .bottom
@@ -55,15 +54,27 @@ struct GenerationTaskCard: View {
             }
         }
         .clipShape(.rect(cornerRadius: 10))
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onTap()
+        }
         .contextMenu(menuItems: {
-            if task.imageData != nil {
+            Section {
                 Button {
-                    setAsSource()
+                    task.prompt.copyToPasteboard()
                 } label: {
-                    Label("Set as Source", systemImage: "photo.badge.plus")
+                    Label("Copy Prompt", systemImage: "document.on.clipboard")
+                }
+                
+                if task.imageData != nil {
+                    Button {
+                        setAsSource()
+                    } label: {
+                        Label("Set as Source", systemImage: "photo.badge.plus")
+                    }
                 }
             }
-            
+                
             Button(role: .destructive) {
                 deleteTask()
             } label: {

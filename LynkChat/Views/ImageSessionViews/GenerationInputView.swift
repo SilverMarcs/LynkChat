@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftMediaViewer
 
 struct GenerationInputView: View {
     @Bindable var generation: Generation
@@ -15,12 +14,8 @@ struct GenerationInputView: View {
     
     var body: some View {
         HStack(spacing: 5) {
-            // Show thumbnail if image exists, otherwise show input menu
             if let imageData = generation.inputImageData {
-                SMVImageData(data: imageData)
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 35, height: 35)
-                    .clipShape(.rect(cornerRadius: 8))
+                ImageViewerData(data: imageData, enableSave: false, size: 35)
                     .overlay(alignment: .topTrailing) {
                         Button {
                             generation.inputImageData = nil
