@@ -12,7 +12,7 @@ struct ImageConfigSheet: View {
     
     var body: some View {
         Form {
-            Picker("Mode", selection: $generation.generationMode) {
+            Picker("Mode", selection: $generation.config.mode) {
                 ForEach(GenerationMode.allCases, id: \.self) { mode in
                     Text(mode.rawValue).tag(mode)
                 }
@@ -23,7 +23,7 @@ struct ImageConfigSheet: View {
             .listRowInsets(.init())
             
             Section("Models") {
-                Picker("Generation", selection: $generation.imageConfig.generationModel) {
+                Picker("Generation", selection: $generation.config.generationModel) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
@@ -31,7 +31,7 @@ struct ImageConfigSheet: View {
                 }
                 
                 
-                Picker("Editing", selection: $generation.imageConfig.editModel) {
+                Picker("Editing", selection: $generation.config.editModel) {
                     ForEach(ImageEditingModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)

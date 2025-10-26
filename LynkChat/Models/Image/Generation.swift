@@ -18,13 +18,11 @@ class Generation {
     var title: String = "Image Session"
     
     var prompt: String = ""
-    var generationMode: GenerationMode = GenerationMode.create
-    
     var inputImage: Data?
     
     var imageTasks: [ImageTask] = []
     
-    var imageConfig: ImageConfig = ImageConfig()
+    var config: ImageConfig = ImageConfig()
     
     init() {}
     
@@ -37,8 +35,7 @@ class Generation {
     func queueTask() {
         let task = ImageTask(
             prompt: prompt,
-            mode: generationMode,
-            config: imageConfig,
+            config: config,
             inputImage: inputImage,
             onCompletion: { [weak self] task in
                 guard let self else { return }

@@ -10,10 +10,12 @@ import Foundation
 struct ImageConfig: Hashable, Codable {
     var generationModel: ImageModel
     var editModel: ImageEditingModel
+    var mode: GenerationMode
 
     init(defaults: ImageConfigDefaults = .init()) {
         self.generationModel = defaults.defaultModel
         self.editModel = defaults.defaultEditingModel
+        self.mode = GenerationMode.create
     }
 }
 

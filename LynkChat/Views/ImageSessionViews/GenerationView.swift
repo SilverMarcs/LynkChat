@@ -45,11 +45,11 @@ struct GenerationView: View {
                 namespace: imageNamespace
             )
         }
-        .navigationTitle(generation.generationMode.rawValue)
+        .navigationTitle(generation.config.mode.rawValue)
         .toolbarTitleDisplayMode(.inline)
         .toolbarVisibility(.hidden, for: .tabBar)
         .toolbarTitleMenu {
-            Picker("Mode", selection: $generation.generationMode) {
+            Picker("Mode", selection: $generation.config.mode) {
                 ForEach(GenerationMode.allCases, id: \.self) { mode in
                     Text(mode.rawValue).tag(mode)
                 }

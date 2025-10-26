@@ -30,7 +30,7 @@ struct GenerationInputView: View {
             }
             
             HStack() {
-                TextField(generation.generationMode == .edit ? "Edit prompt..." : "Generate prompt...", text: $generation.prompt, axis: .vertical)
+                TextField(generation.config.mode == .edit ? "Edit prompt..." : "Generate prompt...", text: $generation.prompt, axis: .vertical)
                     .lineLimit(1...5)
                     .padding(.horizontal, 14)
                     .focused($isFocused, equals: .imageInput)
@@ -53,7 +53,7 @@ struct GenerationInputView: View {
     }
     
     private var canSubmit: Bool {
-        if generation.generationMode == .edit {
+        if generation.config.mode == .edit {
             return generation.inputImage != nil
         }
         return true

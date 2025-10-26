@@ -12,7 +12,6 @@ import SwiftUI
 final class ImageTask {
     var id: UUID = UUID()
     var prompt: String
-    var mode: GenerationMode
     var imageData: Data?
     var isProcessing: Bool = true
     var error: String?
@@ -24,13 +23,11 @@ final class ImageTask {
     
     init(
         prompt: String,
-        mode: GenerationMode,
         config: ImageConfig,
         inputImage: Data? = nil,
         onCompletion: ((ImageTask) -> Void)? = nil
     ) {
         self.prompt = prompt
-        self.mode = mode
         self.config = config
         self.onCompletion = onCompletion
         
@@ -46,7 +43,7 @@ final class ImageTask {
         do {
             let imageData: Data
             
-            switch mode {
+            switch config.mode {
             case .create:
                 imageData = try await generateImage(prompt: prompt, config: config)
             case .edit:

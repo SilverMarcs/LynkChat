@@ -15,7 +15,7 @@ struct ImageRow: View {
     
     var body: some View {
         HStack {
-//            ListRowImage(model: session.config.model)
+            ListRowImage(model: generation.config.generationModel)
             
             HighlightableTextView(generation.title, highlightedText: imageSearchText)
                 .lineLimit(1)
@@ -24,10 +24,10 @@ struct ImageRow: View {
             
             Spacer()
             
-//            Text(session.config.model.name)
-//                .font(.subheadline)
-//                .foregroundStyle(.secondary)
-//                .fontWidth(.compressed)
+            Text(generation.config.mode.rawValue)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fontWidth(.compressed)
         }
         .swipeActions {
             Button(role: .destructive) {

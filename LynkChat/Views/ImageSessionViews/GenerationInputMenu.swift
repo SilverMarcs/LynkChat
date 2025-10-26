@@ -21,7 +21,7 @@ struct GenerationInputMenu: View {
             if generation.inputImage != nil {
                Button(role: .destructive) {
                    generation.inputImage = nil
-                   generation.generationMode = .create // or whatever default mode
+                   generation.config.mode = .create // or whatever default mode
                } label: {
                    Label("Remove Image", systemImage: "trash")
                }
@@ -81,7 +81,7 @@ struct GenerationInputMenu: View {
                 do {
                     if let data = try await firstItem.loadTransferable(type: Data.self) {
                         generation.inputImage = data
-                        generation.generationMode = .edit
+                        generation.config.mode = .edit
                     }
                 } catch {
                     print("Failed to load photo: \(error)")
@@ -109,7 +109,7 @@ struct GenerationInputMenu: View {
                         
                         let data = try Data(contentsOf: url)
                         generation.inputImage = data
-                        generation.generationMode = .edit
+                        generation.config.mode = .edit
                     } catch {
                         print("Failed to load file: \(error)")
                     }
