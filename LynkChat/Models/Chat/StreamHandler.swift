@@ -114,11 +114,6 @@ struct StreamHandler {
                 assistant.reasoningTokens = usage.completion_tokens_details?.reasoning_tokens ?? 0
             }
             
-            // Handle annotations
-            if let annotations = choice.message?.annotations {
-                assistant.fileAnnotations = annotations
-            }
-            
             // Handle tool calls
             if let toolCalls = choice.delta.tool_calls {
                 for toolCall in toolCalls {

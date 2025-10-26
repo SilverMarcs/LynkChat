@@ -34,9 +34,7 @@ final class Message: Equatable, Identifiable, Hashable {
      var inputTokens: Int = 0
      var outputTokens: Int = 0
      var reasoningTokens: Int = 0
-     
-     var fileAnnotations: [FileAnnotation]?
-    
+         
       private init(role: Role,
                    content: String = "",
                    reasoningDetails: [ReasoningDetail]? = nil,
@@ -47,8 +45,7 @@ final class Message: Equatable, Identifiable, Hashable {
                    height: CGFloat,
                    inputTokens: Int = 0,
                    outputTokens: Int = 0,
-                   reasoningTokens: Int = 0,
-                   fileAnnotations: [FileAnnotation]? = nil) {
+                   reasoningTokens: Int = 0) {
           self.role = role
           self.content = content
           self.reasoningDetails = reasoningDetails
@@ -60,7 +57,6 @@ final class Message: Equatable, Identifiable, Hashable {
           self.inputTokens = inputTokens
           self.outputTokens = outputTokens
           self.reasoningTokens = reasoningTokens
-          self.fileAnnotations = fileAnnotations
       }
 
       func copy() -> Message {
@@ -76,7 +72,6 @@ final class Message: Equatable, Identifiable, Hashable {
               inputTokens: inputTokens,
               outputTokens: outputTokens,
               reasoningTokens: reasoningTokens,
-              fileAnnotations: fileAnnotations
           )
       }
     
@@ -149,7 +144,6 @@ extension Message {
                 content: content.isEmpty ? [] : messageContents,
                 toolCalls: toolCalls,
                 reasoningDetails: reasoningDetails,
-                annotations: fileAnnotations
             ))
             
             for tool in tools where tool.result != nil {
@@ -164,14 +158,12 @@ extension Message {
                 role: .assistant,
                 content: messageContents,
                 reasoningDetails: reasoningDetails,
-                annotations: fileAnnotations
             ))
         } else {
             messages.append(ChatRequestMessage(
                 role: .user,
                 content: messageContents,
                 reasoningDetails: reasoningDetails,
-                annotations: fileAnnotations
             ))
         }
         

@@ -56,11 +56,6 @@ struct ChatStreamResponse: Codable {
           let index: Int
           let delta: Delta
           let finish_reason: String?
-          var message: Message?
-          
-          struct Message: Codable {
-              let annotations: [FileAnnotation]?
-          }
           
           struct Delta: Codable {
               let role: String?

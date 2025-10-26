@@ -28,12 +28,6 @@ enum PDFEngine: String, Codable {
      case mistralOCR = "mistral-ocr"
 }
 
-struct FileAnnotation: Codable {
-     let index: Int
-     let type: String
-     let text: String?
-}
-
 struct PDFFile: Codable {
      let filename: String
      let file_data: String
@@ -83,7 +77,6 @@ struct ChatRequestMessage: Codable {
       let tool_calls: [ToolCallInfo]?
       let tool_call_id: String?
       let reasoning_details: [ReasoningDetail]?
-      var annotations: [FileAnnotation]?
       
       struct ToolCallInfo: Codable {
           let id: String
@@ -96,12 +89,11 @@ struct ChatRequestMessage: Codable {
           }
       }
       
-      init(role: MessageRole, content: [MessageContent], toolCalls: [ToolCallInfo]? = nil, toolCallId: String? = nil, reasoningDetails: [ReasoningDetail]? = nil, annotations: [FileAnnotation]? = nil) {
+      init(role: MessageRole, content: [MessageContent], toolCalls: [ToolCallInfo]? = nil, toolCallId: String? = nil, reasoningDetails: [ReasoningDetail]? = nil) {
           self.role = role
           self.content = content
           self.tool_calls = toolCalls
           self.tool_call_id = toolCallId
           self.reasoning_details = reasoningDetails
-          self.annotations = annotations
       }
 }
