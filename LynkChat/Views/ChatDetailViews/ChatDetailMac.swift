@@ -45,6 +45,11 @@ struct ChatDetailMac: View {
                 config.proxy = proxy
                 Scroller.scrollToBottom(animated: false)
             }
+            .onDisappear {
+                if chat.status == .temporary {
+                    modelContext.delete(chat)
+                }
+            }
             .toolbar {
                 ChatToolbar(chat: chat)
             }
