@@ -79,7 +79,11 @@ struct ExpandableText: View {
     @State private var isExpanded = false
     private let needsExpansion: Bool
     
-    @State var config = AppConfig()
+    #if os(macOS)
+    @AppStorage("fontSize") var fontSize: Double = 13
+    #else
+    @AppStorage("fontSize") var fontSize: Double = 17
+    #endif
     
     init(text: String, maxCharacters: Int = 400) {
         self.text = text
@@ -91,7 +95,7 @@ struct ExpandableText: View {
         VStack(alignment: .trailing, spacing: 3) {
             Text(displayedText)
                 .textSelection(.enabled)
-                .font(.system(size: config.fontSize))
+                .font(.system(size: fontSize))
                 .lineSpacing(2)
             
             if needsExpansion {
@@ -112,6 +116,5 @@ struct ExpandableText: View {
         return String(text.prefix(maxCharacters))
     }
 }
-
 
 

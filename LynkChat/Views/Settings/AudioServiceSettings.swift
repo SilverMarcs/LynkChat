@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct AudioServiceSettings: View {
-    @State var config = AppConfig()
+    @AppStorage("geminiApiKey") var geminiApiKey: String = ""
     
     var body: some View {
         Form {
-            TextField("Gemini API Key", text: $config.geminiApiKey)
+            TextField("Gemini API Key", text: $geminiApiKey)
         }
         .formStyle(.grouped)
         .navigationTitle("Audio Service")

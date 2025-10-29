@@ -10,7 +10,11 @@ import SwiftData
 
 struct ChatCommands: Commands {
     @Environment(\.modelContext) var modelContext
-    @State var config = AppConfig()
+    #if os(macOS)
+    @AppStorage("fontSize") var fontSize: Double = 13
+    #else
+    @AppStorage("fontSize") var fontSize: Double = 17
+    #endif
     @Environment(ChatVM.self) var chatVM
     
     var body: some Commands {
@@ -47,14 +51,14 @@ struct ChatCommands: Commands {
     }
     
     private func increaseFontSize() {
-        config.fontSize = min(config.fontSize + 1, 25)
+        fontSize = min(fontSize + 1, 25)
     }
     
     private func decreaseFontSize() {
-        config.fontSize = max(config.fontSize - 1, 8)
+        fontSize = max(fontSize - 1, 8)
     }
     
     private func resetFontSize() {
-        config.fontSize = 13
+        fontSize = 13
     }
 }

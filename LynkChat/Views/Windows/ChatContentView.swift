@@ -12,7 +12,7 @@ struct ChatContentView: View {
     @Environment(\.undoManager) var undoManager
     @Environment(\.modelContext) var modelContext
     
-    @State var config = AppConfig()
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
     
     @Environment(ChatVM.self) var chatVM: ChatVM
     @State var searchText = ""
@@ -36,7 +36,7 @@ struct ChatContentView: View {
         .onAppear {
             modelContext.undoManager = undoManager
         }
-        .sheet(isPresented: .constant(!config.hasCompletedOnboarding)) {
+        .sheet(isPresented: .constant(!hasCompletedOnboarding)) {
             OnboardingView()
         }
         .searchable(text: $searchText, placement: .sidebar)

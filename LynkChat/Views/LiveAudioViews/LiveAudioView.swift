@@ -10,6 +10,7 @@ import SwiftUI
 import WebKit
 
 struct LiveAudioView: View {
+    @AppStorage("geminiApiKey") var geminiApiKey: String = ""
     @State private var page: WebPage = WebPage()
 
     @State private var isStreaming = false
@@ -17,16 +18,10 @@ struct LiveAudioView: View {
     @State private var isSpeaking = false
     @State private var hasSession = false
 
-    private let url: URL
-
     init() {
         guard let baseURL = Bundle.main.url(forResource: "liveaudio", withExtension: "html") else {
             fatalError("Could not find liveaudio.html in bundle")
         }
-
-        var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
-        components.queryItems = [URLQueryItem(name: "key", value: AppConfig().geminiApiKey)]
-        self.url = components.url!
         
         var cfg = WebPage.Configuration()
         cfg.deviceSensorAuthorization = .init { permission, frame, origin in
@@ -78,7 +73,14 @@ struct LiveAudioView: View {
             .controlSize(.extraLarge)
             .buttonBorderShape(.circle)
             .task {
-                await loadPage(url)
+                guard let baseURL = Bundle.main.url(forResource: "liveaudio", withExtension: "html") else {
+                    return
+                }
+                var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
+                components.queryItems = [URLQueryItem(name: "key", value: geminiApiKey)]
+                if let url = components.url {
+                    await loadPage(url)
+                }
             }
             .onDisappear {
                 Task {

@@ -10,23 +10,26 @@ import SwiftUI
 struct DebugSettings: View {
     @Environment(\.openWindow) var openWindow
     
-    @State var config = AppConfig()
+    @AppStorage("myApiKey") var myApiKey: String = ""
+    @AppStorage("useLocalhost") var useLocalhost = false
+    @AppStorage("printDebgLogs") var printDebgLogs = false
+    @AppStorage("sendDebugModel") var sendDebugModel = false
     @State private var showWebView = false
     
     var body: some View {
         Form {
             Section("API Settings") {
-                TextField("API Key", text: $config.myApiKey)
+                TextField("API Key", text: $myApiKey)
                 
-                Toggle(isOn: $config.useLocalhost) {
+                Toggle(isOn: $useLocalhost) {
                     Text("Use Localhost")
                     Text(String.apiHost.replacingOccurrences(of: "/api", with: ""))
                 }
             }
             
             Section("Debug Options") {
-                Toggle("Print debug lines", isOn: $config.printDebgLogs)
-                Toggle("Send debug model", isOn: $config.sendDebugModel)
+                Toggle("Print debug lines", isOn: $printDebgLogs)
+                Toggle("Send debug model", isOn: $sendDebugModel)
             }
         }
         .formStyle(.grouped)

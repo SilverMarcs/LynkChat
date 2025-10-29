@@ -11,12 +11,18 @@ import SwiftData
 struct GeneralSettings: View {
     @Environment(\.modelContext) var modelContext
     
-    @State var config = AppConfig()
+    @AppStorage("autogenTitle") var autogenTitle: Bool = true
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
+    #if os(macOS)
+    @AppStorage("fontSize") var fontSize: Double = 13
+    #else
+    @AppStorage("fontSize") var fontSize: Double = 17
+    #endif
 
     var body: some View {
         Form {
             Section("Title") {
-                Toggle(isOn: $config.autogenTitle) {
+                Toggle(isOn: $autogenTitle) {
                     Text("Autogenerate Title")
                 }
             }
@@ -24,25 +30,29 @@ struct GeneralSettings: View {
             Section("Behaviour") {
                 LabeledContent("Restart Onboarding") {
                     Button("Launch") {
-                        config.hasCompletedOnboarding = false
+                        hasCompletedOnboarding = false
                     }
                 }
             }
             
             Section("Appearance") {
-                Slider(value: $config.fontSize, in: 8...25, step: 1) {
+                Slider(value: $fontSize, in: 8...25, step: 1) {
                     Text("Font Size")
                 } minimumValueLabel: {
                     Text("")
                         .monospacedDigit()
                 } maximumValueLabel: {
-                    Text("\(Int(config.fontSize))")
+                    Text("\(Int(fontSize))")
                         .monospacedDigit()
                 }
             }
             .sectionActions {
                 Button("Reset") {
-                    config.resetFontSize()
+                    #if os(macOS)
+                    fontSize = 13
+                    #else
+                    fontSize = 17
+                    #endif
                 }
             }
         }
