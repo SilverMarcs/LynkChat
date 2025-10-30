@@ -16,14 +16,7 @@ struct PluginsOnboarding: View {
             iconColor: .cyan,
             title: "Connect LLMs with plugins",
             content: {
-                Form {
-                    Section {
-                        Text("Setup MCP Servers")
-                    }
-                    #if os(iOS)
-                    .listRowBackground(Color(.secondarySystemBackground))
-                    #endif
-                }
+                Form { EmptyView() }
             },
             footerText: "Enable plugins to give your AI assistant more capabilities"
         )

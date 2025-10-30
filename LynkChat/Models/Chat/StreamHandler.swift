@@ -102,17 +102,14 @@ struct StreamHandler {
     
     private func createAPIRequest(with messages: [APIMessage]) -> APIRequest {
         let date = "Today's date is \(Date().formatted(date: .complete, time: .omitted))"
-        
-        let mcpServersDict = ChatConfigDefaults().mcpServers.toDictionary(enabledIds: chat.config.enabledMCPServerIds)
-        
+
         return APIRequest(
             userId: "zabir",
             model: AppConfig().sendDebugModel ? "debug" : chat.config.model.id,
             messages: messages,
             temperature: chat.config.temperature.value,
             thinkingBudget: chat.config.thinkingBudget.rawValue,
-            system: date + "\n" + chat.config.systemPrompt,
-            mcpServers: mcpServersDict
+            system: date + "\n" + chat.config.systemPrompt
         )
     }
     

@@ -57,10 +57,6 @@ struct ChatInspector: View {
                 }
             }
             
-            Section("MCP Servers") {
-                MCPServersToggleView(config: $chat.config)
-            }
-            
             Section("System Prompt") {
                 sysPrompt
             }

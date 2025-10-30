@@ -22,20 +22,6 @@ struct ChatServiceSettings: View {
                 }
             }
             
-            Section("MCP Servers") {
-                NavigationLink {
-                    MCPServerManagementView()
-                } label: {
-                    HStack {
-                        Label("Manage Servers", systemImage: "server.rack")
-                        Spacer()
-                        Text("\(config.mcpServers.count) configured")
-                            .foregroundStyle(.secondary)
-                            .font(.subheadline)
-                    }
-                }
-            }
-            
             Section {
                 sysPrompt
             } header: {

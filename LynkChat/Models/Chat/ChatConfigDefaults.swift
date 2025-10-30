@@ -12,32 +12,6 @@ struct ChatConfigDefaults {
     @AppStorage("temperature") var temperature: Temperature = .balanced
     @AppStorage("thinkingBudget") var thinkingBudget: ThinkingBudget = .none
     
-    @AppStorage("mcpServersData") private var mcpServersData: Data = Data()
-    var mcpServers: [MCPServer] {
-        get {
-            guard !mcpServersData.isEmpty,
-                  let servers = try? JSONDecoder().decode([MCPServer].self, from: mcpServersData) else {
-                return []
-            }
-            return servers
-        }
-        set {
-            if let encoded = try? JSONEncoder().encode(newValue) {
-                mcpServersData = encoded
-            }
-        }
-    }
-    
-    @AppStorage("defaultEnabledMCPServerIdsData") private var defaultEnabledMCPServerIdsData: Data = Data()
-    var defaultEnabledMCPServerIds: Set<UUID> {
-        get {
-            (try? JSONDecoder().decode(Set<UUID>.self, from: defaultEnabledMCPServerIdsData)) ?? []
-        }
-        set {
-            defaultEnabledMCPServerIdsData = (try? JSONEncoder().encode(newValue)) ?? Data()
-        }
-    }
-    
     @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses fairly concise."
     #if os(macOS)
     @AppStorage("systemPrompt") var systemPrompt: String = String.systemPrompt

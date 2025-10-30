@@ -18,7 +18,6 @@ struct ChatConfig: Identifiable, Codable, Sendable {
         self.thinkingBudget = defaults.thinkingBudget
         self.systemPrompt = defaults.systemPrompt
         self.models = [defaults.defaultModel]
-        self.enabledMCPServerIds = defaults.defaultEnabledMCPServerIds
     }
     
     var model: ChatModel {
@@ -36,20 +35,6 @@ struct ChatConfig: Identifiable, Codable, Sendable {
     var thinkingBudget: ThinkingBudget
     var systemPrompt: String
     var models: Set<ChatModel> = []
-    var enabledMCPServerIds: Set<UUID> = []
-    
-    // Helper methods for MCP servers
-    func isMCPServerEnabled(_ serverId: UUID) -> Bool {
-        enabledMCPServerIds.contains(serverId)
-    }
-    
-    mutating func toggleMCPServer(_ serverId: UUID) {
-        if isMCPServerEnabled(serverId) {
-            enabledMCPServerIds.remove(serverId)
-        } else {
-            enabledMCPServerIds.insert(serverId)
-        }
-    }
 }
 
 extension ChatConfig {
@@ -59,7 +44,6 @@ extension ChatConfig {
         newConfig.thinkingBudget = self.thinkingBudget
         newConfig.systemPrompt = self.systemPrompt
         newConfig.models = self.models
-        newConfig.enabledMCPServerIds = self.enabledMCPServerIds
         return newConfig
     }
 }
