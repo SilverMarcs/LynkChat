@@ -30,10 +30,20 @@ struct ImageGridView: View {
                     .buttonStyle(.plain)
                     .matchedTransitionSource(id: generation.id, in: imageNamespace)
                     .contextMenu {
-                        Button {
-                            generation.config.prompt.copyToPasteboard()
-                        } label: {
-                            Label("Copy Prompt", systemImage: "document.on.clipboard")
+                        Section {
+                            if let image = generation.image {
+                                Button {
+                                    generation.session.inputImages = [image]
+                                } label: {
+                                    Label("Set as Source", systemImage: "photo.badge.plus")
+                                }
+                            }
+                            
+                            Button {
+                                generation.config.prompt.copyToPasteboard()
+                            } label: {
+                                Label("Copy Prompt", systemImage: "document.on.clipboard")
+                            }
                         }
                         
                         Button(role: .destructive) {

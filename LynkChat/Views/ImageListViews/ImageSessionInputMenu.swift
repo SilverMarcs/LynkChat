@@ -16,7 +16,17 @@ struct ImageSessionInputMenu: View {
     @State private var addingPhoto: Bool = false
 
     var body: some View {
-        Menu {            
+        Menu {
+            if !session.inputImages.isEmpty {
+                Button(role: .destructive) {
+                    session.inputImages.removeAll()
+                } label: {
+                    Label("Clear Images", systemImage: "trash")
+                }
+                
+                Divider()
+            }
+            
             Button {
                 showPhotosPicker = true
             } label: {
@@ -30,14 +40,18 @@ struct ImageSessionInputMenu: View {
             }
         } label: {
             if !addingPhoto {
-#if os(macOS)
-                Image(systemName: "plus.circle.fill")
-                    .foregroundStyle(.secondary, .clear)
-                    .font(.largeTitle).fontWeight(.semibold)
-                    .glassEffect()
-#else
-                Image(systemName: "plus")
-#endif
+                if let firstImageData = session.inputImages.first {
+                    ImageViewerData(data: firstImageData, enableSave: false, size: 30, contentMode: .fit, radius: 16)
+                } else {
+                    #if os(macOS)
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(.secondary, .clear)
+                        .font(.largeTitle).fontWeight(.semibold)
+                        .glassEffect()
+                    #else
+                    Image(systemName: "plus")
+                    #endif
+                }
             } else {
                 ProgressView()
                 #if os(macOS)

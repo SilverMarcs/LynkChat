@@ -10,18 +10,13 @@ import SwiftUI
 struct ImageDetail: View {
     @Bindable var session: ImageSession
 
-    @Namespace private var transition
-
     @State private var isFocused: Bool = false
     @State private var showingInspector: Bool = false
-
-    // Gallery handled inside ImageGridView
+    
+    @Namespace private var transition
 
     var body: some View {
         ImageGridView(generations: session.imageGenerations)
-        .safeAreaBar(edge: .bottom) {
-            ImageInputView(session: session)
-        }
         .toolbarTitleMenu {
             Picker("Model", selection: $session.config.model) {
                 ForEach(ImageModel.allCases) { model in
@@ -44,9 +39,6 @@ struct ImageDetail: View {
         .onSubmit(of: .search) {
             isFocused = false
             Task { await session.send() }
-        }
-        .onChange(of: isFocused) {
-            if isFocused { Scroller.scrollToBottom(delay: 0.2) }
         }
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
@@ -71,8 +63,7 @@ struct ImageDetail: View {
         .sheet(isPresented: $showingInspector) {
             ImageInspector(session: session, showingInspector: $showingInspector)
                 .navigationTransition(.zoom(sourceID: "image-inspector-button", in: transition))
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.medium])
         }
-        // Fullscreen gallery presented inside ImageGridView
     }
 }
