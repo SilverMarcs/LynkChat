@@ -21,7 +21,7 @@ struct ImageGalleryModal: View {
     var body: some View {
         #if os(macOS)
         GalleryImageView(data: generations[selectedIndex].image)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .zoomable()
             .overlay {
                 HStack {
                     Button(action: previous) { Image(systemName: "chevron.left") }

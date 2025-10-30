@@ -21,7 +21,7 @@ struct ImageInspector: View {
             }
             
             Section("Models") {
-                Picker("Model", selection: $session.config.model) {
+                Picker("Creation Model", selection: $session.config.model) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)

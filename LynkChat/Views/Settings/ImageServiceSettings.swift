@@ -22,8 +22,7 @@ struct ImageServiceSettings: View {
                 
                 Picker("Default Editing Model", selection: $config.defaultEditingModel) {
                     ForEach(ImageEditingModel.allCases) { model in
-//                        Label(model.name, image: "model.imageName")
-                        Text(model.name)
+                        Label(model.name, image: model.imageName)
                             .tag(model)
                     }
                 }
@@ -37,7 +36,7 @@ struct ImageServiceSettings: View {
             }
             
             Section(header: Text("API Keys")) {
-                TextField("Wavespeed API Key", text: $config.wavespeedApiKey)
+                SecureField("Wavespeed API Key", text: $config.wavespeedApiKey)
             }
         }
         .formStyle(.grouped)
