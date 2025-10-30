@@ -9,41 +9,37 @@ import SwiftUI
 
 struct ImageGridView: View {
     let generations: [Generation]
-
-    @State private var selectedIndex: Int? = nil
-    @State private var showGallery: Bool = false
+    
+    @State private var selectedGeneration: Generation?
     @Namespace private var imageNamespace
-
+    
     private let columns = [GridItem(.adaptive(minimum: 150))]
-
+    
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 8) {
-                ForEach(Array(generations.enumerated()), id: \.element) { item in
+                ForEach(generations.reversed()) { generation in
                     Button {
-                        if !item.element.isProcessing {
-                            selectedIndex = item.offset
-                            showGallery = true
+                        if !generation.isProcessing {
+                            selectedGeneration = generation
                         }
                     } label: {
-                        GenerationThumbnailView(generation: item.element)
+                        GenerationThumbnailView(generation: generation)
                             .clipShape(.rect(cornerRadius: 10))
                     }
                     .buttonStyle(.plain)
-                    .matchedTransitionSource(id: item.element.id, in: imageNamespace)
+                    .matchedTransitionSource(id: generation.id, in: imageNamespace)
                     .contextMenu {
-                        Section {
-                            Button {
-                                item.element.config.prompt.copyToPasteboard()
-                            } label: {
-                                Label("Copy Prompt", systemImage: "document.on.clipboard")
-                            }
-                            
-                            Button(role: .destructive) {
-                                item.element.deleteSelf()
-                            } label: {
-                                Label("Delete Generation", systemImage: "trash")
-                            }
+                        Button {
+                            generation.config.prompt.copyToPasteboard()
+                        } label: {
+                            Label("Copy Prompt", systemImage: "document.on.clipboard")
+                        }
+                        
+                        Button(role: .destructive) {
+                            generation.deleteSelf()
+                        } label: {
+                            Label("Delete Generation", systemImage: "trash")
                         }
                     }
                 }
@@ -51,21 +47,13 @@ struct ImageGridView: View {
             .padding()
         }
         #if os(macOS)
-        .sheet(isPresented: $showGallery) {
-            ImageGalleryModal(
-                generations: generations,
-                initialIndex: selectedIndex ?? 0,
-                namespace: imageNamespace
-            )
+        .sheet(item: $selectedGeneration) { generation in
+            ImageGalleryModal(generations: generations, selected: generation, namespace: imageNamespace)
         }
         #else
-        .fullScreenCover(isPresented: $showGallery) {
-            ImageGalleryModal(
-                generations: generations,
-                initialIndex: selectedIndex ?? 0,
-                namespace: imageNamespace
-            )
-            .ignoresSafeArea()
+        .fullScreenCover(item: $selectedGeneration) { generation in
+            ImageGalleryModal(generations: generations, selected: generation, namespace: imageNamespace)
+                .ignoresSafeArea()
         }
         #endif
     }

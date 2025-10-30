@@ -39,31 +39,7 @@ struct ImageInspector: View {
 
             }
             
-            Section("Parameters") {
-                Picker("Number of Images", selection: $session.config.numImages) {
-                    ForEach(1 ... 4, id: \.self) { num in
-                        Text(String(num)).tag(num)
-                    }
-                }
-                
-//                    Picker("Size", selection: $session.config.size) {
-//                        ForEach(ImagesQuery.Size.allCases, id: \.self) { size in
-//                            Text(size.rawValue.capitalized).tag(size)
-//                        }
-//                    }
-//
-//                    Picker("Quality", selection: $session.config.quality) {
-//                        ForEach(ImagesQuery.Quality.allCases, id: \.self) { quality in
-//                            Text(quality.rawValue.uppercased()).tag(quality)
-//                        }
-//                    }
-//
-//                    Picker("Style", selection: $session.config.style) {
-//                        ForEach(ImagesQuery.Style.allCases, id: \.self) { style in
-//                            Text(style.rawValue.capitalized).tag(style)
-//                        }
-//                    }
-            }
+            
         }
         .formStyle(.grouped)
         .toolbar {

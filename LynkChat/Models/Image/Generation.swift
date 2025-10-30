@@ -41,12 +41,8 @@ class Generation {
             do {
                 let dataObjects: [Data]
                 if session.inputImages.isEmpty {
-                    // Creation mode (default)
-print("using gen")
                     dataObjects = try await APIService.generateImages(config: config)
                 } else {
-                    // Edit mode whenever input images are present
-                    print("using edit")
                     dataObjects = try await ImageEditingService.editImages(
                         using: config.editingModel,
                         prompt: config.prompt,

@@ -11,8 +11,7 @@ extension APIService {
     static func generateImages(config: ImageConfig) async throws -> [Data] {
         let requestBody = ImageGenerationRequest(
             prompt: config.prompt,
-            model: config.model.id,
-            n: config.numImages
+            model: config.model.id
         )
         
         guard var request = makeRequest(path: .image, method: .POST) else {

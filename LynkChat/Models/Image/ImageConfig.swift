@@ -13,7 +13,6 @@ struct ImageConfig: Identifiable, Codable, Sendable {
     var model: ImageModel
     var editingModel: ImageEditingModel
     var prompt: String
-    var numImages: Int
     
     init(prompt: String = "") {
         self.prompt = prompt
@@ -22,7 +21,5 @@ struct ImageConfig: Identifiable, Codable, Sendable {
         
         self.model = defaults.defaultModel
         self.editingModel = .seedream
-        self.numImages = defaults.numImages
     }
-    
 }

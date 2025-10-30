@@ -29,18 +29,7 @@ struct ImageServiceSettings: View {
                 }
             }
             
-            Section(header: Text("Default Parameters")) {
-                Stepper(
-                    label,
-                    value: Binding<Double>(
-                        get: { Double(config.numImages) },
-                        set: { config.numImages = Int($0) }
-                    ),
-                    in: 1...4,
-                    step: 1,
-                    format: .number
-                )
-            }
+            
             
             Toggle(isOn: $config.saveToPhotos) {
                 Text("Save to Photos Library")
@@ -56,13 +45,7 @@ struct ImageServiceSettings: View {
         .toolbarTitleDisplayMode(.inline)
     }
     
-    var label: String {
-        #if os(macOS)
-        "Number of Images"
-        #else
-        "Number of Images (\(config.numImages))"
-        #endif
-    }
+    
 }
 
 #Preview {

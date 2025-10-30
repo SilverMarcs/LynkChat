@@ -10,5 +10,4 @@ import Foundation
 struct ImageGenerationRequest: Codable {
     let prompt: String
     let model: String
-    let n: Int
 }
