@@ -37,19 +37,10 @@ struct ImageInputView: View {
             HStack {
                 ImageSessionInputMenu(session: session)
                 
-                TextField("Prompt", text: $session.prompt, axis: .vertical)
+                TextField("Prompt", text: $session.config.prompt, axis: .vertical)
                     .onSubmit( { sendInput() } )
                     .textFieldStyle(.plain)
                     .focused($isFocused, equals: .imageInput)
-                    .onKeyPress(.upArrow) {
-                        if session.prompt.isEmpty {
-                            if let lastPrompt = session.imageGenerations.last?.config.prompt {
-                                session.prompt = lastPrompt
-                                return .handled
-                            }
-                        }
-                        return .ignored
-                    }
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 9)
@@ -66,7 +57,6 @@ struct ImageInputView: View {
                 .tint(.accent)
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
-                //                .keyboardShortcut(chat.isReplying ? "d" : .return)
             }
             #endif
         }
@@ -87,9 +77,7 @@ struct ImageInputView: View {
         #endif
     }
     
-    private func sendInput() {
-        guard !session.prompt.isEmpty else { return }
-        
+    private func sendInput() {        
         #if !os(macOS)
         isFocused = nil
         #endif

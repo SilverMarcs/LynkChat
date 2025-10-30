@@ -8,59 +8,47 @@
 import Foundation
 
 enum ImageEditingService {
-    /// Unified entry point for editing.
-    static func editImages(using model: ImageEditingModel, allHistory: [Generation]) async throws -> [Data] {
-        guard let latest = allHistory.last else {
-            throw RuntimeError("No generation history available")
+    /// Edit images strictly using provided input images and prompt.
+    static func editImages(using model: ImageEditingModel, prompt: String, inputImages: [Data]) async throws -> [Data] {
+        guard !inputImages.isEmpty else {
+            throw RuntimeError("No input images provided for editing")
         }
 
-        let prompt = latest.config.prompt
-        
-        // Collect previous images: prefer session inputImages; else fallback to previous generation's single image
-        var previousOutputs: [Data] = []
-        let sessionInputs = latest.session.inputImages
-        if !sessionInputs.isEmpty { previousOutputs.append(contentsOf: sessionInputs) }
-
-        if previousOutputs.isEmpty, allHistory.count >= 2 {
-            let secondLast = allHistory[allHistory.count - 2]
-            if let img = secondLast.image { previousOutputs.append(img) }
-        }
-        
         // Build request body based on model
         let requestBody: [String: Any]
         let apiPath: String
-        
+
         switch model {
         case .seedream:
             apiPath = model.apiPath
             requestBody = [
                 "prompt": prompt,
-                "images": convertToBase64URLs(previousOutputs),
-                "enable_sync_mode": false,
+                "images": convertToBase64URLs(inputImages),
+                "enable_sync_mode": true,
                 "enable_base64_output": true
             ]
-            
+
         case .nanoBanana:
             apiPath = model.apiPath
             requestBody = [
                 "prompt": prompt,
-                "images": convertToBase64URLs(previousOutputs),
+                "images": convertToBase64URLs(inputImages),
                 "output_format": "jpeg",
-                "enable_sync_mode": false,
+                "enable_sync_mode": true,
                 "enable_base64_output": true
             ]
         case .qwen:
             apiPath = model.apiPath
             requestBody = [
                 "prompt": prompt,
-                "images": convertToBase64URLs(previousOutputs),
+                "images": convertToBase64URLs(inputImages),
                 "seed": -1,
                 "output_format": "jpeg",
-                "enable_sync_mode": false,
+                "enable_sync_mode": true,
                 "enable_base64_output": true
             ]
         }
-        
+
         // Submit task and poll for result
         return try await submitAndPollTask(path: apiPath, body: requestBody)
     }

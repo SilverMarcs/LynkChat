@@ -80,6 +80,13 @@
 				Views/ChatListViews/ChatListMac.swift = (
 					macos,
 				);
+				Views/ImageListViews/ImageDetailMac.swift = (
+					macos,
+				);
+				Views/ImageListViews/ImageDetailMobile.swift = (
+					ios,
+					xros,
+				);
 				Views/InputViews/iOS/CameraView.swift = (
 					ios,
 					xros,

@@ -22,7 +22,6 @@ class Generation {
     @Relationship(deleteRule: .nullify)
     var config: ImageConfig
     
-    // Single generated/edited image for this step
     var image: Data? = nil
     
     @Transient
@@ -36,25 +35,26 @@ class Generation {
     @MainActor
     func send() async {
         isProcessing = true
+        defer { isProcessing = false }
 
         generatingTask = Task { @MainActor in
             do {
                 let dataObjects: [Data]
                 if session.inputImages.isEmpty {
+                    // Creation mode (default)
                     dataObjects = try await APIService.generateImages(config: config)
                 } else {
-                    let history = session.imageGenerations
+                    // Edit mode whenever input images are present
                     dataObjects = try await ImageEditingService.editImages(
                         using: config.editingModel,
-                        allHistory: history
+                        prompt: config.prompt,
+                        inputImages: session.inputImages
                     )
                 }
 
                 self.image = dataObjects.first
-                isProcessing = false
             } catch {
                 errorMessage = "\(error.localizedDescription)"
-                isProcessing = false
             }
         }
 
@@ -73,16 +73,7 @@ class Generation {
             #endif
         } catch {
             errorMessage = error.localizedDescription
-            isProcessing = false
         }
-    
-        Scroller.scrollToBottom(delay: 0.1)
-    }
-    
-    func stopGenerating() {
-        generatingTask?.cancel()
-        isProcessing = false
-        errorMessage = "Generation was stopped"
     }
     
     func deleteSelf() {

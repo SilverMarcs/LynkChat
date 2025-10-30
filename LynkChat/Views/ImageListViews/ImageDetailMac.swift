@@ -7,10 +7,8 @@
 
 import SwiftUI
 
-struct ImageDetailMac: View {
+struct ImageDetail: View {
     @Bindable var session: ImageSession
-
-    // Gallery handled inside ImageGridView
 
     var body: some View {
         ImageGridView(generations: session.imageGenerations)
@@ -29,7 +27,5 @@ struct ImageDetailMac: View {
         .safeAreaBar(edge: .bottom) {
             ImageInputView(session: session)
         }
-        // Sheet gallery presented inside ImageGridView
     }
-    
 }

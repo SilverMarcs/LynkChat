@@ -57,7 +57,6 @@ struct ImageGridView: View {
                 initialIndex: selectedIndex ?? 0,
                 namespace: imageNamespace
             )
-            .frame(minWidth: 700, minHeight: 500)
         }
         #else
         .fullScreenCover(isPresented: $showGallery) {

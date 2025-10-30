@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ImageDetailMobile: View {
+struct ImageDetail: View {
     @Bindable var session: ImageSession
 
     @Namespace private var transition
