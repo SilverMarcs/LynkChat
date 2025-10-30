@@ -46,7 +46,9 @@ struct QuickPanelView: View {
         .transaction { $0.animation = nil }
         .frame(width: 650)
         .onAppear {
-            isFocused = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                isFocused = true
+            }
         }
         .onChange(of: chat.inputManager.dataFiles.count) {
             updateHeightBasedOnContent()

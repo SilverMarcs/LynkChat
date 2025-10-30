@@ -82,14 +82,10 @@ import Combine
     }
 
     // MARK: - Quick Panel
-    var quickPanelChat: Chat?
+//    var quickPanelChat: Chat?
     var isQuickPanelPresented: Bool = false
 
     func getOrCreateQuickPanelChat() -> Chat {
-        if let existingChat = quickPanelChat {
-            return existingChat
-        }
-
         let statusId = ChatStatus.quick.id
         var descriptor = FetchDescriptor<Chat>(
             predicate: #Predicate { $0.statusId == statusId }
@@ -97,7 +93,7 @@ import Combine
         descriptor.fetchLimit = 1
         
         let modelContext = globalContainer.mainContext
-
+        
         do {
             let quickChats = try modelContext.fetch(descriptor)
             if let existingChat = quickChats.first {
@@ -105,8 +101,6 @@ import Combine
                 existingChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
                 existingChat.config.models = [.gemini_flash]
                 
-//                existingChat.config.enableTool(.scrapeLinks)
-//                existingChat.config.enableTool(.webSearch)
                 return existingChat
             } else {
                 let newChat = Chat()
@@ -114,28 +108,12 @@ import Combine
                 newChat.status = ChatStatus.quick
                 newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
                 newChat.config.models = [.gemini_flash]
-//                newChat.config.enableTool(.scrapeLinks)
-//                newChat.config.enableTool(.webSearch)
+                
                 modelContext.insert(newChat)
-                quickPanelChat = newChat
                 return newChat
             }
         } catch {
-            print("Error fetching or creating quick panel chat: \(error)")
-            // Handle the error appropriately (e.g., show an alert)
-            // For now, return a new chat to prevent the app from crashing
-            // ideally, this should never happen
-            let newChat = Chat()
-            newChat.statusId = ChatStatus.quick.id
-            newChat.status = ChatStatus.quick
-            newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-            modelContext.insert(newChat)  // Insert into SwiftData
-            quickPanelChat = newChat
-            return newChat
+            fatalError("Error fetching or creating quick panel chat: \(error)")
         }
-    }
-
-    func clearQuickPanelChat() {
-        quickPanelChat = nil
     }
 }

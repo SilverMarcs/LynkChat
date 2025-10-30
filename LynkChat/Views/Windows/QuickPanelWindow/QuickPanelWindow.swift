@@ -11,7 +11,7 @@ import SwiftData
 class QuickPanelWindow: NSPanel {
     private var heightConstraint: NSLayoutConstraint?
     private var chatVM: ChatVM
-    var chat: Chat? // The chat object for the quick panel
+    var chat: Chat // The chat object for the quick panel
     private var currentHeightState: QuickPanelHeight = .collapsed()
 
     @discardableResult
@@ -22,6 +22,8 @@ class QuickPanelWindow: NSPanel {
         chatVM: ChatVM
     ) {
         self.chatVM = chatVM
+        self.chat = chatVM.getOrCreateQuickPanelChat()
+        
         super.init(contentRect: NSRect(x: 0, y: 0, width: 650, height: 57),
                    styleMask: [.nonactivatingPanel, .closable, .fullSizeContentView, .titled],
                    backing: backing,
@@ -43,11 +45,10 @@ class QuickPanelWindow: NSPanel {
         backgroundColor = .clear
 
         // Get or create the quick panel chat from the ChatVM
-        self.chat = chatVM.getOrCreateQuickPanelChat()
 
         let hostingView = NSHostingView(
             rootView: QuickPanelView(
-                chat: chat!, // Use the chat obtained from ChatVM
+                chat: chat, // Use the chat obtained from ChatVM
                 updateHeightState: { [weak self] heightState in
                     self?.setHeightState(heightState)
                 }
@@ -84,7 +85,7 @@ class QuickPanelWindow: NSPanel {
             chatVM.isQuickPanelPresented = true
 
             // Explicitly collapse if chat is empty *before* showing
-            if chat?.currentThread.isEmpty == true && chat?.inputManager.dataFiles.isEmpty == true {
+            if chat.currentThread.isEmpty == true && chat.inputManager.dataFiles.isEmpty == true {
                 setHeightState(.collapsed())
             } else {
                 updateHeightStateBasedOnContent()
@@ -95,8 +96,6 @@ class QuickPanelWindow: NSPanel {
     }
 
     func updateHeightStateBasedOnContent() {
-        guard let chat = chat else { return } // Use the window's chat
-
         let newState: QuickPanelHeight
 
         if !chat.currentThread.isEmpty {
