@@ -40,7 +40,7 @@ struct ImageDetail: View {
             .labelStyle(.titleAndIcon)
         }
         .toolbar(.hidden, for: .tabBar)
-        .searchable(text: $session.prompt, isPresented: $isFocused, prompt: "Generate Images")
+        .searchable(text: $session.config.prompt, isPresented: $isFocused, prompt: "Generate Images")
         .onSubmit(of: .search) {
             isFocused = false
             Task { await session.send() }

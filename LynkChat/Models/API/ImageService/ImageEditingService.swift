@@ -25,7 +25,7 @@ enum ImageEditingService {
                 "prompt": prompt,
                 "images": convertToBase64URLs(inputImages),
                 "enable_sync_mode": true,
-                "enable_base64_output": true
+                "enable_base64_output": false
             ]
 
         case .nanoBanana:
@@ -35,8 +35,9 @@ enum ImageEditingService {
                 "images": convertToBase64URLs(inputImages),
                 "output_format": "jpeg",
                 "enable_sync_mode": true,
-                "enable_base64_output": true
+                "enable_base64_output": false
             ]
+            
         case .qwen:
             apiPath = model.apiPath
             requestBody = [
@@ -45,12 +46,12 @@ enum ImageEditingService {
                 "seed": -1,
                 "output_format": "jpeg",
                 "enable_sync_mode": true,
-                "enable_base64_output": true
+                "enable_base64_output": false
             ]
         }
 
-        // Submit task and poll for result
-        return try await submitAndPollTask(path: apiPath, body: requestBody)
+        // Submit task and get result directly (sync mode)
+        return try await submitTaskSync(path: apiPath, body: requestBody)
     }
     
     // MARK: - Helper Functions
@@ -59,15 +60,7 @@ enum ImageEditingService {
         images.map { "data:image/png;base64,\($0.base64EncodedString())" }
     }
     
-    private static func submitAndPollTask(path: String, body: [String: Any]) async throws -> [Data] {
-        // Step 1: Submit the task
-        let requestId = try await submitTask(path: path, body: body)
-        
-        // Step 2: Poll for the result
-        return try await pollForResult(requestId: requestId)
-    }
-    
-    private static func submitTask(path: String, body: [String: Any]) async throws -> String {
+    private static func submitTaskSync(path: String, body: [String: Any]) async throws -> [Data] {
         guard let url = URL(string: "https://api.wavespeed.ai\(path)") else {
             throw URLError(.badURL)
         }
@@ -86,90 +79,31 @@ enum ImageEditingService {
         
         if !(200...299).contains(httpResponse.statusCode) {
             let errorText = String(data: data, encoding: .utf8) ?? "Unknown error"
-            throw RuntimeError("Failed to submit task: \(errorText)")
+            throw RuntimeError("Failed to edit images: \(errorText)")
         }
         
-        // Parse response
+        // Parse response - in sync mode, outputs are returned directly as URLs
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
         guard let responseData = json?["data"] as? [String: Any],
-              let requestId = responseData["id"] as? String else {
+              let outputs = responseData["outputs"] as? [String], !outputs.isEmpty else {
             let responseText = String(data: data, encoding: .utf8) ?? "Unable to decode"
-            throw RuntimeError("No requestId in response: \(responseText)")
+            throw RuntimeError("No outputs in response: \(responseText)")
         }
         
-        return requestId
-    }
-    
-    private static func pollForResult(
-        requestId: String,
-        maxAttempts: Int = 60,
-        delaySeconds: UInt64 = 2
-    ) async throws -> [Data] {
-        guard let url = URL(string: "https://api.wavespeed.ai/api/v3/predictions/\(requestId)/result") else {
-            throw URLError(.badURL)
+        // Download images from URLs
+        var images: [Data] = []
+        for output in outputs {
+            guard let imageURL = URL(string: output) else {
+                throw RuntimeError("Invalid image URL: \(output)")
+            }
+            let (imageData, _) = try await URLSession.shared.data(from: imageURL)
+            images.append(imageData)
         }
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(ImageConfigDefaults().wavespeedApiKey)", forHTTPHeaderField: "Authorization")
-        
-        for _ in 1...maxAttempts {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw RuntimeError("Invalid response")
-            }
-            
-            if !(200...299).contains(httpResponse.statusCode) {
-                let errorText = String(data: data, encoding: .utf8) ?? "Unknown error"
-                throw RuntimeError("Failed to query result: \(errorText)")
-            }
-            
-            // Parse response
-            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-            guard let responseData = json?["data"] as? [String: Any] else {
-                let responseText = String(data: data, encoding: .utf8) ?? "Unable to decode"
-                throw RuntimeError("Invalid response format: \(responseText)")
-            }
-            
-            let status = responseData["status"] as? String ?? "unknown"
-            
-            switch status {
-            case "completed":
-                // Extract and decode outputs
-                guard let outputs = responseData["outputs"] as? [String], !outputs.isEmpty else {
-                    throw RuntimeError("No outputs in completed response")
-                }
-                
-                // Try to decode as base64, if that fails assume they're URLs and download
-                var images: [Data] = []
-                for output in outputs {
-                    if let imageData = Data(base64Encoded: output) {
-                        images.append(imageData)
-                    } else if let url = URL(string: output) {
-                        let (downloadedData, _) = try await URLSession.shared.data(from: url)
-                        images.append(downloadedData)
-                    }
-                }
-                
-                if images.isEmpty {
-                    throw RuntimeError("No valid images in outputs")
-                }
-                
-                return images
-                
-            case "failed":
-                let error = responseData["error"] as? String ?? "Unknown error"
-                throw RuntimeError("Task failed: \(error)")
-                
-            case "processing", "created":
-                try await Task.sleep(nanoseconds: delaySeconds * 1_000_000_000)
-                
-            default:
-                throw RuntimeError("Unknown status: \(status)")
-            }
+        if images.isEmpty {
+            throw RuntimeError("No valid images downloaded")
         }
         
-        throw RuntimeError("Polling timeout after \(maxAttempts) attempts")
+        return images
     }
 }
