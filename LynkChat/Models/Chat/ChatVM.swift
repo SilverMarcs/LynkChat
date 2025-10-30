@@ -82,9 +82,8 @@ import Combine
     }
 
     // MARK: - Quick Panel
-//    var quickPanelChat: Chat?
     var isQuickPanelPresented: Bool = false
-
+    
     func getOrCreateQuickPanelChat() -> Chat {
         let statusId = ChatStatus.quick.id
         var descriptor = FetchDescriptor<Chat>(

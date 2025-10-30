@@ -44,6 +44,7 @@ struct ImageDetail: View {
             ToolbarItem(placement: .bottomBar) {
                 ImageSessionInputMenu(session: session)
             }
+//            .sharedBackgroundVisibility(session.inputImages.isEmpty ? .visible : .hidden)
 
             ToolbarSpacer(.fixed, placement: .bottomBar)
 
