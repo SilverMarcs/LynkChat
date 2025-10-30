@@ -43,7 +43,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         case .gpt: "openai.symbols"
         case .grok: "xai.symbols"
         case .imagen, .nanoBanana: "gemini.symbols"
-        case .seedream: "cohere.symbols"
+        case .seedream: "bytedance.symbols"
         }
     }
 
@@ -53,7 +53,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         case .gpt: "#00947A"
         case .grok: "#222222"
         case .imagen, .nanoBanana: "#E64335"
-        case .seedream: "#6431e2"
+        case .seedream: "#00A8B2"
         }
     }
 }

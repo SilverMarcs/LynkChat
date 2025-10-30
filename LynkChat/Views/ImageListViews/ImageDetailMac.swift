@@ -12,7 +12,6 @@ struct ImageDetail: View {
 
     var body: some View {
         ImageGridView(generations: session.imageGenerations)
-        .contentMargins(.all, 15, for: .scrollContent)
         .navigationTitle(session.title)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {

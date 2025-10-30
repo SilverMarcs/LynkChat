@@ -48,11 +48,11 @@ struct ImageGridView: View {
         }
         #if os(macOS)
         .sheet(item: $selectedGeneration) { generation in
-            ImageGalleryModal(generations: generations, selected: generation, namespace: imageNamespace)
+            ImageGalleryModal(generations: generations.reversed(), selected: generation, namespace: imageNamespace)
         }
         #else
         .fullScreenCover(item: $selectedGeneration) { generation in
-            ImageGalleryModal(generations: generations, selected: generation, namespace: imageNamespace)
+            ImageGalleryModal(generations: generations.reversed(), selected: generation, namespace: imageNamespace)
                 .ignoresSafeArea()
         }
         #endif
