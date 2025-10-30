@@ -16,15 +16,14 @@ enum ImageEditingService {
 
         let prompt = latest.config.prompt
         
-        // Collect previous images
+        // Collect previous images: prefer session inputImages; else fallback to previous generation's single image
         var previousOutputs: [Data] = []
-        if allHistory.count >= 2 {
+        let sessionInputs = latest.session.inputImages
+        if !sessionInputs.isEmpty { previousOutputs.append(contentsOf: sessionInputs) }
+
+        if previousOutputs.isEmpty, allHistory.count >= 2 {
             let secondLast = allHistory[allHistory.count - 2]
-            previousOutputs = secondLast.images.isEmpty ? secondLast.inputImages : secondLast.images
-        }
-        
-        if !latest.inputImages.isEmpty {
-            previousOutputs.append(contentsOf: latest.inputImages)
+            if let img = secondLast.image { previousOutputs.append(img) }
         }
         
         // Build request body based on model

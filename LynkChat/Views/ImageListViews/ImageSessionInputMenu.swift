@@ -56,9 +56,11 @@ struct ImageSessionInputMenu: View {
             guard !selectedPhotos.isEmpty else { return }
             addingPhoto = true
             do {
+                session.inputImages.removeAll()
                 for item in selectedPhotos {
                     if let data = try await item.loadTransferable(type: Data.self) {
                         session.inputImages.append(data)
+                        break
                     }
                 }
             } catch {
@@ -75,11 +77,13 @@ struct ImageSessionInputMenu: View {
             switch result {
             case .success(let urls):
                 Task {
+                    session.inputImages.removeAll()
                     for url in urls {
                         guard url.startAccessingSecurityScopedResource() else { continue }
                         defer { url.stopAccessingSecurityScopedResource() }
                         if let data = try? Data(contentsOf: url) {
                             session.inputImages.append(data)
+                            break
                         }
                     }
                 }

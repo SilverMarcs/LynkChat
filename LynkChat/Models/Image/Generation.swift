@@ -17,22 +17,13 @@ class Generation {
     var session: ImageSession
     
     var errorMessage: String = ""
+    var isProcessing: Bool = false
     
     @Relationship(deleteRule: .nullify)
     var config: ImageConfig
     
-    @Relationship(deleteRule: .cascade)
-    var images: [Data] = []
-
-    // Any user-provided input images used for editing in this step
-    @Relationship(deleteRule: .cascade)
-    var inputImages: [Data] = []
-
-    // Track whether this step is generation or editing
-    var mode: GenerationMode = GenerationMode.generation
-    
-    @Attribute(.ephemeral)
-    var state: GenerationState
+    // Single generated/edited image for this step
+    var image: Data? = nil
     
     @Transient
     var generatingTask: Task<Void, Error>?
@@ -40,20 +31,18 @@ class Generation {
     init(config: ImageConfig, session: ImageSession) {
         self.config = config
         self.session = session
-        self.state = .generating
     }
     
     @MainActor
     func send() async {
-        state = .generating
+        isProcessing = true
 
         generatingTask = Task { @MainActor in
             do {
                 let dataObjects: [Data]
-                switch mode {
-                case .generation:
+                if session.inputImages.isEmpty {
                     dataObjects = try await APIService.generateImages(config: config)
-                case .editing:
+                } else {
                     let history = session.imageGenerations
                     dataObjects = try await ImageEditingService.editImages(
                         using: config.editingModel,
@@ -61,13 +50,11 @@ class Generation {
                     )
                 }
 
-                self.images = dataObjects
-                state = .success
+                self.image = dataObjects.first
+                isProcessing = false
             } catch {
-                if state != .error {
-                    errorMessage = "\(error.localizedDescription)"
-                    state = .error
-                }
+                errorMessage = "\(error.localizedDescription)"
+                isProcessing = false
             }
         }
 
@@ -86,7 +73,7 @@ class Generation {
             #endif
         } catch {
             errorMessage = error.localizedDescription
-            state = .error
+            isProcessing = false
         }
     
         Scroller.scrollToBottom(delay: 0.1)
@@ -94,22 +81,11 @@ class Generation {
     
     func stopGenerating() {
         generatingTask?.cancel()
-        state = .error
+        isProcessing = false
         errorMessage = "Generation was stopped"
     }
     
     func deleteSelf() {
         session.deleteGeneration(self)
     }
-}
-
-enum GenerationState: Codable, Sendable {
-    case generating
-    case success
-    case error
-}
-
-enum GenerationMode: String, Codable, Sendable {
-    case generation
-    case editing
 }

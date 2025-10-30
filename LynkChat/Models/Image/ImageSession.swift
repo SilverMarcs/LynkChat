@@ -23,7 +23,7 @@ class ImageSession {
 
     var imageGenerations: [Generation] {
         get {
-            unsortedImageGenerations.sorted { $0.date < $1.date }
+            unsortedImageGenerations.sorted { $0.date > $1.date }
         }
         set {
             unsortedImageGenerations = newValue
@@ -41,18 +41,13 @@ class ImageSession {
         guard !promptToUse.isEmpty else { return }
         
         let generation = Generation(config: config, session: self)
+        generation.isProcessing = true
         generation.config.prompt = promptToUse
-        // Attach current input images and decide mode
-        generation.inputImages = inputImages
         imageGenerations.append(generation)
 
-        generation.mode = await ImageModelSelector.selectMode(prompt: promptToUse, history: imageGenerations, hasInputImages: !inputImages.isEmpty)
-
-        inputImages.removeAll()
-    
         await Scroller.scrollToBottom(delay: 0.2)
-        
         await generation.send()
+        inputImages.removeAll()
     }
     
     func deleteGeneration(_ generation: Generation) {
@@ -66,4 +61,3 @@ class ImageSession {
         }
     }
 }
-

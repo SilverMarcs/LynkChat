@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Photos
-import SwiftMediaViewer
 
 struct ImageViewerData: View {
     let data: Data
@@ -18,7 +17,8 @@ struct ImageViewerData: View {
     @State private var showCheckmark = false
     
     var body: some View {
-        SMVImageData(data: data)
+        if let platformImage = PlatformImage.from(data: data) {
+              Image(platformImage: platformImage)
             .scaledToFill()
             .frame(width: size, height: size)
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
@@ -32,7 +32,8 @@ struct ImageViewerData: View {
                             .glassEffect(in: .circle)
                     }
                     .padding(10)
-                
+                    
+                }
             }
         }
     }
