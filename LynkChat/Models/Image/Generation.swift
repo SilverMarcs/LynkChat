@@ -37,23 +37,18 @@ class Generation {
         defer { isProcessing = false }
 
         generatingTask = Task { @MainActor in
-            do {
-                let dataObjects: [Data]
-                if session.inputImages.isEmpty {
-                    dataObjects = try await APIService.generateImages(config: config)
-                } else {
-                    dataObjects = try await ImageEditingService.editImages(
-                        using: config.editingModel,
-                        prompt: config.prompt,
-                        inputImages: session.inputImages
-                    )
-                }
-
-                self.image = dataObjects.first
-            } catch {
-                print(error.localizedDescription)
-                deleteSelf()
+            let dataObjects: [Data]
+            if session.inputImages.isEmpty {
+                dataObjects = try await APIService.generateImages(config: config)
+            } else {
+                dataObjects = try await ImageEditingService.editImages(
+                    using: config.editingModel,
+                    prompt: config.prompt,
+                    inputImages: session.inputImages
+                )
             }
+
+            self.image = dataObjects.first
         }
 
         do {
@@ -70,7 +65,8 @@ class Generation {
             application.endBackgroundTask(taskId)
             #endif
         } catch {
-            errorMessage = error.localizedDescription
+            print(error.localizedDescription)
+            deleteSelf()
         }
     }
     
