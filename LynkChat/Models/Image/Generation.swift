@@ -15,8 +15,7 @@ class Generation {
     var date: Date = Date()
     
     var session: ImageSession
-    
-    var errorMessage: String = ""
+
     var isProcessing: Bool = false
     
     @Relationship(deleteRule: .nullify)
@@ -52,7 +51,8 @@ class Generation {
 
                 self.image = dataObjects.first
             } catch {
-                errorMessage = "\(error.localizedDescription)"
+                print(error.localizedDescription)
+                deleteSelf()
             }
         }
 
