@@ -51,32 +51,54 @@
 				Utils/HotKeyManager.swift = (
 					macos,
 				);
-				Views/ChatDetailViews/ChatDetailMac.swift = (
+				Views/ChatViews/ChatDetailViews/ChatDetailMac.swift = (
 					macos,
 				);
-				Views/ChatDetailViews/ChatDetailMobile.swift = (
+				Views/ChatViews/ChatDetailViews/ChatDetailMobile.swift = (
 					ios,
 					xros,
 				);
-				Views/ChatDetailViews/ChatToolbar.swift = (
+				Views/ChatViews/ChatDetailViews/ChatToolbar.swift = (
 					macos,
 				);
-				Views/ChatDetailViews/MessageViews/TextSelectionView.swift = (
+				Views/ChatViews/ChatDetailViews/PasteHandler.swift = (
+					macos,
+				);
+				Views/ChatViews/ChatListViews/ChatListCards.swift = (
+					macos,
+				);
+				Views/ChatViews/ChatListViews/ChatListIos.swift = (
 					ios,
 					xros,
 				);
-				Views/ChatDetailViews/PasteHandler.swift = (
+				Views/ChatViews/ChatListViews/ChatListMac.swift = (
 					macos,
 				);
-				Views/ChatListViews/ChatListCards.swift = (
-					macos,
-				);
-				Views/ChatListViews/ChatListIos.swift = (
+				Views/ChatViews/InputViews/iOS/CameraView.swift = (
 					ios,
 					xros,
 				);
-				Views/ChatListViews/ChatListMac.swift = (
+				Views/ChatViews/InputViews/iOS/ExpandedSearchView.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatViews/InputViews/iOS/InputArea.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatViews/InputViews/iOS/InputEditor.swift = (
+					ios,
+					xros,
+				);
+				Views/ChatViews/InputViews/macOS/InputArea.swift = (
 					macos,
+				);
+				Views/ChatViews/InputViews/macOS/InputEditor.swift = (
+					macos,
+				);
+				Views/ChatViews/MessageViews/TextSelectionView.swift = (
+					ios,
+					xros,
 				);
 				Views/ImageListViews/ImageDetailMac.swift = (
 					macos,
@@ -84,28 +106,6 @@
 				Views/ImageListViews/ImageDetailMobile.swift = (
 					ios,
 					xros,
-				);
-				Views/InputViews/iOS/CameraView.swift = (
-					ios,
-					xros,
-				);
-				Views/InputViews/iOS/ExpandedSearchView.swift = (
-					ios,
-					xros,
-				);
-				Views/InputViews/iOS/InputArea.swift = (
-					ios,
-					xros,
-				);
-				Views/InputViews/iOS/InputEditor.swift = (
-					ios,
-					xros,
-				);
-				Views/InputViews/macOS/InputArea.swift = (
-					macos,
-				);
-				Views/InputViews/macOS/InputEditor.swift = (
-					macos,
 				);
 				Views/Onboarding/PermissionsOnboarding.swift = (
 					ios,
