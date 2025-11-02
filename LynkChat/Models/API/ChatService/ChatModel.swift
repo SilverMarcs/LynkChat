@@ -63,7 +63,9 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         switch self {
         case .gemini_flash, .gemini_pro:
             [.text, .image, .pdf, .audio, .video]
-        case .gpt, .gpt_mini, .claude_sonnet, .claude_opus, .perplexity:
+        case .gpt, .gpt_mini, .claude_sonnet, .claude_opus:
+            [.text, .image, .pdf]
+        case .perplexity:
             [.text, .image]
         }
     }
