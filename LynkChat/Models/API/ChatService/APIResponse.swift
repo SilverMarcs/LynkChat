@@ -115,7 +115,13 @@ struct APIResponse: Decodable {
 
 // MARK: - Error Response
 struct APIErrorResponse: Decodable {
-    let error: String
+    let success: Bool
+    let error: ErrorDetail
+    
+    struct ErrorDetail: Decodable {
+        let code: String
+        let message: String
+    }
 }
 
 // MARK: - File Upload Response

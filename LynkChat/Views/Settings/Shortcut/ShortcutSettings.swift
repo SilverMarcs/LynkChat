@@ -10,11 +10,13 @@ import SwiftUI
 struct ShortcutSettings: View {
     var body: some View {
         Form {
-            LabeledContent {
-                Text("⌥ + Space")
-            } label: {
-                Text("Quick Panel Shortcut")
+            #if os(macOS)
+            Section("Quick Panel") {
+                ForEach(Shortcut.quickPanelShortcuts, id: \.id) { shortcut in
+                    ShortcutRow(shortcut: shortcut)
+                }
             }
+            #endif
 
             Section("Chat Interaction") {
                 ForEach(Shortcut.chatInteractionShortcuts, id: \.id) { shortcut in
@@ -37,21 +39,6 @@ struct ShortcutSettings: View {
         .formStyle(.grouped)
         .navigationTitle("Keyboard Shortcuts")
         .toolbarTitleDisplayMode(.inline)
-    }
-}
-
-struct ShortcutRow: View {
-    var shortcut: Shortcut
-
-    var body: some View {
-        LabeledContent {
-            Text(shortcut.action)
-                .foregroundStyle(.primary)
-        } label: {
-            Text(shortcut.key)
-                .monospaced()
-                .foregroundStyle(.secondary)
-        }
     }
 }
 

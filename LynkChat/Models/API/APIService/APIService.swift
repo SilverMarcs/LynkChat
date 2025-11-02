@@ -34,7 +34,7 @@ enum APIService {
             AppLogger.critical("\(context) error response: \(String(data: data, encoding: .utf8) ?? "Unable to read error data")")
             
             let errorResponse = try JSONDecoder().decode(APIErrorResponse.self, from: data)
-            throw RuntimeError(errorResponse.error)
+            throw RuntimeError(errorResponse.error.message)
         }
     }
     
