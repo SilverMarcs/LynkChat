@@ -17,7 +17,7 @@ enum APIService {
         request.httpMethod = method.rawValue
         request.setValue(AppConfig().myApiKey, forHTTPHeaderField: "x-api-key")
         
-        if method == .POST && path != .upload {
+        if method == .POST {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
         
@@ -71,9 +71,6 @@ enum APIPath {
     case chat
     case title
     case image
-    case upload
-    case list
-    case delete
     
     var pathString: String {
         switch self {
@@ -83,12 +80,6 @@ enum APIPath {
             return "/chat/title"
         case .image:
             return "/image"
-        case .upload:
-            return "/chat/rag/upload"
-        case .list:
-            return "/chat/rag/list"
-        case .delete:
-            return "/chat/rag/delete"
         }
     }
 }

@@ -124,34 +124,9 @@ struct APIErrorResponse: Decodable {
     }
 }
 
-// MARK: - File Upload Response
-struct FileUploadResponse: Codable {
-    let success: Bool
-    let message: String
-}
 
 // MARK: - Title Response
 struct TitleResponse: Codable {
     let title: String
 }
 
-// MARK: - RAG List Response
-struct RAGResource: Codable {
-    let id: Int
-    let filename: String
-    let mimeType: String
-    let createdAt: String
-    let updatedAt: String
-}
-
-struct RAGListResponse: Codable {
-    let success: Bool
-    let data: [RAGResource]
-    let count: Int
-}
-
-// MARK: - RAG Delete Response
-struct RAGDeleteResponse: Codable {
-    let success: Bool
-    let message: String
-}
