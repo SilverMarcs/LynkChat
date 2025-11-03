@@ -144,7 +144,9 @@ struct QuickPanelView: View {
         chat.inputManager.dataFiles.removeAll()
         // Reset to default Quick Panel model
         let defaults = ChatConfigDefaults()
-        chat.config.model = defaults.quickDefaultModel
+        chat.config.models = [defaults.quickDefaultModel]
+        chat.config.systemPrompt = defaults.quickSystemPrompt
+        chat.config.temperature = .precise
         
         updateHeightState(.collapsed())
     }
