@@ -142,6 +142,9 @@ struct QuickPanelView: View {
     private func resetChat() {
         chat.deleteAllMessages()
         chat.inputManager.dataFiles.removeAll()
+        // Reset to default Quick Panel model
+        let defaults = ChatConfigDefaults()
+        chat.config.model = defaults.quickDefaultModel
         
         updateHeightState(.collapsed())
     }
@@ -175,6 +178,5 @@ struct QuickPanelView: View {
 }
 
 #Preview {
-    QuickPanelView(chat: .mockChat,
-                   updateHeightState: { _ in })
+    QuickPanelView(chat: .mockChat, updateHeightState: { _ in })
 }

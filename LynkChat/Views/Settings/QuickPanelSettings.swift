@@ -23,7 +23,9 @@ struct QuickPanelSettings: View {
                     Text("Access from anywhere in the OS")
                 }
             }
-                
+            
+            ModelPicker(selectedModel: $config.quickDefaultModel, label: "Default Model")
+            
             Section("System Prompt") {
                 TextEditor(text: $config.quickSystemPrompt)
                     .font(.body)

@@ -92,21 +92,22 @@ import Combine
         descriptor.fetchLimit = 1
         
         let modelContext = globalContainer.mainContext
+        let defaults = ChatConfigDefaults()
         
         do {
             let quickChats = try modelContext.fetch(descriptor)
             if let existingChat = quickChats.first {
                 existingChat.deleteAllMessages() // Clear existing messages
-                existingChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-                existingChat.config.models = [.gemini_flash]
+                existingChat.config.systemPrompt = defaults.quickSystemPrompt
+                existingChat.config.models = [defaults.quickDefaultModel]
                 
                 return existingChat
             } else {
                 let newChat = Chat()
                 newChat.statusId = statusId
                 newChat.status = ChatStatus.quick
-                newChat.config.systemPrompt = ChatConfigDefaults().quickSystemPrompt
-                newChat.config.models = [.gemini_flash]
+                newChat.config.systemPrompt = defaults.quickSystemPrompt
+                newChat.config.models = [defaults.quickDefaultModel]
                 
                 modelContext.insert(newChat)
                 return newChat

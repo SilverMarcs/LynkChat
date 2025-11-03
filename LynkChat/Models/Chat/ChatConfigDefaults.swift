@@ -12,7 +12,9 @@ struct ChatConfigDefaults {
     @AppStorage("temperature") var temperature: Temperature = .balanced
     @AppStorage("thinkingBudget") var thinkingBudget: ThinkingBudget = .none
     
+    @AppStorage("quickDefaultModel") var quickDefaultModel: ChatModel = .gemini_flash
     @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses fairly concise."
+    
     #if os(macOS)
     @AppStorage("systemPrompt") var systemPrompt: String = String.systemPrompt
     #else
