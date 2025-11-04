@@ -107,6 +107,13 @@
 					ios,
 					xros,
 				);
+				Views/ImageListViews/ImagePasteHandler.swift = (
+					macos,
+				);
+				Views/ImageListViews/iOS/ImageCameraView.swift = (
+					ios,
+					xros,
+				);
 				Views/Onboarding/PermissionsOnboarding.swift = (
 					ios,
 					xros,

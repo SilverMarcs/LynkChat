@@ -10,6 +10,8 @@ import PhotosUI
 
 struct ImageSessionInputMenu: View {
     @Bindable var session: ImageSession
+    // Optional camera trigger for iOS; when provided, a camera option is shown
+    var showCamera: Binding<Bool>? = nil
     @State private var showPhotosPicker = false
     @State private var selectedPhotos = [PhotosPickerItem]()
     @State private var isFilePickerPresented: Bool = false
@@ -17,6 +19,18 @@ struct ImageSessionInputMenu: View {
 
     var body: some View {
         Menu {
+            #if !os(macOS)
+            Section {
+                if let showCamera {
+                    Button {
+                        showCamera.wrappedValue = true
+                    } label: {
+                        Label("Open Camera", systemImage: "camera")
+                    }
+                    
+                }
+            }
+            #endif
             if !session.inputImages.isEmpty {
                 Button(role: .destructive) {
                     session.inputImages.removeAll()

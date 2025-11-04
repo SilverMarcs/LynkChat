@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ImageInputView: View {
     @Bindable var session: ImageSession
@@ -49,6 +50,9 @@ struct ImageInputView: View {
                 .keyboardShortcut("l")
             }
         }
+        #if os(macOS)
+        .imagePasteHandler(session: session)
+        #endif
     }
     
     private func sendInput() {

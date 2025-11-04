@@ -12,6 +12,7 @@ struct ImageDetail: View {
 
     @State private var isFocused: Bool = false
     @State private var showingInspector: Bool = false
+    @State private var showCamera: Bool = false
     
     @Namespace private var transition
 
@@ -42,7 +43,7 @@ struct ImageDetail: View {
         }
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
-                ImageSessionInputMenu(session: session)
+                ImageSessionInputMenu(session: session, showCamera: $showCamera)
             }
 //            .sharedBackgroundVisibility(session.inputImages.isEmpty ? .visible : .hidden)
 
@@ -65,6 +66,10 @@ struct ImageDetail: View {
             ImageInspector(session: session, showingInspector: $showingInspector)
                 .navigationTransition(.zoom(sourceID: "image-inspector-button", in: transition))
                 .presentationDetents([.medium])
+        }
+        .fullScreenCover(isPresented: $showCamera) {
+            ImageCameraView(session: session)
+                .ignoresSafeArea()
         }
     }
 }
