@@ -50,10 +50,7 @@ struct QuickPanelView: View {
                 isFocused = true
             }
         }
-        .onChange(of: chat.inputManager.dataFiles.count) {
-            updateHeightBasedOnContent()
-        }
-        .onChange(of: chat.currentThread.count) {
+        .onChange(of: [chat.inputManager.dataFiles.count, chat.currentThread.count] ) {
             updateHeightBasedOnContent()
         }
     }
@@ -74,21 +71,40 @@ struct QuickPanelView: View {
     
     var textfieldView: some View {
         HStack(spacing: 12) {
-            Image(systemName: "magnifyingglass")
-                .resizable()
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
-                .frame(width: 24, height: 24)
-                .overlay(
+            Menu {
+                ForEach(ChatModel.allCases, id: \.self) { model in
                     Button {
-                        resetChat()
+                        chat.config.model = model
                     } label: {
-                        Color.clear
+                        HStack {
+                            Label(model.name, image: model.imageName)
+                                .labelStyle(.titleAndIcon)
+                            
+                            if model == chat.config.model {
+                                Image(systemName: "checkmark")
+                            }
+                        }
                     }
-                    .keyboardShortcut(.delete, modifiers: [.command, .shift])
-                    .opacity(0)
-                )
-            
+                }
+            } label: {
+                Image(chat.config.model.imageName)
+                    .resizable()
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .frame(width: 24, height: 24)
+            }
+            .menuStyle(.button)
+            .buttonStyle(.plain)
+            .overlay(
+                Button {
+                    resetChat()
+                } label: {
+                    Color.clear
+                }
+                .keyboardShortcut(.delete, modifiers: [.command, .shift])
+                .opacity(0)
+            )
+        
             TextField("Ask Anything...", text: $chat.inputManager.prompt, axis: .vertical)
                 .allowsTightening(true)
                 .focused($isFocused)
