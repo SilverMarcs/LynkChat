@@ -35,6 +35,8 @@ struct LynkChatApp: App {
         try? Tips.configure()
 
         #if os(macOS)
+        // Ensure Dock is hidden at launch until a main window appears
+        DockVisibilityManager.shared.updateActivationPolicy()
         QuickPanelWindow(chatVM: chatVM)
         #endif
     }

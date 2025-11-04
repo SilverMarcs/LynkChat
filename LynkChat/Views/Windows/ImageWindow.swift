@@ -11,6 +11,7 @@ struct ImageWindow: Scene {
     var body: some Scene {
         Window("Images", id: WindowID.images) {
             ImageContentView()
+                .trackAsMainWindow()
         }
         .defaultSize(.init(width: 1100, height: 800))
     }

@@ -14,6 +14,7 @@ struct AudioWindow: Scene {
                 .ignoresSafeArea()
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
                 .presentedWindowStyle(.hiddenTitleBar)
+                .trackAsMainWindow()
         }
         .restorationBehavior(.disabled)
         .windowLevel(.floating)

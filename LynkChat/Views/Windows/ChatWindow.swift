@@ -12,6 +12,7 @@ struct ChatWindow: Scene {
     var body: some Scene {
         Window("Chats", id: WindowID.chats) {
             ChatContentView()
+                .trackAsMainWindow()
         }
         .defaultSize(.init(width: 1200, height: 900))
         .commands {
@@ -22,6 +23,7 @@ struct ChatWindow: Scene {
             if let id = id {
                 ChatDetailWrapper(id: id)
                     .modelContainer(globalContainer)
+                    .trackAsMainWindow()
             } else {
                 Text("No ID")
             }

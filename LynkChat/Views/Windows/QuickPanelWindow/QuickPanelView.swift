@@ -14,6 +14,7 @@ struct QuickPanelView: View {
     @Bindable var chat: Chat
     var updateHeightState: (QuickPanelHeight) -> Void
     @Environment(ChatVM.self) var chatVM
+    @Environment(\.openWindow) private var openWindow
 
     @FocusState private var isFocused: Bool
     
@@ -145,14 +146,13 @@ struct QuickPanelView: View {
                         .imageScale(.medium)
                 }
                 .disabled(chat.currentThread.isEmpty)
-                .keyboardShortcut("N", modifiers: [.command])
+                .keyboardShortcut("N", modifiers: [.command, .shift])
                 
             }
             .foregroundStyle(.secondary)
             .buttonStyle(.plain)
             .padding(7)
         }
-//        .background(.background.opacity(0.5))
     }
     
     private func resetChat() {
@@ -168,19 +168,28 @@ struct QuickPanelView: View {
     }
     
     private func addToDB() {
-        NSApp.activate(ignoringOtherApps: true)
-        NSApp.keyWindow?.makeKeyAndOrderFront(nil)
-        
-        Task {
+        Task { @MainActor in
             let newChat = await chat.copy()
             newChat.title = "(↯) " + newChat.title
             chatVM.fork(newChat: newChat)
             resetChat()
-            
-            if let mainWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == "chats" }) {
-                mainWindow.makeKeyAndOrderFront(nil)
+
+            // Close Quick Panel so it doesn't hold focus
+            if let qp = NSApplication.shared.windows.first(where: { $0.identifier?.rawValue == "quickPanel" }) as? NSPanel {
+                qp.orderOut(nil)
             }
-            NSApp.activate(ignoringOtherApps: true)
+
+            // Ensure Chats window is open and front
+            openWindow(id: WindowID.chats)
+
+            // Activate app and bring Chats window key/front on the next runloop
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                NSApplication.shared.activate(ignoringOtherApps: true)
+                if let chatsWindow = NSApplication.shared.windows.first(where: { $0.title == "Chats" }) {
+                    if chatsWindow.isMiniaturized { chatsWindow.deminiaturize(nil) }
+                    chatsWindow.makeKeyAndOrderFront(nil)
+                }
+            }
         }
     }
     
