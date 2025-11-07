@@ -20,7 +20,7 @@ struct ImageGridView: View {
             LazyVGrid(columns: columns, spacing: 8) {
                 ForEach(generations.reversed()) { generation in
                     Button {
-                        if !generation.isProcessing {
+                        if !generation.isProcessing, generation.image != nil {
                             selectedGeneration = generation
                         }
                     } label: {
@@ -84,6 +84,10 @@ private struct GenerationThumbnailView: View {
                 .overlay {
                     if generation.isProcessing {
                         ProgressView()
+                    } else if generation.isFailed {
+                        Image(systemName: "exclamationmark.circle.fill")
+                            .font(.system(size: 40))
+                            .foregroundStyle(.red)
                     }
                 }
         }

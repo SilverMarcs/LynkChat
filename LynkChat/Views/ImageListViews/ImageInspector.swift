@@ -38,8 +38,17 @@ struct ImageInspector: View {
                 .labelStyle(.titleAndIcon)
 
             }
-            
-            
+
+            Section("Maintenance") {
+                Button(role: .destructive) {
+                    session.deleteFailedGenerations()
+                } label: {
+                    Label("Delete Failed Generations", systemImage: "trash")
+                        .contentShape(.rect)
+                }
+                .tint(.red)
+                .disabled(session.imageGenerations.allSatisfy { !$0.isFailed })
+            }
         }
         .formStyle(.grouped)
         .toolbar {

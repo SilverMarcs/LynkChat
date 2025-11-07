@@ -43,4 +43,11 @@ class ImageSession {
             modelContext?.delete(generation)
         }
     }
+
+    func deleteFailedGenerations() {
+        let failed = imageGenerations.filter { $0.isFailed }
+        for gen in failed {
+            deleteGeneration(gen)
+        }
+    }
 }

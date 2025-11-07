@@ -17,6 +17,7 @@ class Generation {
     var session: ImageSession
 
     var isProcessing: Bool = false
+    var isFailed: Bool = false
     
     @Relationship(deleteRule: .nullify)
     var config: ImageConfig
@@ -66,8 +67,7 @@ class Generation {
             #endif
         } catch {
             print(error.localizedDescription)
-            try? await Task.sleep(nanoseconds: 1_000_000)
-            deleteSelf()
+            isFailed = true
         }
     }
     

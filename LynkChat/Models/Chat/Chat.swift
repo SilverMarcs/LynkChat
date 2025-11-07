@@ -46,7 +46,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         return thread
     }
-    // TODO: so redundant
+
     var isEmpty: Bool = true
     
     @Relationship(deleteRule: .cascade)
