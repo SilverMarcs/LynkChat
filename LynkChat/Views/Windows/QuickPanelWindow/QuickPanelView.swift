@@ -91,7 +91,7 @@ struct QuickPanelView: View {
                 Image(chat.config.model.imageName)
                     .resizable()
                     .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color(hex: chat.config.model.color))
                     .frame(width: 24, height: 24)
             }
             .menuStyle(.button)
@@ -120,7 +120,7 @@ struct QuickPanelView: View {
                     .font(.largeTitle).fontWeight(.semibold)
                     .scaleEffect(1.1)
             }
-            .foregroundStyle((chat.isReplying ? AnyShapeStyle(.background) : AnyShapeStyle(.white)), (chat.isReplying ? .red : .accentColor))
+            .foregroundStyle((chat.isReplying ? AnyShapeStyle(.white) : AnyShapeStyle(.white)), (chat.isReplying ? .red : .accentColor))
             .buttonStyle(.plain)
 //            .contentTransition(.symbolEffect(.replace, options: .speed(2)))
         }
