@@ -10,7 +10,6 @@ import SwiftData
 import AppIntents
 
 struct ChatListIos: View {
-    @Bindable var config = AppSettings.shared
     @Environment(\.modelContext) var modelContext
     
     var chats: [Chat]
@@ -18,7 +17,7 @@ struct ChatListIos: View {
     
     var body: some View {
         List {
-            if chats.isEmpty && config.showCamera == false {
+            if chats.isEmpty {
                 ContentUnavailableView.search
             } else {
                 ForEach(chats, id: \.self) { chat in

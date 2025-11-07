@@ -19,7 +19,7 @@ struct LiveAudioView: View {
     @State private var hasSession = false
 
     init() {
-        guard let baseURL = Bundle.main.url(forResource: "liveaudio", withExtension: "html") else {
+        guard Bundle.main.url(forResource: "liveaudio", withExtension: "html") != nil else {
             fatalError("Could not find liveaudio.html in bundle")
         }
         

@@ -9,10 +9,8 @@ import SwiftUI
 import TipKit
 
 struct ChatDetailMobile: View {
-    private let config: AppSettings = AppSettings.shared
     @Environment(ChatVM.self) var chatVM
     
-    @Bindable var settings = AppSettings.shared
     @Bindable var chat: Chat
     
     @Namespace private var transition
@@ -21,6 +19,7 @@ struct ChatDetailMobile: View {
     @State private var showingInspector: Bool = false
     @State private var searchScope: SearchScope = .regular
     @State private var showingExpandedSearch: Bool = false
+    @State private var showCamera: Bool = false
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -37,9 +36,8 @@ struct ChatDetailMobile: View {
                 ErrorMessageView(chat: chat)
                 
                 Color.clear
-                    .frame(height: config.expandColor ? 400 : 1)
+                    .frame(height: chat.expandColor ? 400 : 1)
                     .listRowInsets(.init())
-//                    .modifier(AnimatingCellHeight(height: config.expandColor ? 375 : 1)) // TODO: see if needed anymore or not
                     .listRowSeparator(.hidden)
                     .id(String.bottomID)
             }
@@ -73,13 +71,9 @@ struct ChatDetailMobile: View {
             }
             .toolbarTitleDisplayMode(.inline)
             .listStyle(.plain)
-            .task {
-                onAppearStuff(proxy: proxy)
-            }
+            .task { onAppearStuff(proxy: proxy) }
             .onChange(of: isFocused) {
-                if isFocused {
-                    Scroller.scrollToBottom(delay: 0.2)
-                }
+                if isFocused { Scroller.scrollToBottom(with: proxy, delay: 0.2) }
             }
             .onChange(of: chat.inputManager.state) {
                 if chat.inputManager.state == .editing {
@@ -122,7 +116,7 @@ struct ChatDetailMobile: View {
                 .matchedTransitionSource(id: "shortcuts-button", in: transition)
                 
                 ToolbarItem(placement: .bottomBar) {
-                    ChatInputMenu(chat: chat)
+                    ChatInputMenu(chat: chat, showCamera: $showCamera)
                 }
                 
                 ToolbarSpacer(.fixed, placement: .bottomBar)
@@ -143,27 +137,25 @@ struct ChatDetailMobile: View {
                 }
             }
             .toolbar(.hidden, for: .tabBar)
-            .fullScreenCover(isPresented: $settings.showCamera) {
-                CameraView(chat: chat)
+            .fullScreenCover(isPresented: $showCamera) {
+                CameraView(chat: chat, isPresented: $showCamera)
                     .ignoresSafeArea()
             }
         }
     }
     
     private func sendInput() {
-        config.expandColor = true
+        chat.expandColor = true
         isFocused = false
         Task {
             await chat.sendInput()
         }
     }
     
-    // Rest of the helper methods and computed properties
     func onAppearStuff(proxy: ScrollViewProxy) {
         chatVM.activeChat = chat
-        config.expandColor = false
-        config.proxy = proxy
-        Scroller.scrollToBottom(animated: false)
+        chat.expandColor = false
+        Scroller.scrollToBottom(with: chat.scrollProxy, animated: false)
     }
 }
 

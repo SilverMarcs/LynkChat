@@ -10,8 +10,6 @@ import SwiftUI
 struct ChatDetailMac: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.modelContext) var modelContext
-    var config: AppSettings = AppSettings.shared
-    
     var chat: Chat
     
     @Namespace var inputNS
@@ -27,7 +25,7 @@ struct ChatDetailMac: View {
                 ErrorMessageView(chat: chat)
                 
                 Color.clear
-                    .frame(height: config.expandColor
+                    .frame(height: chat.expandColor
                            ? (chat.status == .quick ? 250 : 475)
                            : 1)
                     .id(String.bottomID)
@@ -41,9 +39,9 @@ struct ChatDetailMac: View {
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
             .navigationSubtitle(chat.config.systemPrompt.prefix(100))
             .task {
-                config.expandColor = false
-                config.proxy = proxy
-                Scroller.scrollToBottom(animated: false)
+                chat.expandColor = false
+                chat.scrollProxy = proxy 
+                Scroller.scrollToBottom(with: chat.scrollProxy, animated: false)
             }
             .onDisappear {
                 if chat.status == .temporary {

@@ -168,28 +168,20 @@ struct QuickPanelView: View {
     }
     
     private func addToDB() {
-        Task { @MainActor in
+        openWindow(id: WindowID.chats)
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.keyWindow?.makeKeyAndOrderFront(nil)
+        
+        Task {
             let newChat = await chat.copy()
             newChat.title = "(↯) " + newChat.title
             chatVM.fork(newChat: newChat)
             resetChat()
-
-            // Close Quick Panel so it doesn't hold focus
-            if let qp = NSApplication.shared.windows.first(where: { $0.identifier?.rawValue == "quickPanel" }) as? NSPanel {
-                qp.orderOut(nil)
+            
+            if let mainWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == "chats" }) {
+                mainWindow.makeKeyAndOrderFront(nil)
             }
-
-            // Ensure Chats window is open and front
-            openWindow(id: WindowID.chats)
-
-            // Activate app and bring Chats window key/front on the next runloop
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                NSApplication.shared.activate(ignoringOtherApps: true)
-                if let chatsWindow = NSApplication.shared.windows.first(where: { $0.title == "Chats" }) {
-                    if chatsWindow.isMiniaturized { chatsWindow.deminiaturize(nil) }
-                    chatsWindow.makeKeyAndOrderFront(nil)
-                }
-            }
+            NSApp.activate(ignoringOtherApps: true)
         }
     }
     

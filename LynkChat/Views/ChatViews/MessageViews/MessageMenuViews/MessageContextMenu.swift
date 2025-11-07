@@ -28,7 +28,7 @@ struct MessageContextMenu: View {
             
             if group.role == .user {
                 // Edit Button
-                Button(action: { chat.inputManager.setupEditing(message: group) }) {
+                Button(action: { chat.inputManager.setupEditing(chat: chat, message: group) }) {
                     Label("Edit", systemImage: "pencil.and.outline")
                 }
                 .help("Edit")

@@ -48,11 +48,11 @@ enum InputState {
         }
     }
     
-    func setupEditing(message: MessageGroup) {
+    func setupEditing(chat: Chat, message: MessageGroup) {
         withAnimation {
             self.state = .editing
         } completion: {
-            Scroller.scroll(to: .top, of: message, animated: true)
+            Scroller.scroll(to: .top, of: message, with: chat.scrollProxy, animated: true)
         }
         
         tempNormalPrompt = normalPrompt
@@ -72,4 +72,3 @@ enum InputState {
 }
 
 // MARK: - Drag and Drop
-

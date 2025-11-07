@@ -46,21 +46,26 @@ final class Chat: Equatable, Identifiable, Hashable {
         
         return thread
     }
+    // TODO: so redundant
     var isEmpty: Bool = true
     
     @Relationship(deleteRule: .cascade)
     var config: ChatConfig = ChatConfig()
     
     @Transient
+    var inputManager = InputManager()
+    
+    @Transient
     var streamingTask: Task<Void, Error>?
+
+    @Attribute(.ephemeral)
+    var expandColor: Bool = false
+    @Transient
+    var scrollProxy: ScrollViewProxy?
     
     var isReplying: Bool {
         currentThread.last?.isReplying ?? false
     }
-
-    @Transient
-    var inputManager = InputManager()
-    
     
     var totalTokens: Int {
         adjustedContext.reduce(0) { total, message in
@@ -72,6 +77,9 @@ final class Chat: Equatable, Identifiable, Hashable {
     
     @MainActor
     func processRequest(message: Message, user: Message) async {
+        expandColor = true
+        Scroller.scrollToBottom(with: scrollProxy)
+        
         // Cancel any existing task first and wait for it to complete
         streamingTask?.cancel()
         if let task = streamingTask {
@@ -209,7 +217,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
     
-    @MainActor
+//    @MainActor
     func stopStreaming() {
         guard let task = streamingTask else { return }
         task.cancel()
@@ -226,12 +234,11 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         errorDeleteLast()
-        withAnimation(.easeInOut(duration: 0.5)) {
-            AppSettings.shared.expandColor = false
-        }
+        
+        withAnimation(.easeInOut(duration: 0.5)) { self.expandColor = false }
     }
 
-    @MainActor
+//    @MainActor
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
         
@@ -269,7 +276,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
         
         if let lastMessage = currentThread.last, lastMessage == message {
-            Scroller.scrollToBottom()
+            Scroller.scrollToBottom(with: self.scrollProxy)
         }
     }
 
@@ -283,7 +290,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         contextResetPoint = nil
     }
     
-    @MainActor
+//    @MainActor
     func deleteLastMessage() {
         guard let lastGroup = currentThread.last, !lastGroup.isReplying else { return }
         errorMessage = nil
@@ -300,10 +307,10 @@ final class Chat: Equatable, Identifiable, Hashable {
             secondToLastGroup.activeMessage.next = nil
         }
         
-        Scroller.scrollToBottom()
+//        Scroller.scrollToBottom(with: self.scrollProxy)
     }
     
-    @MainActor
+//    @MainActor
     func errorDeleteLast() {
         guard let last = self.currentThread.last else { return }
         
@@ -338,7 +345,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
     
-    @MainActor
+//    @MainActor
     func deleteAllMessages() {
         rootMessage = nil
         contextResetPoint = nil
@@ -379,7 +386,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         return newChat
     }
     
-    @MainActor
+//    @MainActor
     func cleanupMessagesAndGroups() {
         rootMessage = nil
         withAnimation { isEmpty = true }

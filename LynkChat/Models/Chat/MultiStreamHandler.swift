@@ -15,9 +15,6 @@ struct MultiStreamHandler {
     let user: Message
     
     func handleMultipleRequests() async throws {
-        AppSettings.shared.expandColor = true
-        Scroller.scrollToBottom()
-        
         let models = Array(chat.config.models)
         
         if models.count == 1 {

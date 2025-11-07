@@ -10,7 +10,6 @@ import SwiftData
 
 struct IOSWindow: Scene {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
-    @Bindable var settings = AppSettings.shared
     
     @State var selection: ImageSession?
     @State var searchText: String = ""

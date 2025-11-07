@@ -15,9 +15,6 @@ struct StreamHandler {
     let user: Message
     
     func handleRequest() async throws {
-        AppSettings.shared.expandColor = true
-        Scroller.scrollToBottom()
-        
         let apiRequest = await createAPIRequest()
         try await processStream(from: apiRequest)
         
@@ -138,6 +135,6 @@ struct StreamHandler {
             chat.errorDeleteLast()
         }
         
-        withAnimation(.easeInOut(duration: 1)) { AppSettings.shared.expandColor = false }
+        withAnimation(.easeInOut(duration: 1)) { chat.expandColor = false }
     }
 }

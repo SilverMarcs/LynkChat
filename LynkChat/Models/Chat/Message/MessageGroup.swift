@@ -87,23 +87,11 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
     func goToPreviousMessage() {
         guard canGoToPrevious else { return }
         activeMessage = allMessages[currentMessageIndex - 1]
-        
-        scrollToActiveMessage()
     }
     
     func goToNextMessage() {
         guard canGoToNext else { return }
         activeMessage = allMessages[currentMessageIndex + 1]
-        
-        scrollToActiveMessage()
-    }
-    
-    private func scrollToActiveMessage() {
-        // TODO: add the aboev check etxernally
-        let anchor: UnitPoint = role == Message.Role.assistant ? .bottom : .top
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            Scroller.scroll(to: anchor, of: self)
-        }
     }
     
     func deleteActiveMessage() {
@@ -136,7 +124,6 @@ final class MessageGroup: Hashable, Identifiable, Equatable {
         if isSplitView {
             secondaryMessageIndex = 0
         }
-        Scroller.scroll(to: .top, of: self)
     }
     
     func nextSecondaryMessage() {

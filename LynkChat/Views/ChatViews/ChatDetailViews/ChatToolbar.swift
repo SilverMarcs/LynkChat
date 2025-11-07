@@ -95,7 +95,7 @@ struct ChatToolbar: ToolbarContent {
                 Button("Edit Last Message") {
                     guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }
                     isFocused = .textEditor // this isnt doing anything (on macos at least)
-                    chat.inputManager.setupEditing(message: lastUserMessage)
+                    chat.inputManager.setupEditing(chat: chat, message: lastUserMessage)
                 }
                 .keyboardShortcut("e")
                 .disabled(chat.status == .quick || chat.isReplying)

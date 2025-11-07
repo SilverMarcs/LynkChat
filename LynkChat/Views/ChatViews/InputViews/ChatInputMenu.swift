@@ -10,8 +10,8 @@ import PhotosUI
 
 struct ChatInputMenu: View {
     @Bindable var chat: Chat
-    
-    var config = AppSettings.shared
+    // Optional camera presentation for iOS; if provided, menu shows camera option
+    var showCamera: Binding<Bool>? = nil
     
     @State private var isFilePickerPresented: Bool = false
     @State private var showPhotosPicker = false
@@ -32,10 +32,12 @@ struct ChatInputMenu: View {
                     }
                 }
             
-                Button {
-                    config.showCamera = true
-                } label: {
-                    Label("Open Camera", systemImage: "camera")
+                if let showCamera {
+                    Button {
+                        showCamera.wrappedValue = true
+                    } label: {
+                        Label("Open Camera", systemImage: "camera")
+                    }
                 }
                 #endif
                 

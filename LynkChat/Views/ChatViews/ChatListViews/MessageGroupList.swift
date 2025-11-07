@@ -47,9 +47,7 @@ struct MessageGroupList: View {
                             chatVM.selections = [chat]
                             selectedGroupID = group.id
                             
-                            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                                Scroller.scroll(to: .top, of: group)
-                            }
+                            Scroller.scroll(to: .top, of: group, with: chat.scrollProxy, delay: delay)
                         } label: {
                             HighlightableTextView(getContextAroundMatch(content: group.activeMessage.content, searchText: searchText), highlightedText: searchText)
                                 .font(.system(size: 13))
@@ -147,4 +145,3 @@ extension ButtonStyle where Self == SelectedButtonStyle {
         SelectedButtonStyle(isSelected: isSelected)
     }
 }
-

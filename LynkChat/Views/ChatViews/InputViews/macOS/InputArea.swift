@@ -74,6 +74,7 @@ struct InputArea: View {
     }
     
     private func sendInput() {
+        chat.expandColor = true
         Task {
             await chat.sendInput()
         }

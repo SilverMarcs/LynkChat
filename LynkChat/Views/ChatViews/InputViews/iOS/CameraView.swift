@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 
 struct CameraView: UIViewControllerRepresentable {
     let chat: Chat
+    var isPresented: Binding<Bool>
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let imagePicker = UIImagePickerController()
@@ -27,17 +28,19 @@ struct CameraView: UIViewControllerRepresentable {
     }
 
     func makeCoordinator() -> CameraCoordinator {
-        return CameraCoordinator(picker: self, chat: chat)
+        return CameraCoordinator(picker: self, chat: chat, isPresented: isPresented)
     }
 }
 
 class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     var picker: CameraView
     var chat: Chat
+    var isPresented: Binding<Bool>
     
-    init(picker: CameraView, chat: Chat) {
+    init(picker: CameraView, chat: Chat, isPresented: Binding<Bool>) {
         self.picker = picker
         self.chat = chat
+        self.isPresented = isPresented
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -51,17 +54,13 @@ class CameraCoordinator: NSObject, UINavigationControllerDelegate, UIImagePicker
                 fileName: "Camera_\(UUID().uuidString).jpg"
             )
         
-            await MainActor.run {
-                AppSettings.shared.showCamera = false
-            }
+            await MainActor.run { self.isPresented.wrappedValue = false }
         }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         Task {
-            await MainActor.run {
-                AppSettings.shared.showCamera = false
-            }
+            await MainActor.run { self.isPresented.wrappedValue = false }
         }
     }
 }

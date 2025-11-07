@@ -8,16 +8,15 @@
 import SwiftUI
 
 enum Scroller<ID: Hashable> {
-    static func scroll(to anchor: UnitPoint, of id: ID, animated: Bool = true, delay: TimeInterval = 0.0) {
+    // Preferred: pass a proxy directly
+    static func scroll(to anchor: UnitPoint, of id: ID, with proxy: ScrollViewProxy?, animated: Bool = true, delay: TimeInterval = 0.0) {
+        guard let proxy else { return }
+        
         let action = {
-            if let proxy = AppSettings.shared.proxy {
-                if animated {
-                    withAnimation {
-                        proxy.scrollTo(id, anchor: anchor)
-                    }
-                } else {
-                    proxy.scrollTo(id, anchor: anchor)
-                }
+            if animated {
+                withAnimation { proxy.scrollTo(id, anchor: anchor) }
+            } else {
+                proxy.scrollTo(id, anchor: anchor)
             }
         }
         
@@ -28,7 +27,9 @@ enum Scroller<ID: Hashable> {
         }
     }
     
-    static func scrollToBottom(id: ID = String.bottomID, animated: Bool = true, delay: TimeInterval = 0.0) {
-        scroll(to: .bottom, of: id, animated: animated, delay: delay)
+    static func scrollToBottom(with proxy: ScrollViewProxy?, id: ID = String.bottomID, animated: Bool = true, delay: TimeInterval = 0.0) {
+        guard let proxy else { return }
+        
+        scroll(to: .bottom, of: id, with: proxy, animated: animated, delay: delay)
     }
 }

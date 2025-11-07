@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NavigationButtons: View {
+    @Environment(\.chat) var chat
     var message: MessageGroup
     
     var body: some View {
@@ -33,6 +34,8 @@ struct NavigationButtons: View {
                     if !message.isSplitView {
                         Button {
                             message.goToPreviousMessage()
+                            let anchor: UnitPoint = message.role == .assistant ? .bottom : .top
+                            Scroller.scroll(to: anchor, of: message, with: chat.scrollProxy, delay: 0.1)
                         } label: {
                             Label("Previous", systemImage: "chevron.left")
                         }
@@ -40,6 +43,8 @@ struct NavigationButtons: View {
                         
                         Button {
                             message.goToNextMessage()
+                            let anchor: UnitPoint = message.role == .assistant ? .bottom : .top
+                            Scroller.scroll(to: anchor, of: message, with: chat.scrollProxy, delay: 0.1)
                         } label: {
                             Label("Next", systemImage: "chevron.right")
                         }
