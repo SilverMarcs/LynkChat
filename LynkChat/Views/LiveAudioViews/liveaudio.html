@@ -163,7 +163,7 @@
         if (this.session) return;
         await this.ensureClient();
         this.session = await this.client.live.connect({
-          model: "gemini-live-2.5-flash-preview",
+          model: "gemini-2.5-flash-native-audio-preview-09-2025",
           callbacks: {
             onopen: () => {
               this.hasSession = true;
