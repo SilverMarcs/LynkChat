@@ -45,8 +45,12 @@ struct ImageInspector: View {
                 } label: {
                     Label("Delete Failed Generations", systemImage: "trash")
                         .contentShape(.rect)
+                        #if !os(macOS)
+                        .labelStyle(.titleOnly)
+                        #endif
                 }
                 .tint(.red)
+                .buttonStyle(.plain)
                 .disabled(session.imageGenerations.allSatisfy { !$0.isFailed })
             }
         }

@@ -38,9 +38,8 @@ struct ListCard: View {
                 Text(title)
                     .font(.callout)
                     .fontWeight(.semibold)
-                    .opacity(0.9)
+                    .opacity(0.72)
                     .padding(.leading, 2)
-                    .foregroundStyle(.secondary)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
