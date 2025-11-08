@@ -9,14 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct QuickPanelView: View {
-    @Environment(\.modelContext) private var modelContext
-
-    @Bindable var chat: Chat
-    var updateHeightState: (QuickPanelHeight) -> Void
     @Environment(ChatVM.self) var chatVM
     @Environment(\.openWindow) private var openWindow
+    
+    @Bindable var chat: Chat
+    var updateHeightState: (QuickPanelHeight) -> Void
 
-    @FocusState private var isFocused: Bool
+    @FocusState private var isFocused: FocusedField?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -46,10 +45,8 @@ struct QuickPanelView: View {
         }
         .transaction { $0.animation = nil }
         .frame(width: 650)
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                isFocused = true
-            }
+        .task {
+            isFocused = .quickPanel
         }
         .onChange(of: [chat.inputManager.dataFiles.count, chat.currentThread.count] ) {
             updateHeightBasedOnContent()
@@ -108,7 +105,7 @@ struct QuickPanelView: View {
         
             TextField("Ask Anything...", text: $chat.inputManager.prompt, axis: .vertical)
                 .allowsTightening(true)
-                .focused($isFocused)
+                .focused($isFocused, equals: .quickPanel)
                 .font(.system(size: 25))
                 .textFieldStyle(.plain)
                 .onSubmit {

@@ -10,6 +10,7 @@ import Foundation
 enum FocusedField {
     case textEditor
     case expandedTextEditor
+    case quickPanel
     case imageInput
     case searchBox
 }

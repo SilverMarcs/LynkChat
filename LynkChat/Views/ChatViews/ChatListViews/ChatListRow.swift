@@ -52,6 +52,7 @@ struct ChatListRow: View {
                     chat.status = (chat.status == .archived) ? .normal : .archived
                 } label: {
                     Label("Archive", systemImage: chat.status == .archived ? "tray.and.arrow.up.fill" : "archivebox")
+                        .labelStyle(.iconOnly)
                 }
                 .tint(chat.status == .archived ? .blue : .gray)
             }
