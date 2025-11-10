@@ -8,19 +8,22 @@
 import SwiftUI
 
 struct ImageServiceSettings: View {
-    @State var config: ImageConfigDefaults = .init()
+    @AppStorage("saveToPhotos") private var saveToPhotos: Bool = true
+    @AppStorage("defaultModel") private var defaultModel: ImageModel = .flux
+    @AppStorage("defaultEditingModel") private var defaultEditingModel: ImageEditingModel = .seedream
+    @AppStorage("wavespeedApiKey") private var wavespeedApiKey: String = ""
     
     var body: some View {
         Form {
             Section {
-                Picker("Default Model", selection: $config.defaultModel) {
+                Picker("Default Model", selection: $defaultModel) {
                     ForEach(ImageModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
                     }
                 }
                 
-                Picker("Default Editing Model", selection: $config.defaultEditingModel) {
+                Picker("Default Editing Model", selection: $defaultEditingModel) {
                     ForEach(ImageEditingModel.allCases) { model in
                         Label(model.name, image: model.imageName)
                             .tag(model)
@@ -30,13 +33,13 @@ struct ImageServiceSettings: View {
             
             
             
-            Toggle(isOn: $config.saveToPhotos) {
+            Toggle(isOn: $saveToPhotos) {
                 Text("Save to Photos Library")
                 Text("Images will be saved to Downloads folder otherwise")
             }
             
             Section(header: Text("API Keys")) {
-                SecureField("Wavespeed API Key", text: $config.wavespeedApiKey)
+                SecureField("Wavespeed API Key", text: $wavespeedApiKey)
             }
         }
         .formStyle(.grouped)

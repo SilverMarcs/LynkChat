@@ -15,15 +15,17 @@ struct ChatConfigDefaults {
     @AppStorage("quickDefaultModel") var quickDefaultModel: ChatModel = .gemini_flash
     @AppStorage("quickSystemPrompt") var quickSystemPrompt: String = "Keep your responses fairly concise."
     
-    #if os(macOS)
     @AppStorage("systemPrompt") var systemPrompt: String = String.systemPrompt
-    #else
-    @AppStorage("systemPrompt") var systemPrompt: String = String.systemPrompt + "\n Be concise with your responses"
-    #endif
 }
 
 extension String {
+    #if os(macOS)
     static let systemPrompt = """
     You are a helpful assistant.
     """
+    #else
+    static let systemPrompt = """
+    You are a helpful assistant.
+    """ + "\n Be concise with your responses"
+    #endif
 }

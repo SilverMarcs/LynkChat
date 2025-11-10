@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct ChatServiceSettings: View {
-    @State var config: ChatConfigDefaults = .init()
+    @AppStorage("defaultModel") private var defaultModel: ChatModel = .gemini_flash
+    @AppStorage("temperature") private var temperature: Temperature = .balanced
+    @AppStorage("systemPrompt") private var systemPrompt: String = String.systemPrompt
 
     var body: some View {
         Form {
-            ModelPicker(selectedModel: $config.defaultModel, label: "Default Model")
+            ModelPicker(selectedModel: $defaultModel, label: "Default Model")
             
             Section("Parameters") {
-                Picker("Behaviour", selection: $config.temperature) {
+                Picker("Behaviour", selection: $temperature) {
                     ForEach(Temperature.allCases, id: \.self) { option in
                         Text(option.name).tag(option)
                     }
@@ -29,7 +31,7 @@ struct ChatServiceSettings: View {
                     Text("System Prompt")
                     Spacer()
                     Button {
-                        config.systemPrompt = String.systemPrompt
+                        systemPrompt = String.systemPrompt
                     } label: {
                         Text("Default")
                             .fontWeight(.regular)
@@ -43,7 +45,7 @@ struct ChatServiceSettings: View {
     }
     
     var sysPrompt: some View {
-        TextEditor(text: $config.systemPrompt)
+        TextEditor(text: $systemPrompt)
             .font(.body)
             .scrollContentBackground(.hidden)
             .labelsHidden()

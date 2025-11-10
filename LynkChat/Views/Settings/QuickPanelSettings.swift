@@ -6,11 +6,10 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct QuickPanelSettings: View {
-    @Environment(\.modelContext) var modelContext
-    @State var config: ChatConfigDefaults = .init()
+    @AppStorage("quickDefaultModel") private var quickDefaultModel: ChatModel = .gemini_flash
+    @AppStorage("quickSystemPrompt") private var quickSystemPrompt: String = "Keep your responses fairly concise."
     
     var body: some View {
         Form {
@@ -24,10 +23,10 @@ struct QuickPanelSettings: View {
                 }
             }
             
-            ModelPicker(selectedModel: $config.quickDefaultModel, label: "Default Model")
+            ModelPicker(selectedModel: $quickDefaultModel, label: "Default Model")
             
             Section("System Prompt") {
-                TextEditor(text: $config.quickSystemPrompt)
+                TextEditor(text: $quickSystemPrompt)
                     .font(.body)
                     .frame(height: 70)
                     .scrollContentBackground(.hidden)
@@ -35,6 +34,7 @@ struct QuickPanelSettings: View {
         }
         .navigationTitle("Quick Panel")
         .formStyle(.grouped)
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 
