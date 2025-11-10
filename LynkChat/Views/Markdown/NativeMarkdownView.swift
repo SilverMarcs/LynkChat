@@ -34,12 +34,11 @@ struct NativeMarkdownView: View {
                 case .text(let string):
                     Text(LocalizedStringKey(string))
                         .lineSpacing(2)
-                        .font(.body)
 
                 case .codeBlock(let code):
                     ScrollView(.horizontal, showsIndicators: true) {
                         Text(code)
-                            .font(.body)
+                            .font(.callout)
                             .monospaced()
                             .textSelection(.enabled)
                             .fixedSize(horizontal: true, vertical: false)
@@ -66,17 +65,17 @@ struct NativeMarkdownView: View {
         // Map Markdown heading levels to SwiftUI fonts
         let font: Font = {
             switch level {
-            case 1: return .largeTitle.bold()
-            case 2: return .title.bold()
-            case 3: return .title2.weight(.semibold)
-            case 4: return .title3.weight(.semibold)
-            case 5: return .headline
+            case 1: return .title.bold()
+            case 2: return .title2.bold()
+            case 3: return .title3.weight(.semibold)
+            case 4: return .headline.weight(.semibold)
+            case 5: return .subheadline
             default: return .subheadline
             }
         }()
         Text(LocalizedStringKey(text))
             .font(font)
-            .padding(.top, level == 1 ? 4 : 2)
+            .padding(.top, 2)
     }
 
     // MARK: - List Rendering (Recursive)
@@ -90,7 +89,6 @@ struct NativeMarkdownView: View {
                         .frame(width: 16, alignment: .trailing)
                     Text(LocalizedStringKey(item.content))
                         .lineSpacing(2)
-                        .font(.body)
                 }
                 .padding(.leading, CGFloat(max(0, item.level - 1)) * 16)
             }
@@ -104,11 +102,9 @@ struct NativeMarkdownView: View {
             Circle()
                 .fill(.primary)
                 .frame(width: 4, height: 4)
-                .offset(y: -2)
+                .offset(y: -2.5)
         case .ordered(let n):
             Text("\(n).")
-                .font(.body)
-                .foregroundStyle(.primary)
         }
     }
 
