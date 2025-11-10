@@ -13,11 +13,7 @@ struct GeneralSettings: View {
     
     @AppStorage("autogenTitle") var autogenTitle: Bool = true
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
-    #if os(macOS)
     @AppStorage("fontSize") var fontSize: Double = 13
-    #else
-    @AppStorage("fontSize") var fontSize: Double = 17
-    #endif
 
     var body: some View {
         Form {
@@ -35,6 +31,7 @@ struct GeneralSettings: View {
                 }
             }
             
+            #if os(macOS)
             Section("Appearance") {
                 Slider(value: $fontSize, in: 8...25, step: 1) {
                     Text("Font Size")
@@ -48,13 +45,10 @@ struct GeneralSettings: View {
             }
             .sectionActions {
                 Button("Reset") {
-                    #if os(macOS)
                     fontSize = 13
-                    #else
-                    fontSize = 17
-                    #endif
                 }
             }
+            #endif
         }
         .formStyle(.grouped)
         .navigationTitle("General")

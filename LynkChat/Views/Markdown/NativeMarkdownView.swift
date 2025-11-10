@@ -21,11 +21,6 @@ struct ListItem: Equatable, Identifiable {
 
 struct NativeMarkdownView: View {
     private let parts: [MarkdownPart]
-    #if os(macOS)
-    @AppStorage("fontSize") var fontSize: Double = 13
-    #else
-    @AppStorage("fontSize") var fontSize: Double = 17
-    #endif
     
     init(text: String) {
         self.parts = NativeMarkdownView.parseMarkdown(text)
@@ -39,18 +34,19 @@ struct NativeMarkdownView: View {
                 case .text(let string):
                     Text(LocalizedStringKey(string))
                         .lineSpacing(2)
-                        .font(.system(size: fontSize + 1))
+                        .font(.body)
 
                 case .codeBlock(let code):
-                    GroupBox {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            Text(code)
-                                .font(.system(size: fontSize - 1, weight: .regular, design: .monospaced))
-                                .textSelection(.enabled)                        }
+                    ScrollView(.horizontal, showsIndicators: true) {
+                        Text(code)
+                            .font(.body)
+                            .monospaced()
+                            .textSelection(.enabled)
+                            .fixedSize(horizontal: true, vertical: false)
+                            .padding(12)
                     }
-                    #if os(macOS)
-                    .groupBoxStyle(PlatformGroupBox())
-                    #endif
+                    .background(.background.secondary)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
 
                 case .heading(let level, let text):
                     headingView(level: level, text: text)
@@ -70,12 +66,12 @@ struct NativeMarkdownView: View {
         // Map Markdown heading levels to SwiftUI fonts
         let font: Font = {
             switch level {
-            case 1: return .system(size: fontSize + 10, weight: .bold)
-            case 2: return .system(size: fontSize + 8, weight: .bold)
-            case 3: return .system(size: fontSize + 6, weight: .semibold)
-            case 4: return .system(size: fontSize + 4, weight: .semibold)
-            case 5: return .system(size: fontSize + 2, weight: .medium)
-            default: return .system(size: fontSize + 1, weight: .medium)
+            case 1: return .largeTitle.bold()
+            case 2: return .title.bold()
+            case 3: return .title2.weight(.semibold)
+            case 4: return .title3.weight(.semibold)
+            case 5: return .headline
+            default: return .subheadline
             }
         }()
         Text(LocalizedStringKey(text))
@@ -89,11 +85,14 @@ struct NativeMarkdownView: View {
     private func listView(items: [ListItem]) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             ForEach(items) { item in
-                ListItemView(
-                    item: item,
-                    markerViewProvider: { marker in AnyView(markerView(for: marker)) },
-                    childViewProvider: { children in AnyView(listView(items: children)) }
-                )
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    markerView(for: item.marker)
+                        .frame(width: 16, alignment: .trailing)
+                    Text(LocalizedStringKey(item.content))
+                        .lineSpacing(2)
+                        .font(.body)
+                }
+                .padding(.leading, CGFloat(max(0, item.level - 1)) * 16)
             }
         }
     }
@@ -108,7 +107,7 @@ struct NativeMarkdownView: View {
                 .offset(y: -2)
         case .ordered(let n):
             Text("\(n).")
-                .font(.system(size: fontSize + 1, weight: .regular, design: .default))
+                .font(.body)
                 .foregroundStyle(.primary)
         }
     }
@@ -208,25 +207,19 @@ struct NativeMarkdownView: View {
 
     private static func parseListBlock(from start: Int, lines: [String]) -> ([ListItem], Int) {
         var i = start
-        var rawItems: [ListItem] = []
+        var items: [ListItem] = []
 
         // Collect contiguous list lines (stopping at blank line or non-list)
         while i < lines.count {
             let line = lines[i]
-            if line.trimmingCharacters(in: .whitespaces).isEmpty {
-                break
-            }
+            if line.trimmingCharacters(in: .whitespaces).isEmpty { break }
             guard let parsed = parseListLine(line) else { break }
-            rawItems.append(parsed)
+            items.append(parsed)
             i += 1
-
-            // NOTE: For multi-line list items (wrapped paragraphs), you could extend this:
-            // while next line is indented more than content indent and not a new marker, append to content...
         }
 
-        // Build hierarchy from levels using a stack
-        let tree = buildListTree(from: rawItems)
-        return (tree, i)
+        // Return a flat list; indentation handled by rendering with padding
+        return (items, i)
     }
 
     private static func parseListLine(_ line: String) -> ListItem? {
@@ -265,109 +258,9 @@ struct NativeMarkdownView: View {
         return count
     }
 
-    private static func buildListTree(from items: [ListItem]) -> [ListItem] {
-        var result: [ListItem] = []
-        var stack: [ListItem] = []
-
-        func appendToCurrent(_ item: ListItem) {
-            if stack.isEmpty {
-                result.append(item)
-                stack = [item]
-            } else {
-                var top = stack.removeLast()
-                if item.level > top.level {
-                    // child
-                    top.children.append(item)
-                    stack.append(top)
-                    stack.append(item)
-                    // Need to also fix result linkage if top is in result or nested
-                    // We re-sync the tree after loop by rebuilding from stack references.
-                    // To keep it simple, we’ll reconstruct using indexes below.
-                } else {
-                    // ascend until we find a parent with lower level
-                    var tmp = top
-                    var tempStack = stack
-                    while item.level <= tmp.level, !tempStack.isEmpty {
-                        tmp = tempStack.removeLast()
-                    }
-                    // Reconstruct the ancestors array to the found parent
-                    stack = tempStack
-                    if stack.isEmpty {
-                        result.append(item)
-                        stack = [item]
-                    } else {
-                        // Append as sibling to the parent's children
-                        var parent = stack.removeLast()
-                        parent.children.append(item)
-                        stack.append(parent)
-                        stack.append(item)
-                    }
-                }
-            }
-        }
-
-        // Simpler and correct approach: we’ll maintain an array of references through indices.
-        result.removeAll()
-        var parentIndicesStack: [(arrayRef: UnsafeMutablePointer<[ListItem]>, idx: Int, level: Int)] = unsafe []
-
-        func appendItem(_ item: ListItem) {
-            // Find correct parent by level
-            while let last = unsafe parentIndicesStack.last, unsafe item.level <= last.level {
-                unsafe parentIndicesStack.removeLast()
-            }
-
-            if let last = unsafe parentIndicesStack.last {
-                // Append to parent's children
-                unsafe last.arrayRef.pointee[last.idx].children.append(item)
-                let childIdx = unsafe last.arrayRef.pointee[last.idx].children.count - 1
-                let ptr = unsafe withUnsafeMutablePointer(to: &last.arrayRef.pointee[last.idx].children) { unsafe $0 }
-                unsafe parentIndicesStack.append((arrayRef: ptr, idx: childIdx, level: item.level))
-            } else {
-                // Append to root
-                result.append(item)
-                let idx = result.count - 1
-                let ptr = unsafe withUnsafeMutablePointer(to: &result) { unsafe $0 }
-                unsafe parentIndicesStack.append((arrayRef: ptr, idx: idx, level: item.level))
-            }
-        }
-
-        for item in items {
-            appendItem(item)
-        }
-
-        return result
-    }
+    // Removed complex tree building; using flat list rendering for simplicity
 }
-
-
-struct ListItemView: View {
-    #if os(macOS)
-    @AppStorage("fontSize") var fontSize: Double = 13
-    #else
-    @AppStorage("fontSize") var fontSize: Double = 17
-    #endif
-    let item: ListItem
-    let markerViewProvider: (ListItem.Marker) -> AnyView
-    let childViewProvider: ([ListItem]) -> AnyView
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                markerViewProvider(item.marker)
-                    .frame(width: 16, alignment: .trailing)
-//                        .offset(y: -2)
-
-                Text(LocalizedStringKey(item.content))
-                    .lineSpacing(2)
-                    .font(.system(size: fontSize + 1))
-            }
-            if !item.children.isEmpty {
-                childViewProvider(item.children)
-                    .padding(.leading, 16)
-            }
-        }
-    }
-}
+ 
 
 //extension AttributedString {
 //    init(styledMarkdown markdownString: String) throws {

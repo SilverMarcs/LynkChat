@@ -30,7 +30,9 @@ struct ChatToolbar: ToolbarContent {
                 }
         }
         
-        ToolbarSpacer(.fixed)
+        if showToolbarItems {
+            ToolbarSpacer(.fixed)
+            
             ToolbarItem(placement: .navigation) {
                 Button {
                     showingInspector.toggle()
@@ -43,7 +45,6 @@ struct ChatToolbar: ToolbarContent {
                 }
             }
         
-        if showToolbarItems {
             ToolbarSpacer(.fixed)
             
             ToolbarItem(placement: .primaryAction) {
@@ -83,44 +84,45 @@ struct ChatToolbar: ToolbarContent {
                     .popoverTip(TemporaryChatTip())
                 }
             }
-        }
+        
             
-        ToolbarItemGroup(placement: .keyboard) {
-            Section {
-                Button("Send/Stop Message") {
-                    chat.isReplying ? chat.stopStreaming() : sendInput()
-                }
-                .keyboardShortcut(chat.isReplying ? "d" : .return)
-                
-                Button("Edit Last Message") {
-                    guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }
-                    isFocused = .textEditor // this isnt doing anything (on macos at least)
-                    chat.inputManager.setupEditing(chat: chat, message: lastUserMessage)
-                }
-                .keyboardShortcut("e")
-                .disabled(chat.status == .quick || chat.isReplying)
-                
-                Button("Regen Last Message") {
-                    guard !chat.isReplying, let last = chat.currentThread.last else { return }
-                    Task {
-                        await chat.regenerate(message: last)
+            ToolbarItemGroup(placement: .keyboard) {
+                Section {
+                    Button("Send/Stop Message") {
+                        chat.isReplying ? chat.stopStreaming() : sendInput()
                     }
+                    .keyboardShortcut(chat.isReplying ? "d" : .return)
+                    
+                    Button("Edit Last Message") {
+                        guard let lastUserMessage = chat.currentThread.last(where: { $0.role == .user }) else { return }
+                        isFocused = .textEditor // this isnt doing anything (on macos at least)
+                        chat.inputManager.setupEditing(chat: chat, message: lastUserMessage)
+                    }
+                    .keyboardShortcut("e")
+                    .disabled(chat.status == .quick || chat.isReplying)
+                    
+                    Button("Regen Last Message") {
+                        guard !chat.isReplying, let last = chat.currentThread.last else { return }
+                        Task {
+                            await chat.regenerate(message: last)
+                        }
+                    }
+                    .keyboardShortcut("r")
                 }
-                .keyboardShortcut("r")
-            }
-            
-            Section {
-                Button("Reset Context") {
-                    guard !chat.isReplying, let last = chat.currentThread.last else { return }
-                    chat.resetContext(at: last)
-                }
-                .keyboardShortcut("k")
                 
-                Button("Delete Last Message", role: .destructive) {
-                    chat.deleteLastMessage()
-                    chat.errorMessage = nil
+                Section {
+                    Button("Reset Context") {
+                        guard !chat.isReplying, let last = chat.currentThread.last else { return }
+                        chat.resetContext(at: last)
+                    }
+                    .keyboardShortcut("k")
+                    
+                    Button("Delete Last Message", role: .destructive) {
+                        chat.deleteLastMessage()
+                        chat.errorMessage = nil
+                    }
+                    .keyboardShortcut(.delete)
                 }
-                .keyboardShortcut(.delete)
             }
         }
     }

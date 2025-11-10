@@ -13,7 +13,6 @@ struct UserMessage: View {
     
     var group: MessageGroup
     @State var showingTextSelection = false
-    @Namespace private var transition
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 8) {
@@ -21,15 +20,16 @@ struct UserMessage: View {
                 DataFilesView(dataFiles: group.dataFiles)
             }
             
-            GroupBox {
+            Group {
                 #if os(macOS)
                 ExpandableText(text: group.content)
                 #else
                 Text(group.content)
                 #endif
             }
-            .groupBoxStyle(PlatformGroupBox())
-            .matchedTransitionSource(id: "text-selection", in: transition)
+            .padding(12)
+            .background(.background.secondary)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
 
             if group.allMessages.count > 1 {
                 NavigationButtons(message: group)
@@ -58,7 +58,6 @@ struct UserMessage: View {
         #if !os(macOS)
         .sheet(isPresented: $showingTextSelection) {
             TextSelectionView(content: group.content)
-                .navigationTransition(.zoom(sourceID: "text-selection", in: transition))
         }
         #endif
     }
@@ -71,50 +70,3 @@ struct UserMessage: View {
         #endif
     }
 }
-
-struct ExpandableText: View {
-    let text: String
-    let maxCharacters: Int
-    
-    @State private var isExpanded = false
-    private let needsExpansion: Bool
-    
-    #if os(macOS)
-    @AppStorage("fontSize") var fontSize: Double = 13
-    #else
-    @AppStorage("fontSize") var fontSize: Double = 17
-    #endif
-    
-    init(text: String, maxCharacters: Int = 400) {
-        self.text = text
-        self.maxCharacters = maxCharacters
-        self.needsExpansion = text.count > maxCharacters
-    }
-    
-    var body: some View {
-        VStack(alignment: .trailing, spacing: 3) {
-            Text(displayedText)
-                .textSelection(.enabled)
-                .font(.system(size: fontSize))
-                .lineSpacing(2)
-            
-            if needsExpansion {
-                Button {
-                    isExpanded.toggle()
-                } label: {
-                    Text(isExpanded ? "Show Less" : "Show More")
-                }
-                .buttonBorderShape(.capsule)
-            }
-        }
-    }
-    
-    private var displayedText: String {
-        guard needsExpansion && !isExpanded else {
-            return text
-        }
-        return String(text.prefix(maxCharacters))
-    }
-}
-
-

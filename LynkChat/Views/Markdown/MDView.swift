@@ -11,11 +11,7 @@ import SwiftMarkdownView
 #endif
 
 struct MDView: View {
-    #if os(macOS)
     @AppStorage("fontSize") var fontSize: Double = 13
-    #else
-    @AppStorage("fontSize") var fontSize: Double = 17
-    #endif
     var content: String
     var calculatedHeight: Binding<CGFloat>? = nil
 
