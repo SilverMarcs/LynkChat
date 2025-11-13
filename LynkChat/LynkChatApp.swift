@@ -16,7 +16,7 @@ struct LynkChatApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
     
-    @State private var chatVM = ChatVM()
+    let chatVM = ChatVM()
     
     var body: some Scene {
         Group {
