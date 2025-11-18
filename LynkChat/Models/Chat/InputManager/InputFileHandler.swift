@@ -110,7 +110,8 @@ extension InputManager {
                         return
                     }
                     
-                    Task {
+                    Task { [weak self] in
+                        guard let self else { return }
                         let fileType = typeIdentifier.flatMap { UTType($0) } ?? .data
                         try await self.processData(data, fileType: fileType, fileName: fileName)
                     }
@@ -137,7 +138,7 @@ extension InputManager {
 #if os(macOS)
 extension InputManager {
     func handlePaste(pasteboardItem: NSPasteboardItem, supportedTypes: Set<UTType>) {
-        Task {
+        Task { [weak self] in
             do {
                 if let fileURLData = pasteboardItem.data(forType: .fileURL),
                    let fileURL = URL(dataRepresentation: fileURLData, relativeTo: nil) {
@@ -152,10 +153,10 @@ extension InputManager {
                     
                     let fileType = try fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier
                     if let fileUTType = fileType.flatMap({ UTType($0) }) {
-                          if supportedTypes.contains(where: { fileUTType.conforms(to: $0) }) {
-                              try await processFile(at: fileURL)
-                          }
-                      }
+                        if supportedTypes.contains(where: { fileUTType.conforms(to: $0) }) {
+                            try await self?.processFile(at: fileURL)
+                        }
+                    }
                 } else if let imageData = pasteboardItem.data(forType: .png) ?? pasteboardItem.data(forType: .tiff) {
                     // Check if images are supported
                     guard supportedTypes.contains(where: { $0.conforms(to: .image) }) else {
@@ -163,7 +164,9 @@ extension InputManager {
                     }
 
                     let fileType: UTType = pasteboardItem.data(forType: .png) != nil ? .png : .tiff
-                    try await processData(imageData, fileType: fileType, fileName: "Pasted_Image_\(UUID().uuidString).\(fileType.preferredFilenameExtension ?? "png")")
+                    if let self {
+                        try await self.processData(imageData, fileType: fileType, fileName: "Pasted_Image_\(UUID().uuidString).\(fileType.preferredFilenameExtension ?? "png")")
+                    }
                 } else if let pastedString = pasteboardItem.string(forType: .string) {
                     // Handle pasted plain text:
                     // If the pasted text is large (>= threshold) create a .txt file and add it as an attachment.
@@ -178,7 +181,9 @@ extension InputManager {
                         let fileType: UTType = .plainText
                         let fileName = "Paste_\(pastedString.prefix(7))_\(UUID().uuidString.prefix(2)).txt"
 
-                        try await processData(textData, fileType: fileType, fileName: fileName)
+                        if let self {
+                            try await self.processData(textData, fileType: fileType, fileName: fileName)
+                        }
                     } else {
                         // Small text: do nothing here so that the default paste continues
                         // (PasteHandler will return false so the system inserts text into the focused text view)

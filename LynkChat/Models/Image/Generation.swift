@@ -37,7 +37,8 @@ class Generation {
         isProcessing = true
         defer { isProcessing = false }
 
-        generatingTask = Task { @MainActor in
+        generatingTask = Task { [weak self] in
+            guard let self else { return }
             let dataObjects: [Data]
             if session.inputImages.isEmpty {
                 dataObjects = try await APIService.generateImages(config: config)
@@ -53,6 +54,7 @@ class Generation {
         }
 
         do {
+            defer { generatingTask = nil }
             #if os(macOS)
             try await generatingTask?.value
             #else
