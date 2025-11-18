@@ -14,5 +14,4 @@ struct AppConfig {
     // DEBUG
     @AppStorage("myApiKey") var myApiKey: String = ""
     @AppStorage("useLocalhost") var useLocalhost = false
-    @AppStorage("sendDebugModel") var sendDebugModel = false
 }
