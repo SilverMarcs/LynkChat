@@ -16,6 +16,17 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     case claude_sonnet
     case claude_opus
     case perplexity
+    case perplexity_pro
+    
+    static var allCases: [ChatModel] = [
+        .gemini_flash,
+        .gemini_pro,
+        .gpt,
+        .gpt_mini,
+        .claude_sonnet,
+        .perplexity,
+        .perplexity_pro
+    ]
     
     var id: String {
         switch self {
@@ -26,6 +37,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .claude_sonnet: "claude-sonnet"
         case .claude_opus: "claude-opus"
         case .perplexity: "perplexity"
+        case .perplexity_pro: "perplexity-pro"
         }
     }
     
@@ -38,6 +50,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .claude_sonnet: "Claude Sonnet"
         case .claude_opus: "Claude Opus"
         case .perplexity: "Perplexity"
+        case .perplexity_pro: "Perplexity Pro"
         }
     }
     
@@ -46,7 +59,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gpt, .gpt_mini: "openai.symbols"
         case .gemini_flash, .gemini_pro: "gemini.symbols"
         case .claude_sonnet, .claude_opus: "claude.symbols"
-        case .perplexity: "perplexity.symbols"
+        case .perplexity, .perplexity_pro: "perplexity.symbols"
         }
     }
     
@@ -55,7 +68,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gpt, .gpt_mini: "#00947A"
         case .gemini_flash, .gemini_pro: "#E64335"
         case .claude_sonnet, .claude_opus: "#D6683B"
-        case .perplexity: "#47808a"
+        case .perplexity, .perplexity_pro: "#47808a"
         }
     }
     
@@ -65,7 +78,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
             [.text, .image, .pdf, .audio, .video]
         case .gpt, .gpt_mini, .claude_sonnet, .claude_opus:
             [.text, .image, .pdf]
-        case .perplexity:
+        case .perplexity, .perplexity_pro:
             [.text, .image]
         }
     }
