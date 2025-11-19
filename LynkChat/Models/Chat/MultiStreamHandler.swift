@@ -33,20 +33,21 @@ struct MultiStreamHandler {
             return secondaryMessage
         }
         
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask {
-                let handler = StreamHandler(chat: chat, assistant: primaryMessage, user: user)
+        let primaryTask = Task {
+            let handler = StreamHandler(chat: chat, assistant: primaryMessage, user: user)
+            try await handler.handleRequest()
+        }
+        
+        let secondaryTasks = secondaryMessages.map { message in
+            Task {
+                let handler = StreamHandler(chat: chat, assistant: message, user: user)
                 try await handler.handleRequest()
             }
-            
-            for message in secondaryMessages {
-                group.addTask {
-                    let handler = StreamHandler(chat: chat, assistant: message, user: user)
-                    try await handler.handleRequest()
-                }
-            }
-            
-            while try await group.next() != nil { }
+        }
+        
+        try await primaryTask.value
+        for task in secondaryTasks {
+            try await task.value
         }
     }
 }
