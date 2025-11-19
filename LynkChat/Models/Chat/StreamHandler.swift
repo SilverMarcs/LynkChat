@@ -39,6 +39,8 @@ struct StreamHandler {
         }
         
         for try await response in APIService.streamResponse(from: request) {
+            try Task.checkCancellation()
+            
             switch response {
             case .text(let textResponse):
                 contentBuffer += textResponse.content
@@ -84,6 +86,8 @@ struct StreamHandler {
                 lastUpdateTime = now
             }
         }
+        
+        try Task.checkCancellation()
         
         // Final update to ensure all content is set
         updateUI()

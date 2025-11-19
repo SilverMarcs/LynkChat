@@ -114,6 +114,8 @@ final class Chat: Equatable, Identifiable, Hashable {
                 if AppConfig().autogenTitle {
                     await generateTitle()
                 }
+            } catch is CancellationError {
+                AppLogger.info("Streaming cancelled for chat \(self.id)")
             } catch {
                 handleError(error)
             }

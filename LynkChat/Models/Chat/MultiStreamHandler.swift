@@ -22,35 +22,31 @@ struct MultiStreamHandler {
             let primaryMessage = assistantGroup.activeMessage
             let primaryHandler = StreamHandler(chat: chat, assistant: primaryMessage, user: user)
             try await primaryHandler.handleRequest()
-        } else {
-            // Multiple models - handle concurrently
-            let primaryMessage = assistantGroup.activeMessage
-            let secondaryModels = models.dropFirst() // All models except the first one
-            
-            // Start primary stream
-            let primaryTask = Task {
-                let primaryHandler = StreamHandler(chat: chat, assistant: primaryMessage, user: user)
-                try await primaryHandler.handleRequest()
+            return
+        }
+        
+        let primaryMessage = assistantGroup.activeMessage
+        let secondaryModels = Array(models.dropFirst())
+        let secondaryMessages = secondaryModels.map { model -> Message in
+            let secondaryMessage = Message.assistant(model: model)
+            assistantGroup.addMessage(secondaryMessage, skipActive: true)
+            return secondaryMessage
+        }
+        
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                let handler = StreamHandler(chat: chat, assistant: primaryMessage, user: user)
+                try await handler.handleRequest()
             }
             
-            // Start secondary streams concurrently
-            let secondaryTasks = secondaryModels.map { model in
-                Task {
-                    let secondaryMessage = Message.assistant(model: model)
-                    assistantGroup.addMessage(secondaryMessage, skipActive: true)
-                    
-                    let secondaryHandler = StreamHandler(chat: chat, assistant: secondaryMessage, user: user)
-                    try await secondaryHandler.handleRequest()
+            for message in secondaryMessages {
+                group.addTask {
+                    let handler = StreamHandler(chat: chat, assistant: message, user: user)
+                    try await handler.handleRequest()
                 }
             }
             
-            // Wait for all tasks to complete
-            try await primaryTask.value
-            
-            // Wait for all secondary tasks
-            for task in secondaryTasks {
-                try await task.value
-            }
+            while try await group.next() != nil { }
         }
     }
 }

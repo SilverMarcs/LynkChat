@@ -12,7 +12,7 @@ extension APIService {
         AppLogger.warning("Streaming response for model: \(String(describing: request.model))")
         
         return AsyncThrowingStream { continuation in
-            Task {
+            let streamTask = Task {
                 do {
                     guard var urlRequest = makeRequest(path: .chat, method: .POST) else {
                         throw URLError(.badURL)
@@ -34,6 +34,7 @@ extension APIService {
                     }
                     
                     for try await line in result.lines {
+                        if Task.isCancelled { break }
                         if line.isEmpty { continue }
                         
                         AppLogger.debug("\(line)")
@@ -69,10 +70,16 @@ extension APIService {
                     }
                     
                     continuation.finish()
+                } catch is CancellationError {
+                    continuation.finish()
                 } catch {
                     AppLogger.error("Stream error: \(error.localizedDescription)")
                     continuation.finish(throwing: error)
                 }
+            }
+            
+            continuation.onTermination = { @Sendable _ in
+                streamTask.cancel()
             }
         }
     }
