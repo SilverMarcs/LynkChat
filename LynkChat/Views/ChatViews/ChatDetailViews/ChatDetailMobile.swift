@@ -41,7 +41,7 @@ struct ChatDetailMobile: View {
                     .listRowSeparator(.hidden)
                     .id(String.bottomID)
             }
-            .contentMargins(10)
+            .contentMargins([.top, .horizontal], 10)
             .environment(\.defaultMinListRowHeight, 1)
             .overlay {
                 if chat.currentThread.isEmpty {
@@ -155,7 +155,7 @@ struct ChatDetailMobile: View {
     func onAppearStuff(proxy: ScrollViewProxy) {
         chatVM.activeChat = chat
         chat.expandColor = false
-        Scroller.scrollToBottom(with: chat.scrollProxy, animated: false)
+        proxy.scrollTo(String.bottomID, anchor: .bottom)
     }
 }
 

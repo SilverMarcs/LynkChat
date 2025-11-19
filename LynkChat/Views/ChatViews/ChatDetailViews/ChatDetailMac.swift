@@ -40,8 +40,8 @@ struct ChatDetailMac: View {
             .navigationSubtitle(chat.config.systemPrompt.prefix(100))
             .task {
                 chat.expandColor = false
-                chat.scrollProxy = proxy 
-                Scroller.scrollToBottom(with: chat.scrollProxy, animated: false)
+                chat.scrollProxy = proxy
+                proxy.scrollTo(String.bottomID, anchor: .bottom)
             }
             .onDisappear {
                 if chat.status == .temporary {

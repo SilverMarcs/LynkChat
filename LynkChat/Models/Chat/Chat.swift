@@ -219,7 +219,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
     
-//    @MainActor
     func stopStreaming() {
         guard let task = streamingTask else { return }
         task.cancel()
@@ -240,7 +239,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         withAnimation(.easeInOut(duration: 0.5)) { self.expandColor = false }
     }
 
-//    @MainActor
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription.isEmpty ? "An unknown error occurred" : error.localizedDescription
         
@@ -292,7 +290,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         contextResetPoint = nil
     }
     
-//    @MainActor
     func deleteLastMessage() {
         guard let lastGroup = currentThread.last, !lastGroup.isReplying else { return }
         errorMessage = nil
@@ -308,11 +305,8 @@ final class Chat: Equatable, Identifiable, Hashable {
             let secondToLastGroup = currentThread[currentThread.count - 2]
             secondToLastGroup.activeMessage.next = nil
         }
-        
-//        Scroller.scrollToBottom(with: self.scrollProxy)
     }
     
-//    @MainActor
     func errorDeleteLast() {
         guard let last = self.currentThread.last else { return }
         
@@ -347,7 +341,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         }
     }
     
-//    @MainActor
     func deleteAllMessages() {
         rootMessage = nil
         contextResetPoint = nil
@@ -388,7 +381,6 @@ final class Chat: Equatable, Identifiable, Hashable {
         return newChat
     }
     
-//    @MainActor
     func cleanupMessagesAndGroups() {
         rootMessage = nil
         withAnimation { isEmpty = true }
