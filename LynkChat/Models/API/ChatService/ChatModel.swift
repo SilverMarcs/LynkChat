@@ -24,6 +24,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         .gpt,
         .gpt_mini,
         .claude_sonnet,
+        .claude_opus,
         .perplexity,
         .perplexity_pro
     ]
