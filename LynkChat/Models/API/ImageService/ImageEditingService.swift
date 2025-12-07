@@ -56,7 +56,20 @@ enum ImageEditingService {
                 "enable_sync_mode": true,
                 "enable_base64_output": false
             ]
-            
+
+        case .fluxPro:
+            apiPath = model.apiPath
+            let size = try calculateOptimalSize(from: inputImages[0], maxDimension: 1536)
+            requestBody = [
+                "prompt": prompt,
+                "images": convertToBase64URLs(inputImages),
+                "size": size,
+                "seed": -1,
+                "output_format": "jpeg",
+                "enable_sync_mode": true,
+                "enable_base64_output": false
+            ]
+
         case .qwen:
             apiPath = model.apiPath
             requestBody = [

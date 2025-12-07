@@ -9,19 +9,21 @@ import Foundation
 
 enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
     case zImage
+    case fluxPro
     case gpt
     case nanoBanana
     case nanoBananaPro
     case seedream
-    case flux
+    case flux // legacy
 
     static var allCases: [ImageModel] {
-        [.zImage, .gpt, .nanoBanana, .nanoBananaPro, .seedream]
+        [.zImage, .fluxPro, .gpt, .nanoBanana, .nanoBananaPro, .seedream]
     }
 
     var id: String {
         switch self {
-        case .zImage, .flux: "zImage"
+        case .zImage: "zImage"
+        case .fluxPro, .flux: "fluxPro"
         case .gpt: "gpt"
         case .nanoBanana: "nanoBanana"
         case .nanoBananaPro: "nanoBananaPro"
@@ -31,7 +33,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
 
     var name: String {
         switch self {
-        case .zImage, .flux: "Z-Image"
+        case .zImage: "Z-Image"
+        case .fluxPro, .flux: "FLUX.2"
         case .gpt: "GPT"
         case .nanoBanana: "Banana"
         case .nanoBananaPro: "Banana Pro"
@@ -41,7 +44,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
 
     var imageName: String {
         switch self {
-        case .zImage, .flux: "qwen.symbols"
+        case .zImage: "qwen.symbols"
+        case .fluxPro, .flux: "flux.symbols"
         case .gpt: "openai.symbols"
         case .nanoBanana, .nanoBananaPro: "gemini.symbols"
         case .seedream: "bytedance.symbols"
@@ -50,7 +54,8 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
 
     var color: String {
         switch self {
-        case .zImage, .flux: "#007BFF"
+        case .zImage: "#007BFF"
+        case .fluxPro, .flux: "#6431e2"
         case .gpt: "#00947A"
         case .nanoBanana, .nanoBananaPro: "#E64335"
         case .seedream: "#00A8B2"

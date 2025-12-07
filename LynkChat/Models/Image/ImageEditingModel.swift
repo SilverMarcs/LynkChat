@@ -11,6 +11,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
     case seedream
     case nanoBanana
     case nanoBananaPro
+    case fluxPro
     case qwen
 
     var id: String { rawValue }
@@ -20,6 +21,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
         case .seedream: "Seedream"
         case .nanoBanana: "Banana"
         case .nanoBananaPro: "Banana Pro"
+        case .fluxPro: "FLUX.2"
         case .qwen: "Qwen"
         }
     }
@@ -29,6 +31,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
         case .seedream: "/api/v3/bytedance/seedream-v4.5/edit"
         case .nanoBanana: "/api/v3/google/nano-banana/edit"
         case .nanoBananaPro: "/api/v3/google/nano-banana-pro/edit"
+        case .fluxPro: "/api/v3/wavespeed-ai/flux-2-pro/edit"
         case .qwen: "/api/v3/wavespeed-ai/qwen-image/edit-plus"
         }
     }
@@ -37,6 +40,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
          switch self {
          case .nanoBanana, .nanoBananaPro: "#E64335"
          case .seedream: "#00A8B2"
+         case .fluxPro: "#6431e2"
          case .qwen: "#007BFF"
          }
      }
@@ -45,6 +49,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
          switch self {
          case .nanoBanana, .nanoBananaPro: "gemini.symbols"
          case .seedream: "bytedance.symbols"
+         case .fluxPro: "flux.symbols"
          case .qwen: "qwen.symbols"
          }
      }
