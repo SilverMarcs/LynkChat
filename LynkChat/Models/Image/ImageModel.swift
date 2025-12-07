@@ -10,8 +10,6 @@ import Foundation
 enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
     case flux
     case gpt
-    case grok
-    case imagen
     case nanoBanana
     case seedream
 
@@ -19,8 +17,6 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         switch self {
         case .flux: "flux"
         case .gpt: "gpt"
-        case .grok: "grok"
-        case .imagen: "imagen"
         case .nanoBanana: "nanoBanana"
         case .seedream: "seedream"
         }
@@ -30,8 +26,6 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         switch self {
         case .flux: "Flux"
         case .gpt: "GPT"
-        case .grok: "Grok"
-        case .imagen: "Imagen"
         case .nanoBanana: "Banana"
         case .seedream: "Seedream"
         }
@@ -41,8 +35,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         switch self {
         case .flux: "flux.symbols"
         case .gpt: "openai.symbols"
-        case .grok: "xai.symbols"
-        case .imagen, .nanoBanana: "gemini.symbols"
+        case .nanoBanana: "gemini.symbols"
         case .seedream: "bytedance.symbols"
         }
     }
@@ -51,8 +44,7 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         switch self {
         case .flux: "#6431e2"
         case .gpt: "#00947A"
-        case .grok: "#222222"
-        case .imagen, .nanoBanana: "#E64335"
+        case .nanoBanana: "#E64335"
         case .seedream: "#00A8B2"
         }
     }
