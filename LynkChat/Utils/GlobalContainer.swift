@@ -10,10 +10,12 @@ import Foundation
 
 let globalContainer: ModelContainer = {
     print((URL.applicationSupportDirectory.path(percentEncoded: false)))
+
     let schema = Schema([
         Chat.self,
         Message.self,
         MessageGroup.self,
+        ImageSession.self,
         Generation.self,
     ])
     
