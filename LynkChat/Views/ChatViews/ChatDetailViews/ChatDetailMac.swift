@@ -17,18 +17,20 @@ struct ChatDetailMac: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                ForEach(chat.currentThread, id: \.self) { group in
-                    MessageView(group: group)
-                        .environment(\.chat, chat)
+                LazyVStack {
+                    ForEach(chat.currentThread, id: \.self) { group in
+                        MessageView(group: group)
+                            .environment(\.chat, chat)
+                    }
+                    
+                    ErrorMessageView(chat: chat)
+                    
+                    Color.clear
+                        .frame(height: chat.expandColor
+                               ? (chat.status == .quick ? 250 : 475)
+                               : 1)
+                        .id(String.bottomID)
                 }
-                
-                ErrorMessageView(chat: chat)
-                
-                Color.clear
-                    .frame(height: chat.expandColor
-                           ? (chat.status == .quick ? 250 : 475)
-                           : 1)
-                    .id(String.bottomID)
             }
             .overlay(alignment: .center) {
                 if chat.isEmpty {
