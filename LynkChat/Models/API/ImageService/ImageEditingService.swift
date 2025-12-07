@@ -45,6 +45,17 @@ enum ImageEditingService {
                 "enable_sync_mode": true,
                 "enable_base64_output": false
             ]
+
+        case .nanoBananaPro:
+            apiPath = model.apiPath
+            requestBody = [
+                "prompt": prompt,
+                "images": convertToBase64URLs(inputImages),
+                "resolution": "2k",
+                "output_format": "jpeg",
+                "enable_sync_mode": true,
+                "enable_base64_output": false
+            ]
             
         case .qwen:
             apiPath = model.apiPath
