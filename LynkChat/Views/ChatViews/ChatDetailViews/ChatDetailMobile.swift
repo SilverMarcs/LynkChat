@@ -86,10 +86,11 @@ struct ChatDetailMobile: View {
                 }
             }
             .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
-            .searchScopes($searchScope, activation: .onSearchPresentation) {
+            .searchScopes($searchScope) {
                 Text("Regular").tag(SearchScope.regular)
                 Text("Expanded").tag(SearchScope.expanded)
             }
+            .searchPresentationToolbarBehavior(.avoidHidingContent)
             .onSubmit(of: .search) {
                 sendInput()
             }
