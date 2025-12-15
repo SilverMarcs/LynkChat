@@ -16,7 +16,7 @@ struct ExpandedSearchView: View {
     var body: some View {
         NavigationStack{
             Form {
-                TextField("Ask Anything", text: $chat.inputManager.prompt, axis: .vertical)
+                TextField("Ask Anything...", text: $chat.inputManager.prompt, axis: .vertical)
                     .focused($isFocused, equals: .expandedTextEditor)
             }
             .contentMargins(.top, 10)

@@ -85,7 +85,7 @@ struct ChatDetailMobile: View {
                     showingExpandedSearch = true
                 }
             }
-            .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything")
+            .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything...")
             .searchScopes($searchScope) {
                 Text("Regular").tag(SearchScope.regular)
                 Text("Expanded").tag(SearchScope.expanded)
