@@ -81,6 +81,8 @@ struct LiveAudioView: View {
                 if let url = components.url {
                     await loadPage(url)
                 }
+                try? await Task.sleep(for: .seconds(0.5))
+                await toggleMic()
             }
             .onDisappear {
                 Task {
