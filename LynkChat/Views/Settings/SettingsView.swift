@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.dismiss) var dismiss
     @SceneStorage("selectedCategory") var selectedCategory: SettingsCategory = .general
     
     var body: some View {
@@ -44,6 +45,11 @@ struct SettingsView: View {
             #else
             List {
                 listItems
+            }
+            .toolbar {
+                Button(role: .close) {
+                    dismiss()
+                }
             }
             .navigationDestination(for: SettingsCategory.self) { category in
                category.destination

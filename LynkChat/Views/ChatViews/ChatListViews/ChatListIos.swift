@@ -17,7 +17,11 @@ struct ChatListIos: View {
     var deleteItems: (IndexSet) -> Void
     
     @AppStorage("autoCreateChatOnLaunch") var autoCreateChatOnLaunch: Bool = false
+ 
     @State private var showSettings = false
+    @State private var initedLaunch = false
+    
+    @Namespace private var transition
     
     var body: some View {
         List {
@@ -36,10 +40,14 @@ struct ChatListIos: View {
         }
         .onAppear {
             if autoCreateChatOnLaunch {
-                if let firstChat = chats.first, firstChat.currentThread.isEmpty {
-                    chatVM.chatPath.append(firstChat)
-                } else {
-                    chatVM.createNewChat()
+                if !initedLaunch {
+                    if let firstChat = chats.first, firstChat.currentThread.isEmpty {
+                        chatVM.chatPath.append(firstChat)
+                    } else {
+                        chatVM.createNewChat()
+                    }
+                    initedLaunch = true
+                    
                 }
             }
         }
@@ -57,8 +65,10 @@ struct ChatListIos: View {
                 }
                 .sheet(isPresented: $showSettings) {
                     SettingsView()
+                        .navigationTransition(.zoom(sourceID: "settings", in: transition))
                 }
             }
+            .matchedTransitionSource(id: "settings", in: transition)
             
             ToolbarItem(placement: .bottomBar) {
                 Menu {
