@@ -14,6 +14,7 @@ struct GeneralSettings: View {
     @AppStorage("autogenTitle") var autogenTitle: Bool = true
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
     @AppStorage("fontSize") var fontSize: Double = 13
+    @AppStorage("autoCreateChatOnLaunch") var autoCreateChatOnLaunch: Bool = false
 
     var body: some View {
         Form {
@@ -28,6 +29,10 @@ struct GeneralSettings: View {
                     Button("Launch") {
                         hasCompletedOnboarding = false
                     }
+                }
+                
+                Toggle(isOn: $autoCreateChatOnLaunch) {
+                    Text("Auto create chat on App Launch")
                 }
             }
             

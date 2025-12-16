@@ -10,6 +10,8 @@ import SwiftUI
 import WebKit
 
 struct LiveAudioView: View {
+    @Environment(\.dismiss) var dismiss
+    
     @AppStorage("geminiApiKey") var geminiApiKey: String = ""
     @State private var page: WebPage = WebPage()
 
@@ -110,6 +112,17 @@ struct LiveAudioView: View {
                         Label("Reset", systemImage: "arrow.counterclockwise")
                     }
                 }
+                
+                ToolbarSpacer(.flexible, placement: .bottomBar)
+                ToolbarItem(placement: .bottomBar) {
+                    Button {
+                        dismiss()
+                    } label: {
+//                        Text("Dismiss")
+                        Image(systemName: "chevron.down")
+                    }
+                }
+                ToolbarSpacer(.flexible, placement: .bottomBar)
             }
             #if os(macOS)
             .padding(.top, -20)
@@ -163,7 +176,7 @@ struct LiveAudioView: View {
         } else if hasSession {
             return "Ready"
         } else {
-            return "Connecting..."
+            return ""
         }
     }
 

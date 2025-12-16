@@ -12,6 +12,8 @@ struct ChatListToolbar: ToolbarContent {
     let deleteItems: (IndexSet) -> Void
     @Environment(ChatVM.self) var chatVM
     
+    @State var showSettings: Bool = false
+    
     var body: some ToolbarContent {
         #if os(macOS)
         ToolbarItem(placement: .keyboard) {
@@ -32,7 +34,22 @@ struct ChatListToolbar: ToolbarContent {
         }
         #endif
         
-        ToolbarItem {
+        #if !os(macOS)
+        DefaultToolbarItem(kind: .search, placement: .bottomBar)
+        ToolbarSpacer(.flexible, placement: .bottomBar)
+        
+        ToolbarItem(placement: .primaryAction) {
+            Button("Settings", systemImage: "gear") {
+                showSettings = true
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+            }
+        }
+        
+        #endif
+        
+        ToolbarItem(placement: placement) {
             Menu {
                 ForEach(ChatModel.allCases) { model in
                     Button {
@@ -49,5 +66,13 @@ struct ChatListToolbar: ToolbarContent {
             }
             .menuIndicator(.hidden)
         }
+    }
+    
+    var placement: ToolbarItemPlacement {
+        #if os(macOS)
+        .automatic
+        #else
+        .bottomBar
+        #endif
     }
 }

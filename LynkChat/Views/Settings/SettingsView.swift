@@ -51,7 +51,7 @@ struct SettingsView: View {
             .scrollDismissesKeyboard(.immediately)
             #endif
         }
-        .toolbarTitleDisplayMode(.inlineLarge)
+        .toolbarTitleDisplayMode(.inline)
         .navigationTitle("Settings")
         .scrollContentBackground(.visible)
     }

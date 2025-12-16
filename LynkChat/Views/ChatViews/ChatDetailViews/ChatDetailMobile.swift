@@ -20,6 +20,7 @@ struct ChatDetailMobile: View {
     @State private var searchScope: SearchScope = .regular
     @State private var showingExpandedSearch: Bool = false
     @State private var showCamera: Bool = false
+    @State private var showVoice: Bool = false
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -124,15 +125,21 @@ struct ChatDetailMobile: View {
                 
                 DefaultToolbarItem(kind: .search, placement: .bottomBar)
                 
-                if chat.isReplying {
-                    ToolbarSpacer(.fixed, placement: .bottomBar)
-                    
-                    ToolbarItem(placement: .bottomBar) {
+                ToolbarSpacer(.fixed, placement: .bottomBar)
+                
+                ToolbarItem(placement: .bottomBar) {
+                    if chat.isReplying {
                         Button(role: .destructive) {
                             chat.stopStreaming()
                         } label: {
                             Image(systemName: "stop.fill")
                                 .foregroundStyle(.red)
+                        }
+                    } else {
+                        Button {
+                            showVoice = true
+                        } label: {
+                            Image(systemName: "waveform")
                         }
                     }
                 }
@@ -141,6 +148,9 @@ struct ChatDetailMobile: View {
             .fullScreenCover(isPresented: $showCamera) {
                 CameraView(chat: chat, isPresented: $showCamera)
                     .ignoresSafeArea()
+            }
+            .fullScreenCover(isPresented: $showVoice) {
+                LiveAudioView()
             }
         }
     }
@@ -157,6 +167,7 @@ struct ChatDetailMobile: View {
         chatVM.activeChat = chat
         chat.expandColor = false
         proxy.scrollTo(String.bottomID, anchor: .bottom)
+        isFocused = true
     }
 }
 
