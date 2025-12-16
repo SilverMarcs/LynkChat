@@ -17,6 +17,7 @@ struct ChatListIos: View {
     var deleteItems: (IndexSet) -> Void
     
     @AppStorage("autoCreateChatOnLaunch") var autoCreateChatOnLaunch: Bool = false
+    @State private var showSettings = false
     
     var body: some View {
         List {
@@ -45,6 +46,37 @@ struct ChatListIos: View {
         .navigationDestination(for: Chat.self) { chat in
             ChatDetail(chat: chat)
                 .id(chat.id)
+        }
+        .toolbar {
+            DefaultToolbarItem(kind: .search, placement: .bottomBar)
+            ToolbarSpacer(.flexible, placement: .bottomBar)
+            
+            ToolbarItem(placement: .primaryAction) {
+                Button("Settings", systemImage: "gear") {
+                    showSettings = true
+                }
+                .sheet(isPresented: $showSettings) {
+                    SettingsView()
+                }
+            }
+            
+            ToolbarItem(placement: .bottomBar) {
+                Menu {
+                    ForEach(ChatModel.allCases) { model in
+                        Button {
+                            chatVM.createNewChat(model: model)
+                        } label: {
+                            Label(model.name, image: model.imageName)
+                                .labelStyle(.titleAndIcon)
+                        }
+                    }
+                } label: {
+                    Label("New Chat", systemImage: "square.and.pencil")
+                } primaryAction: {
+                    chatVM.createNewChat()
+                }
+                .menuIndicator(.hidden)
+            }
         }
     }
 }

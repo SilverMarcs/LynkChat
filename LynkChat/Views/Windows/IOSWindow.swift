@@ -17,8 +17,6 @@ struct IOSWindow: Scene {
     @Environment(ChatVM.self) var chatVM: ChatVM
     
     var body: some Scene {
-//        @Bindable var chatVM = chatVM
-
         WindowGroup("Chats", id: "chats") {
             newView
         }

@@ -25,12 +25,6 @@ struct ChatList: View {
         }
         .navigationTitle("Chats")
         .toolbarTitleDisplayMode(.inlineLarge)
-        .toolbar {
-            ChatListToolbar(
-                chats: chats,
-                deleteItems: deleteItems
-            )
-        }
     }
 
     private func deleteItems(offsets: IndexSet) {

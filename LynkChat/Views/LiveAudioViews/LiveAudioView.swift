@@ -113,16 +113,17 @@ struct LiveAudioView: View {
                     }
                 }
                 
+                #if !os(macOS)
                 ToolbarSpacer(.flexible, placement: .bottomBar)
                 ToolbarItem(placement: .bottomBar) {
                     Button {
                         dismiss()
                     } label: {
-//                        Text("Dismiss")
                         Image(systemName: "chevron.down")
                     }
                 }
                 ToolbarSpacer(.flexible, placement: .bottomBar)
+                #endif
             }
             #if os(macOS)
             .padding(.top, -20)

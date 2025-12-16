@@ -42,5 +42,37 @@ struct ChatListMac: View {
                 chatVM.selections = [first]
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .keyboard) {
+                Button {
+                    let indices = chatVM.selections.compactMap { chat in
+                        chats.firstIndex(of: chat)
+                    }
+                    deleteItems(IndexSet(indices))
+                } label: {
+                    Image(systemName: "trash")
+                }
+                .keyboardShortcut(.delete, modifiers: [.command, .shift])
+                .disabled(chatVM.selections.isEmpty)
+            }
+            
+            ToolbarItem(placement: .automatic) {
+                Menu {
+                    ForEach(ChatModel.allCases) { model in
+                        Button {
+                            chatVM.createNewChat(model: model)
+                        } label: {
+                            Label(model.name, image: model.imageName)
+                                .labelStyle(.titleAndIcon)
+                        }
+                    }
+                } label: {
+                    Label("New Chat", systemImage: "square.and.pencil")
+                } primaryAction: {
+                    chatVM.createNewChat()
+                }
+                .menuIndicator(.hidden)
+            }
+        }
     }
 }
