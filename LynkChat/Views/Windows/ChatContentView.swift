@@ -27,10 +27,12 @@ struct ChatContentView: View {
                 ChatDetail(chat: chat)
                     .frame(minWidth: 600)
             } else {
-                Text(chatVM.selections.count > 0
-                    ? "^[\(chatVM.selections.count) Chat](inflect: true) Selected"
-                    : "Select or create a chat to get started")
+                ScrollView {
+                    Text(chatVM.selections.count > 0
+                         ? "^[\(chatVM.selections.count) Chat](inflect: true) Selected"
+                         : "Select or create a chat to get started")
                     .font(.title)
+                }
             }
         }
         .onAppear {
