@@ -12,7 +12,7 @@ struct ImageViewerData: View {
     let data: Data
     var enableSave: Bool = true
     var size: CGFloat = 300
-    var contentMode: ContentMode = .fit
+    var contentMode: ContentMode = .fill
     var radius: CGFloat = 10
     
     @State private var selectedFileURL: URL?
@@ -24,7 +24,7 @@ struct ImageViewerData: View {
                 .resizable()
             .aspectRatio(contentMode: contentMode)
             .frame(width: size, height: size)
-            .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .clipShape(.rect(cornerRadius: radius))
             .overlay(alignment: .topTrailing) {
                 if enableSave {
                     Button(action: saveImage) {
@@ -35,7 +35,6 @@ struct ImageViewerData: View {
                             .glassEffect(in: .circle)
                     }
                     .padding(10)
-                    
                 }
             }
         }

@@ -12,6 +12,10 @@ struct ImageProcessor {
     static let maxImageSizeBytes: Int = 2 * 1024 * 1024 // 2MB
     
     static func processImageData(_ data: Data, fileType: UTType, fileName: String) throws -> (Data, UTType, String) {
+        if fileType == .heic || fileType == .heif {
+            return try convertToJPEG(data: data, originalFileName: fileName)
+        }
+
         // If already under 2MB, return as-is
         guard data.count > maxImageSizeBytes else {
             return (data, fileType, fileName)
@@ -23,8 +27,33 @@ struct ImageProcessor {
         }
         
         // Return compressed data as JPEG (most efficient for compression)
-        let newFileName = fileName.replacingOccurrences(of: ".\(fileType.preferredFilenameExtension ?? "")", with: ".jpg")
+        let currentExtension = fileType.preferredFilenameExtension ?? ""
+        let newFileName = fileName.replacing(".\(currentExtension)", with: ".jpg")
         return (compressedData, .jpeg, newFileName)
+    }
+
+    private static func convertToJPEG(data: Data, originalFileName: String) throws -> (Data, UTType, String) {
+        #if os(macOS)
+        guard let image = NSImage(data: data),
+              let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            throw InputError.imageCompressionFailed
+        }
+
+        let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
+        guard let jpegData = bitmapRep.representation(using: .jpeg, properties: [.compressionFactor: 0.9]) else {
+            throw InputError.imageCompressionFailed
+        }
+        #else
+        guard let image = UIImage(data: data),
+              let jpegData = image.jpegData(compressionQuality: 0.9) else {
+            throw InputError.imageCompressionFailed
+        }
+        #endif
+
+        let baseName = originalFileName.split(separator: ".").dropLast().joined(separator: ".")
+        let newFileName = baseName.isEmpty ? "\(originalFileName).jpg" : "\(baseName).jpg"
+
+        return (jpegData, .jpeg, newFileName)
     }
     
     private static func compressImage(data: Data, targetSizeBytes: Int) -> Data? {

@@ -127,9 +127,11 @@ extension InputManager {
             guard let data = try? await photo.loadTransferable(type: Data.self) else {
                 throw RuntimeError("Failed to load photo data")
             }
-            
-            let fileName = "photo_\(UUID().uuidString).jpg"
-            try await self.processData(data, fileType: .jpeg, fileName: fileName)
+
+            let detectedType = photo.supportedContentTypes.first { $0.conforms(to: .image) } ?? .image
+            let fileExtension = detectedType.preferredFilenameExtension ?? "img"
+            let fileName = "photo_\(UUID().uuidString).\(fileExtension)"
+            try await self.processData(data, fileType: detectedType, fileName: fileName)
         }
     }
 }
