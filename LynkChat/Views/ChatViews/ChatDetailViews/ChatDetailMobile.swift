@@ -81,17 +81,17 @@ struct ChatDetailMobile: View {
                     isFocused = true
                 }
             }
-            .onChange(of: searchScope) {
-                if searchScope == .expanded {
-                    showingExpandedSearch = true
-                }
-            }
             .searchable(text: $chat.inputManager.prompt, isPresented: $isFocused, prompt: "Ask Anything...")
-            .searchScopes($searchScope) {
-                Text("Regular").tag(SearchScope.regular)
-                Text("Expanded").tag(SearchScope.expanded)
-            }
             .searchPresentationToolbarBehavior(.avoidHidingContent)
+//            .searchScopes($searchScope) {
+//                Text("Regular").tag(SearchScope.regular)
+//                Text("Expanded").tag(SearchScope.expanded)
+//            }
+//            .onChange(of: searchScope) {
+//                if searchScope == .expanded {
+//                    showingExpandedSearch = true
+//                }
+//            }
             .onSubmit(of: .search) {
                 sendInput()
             }
@@ -167,7 +167,10 @@ struct ChatDetailMobile: View {
         chatVM.activeChat = chat
         chat.expandColor = false
         proxy.scrollTo(String.bottomID, anchor: .bottom)
-        isFocused = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            isFocused = true
+            Scroller.scrollToBottom(with: proxy, animated: true, delay: 0.3)
+        }
     }
 }
 
