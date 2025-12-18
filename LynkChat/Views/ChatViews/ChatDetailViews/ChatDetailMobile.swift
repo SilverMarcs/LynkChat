@@ -22,6 +22,8 @@ struct ChatDetailMobile: View {
     @State private var showCamera: Bool = false
     @State private var showVoice: Bool = false
     
+    @AppStorage("focusChatOnAppear") var focusChatOnAppear: Bool = false
+    
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -167,9 +169,11 @@ struct ChatDetailMobile: View {
         chatVM.activeChat = chat
         chat.expandColor = false
         proxy.scrollTo(String.bottomID, anchor: .bottom)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            isFocused = true
-            Scroller.scrollToBottom(with: proxy, animated: true, delay: 0.3)
+        if focusChatOnAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                isFocused = true
+                Scroller.scrollToBottom(with: proxy, animated: true, delay: 0.3)
+            }
         }
     }
 }

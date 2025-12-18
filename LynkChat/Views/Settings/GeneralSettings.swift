@@ -15,7 +15,8 @@ struct GeneralSettings: View {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
     @AppStorage("fontSize") var fontSize: Double = 13
     @AppStorage("autoCreateChatOnLaunch") var autoCreateChatOnLaunch: Bool = false
-
+    @AppStorage("focusChatOnAppear") var focusChatOnAppear: Bool = false
+    
     var body: some View {
         Form {
             Section("Title") {
@@ -31,9 +32,15 @@ struct GeneralSettings: View {
                     }
                 }
                 
+                #if !os(macOS)
                 Toggle(isOn: $autoCreateChatOnLaunch) {
                     Text("Auto create chat on App Launch")
                 }
+                
+                Toggle(isOn: $focusChatOnAppear) {
+                    Text("Focus chat input when appears")
+                }
+                #endif
             }
             
             #if os(macOS)
