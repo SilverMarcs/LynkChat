@@ -29,13 +29,22 @@ struct IOSWindow: Scene {
         NavigationStack(path: $chatVM.chatPath) {
             ChatList(status: chatVM.statusFilter, searchText: searchText)
                 .contentMargins(.top, 10)
-                .searchable(text: $searchText)
-                .onAppear {
-                    // Clear current chat when back at chat list
-                    if chatVM.chatPath.isEmpty {
-                        chatVM.activeChat = nil
+                .searchable(text: Binding(
+                    get: { searchText },
+                    set: { newValue in
+                        withAnimation(.smooth) {
+                            searchText = newValue
+                        }
                     }
-                }
+                ))
+                .searchable(text: $searchText)
+//                .searchPresentationToolbarBehavior(.avoidHidingContent)
+//                .onAppear {
+//                    // Clear current chat when back at chat list
+//                    if chatVM.chatPath.isEmpty {
+//                        chatVM.activeChat = nil
+//                    }
+//                }
                 .fullScreenCover(isPresented: .constant(!hasCompletedOnboarding)) {
                     OnboardingView()
                 }
