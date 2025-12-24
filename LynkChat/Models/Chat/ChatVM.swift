@@ -10,9 +10,9 @@ import SwiftData
 import SwiftUI
 import Combine
 
-@Observable class ChatVM {    
+@Observable class ChatVM {
     var selections: Set<Chat> = []
-    var chatPath: NavigationPath = NavigationPath()
+    var chatPath: [Chat] = []
     
     var statusFilter: ChatStatus = .normal
     
@@ -39,12 +39,7 @@ import Combine
         newChat.isEmpty = false
         let modelContext = globalContainer.mainContext
         modelContext.insert(newChat)
-        #if os(macOS)
-        self.selections = [newChat]
-        #else
-        self.chatPath.removeLast()
-        self.chatPath.append(newChat)
-        #endif
+        selectChat(newChat)
     }
 
     @discardableResult
@@ -56,21 +51,8 @@ import Combine
         }
 
         globalContainer.mainContext.insert(newChat)
-        #if os(macOS)
-        self.activeChat = newChat
-        selections = [newChat]
-        #else
-        if !chatPath.isEmpty {
-            chatPath.removeLast()
-        }
-        if delay {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.chatPath.append(newChat)
-            }
-        } else {
-            chatPath.append(newChat)
-        }
-        #endif
+        let delayDuration: Duration? = delay ? .milliseconds(500) : nil
+        selectChat(newChat, delay: delayDuration)
         return newChat
     }
 
@@ -79,6 +61,29 @@ import Combine
         newChat.status = .temporary
         globalContainer.mainContext.insert(newChat)
         self.activeChat = newChat
+    }
+
+    func selectChat(_ chat: Chat, delay: Duration? = nil) {
+        #if os(macOS)
+        activeChat = chat
+        selections = [chat]
+        #else
+        currentChat = chat
+        selections = [chat]
+
+        if !chatPath.isEmpty {
+            chatPath.removeLast()
+        }
+
+        if let delay {
+            Task {
+                try? await Task.sleep(for: delay)
+                self.chatPath.append(chat)
+            }
+        } else {
+            chatPath.append(chat)
+        }
+        #endif
     }
 
     // MARK: - Quick Panel
