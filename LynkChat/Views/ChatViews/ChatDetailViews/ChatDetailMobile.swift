@@ -129,21 +129,24 @@ struct ChatDetailMobile: View {
                 
                 ToolbarSpacer(.fixed, placement: .bottomBar)
                 
-                ToolbarItem(placement: .bottomBar) {
-                    if chat.isReplying {
+                if chat.isReplying {
+                    ToolbarItem(placement: .bottomBar) {
                         Button(role: .destructive) {
                             chat.stopStreaming()
                         } label: {
                             Image(systemName: "stop.fill")
                                 .foregroundStyle(.red)
                         }
-                    } else {
+                    }
+                } else {
+                    ToolbarItem(placement: .bottomBar) {
                         Button {
                             showVoice = true
                         } label: {
                             Image(systemName: "waveform")
                         }
                     }
+                    .matchedTransitionSource(id: "live-button", in: transition)
                 }
             }
             .toolbar(.hidden, for: .tabBar)
@@ -151,8 +154,10 @@ struct ChatDetailMobile: View {
                 CameraView(chat: chat, isPresented: $showCamera)
                     .ignoresSafeArea()
             }
-            .fullScreenCover(isPresented: $showVoice) {
+            .sheet(isPresented: $showVoice) {
                 LiveAudioView()
+                    .presentationDetents([.medium])
+                    .navigationTransition(.zoom(sourceID: "live-button", in: transition))
             }
         }
     }

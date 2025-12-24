@@ -105,25 +105,15 @@ struct LiveAudioView: View {
             .navigationSubtitle(statusText)
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
+                ToolbarItem(placement: .destructiveAction) {
+                    Button(role: .destructive) {
                         Task { await resetSession() }
                     } label: {
                         Label("Reset", systemImage: "arrow.counterclockwise")
+                            .labelStyle(.titleOnly)
                     }
+                    .tint(.red)
                 }
-                
-                #if !os(macOS)
-                ToolbarSpacer(.flexible, placement: .bottomBar)
-                ToolbarItem(placement: .bottomBar) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.down")
-                    }
-                }
-                ToolbarSpacer(.flexible, placement: .bottomBar)
-                #endif
             }
             #if os(macOS)
             .padding(.top, -20)
