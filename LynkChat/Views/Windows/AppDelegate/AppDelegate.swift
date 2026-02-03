@@ -1,10 +1,13 @@
 //
-//  AppIconMenu.swift
+//  AppDelegate.swift
 //  LynkChat
 //
 //  Created by Zabir Raihan on 03/10/2024.
 //
 
+import Foundation
+
+#if os(iOS)
 import UIKit
 
 extension Notification.Name {
@@ -97,3 +100,76 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
         ud.synchronize()
     }
 }
+#endif
+
+#if os(macOS)
+import AppKit
+
+class MacAppDelegate: NSObject, NSApplicationDelegate {
+    private var windowObserver: NSObjectProtocol?
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Observe window changes to automatically hide/show from dock
+        windowObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.didBecomeKeyNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.updateDockVisibility()
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: NSWindow.willCloseNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            // Delay slightly to allow window count to update
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self?.updateDockVisibility()
+            }
+        }
+        
+        // Initial check
+        updateDockVisibility()
+    }
+    
+    deinit {
+        if let observer = windowObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
+    private func updateDockVisibility() {
+        let windows = NSApp.windows.filter { window in
+            // Count only regular windows, not panels (like the quick panel)
+            // and not hidden/minimized windows
+            window.isVisible &&
+            !window.isKind(of: NSPanel.self) &&
+            window.title != "" &&
+            window.identifier?.rawValue != "quickPanel"
+        }
+        
+        // If no regular windows are visible, hide from dock
+        // Otherwise, show in dock
+        if windows.isEmpty {
+            NSApp.setActivationPolicy(.accessory)
+        } else {
+            if NSApp.activationPolicy() != .regular {
+                NSApp.setActivationPolicy(.regular)
+            }
+        }
+    }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        // When clicking the dock icon (if visible) and no windows are open,
+        // you could optionally open a window or show the quick panel
+        if !flag {
+            // No visible windows - could show quick panel or do nothing
+            // For now, just ensure we're visible in dock when reopening
+            NSApp.setActivationPolicy(.regular)
+        }
+        return true
+    }
+}
+#endif
+

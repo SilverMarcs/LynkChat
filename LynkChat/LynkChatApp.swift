@@ -14,6 +14,8 @@ import AppIntents
 struct LynkChatApp: App {
     #if !os(macOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #else
+    @NSApplicationDelegateAdaptor(MacAppDelegate.self) var appDelegate
     #endif
     
     let chatVM = ChatVM()

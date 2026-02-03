@@ -124,10 +124,6 @@
 				Views/Windows/AboutWindow.swift = (
 					macos,
 				);
-				Views/Windows/AppDelegate/AppDelegate.swift = (
-					ios,
-					xros,
-				);
 				Views/Windows/AudioWindow.swift = (
 					macos,
 				);
