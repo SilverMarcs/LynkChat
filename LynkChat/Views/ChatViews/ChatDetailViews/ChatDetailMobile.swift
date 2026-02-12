@@ -49,12 +49,13 @@ struct ChatDetailMobile: View {
             .overlay {
                 if chat.currentThread.isEmpty {
                     VStack {
-                         Image(chat.config.model.imageName)
-                             .font(.largeTitle)
-                             .foregroundStyle(Color(hex: chat.config.model.color).gradient)
-                     }
-                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                     .padding()
+                        Image(chat.config.model.imageName)
+                            .font(.largeTitle)
+                            .foregroundStyle(Color(hex: chat.config.model.color).gradient)
+                            .symbolEffect(.rotate, options: .repeat(1), value: chat.config.model)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
                 }
             }
 //            .if(config.expandColor) {
