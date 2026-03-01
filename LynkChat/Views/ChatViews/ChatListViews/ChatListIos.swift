@@ -13,6 +13,7 @@ struct ChatListIos: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ChatVM.self) var chatVM
     @Environment(\.editMode) private var editMode
+    @Environment(\.setWindowType) private var setWindowType
     
     var chats: [Chat]
     var deleteItems: (IndexSet) -> Void
@@ -38,9 +39,9 @@ struct ChatListIos: View {
                     .tag(chat)
                     .deleteDisabled(chat.status == .starred)
                 }
-//                .onDelete(perform: deleteItems)
             }
         }
+        .contentMargins(.top, 10)
         .onAppear {
             if autoCreateChatOnLaunch {
                 if !initedLaunch {
@@ -85,6 +86,12 @@ struct ChatListIos: View {
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     EditButton()
+
+                    Button {
+                        setWindowType(.images)
+                    } label: {
+                        Label("Images", systemImage: "photo.on.rectangle.angled")
+                    }
                 } label: {
                     Label("Settings", systemImage: "gear")
                 } primaryAction: {

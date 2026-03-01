@@ -34,6 +34,7 @@ struct ImageRow: View {
                 modelContext.delete(session)
             } label: {
                 Label("Delete", systemImage: "trash")
+                    .labelStyle(.iconOnly)
             }
         }
     }

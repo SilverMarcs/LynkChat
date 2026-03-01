@@ -12,6 +12,7 @@ extension EnvironmentValues {
     @Entry var searchText = ""
     @Entry var chat: Chat = .mockChat // TODO: must make sure this is not used
     @Entry var windowType: WindowType = .chats // TODO: must make sure this is not used
+    @Entry var setWindowType: (WindowType) -> Void = { _ in }
     @Entry var imageSearchText: String = ""
     @Entry var chatSearchText: String = "" // not used atm
 }

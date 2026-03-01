@@ -11,6 +11,7 @@ import SwiftData
 struct ImageList: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.modelContext) var modelContext
+    @Environment(\.setWindowType) private var setWindowType
 
     @Binding var selection: ImageSession?
     
@@ -19,6 +20,9 @@ struct ImageList: View {
     
     @State var searchText: String = ""
     @State var imagePath: NavigationPath = NavigationPath()
+    @State private var showSettings = false
+
+    @Namespace private var transition
     
     var body: some View {
         list
@@ -61,6 +65,7 @@ struct ImageList: View {
                 }
                 .onDelete(perform: deleteItems)
             }
+            .contentMargins(.top, 10)
             .toolbarTitleDisplayMode(.inlineLarge)
             .navigationTitle("Images")
             .toolbar {
@@ -75,19 +80,47 @@ struct ImageList: View {
     
     @ToolbarContentBuilder
     var toolbar: some ToolbarContent {
+        #if os(iOS)
+        ToolbarItem(placement: .primaryAction) {
+            Menu {
+                Button {
+                    setWindowType(.chats)
+                } label: {
+                    Label("Chats", systemImage: "message")
+                }
+            } label: {
+                Label("Settings", systemImage: "gear")
+            } primaryAction: {
+                showSettings = true
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+                    .navigationTransition(.zoom(sourceID: "image-settings", in: transition))
+            }
+        }
+        .matchedTransitionSource(id: "image-settings", in: transition)
+
+        DefaultToolbarItem(kind: .search, placement: .bottomBar)
+        ToolbarSpacer(placement: .bottomBar)
+        ToolbarItem(placement: .bottomBar) {
+            Button {
+                createImageSession()
+            } label: {
+                Label("New Image", systemImage: "square.and.pencil")
+            }
+        }
+        #else
         ToolbarSpacer(placement: .primaryAction)
         
         ToolbarItem(placement: .primaryAction) {
             Button {
-                let imageSession = ImageSession()
-                modelContext.insert(imageSession)
-                selection = imageSession
-                imagePath.append(imageSession)
+                createImageSession()
             } label: {
                 Label("Add Item", systemImage: "square.and.pencil")
             }
             .keyboardShortcut("n")
         }
+        #endif
     }
     
     private var searchPlacement: SearchFieldPlacement {
@@ -107,6 +140,13 @@ struct ImageList: View {
                 
             modelContext.delete(session)
         }
+    }
+
+    private func createImageSession() {
+        let imageSession = ImageSession()
+        modelContext.insert(imageSession)
+        selection = imageSession
+        imagePath.append(imageSession)
     }
 }
 

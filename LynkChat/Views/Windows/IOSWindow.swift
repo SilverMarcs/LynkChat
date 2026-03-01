@@ -10,25 +10,43 @@ import SwiftData
 
 struct IOSWindow: Scene {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
+    @AppStorage("iosWindowType") private var windowTypeRawValue = WindowType.chats.rawValue
     
-    @State var selection: ImageSession?
-    @State var searchText: String = ""
+    @State private var selection: ImageSession?
+    @State private var searchText: String = ""
     
     @Environment(ChatVM.self) var chatVM: ChatVM
     
     var body: some Scene {
         WindowGroup("Chats", id: "chats") {
-            newView
+            Group {
+                switch selectedWindowType {
+                case .chats:
+                    chatRootView
+                case .images:
+                    imageRootView
+                case .audio:
+                    LiveAudioView()
+                }
+            }
+            .fullScreenCover(isPresented: .constant(!hasCompletedOnboarding)) {
+                OnboardingView()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .sharedContentReceived)) { notification in
+                if let payload = notification.userInfo?["payload"] as? String {
+                    let newChat = chatVM.createNewChat(delay: true)
+                    newChat.inputManager.prompt = payload
+                }
+            }
         }
     }
-    
+
     @ViewBuilder
-    var newView: some View {
+    private var chatRootView: some View {
         @Bindable var chatVM = chatVM
-        
+
         NavigationStack(path: $chatVM.chatPath) {
             ChatList(status: chatVM.statusFilter, searchText: searchText)
-                .contentMargins(.top, 10)
                 .searchable(text: Binding(
                     get: { searchText },
                     set: { newValue in
@@ -38,23 +56,24 @@ struct IOSWindow: Scene {
                     }
                 ))
                 .searchable(text: $searchText)
-//                .searchPresentationToolbarBehavior(.avoidHidingContent)
-//                .onAppear {
-//                    // Clear current chat when back at chat list
-//                    if chatVM.chatPath.isEmpty {
-//                        chatVM.activeChat = nil
-//                    }
-//                }
-                .fullScreenCover(isPresented: .constant(!hasCompletedOnboarding)) {
-                    OnboardingView()
-                }
-                .onReceive(NotificationCenter.default.publisher(for: .sharedContentReceived)) { notification in
-                    if let payload = notification.userInfo?["payload"] as? String {
-                        let newChat = chatVM.createNewChat(delay: true)
-                        newChat.inputManager.prompt = payload
-                    }
-                }
         }
+        .environment(\.windowType, .chats)
+        .environment(\.setWindowType, setWindowType)
+    }
+
+    @ViewBuilder
+    private var imageRootView: some View {
+        ImageList(selection: $selection)
+            .environment(\.windowType, .images)
+            .environment(\.setWindowType, setWindowType)
+    }
+
+    private var selectedWindowType: WindowType {
+        WindowType(rawValue: windowTypeRawValue) ?? .chats
+    }
+
+    private func setWindowType(_ newValue: WindowType) {
+        windowTypeRawValue = newValue.rawValue
     }
     
     @ViewBuilder
