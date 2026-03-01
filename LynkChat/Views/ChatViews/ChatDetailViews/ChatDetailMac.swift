@@ -17,7 +17,8 @@ struct ChatDetailMac: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack {
+//                LazyVStack {
+                VStack {
                     ForEach(chat.currentThread, id: \.self) { group in
                         MessageView(group: group)
                             .environment(\.chat, chat)
