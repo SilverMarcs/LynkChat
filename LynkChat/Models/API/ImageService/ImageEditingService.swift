@@ -19,64 +19,64 @@ enum ImageEditingService {
             throw RuntimeError("No input images provided for editing")
         }
 
+        let imageURLs = convertToBase64URLs(inputImages)
+
         // Build request body based on model
         let requestBody: [String: Any]
         let apiPath: String
 
         switch model {
-        case .seedream:
+        case .seedreamV50Lite, .seedreamV45:
             apiPath = model.apiPath
-            // Calculate size based on first input image
             let size = try calculateOptimalSize(from: inputImages[0], maxDimension: 4096)
             requestBody = [
                 "prompt": prompt,
-                "images": convertToBase64URLs(inputImages),
+                "images": imageURLs,
                 "size": size,
                 "enable_sync_mode": false,
                 "enable_base64_output": false
             ]
 
-        case .nanoBanana:
+        case .klingImageO3:
             apiPath = model.apiPath
             requestBody = [
                 "prompt": prompt,
-                "images": convertToBase64URLs(inputImages),
+                "images": imageURLs,
+                "aspect_ratio": "9:16",
+                "resolution": "1k",
+                "output_format": "png"
+            ]
+
+        case .grokImagine:
+            apiPath = model.apiPath
+            requestBody = [
+                "prompt": prompt,
+                "image": imageURLs[0],
+                "aspect_ratio": "9:16",
+                "output_format": "jpeg",
+                "enable_base64_output": false
+            ]
+
+        case .gptImage15:
+            apiPath = model.apiPath
+            requestBody = [
+                "prompt": prompt,
+                "images": imageURLs,
+                "size": "1024*1536",
+                "quality": "medium",
                 "output_format": "jpeg",
                 "enable_sync_mode": false,
                 "enable_base64_output": false
             ]
 
-        case .nanoBananaPro:
+        case .nanoBanana2:
             apiPath = model.apiPath
             requestBody = [
                 "prompt": prompt,
-                "images": convertToBase64URLs(inputImages),
-                "resolution": "2k",
-                "output_format": "jpeg",
-                "enable_sync_mode": false,
-                "enable_base64_output": false
-            ]
-
-        case .fluxPro:
-            apiPath = model.apiPath
-            let size = try calculateOptimalSize(from: inputImages[0], maxDimension: 1536)
-            requestBody = [
-                "prompt": prompt,
-                "images": convertToBase64URLs(inputImages),
-                "size": size,
-                "seed": -1,
-                "output_format": "jpeg",
-                "enable_sync_mode": false,
-                "enable_base64_output": false
-            ]
-
-        case .qwen:
-            apiPath = model.apiPath
-            requestBody = [
-                "prompt": prompt,
-                "images": convertToBase64URLs(inputImages),
-                "seed": -1,
-                "output_format": "jpeg",
+                "images": imageURLs,
+                "aspect_ratio": "9:16",
+                "resolution": "1k",
+                "output_format": "png",
                 "enable_sync_mode": false,
                 "enable_base64_output": false
             ]
@@ -101,7 +101,7 @@ enum ImageEditingService {
         let height = image.size.height * image.scale
         #elseif canImport(AppKit)
         guard let image = NSImage(data: imageData),
-              let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+              let cgImage = unsafe image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
             throw RuntimeError("Failed to decode image data")
         }
         let width = CGFloat(cgImage.width)

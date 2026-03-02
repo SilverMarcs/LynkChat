@@ -20,6 +20,6 @@ struct ImageConfig: Identifiable, Codable, Sendable {
         let defaults = ImageConfigDefaults()
         
         self.model = defaults.defaultModel
-        self.editingModel = .seedream
+        self.editingModel = defaults.defaultEditingModel
     }
 }

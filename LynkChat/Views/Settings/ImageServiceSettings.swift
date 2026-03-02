@@ -10,7 +10,7 @@ import SwiftUI
 struct ImageServiceSettings: View {
     @AppStorage("saveToPhotos") private var saveToPhotos: Bool = true
     @AppStorage("defaultImageModel") private var defaultModel: ImageModel = .seedreamV50Lite
-    @AppStorage("defaultEditingModel") private var defaultEditingModel: ImageEditingModel = .seedream
+    @AppStorage("defaultEditingModel") private var defaultEditingModel: ImageEditingModel = .seedreamV50Lite
     @AppStorage("wavespeedApiKey") private var wavespeedApiKey: String = ""
     
     var body: some View {

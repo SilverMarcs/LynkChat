@@ -11,7 +11,7 @@ struct ImageConfigDefaults {
     @AppStorage("saveToPhotos") var saveToPhotos = true
     
     @AppStorage("defaultImageModel") var defaultModel: ImageModel = .seedreamV50Lite
-    @AppStorage("defaultEditingModel") var defaultEditingModel: ImageEditingModel = .seedream
+    @AppStorage("defaultEditingModel") var defaultEditingModel: ImageEditingModel = .seedreamV50Lite
     
     @AppStorage("wavespeedApiKey") var wavespeedApiKey: String = ""
 }
