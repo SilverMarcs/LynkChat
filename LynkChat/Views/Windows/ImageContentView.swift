@@ -22,8 +22,10 @@ struct ImageContentView: View {
                 ImageDetail(session: imageSession)
                     .id(imageSession.id)
             } else {
-                Text("Select or create an image session")
-                    .font(.title)
+                ScrollView {
+                    Text("Select or create an image session")
+                        .font(.title)
+                }
             }
         }
         .inspector(isPresented: $showingInspector) {

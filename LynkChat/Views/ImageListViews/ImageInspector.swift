@@ -44,6 +44,7 @@ struct ImageInspector: View {
                     session.deleteFailedGenerations()
                 } label: {
                     Label("Delete Failed Generations", systemImage: "trash")
+                        .foregroundStyle(.red)
                         .contentShape(.rect)
                         #if !os(macOS)
                         .labelStyle(.titleOnly)
