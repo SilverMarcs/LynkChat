@@ -15,6 +15,8 @@ class Generation {
     var date: Date = Date()
     
     var session: ImageSession
+    var imageModel: ImageModel?
+    var imageEditingModel: ImageEditingModel?
 
     var isProcessing: Bool = false
     var isFailed: Bool = false
@@ -30,6 +32,18 @@ class Generation {
     init(config: ImageConfig, session: ImageSession) {
         self.config = config
         self.session = session
+
+        if session.inputImages.isEmpty {
+            imageModel = config.model
+            imageEditingModel = nil
+        } else {
+            imageModel = nil
+            imageEditingModel = config.editingModel
+        }
+    }
+
+    var modelName: String {
+        imageModel?.name ?? imageEditingModel?.name ?? "Unknown"
     }
     
     @MainActor
@@ -40,14 +54,19 @@ class Generation {
         generatingTask = Task { [weak self] in
             guard let self else { return }
             let dataObjects: [Data]
-            if session.inputImages.isEmpty {
-                dataObjects = try await ImageGenerationService.generateImages(config: config)
-            } else {
+            if let imageModel {
+                var requestConfig = config
+                requestConfig.model = imageModel
+                dataObjects = try await ImageGenerationService.generateImages(config: requestConfig)
+            } else if let imageEditingModel {
                 dataObjects = try await ImageEditingService.editImages(
-                    using: config.editingModel,
+                    using: imageEditingModel,
                     prompt: config.prompt,
                     inputImages: session.inputImages
                 )
+            } else {
+                isFailed = true
+                return
             }
 
             self.image = dataObjects.first

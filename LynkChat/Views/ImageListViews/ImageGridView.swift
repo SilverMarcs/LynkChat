@@ -30,7 +30,7 @@ struct ImageGridView: View {
                     .buttonStyle(.plain)
                     .matchedTransitionSource(id: generation.id, in: imageNamespace)
                     .contextMenu {
-                        Section(generation.config.model.name) {
+                        Section(generation.modelName) {
                             if let image = generation.image {
                                 Button {
                                     generation.session.inputImages = [image]
