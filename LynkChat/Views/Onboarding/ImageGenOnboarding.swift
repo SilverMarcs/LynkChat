@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ImageGenOnboarding: View {
-    // TODO: add new models here
     @State var config: ImageConfigDefaults = .init()
     
     var body: some View {

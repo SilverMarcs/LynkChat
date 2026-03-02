@@ -10,7 +10,7 @@ import SwiftUI
 struct ImageConfigDefaults {
     @AppStorage("saveToPhotos") var saveToPhotos = true
     
-    @AppStorage("defaultModel") var defaultModel: ImageModel = .zImage
+    @AppStorage("defaultImageModel") var defaultModel: ImageModel = .seedreamV50Lite
     @AppStorage("defaultEditingModel") var defaultEditingModel: ImageEditingModel = .seedream
     
     @AppStorage("wavespeedApiKey") var wavespeedApiKey: String = ""

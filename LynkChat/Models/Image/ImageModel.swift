@@ -8,57 +8,110 @@
 import Foundation
 
 enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
-    case zImage
-    case fluxPro
-    case gpt
-    case nanoBanana
-    case nanoBananaPro
-    case seedream
-    case flux // legacy
+    case seedreamV50Lite = "seedream_v5_0_lite"
+    case seedreamV45 = "seedream_v4_5"
+    case klingImageO3 = "kling_image_o3"
+    case grokImagine = "grok_imagine"
+    case gptImage15 = "gpt_image_1_5"
+    case nanoBanana2 = "nano_banana_2"
 
-    static var allCases: [ImageModel] {
-        [.zImage, .fluxPro, .gpt, .nanoBanana, .nanoBananaPro, .seedream]
-    }
-
-    var id: String {
-        switch self {
-        case .zImage: "zImage"
-        case .fluxPro, .flux: "fluxPro"
-        case .gpt: "gpt"
-        case .nanoBanana: "nanoBanana"
-        case .nanoBananaPro: "nanoBananaPro"
-        case .seedream: "seedream"
-        }
-    }
+    var id: String { rawValue }
 
     var name: String {
         switch self {
-        case .zImage: "Z-Image"
-        case .fluxPro, .flux: "FLUX.2"
-        case .gpt: "GPT"
-        case .nanoBanana: "Banana"
-        case .nanoBananaPro: "Banana Pro"
-        case .seedream: "Seedream"
+        case .seedreamV50Lite: "Seedream V5 Lite"
+        case .seedreamV45: "Seedream V4.5"
+        case .klingImageO3: "Kling Image O3"
+        case .grokImagine: "Grok Imagine"
+        case .gptImage15: "GPT Image 1.5"
+        case .nanoBanana2: "Nano Banana 2"
         }
     }
 
     var imageName: String {
         switch self {
-        case .zImage: "qwen.symbols"
-        case .fluxPro, .flux: "flux.symbols"
-        case .gpt: "openai.symbols"
-        case .nanoBanana, .nanoBananaPro: "gemini.symbols"
-        case .seedream: "bytedance.symbols"
+        case .seedreamV50Lite, .seedreamV45: "bytedance.symbols"
+        case .klingImageO3: "flux.symbols"
+        case .grokImagine, .gptImage15: "openai.symbols"
+        case .nanoBanana2: "gemini.symbols"
         }
     }
 
     var color: String {
         switch self {
-        case .zImage: "#007BFF"
-        case .fluxPro, .flux: "#6431e2"
-        case .gpt: "#00947A"
-        case .nanoBanana, .nanoBananaPro: "#E64335"
-        case .seedream: "#00A8B2"
+        case .seedreamV50Lite, .seedreamV45: "#00A8B2"
+        case .klingImageO3: "#6431E2"
+        case .grokImagine: "#111111"
+        case .gptImage15: "#00947A"
+        case .nanoBanana2: "#E64335"
+        }
+    }
+
+    var apiPath: String {
+        switch self {
+        case .seedreamV50Lite:
+            "/api/v3/bytedance/seedream-v5.0-lite"
+        case .seedreamV45:
+            "/api/v3/bytedance/seedream-v4.5"
+        case .klingImageO3:
+            "/api/v3/kwaivgi/kling-image-o3/text-to-image"
+        case .grokImagine:
+            "/api/v3/x-ai/grok-imagine-image/text-to-image"
+        case .gptImage15:
+            "/api/v3/openai/gpt-image-1.5/text-to-image"
+        case .nanoBanana2:
+            "/api/v3/google/nano-banana-2/text-to-image"
+        }
+    }
+
+    func requestBody(prompt: String) -> [String: Any] {
+        switch self {
+        case .seedreamV50Lite:
+            return [
+                "prompt": prompt,
+                "size": "1440*2560",
+                "enable_sync_mode": false,
+                "enable_base64_output": false
+            ]
+        case .seedreamV45:
+            return [
+                "prompt": prompt,
+                "size": "1440*2560",
+                "enable_sync_mode": false,
+                "enable_base64_output": false
+            ]
+        case .klingImageO3:
+            return [
+                "prompt": prompt,
+                "aspect_ratio": "9:16",
+                "resolution": "1k",
+                "num_images": 1,
+                "output_format": "png"
+            ]
+        case .grokImagine:
+            return [
+                "prompt": prompt,
+                "aspect_ratio": "9:16",
+                "output_format": "jpeg"
+            ]
+        case .gptImage15:
+            return [
+                "prompt": prompt,
+                "size": "1024*1536",
+                "quality": "medium",
+                "output_format": "jpeg",
+                "enable_sync_mode": false,
+                "enable_base64_output": false
+            ]
+        case .nanoBanana2:
+            return [
+                "prompt": prompt,
+                "aspect_ratio": "9:16",
+                "resolution": "1k",
+                "output_format": "png",
+                "enable_sync_mode": false,
+                "enable_base64_output": false
+            ]
         }
     }
 }

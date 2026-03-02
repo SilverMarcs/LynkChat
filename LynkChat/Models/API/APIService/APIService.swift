@@ -70,7 +70,6 @@ enum HTTPMethod: String {
 enum APIPath {
     case chat
     case title
-    case image
     
     var pathString: String {
         switch self {
@@ -78,8 +77,6 @@ enum APIPath {
             return "/chat"
         case .title:
             return "/chat/title"
-        case .image:
-            return "/image"
         }
     }
 }

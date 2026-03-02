@@ -41,7 +41,7 @@ class Generation {
             guard let self else { return }
             let dataObjects: [Data]
             if session.inputImages.isEmpty {
-                dataObjects = try await APIService.generateImages(config: config)
+                dataObjects = try await ImageGenerationService.generateImages(config: config)
             } else {
                 dataObjects = try await ImageEditingService.editImages(
                     using: config.editingModel,
