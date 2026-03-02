@@ -42,7 +42,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
     var color: String {
         switch self {
         case .seedreamV50Lite, .seedreamV45: "#00A8B2"
-        case .klingImageO3: "#6431E2"
+        case .klingImageO3: "#70EECD"
         case .grokImagine: "#111111"
         case .gptImage15: "#00947A"
         case .nanoBanana2: "#E64335"
@@ -52,7 +52,7 @@ enum ImageEditingModel: String, Identifiable, Hashable, Codable, Equatable, Case
     var imageName: String {
         switch self {
         case .seedreamV50Lite, .seedreamV45: "bytedance.symbols"
-        case .klingImageO3: "flux.symbols"
+        case .klingImageO3: "kling.symbols"
         case .grokImagine: "xai.symbols"
         case .gptImage15: "openai.symbols"
         case .nanoBanana2: "gemini.symbols"
