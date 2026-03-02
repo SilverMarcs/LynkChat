@@ -37,6 +37,7 @@ struct ImageDetail: View {
         }
         .toolbar(.hidden, for: .tabBar)
         .searchable(text: $session.config.prompt, isPresented: $isFocused, prompt: "Generate Images")
+        .searchPresentationToolbarBehavior(.avoidHidingContent)
         .onSubmit(of: .search) {
             isFocused = false
             Task { await session.send() }
