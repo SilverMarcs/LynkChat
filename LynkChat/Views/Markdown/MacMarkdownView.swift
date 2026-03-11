@@ -350,6 +350,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
     private enum Layout {
         static let contentPadding: CGFloat = 14
         static let buttonInset: CGFloat = 10
+        static let buttonSize: CGFloat = 28
         static let minimumContentWidth: CGFloat = 160
     }
 
@@ -378,7 +379,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         backgroundView.wantsLayer = true
         backgroundView.layer?.cornerRadius = 12
         backgroundView.layer?.backgroundColor = NSColor(
-            calibratedWhite: 0.15,
+            calibratedWhite: 0.12,
             alpha: 1
         ).cgColor
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
@@ -388,11 +389,14 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             accessibilityDescription: "Copy code"
         )
         copyButton.imagePosition = .imageOnly
-        copyButton.bezelStyle = .push
+        copyButton.bezelStyle = .regularSquare
         copyButton.controlSize = .small
         copyButton.target = self
         copyButton.action = #selector(copyCode)
         copyButton.contentTintColor = .white
+        copyButton.wantsLayer = true
+        copyButton.layer?.cornerRadius = 8
+        copyButton.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
         copyButton.translatesAutoresizingMaskIntoConstraints = false
 
         scrollView.drawsBackground = false
@@ -439,7 +443,9 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             scrollView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -Layout.contentPadding),
 
             copyButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -Layout.buttonInset),
-            copyButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -Layout.buttonInset)
+            copyButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -Layout.buttonInset),
+            copyButton.widthAnchor.constraint(equalToConstant: Layout.buttonSize),
+            copyButton.heightAnchor.constraint(equalToConstant: Layout.buttonSize)
         ])
 
         update(content: content, language: language)
