@@ -184,16 +184,49 @@ private final class MarkdownCodeTextView: NSTextView {
     let markdownTextStorage = NSTextStorage()
     let markdownLayoutManager = NSLayoutManager()
     let markdownTextContainer = NSTextContainer()
+    static let codeFont = NSFont.monospacedSystemFont(
+        ofSize: NSFont.preferredFont(forTextStyle: .body).pointSize,
+        weight: .regular
+    )
 
     init() {
         markdownLayoutManager.addTextContainer(markdownTextContainer)
         markdownTextStorage.addLayoutManager(markdownLayoutManager)
         super.init(frame: .zero, textContainer: markdownTextContainer)
+        font = Self.codeFont
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private final class MarkdownHorizontalScrollView: NSScrollView {
+    override func scrollWheel(with event: NSEvent) {
+        let horizontalDelta = abs(event.scrollingDeltaX)
+        let verticalDelta = abs(event.scrollingDeltaY)
+
+        guard horizontalDelta > verticalDelta else {
+            ancestorScrollView?.scrollWheel(with: event)
+            return
+        }
+
+        super.scrollWheel(with: event)
+    }
+
+    private var ancestorScrollView: NSScrollView? {
+        var currentView = unsafe superview
+
+        while let view = currentView {
+            if let scrollView = view as? NSScrollView {
+                return scrollView
+            }
+
+            currentView = unsafe view.superview
+        }
+
+        return nil
     }
 }
 
@@ -281,8 +314,14 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
 }
 
 private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
+    private enum Layout {
+        static let contentPadding: CGFloat = 14
+        static let buttonInset: CGFloat = 10
+        static let minimumContentWidth: CGFloat = 160
+    }
+
     private let backgroundView = NSView()
-    private let scrollView = NSScrollView()
+    private let scrollView = MarkdownHorizontalScrollView()
     private let textView = MarkdownCodeTextView()
     private let copyButton = NSButton()
     private var widthConstraint: NSLayoutConstraint?
@@ -303,11 +342,16 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         ).cgColor
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
 
-        copyButton.title = "Copy"
-        copyButton.bezelStyle = .rounded
+        copyButton.image = NSImage(
+            systemSymbolName: "clipboard",
+            accessibilityDescription: "Copy code"
+        )
+        copyButton.imagePosition = .imageOnly
+        copyButton.bezelStyle = .push
         copyButton.controlSize = .small
         copyButton.target = self
         copyButton.action = #selector(copyCode)
+        copyButton.contentTintColor = .white
         copyButton.translatesAutoresizingMaskIntoConstraints = false
 
         scrollView.drawsBackground = false
@@ -315,6 +359,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         scrollView.hasHorizontalScroller = true
         scrollView.hasVerticalScroller = false
         scrollView.autohidesScrollers = true
+        scrollView.verticalScrollElasticity = .none
         scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         textView.drawsBackground = false
@@ -324,8 +369,10 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         textView.importsGraphics = false
         textView.textContainerInset = NSSize(width: 0, height: 0)
         textView.markdownTextContainer.lineFragmentPadding = 0
+        textView.markdownTextContainer.widthTracksTextView = false
+        textView.markdownTextContainer.heightTracksTextView = false
         textView.isHorizontallyResizable = true
-        textView.isVerticallyResizable = true
+        textView.isVerticallyResizable = false
         textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.minSize = .zero
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -345,13 +392,13 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
             widthConstraint,
 
-            copyButton.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 10),
-            copyButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -10),
+            scrollView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: Layout.contentPadding),
+            scrollView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -Layout.contentPadding),
+            scrollView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: Layout.contentPadding),
+            scrollView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -Layout.contentPadding),
 
-            scrollView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 14),
-            scrollView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -14),
-            scrollView.topAnchor.constraint(equalTo: copyButton.bottomAnchor, constant: 10),
-            scrollView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -14)
+            copyButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -Layout.buttonInset),
+            copyButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -Layout.buttonInset)
         ])
 
         update(content: content)
@@ -368,20 +415,18 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             NSAttributedString(
                 string: content,
                 attributes: [
-                    .font: textView.font ?? .monospacedSystemFont(ofSize: 14, weight: .regular),
+                    .font: textView.font ?? MarkdownCodeTextView.codeFont,
                     .foregroundColor: NSColor.white
                 ]
             )
         )
+        updateTextViewFrame()
         invalidateIntrinsicContentSize()
     }
 
     func update(preferredWidth: CGFloat) {
         widthConstraint?.constant = preferredWidth
-        textView.markdownTextContainer.containerSize = CGSize(
-            width: CGFloat.greatestFiniteMagnitude,
-            height: CGFloat.greatestFiniteMagnitude
-        )
+        updateTextViewFrame()
         invalidateIntrinsicContentSize()
     }
 
@@ -393,18 +438,34 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         measuredSize(for: widthConstraint?.constant ?? bounds.width)
     }
 
+    private func updateTextViewFrame() {
+        textView.markdownTextContainer.containerSize = CGSize(
+            width: CGFloat.greatestFiniteMagnitude,
+            height: CGFloat.greatestFiniteMagnitude
+        )
+        textView.markdownLayoutManager.ensureLayout(for: textView.markdownTextContainer)
+
+        let usedRect = textView.markdownLayoutManager.usedRect(for: textView.markdownTextContainer)
+        let fittedSize = NSSize(
+            width: ceil(max(Layout.minimumContentWidth, usedRect.width)),
+            height: ceil(usedRect.height)
+        )
+
+        textView.setFrameSize(fittedSize)
+    }
+
     private func measuredSize(for width: CGFloat) -> NSSize {
         guard width > 0 else { return .zero }
 
-        let contentWidth = max(width - 28, 160)
-        let codeSize = (content as NSString).boundingRect(
-            with: CGSize(width: contentWidth, height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: textView.font ?? .monospacedSystemFont(ofSize: 14, weight: .regular)]
-        ).size
+        textView.markdownTextContainer.containerSize = CGSize(
+            width: CGFloat.greatestFiniteMagnitude,
+            height: CGFloat.greatestFiniteMagnitude
+        )
+        textView.markdownLayoutManager.ensureLayout(for: textView.markdownTextContainer)
+        let codeSize = textView.markdownLayoutManager.usedRect(for: textView.markdownTextContainer).size
 
         let bodyHeight = ceil(codeSize.height)
-        let totalHeight = 10 + 24 + 10 + bodyHeight + 14
+        let totalHeight = (Layout.contentPadding * 2) + bodyHeight
         return NSSize(width: width, height: totalHeight)
     }
 
