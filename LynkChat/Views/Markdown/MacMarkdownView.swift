@@ -775,8 +775,6 @@ private struct MacMarkdownRenderer {
     private func quoteParagraphStyle() -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4
-        style.firstLineHeadIndent = 22
-        style.headIndent = 22
         style.paragraphSpacing = 4
         style.paragraphSpacingBefore = 4
         return style
