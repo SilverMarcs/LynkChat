@@ -163,6 +163,20 @@ private protocol MarkdownMeasurable {
     func update(preferredWidth: CGFloat)
 }
 
+private func markdownAncestorMenu(from view: NSView) -> NSMenu? {
+    var currentView = unsafe view.superview
+
+    while let candidate = currentView {
+        if let menu = candidate.menu {
+            return menu
+        }
+
+        currentView = unsafe candidate.superview
+    }
+
+    return nil
+}
+
 private final class MarkdownPlainTextView: NSTextView {
     let markdownTextStorage = NSTextStorage()
     let markdownLayoutManager = NSLayoutManager()
@@ -177,6 +191,10 @@ private final class MarkdownPlainTextView: NSTextView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func menu(for event: NSEvent) -> NSMenu? {
+        markdownAncestorMenu(from: self)
     }
 }
 
@@ -199,6 +217,10 @@ private final class MarkdownCodeTextView: NSTextView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func menu(for event: NSEvent) -> NSMenu? {
+        markdownAncestorMenu(from: self)
     }
 }
 
@@ -227,6 +249,16 @@ private final class MarkdownHorizontalScrollView: NSScrollView {
         }
 
         return nil
+    }
+
+    override func menu(for event: NSEvent) -> NSMenu? {
+        markdownAncestorMenu(from: self)
+    }
+}
+
+private final class MarkdownBackgroundView: NSView {
+    override func menu(for event: NSEvent) -> NSMenu? {
+        markdownAncestorMenu(from: self)
     }
 }
 
@@ -320,7 +352,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         static let minimumContentWidth: CGFloat = 160
     }
 
-    private let backgroundView = NSView()
+    private let backgroundView = MarkdownBackgroundView()
     private let scrollView = MarkdownHorizontalScrollView()
     private let textView = MarkdownCodeTextView()
     private let copyButton = NSButton()
@@ -861,9 +893,9 @@ private struct MacMarkdownRenderer {
 
     private func headingFont(for level: Int) -> NSFont {
         switch level {
-        case 1: return .systemFont(ofSize: bodyFontSize + 15, weight: .bold)
-        case 2: return .systemFont(ofSize: bodyFontSize + 11, weight: .bold)
-        case 3: return .systemFont(ofSize: bodyFontSize + 7, weight: .semibold)
+        case 1: return .systemFont(ofSize: bodyFontSize + 14, weight: .bold)
+        case 2: return .systemFont(ofSize: bodyFontSize + 9, weight: .bold)
+        case 3: return .systemFont(ofSize: bodyFontSize + 6, weight: .semibold)
         case 4: return .systemFont(ofSize: bodyFontSize + 3, weight: .semibold)
         default: return .systemFont(ofSize: bodyFontSize, weight: .regular)
         }
