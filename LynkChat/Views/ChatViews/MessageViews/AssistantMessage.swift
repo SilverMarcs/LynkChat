@@ -12,7 +12,7 @@ struct AssistantMessage: View {
     var group: MessageGroup
     var showMenu: Bool = true
     
-    @State var height: CGFloat = 0
+    @State private var height: CGFloat = 0
     @State private var showingTextSelection = false
     @Namespace private var transition
     
@@ -32,11 +32,16 @@ struct AssistantMessage: View {
                 MDView(content: message.content, calculatedHeight: $height)
                     .transaction { $0.animation = nil }
                     #if os(macOS)
-                    .frame(height: message.height, alignment: .top)
-                    .onChange(of: height) {
-                        if height > 0 {
-                            message.height = height
-                        }
+//                    .frame(height: message.height, alignment: .top)
+//                    .onChange(of: height) {
+//                        if height > 0 {
+//                            message.height = height
+//                        }
+//                    }
+                    .frame(height: message.height > 0 ? message.height : nil, alignment: .top)
+                    .onChange(of: height) { _, newHeight in
+                        guard newHeight > 0, message.height != newHeight else { return }
+                        message.height = newHeight
                     }
                     #endif
                 

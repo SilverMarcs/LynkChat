@@ -16,22 +16,25 @@ struct ChatDetailMac: View {
     
     var body: some View {
         ScrollViewReader { proxy in
-            ScrollView {
+            List {
 //                LazyVStack {
-                VStack {
+//                VStack {
                     ForEach(chat.currentThread, id: \.self) { group in
                         MessageView(group: group)
                             .environment(\.chat, chat)
+                            .listRowSeparator(.hidden)
                     }
                     
                     ErrorMessageView(chat: chat)
+                    .listRowSeparator(.hidden)
                     
                     Color.clear
                         .frame(height: chat.expandColor
                                ? (chat.status == .quick ? 250 : 475)
                                : 1)
                         .id(String.bottomID)
-                }
+                        .listRowSeparator(.hidden)
+//                }
             }
             .overlay(alignment: .center) {
                 if chat.isEmpty {

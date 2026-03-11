@@ -6,26 +6,22 @@
 //
 
 import SwiftUI
-#if os(macOS)
-import SwiftMarkdownView
-#endif
 
 struct MDView: View {
     @AppStorage("fontSize") var fontSize: Double = 13
     var content: String
     var calculatedHeight: Binding<CGFloat>? = nil
 
-var body: some View {
-    #if os(macOS)
-    SwiftMarkdownView(
-        content,
-        calculatedHeight: calculatedHeight,
-        fontSize: CGFloat(fontSize),
-        baseURL: "LynkChat Web Content",
-    )
-    #else
-    NativeMarkdownView(text: content)
-    #endif
+    var body: some View {
+        #if os(macOS)
+        MacMarkdownView(
+            text: content,
+            fontSize: CGFloat(fontSize),
+            calculatedHeight: calculatedHeight
+        )
+        #else
+        NativeMarkdownView(text: content)
+        #endif
     }
 }
 
