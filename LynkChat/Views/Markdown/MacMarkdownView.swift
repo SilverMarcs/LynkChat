@@ -2,6 +2,7 @@ import SwiftUI
 
 #if os(macOS)
 import AppKit
+import Highlightr
 
 struct MacMarkdownView: View {
     let text: String
@@ -137,8 +138,8 @@ private final class MarkdownContainerView: NSView {
         switch block {
         case .text(let attributedStrings):
             return MarkdownTextBlockView(attributedStrings: attributedStrings)
-        case .code(let content):
-            return MarkdownCodeBlockView(content: content)
+        case .code(let content, let language):
+            return MarkdownCodeBlockView(content: content, language: language)
         }
     }
 
@@ -146,8 +147,8 @@ private final class MarkdownContainerView: NSView {
         switch (view, block) {
         case let (textView as MarkdownTextBlockView, .text(attributedStrings)):
             textView.update(attributedStrings: attributedStrings)
-        case let (codeView as MarkdownCodeBlockView, .code(content)):
-            codeView.update(content: content)
+        case let (codeView as MarkdownCodeBlockView, .code(content, language)):
+            codeView.update(content: content, language: language)
         default:
             if let index = stackView.arrangedSubviews.firstIndex(of: view) {
                 stackView.removeArrangedSubview(view)
@@ -352,15 +353,23 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         static let minimumContentWidth: CGFloat = 160
     }
 
+    private static let syntaxHighlighter: Highlightr? = {
+        let highlighter = Highlightr()
+        highlighter?.setTheme(to: "atom-one-dark")
+        return highlighter
+    }()
+
     private let backgroundView = MarkdownBackgroundView()
     private let scrollView = MarkdownHorizontalScrollView()
     private let textView = MarkdownCodeTextView()
     private let copyButton = NSButton()
     private var widthConstraint: NSLayoutConstraint?
     private var content: String
+    private var language: String?
 
-    init(content: String) {
+    init(content: String, language: String?) {
         self.content = content
+        self.language = language
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
 
@@ -433,7 +442,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             copyButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -Layout.buttonInset)
         ])
 
-        update(content: content)
+        update(content: content, language: language)
     }
 
     @available(*, unavailable)
@@ -441,17 +450,10 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(content: String) {
+    func update(content: String, language: String?) {
         self.content = content
-        textView.markdownTextStorage.setAttributedString(
-            NSAttributedString(
-                string: content,
-                attributes: [
-                    .font: textView.font ?? MarkdownCodeTextView.codeFont,
-                    .foregroundColor: NSColor.white
-                ]
-            )
-        )
+        self.language = language
+        textView.markdownTextStorage.setAttributedString(attributedCode())
         updateTextViewFrame()
         invalidateIntrinsicContentSize()
     }
@@ -468,6 +470,22 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 
     override var fittingSize: NSSize {
         measuredSize(for: widthConstraint?.constant ?? bounds.width)
+    }
+
+    private func attributedCode() -> NSAttributedString {
+        if let highlighted = Self.syntaxHighlighter?.highlight(content, as: language) {
+            let output = NSMutableAttributedString(attributedString: highlighted)
+            output.addAttribute(.font, value: MarkdownCodeTextView.codeFont, range: output.fullRange)
+            return output
+        }
+
+        return NSAttributedString(
+            string: content,
+            attributes: [
+                .font: textView.font ?? MarkdownCodeTextView.codeFont,
+                .foregroundColor: NSColor.white
+            ]
+        )
     }
 
     private func updateTextViewFrame() {
@@ -510,7 +528,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 
 private enum MarkdownRenderedBlock {
     case text([NSAttributedString])
-    case code(String)
+    case code(String, language: String?)
 }
 
 private struct MacMarkdownRenderer {
@@ -519,7 +537,7 @@ private struct MacMarkdownRenderer {
         case heading(level: Int, text: String)
         case list(items: [Item])
         case quote(String)
-        case codeBlock(String)
+        case codeBlock(String, language: String?)
         case thematicBreak
     }
 
@@ -554,9 +572,9 @@ private struct MacMarkdownRenderer {
 
         for block in parseBlocks(markdown) {
             switch block {
-            case .codeBlock(let code):
+            case .codeBlock(let code, let language):
                 flushPendingTextBlocks()
-                renderedBlocks.append(.code(code))
+                renderedBlocks.append(.code(code, language: language))
             default:
                 pendingTextBlocks.append(attributedBlock(for: block))
             }
@@ -581,6 +599,7 @@ private struct MacMarkdownRenderer {
             }
 
             if trimmed.hasPrefix("```") {
+                let language = parseCodeBlockLanguage(from: trimmed)
                 var codeLines: [String] = []
                 index += 1
                 while index < lines.count, lines[index].trimmingCharacters(in: .whitespaces) != "```" {
@@ -588,7 +607,7 @@ private struct MacMarkdownRenderer {
                     index += 1
                 }
                 index += 1
-                blocks.append(.codeBlock(codeLines.joined(separator: "\n")))
+                blocks.append(.codeBlock(codeLines.joined(separator: "\n"), language: language))
                 continue
             }
 
@@ -643,6 +662,21 @@ private struct MacMarkdownRenderer {
         }
 
         return blocks
+    }
+
+    private func parseCodeBlockLanguage(from trimmedFenceLine: String) -> String? {
+        let languageHint = trimmedFenceLine
+            .dropFirst(3)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !languageHint.isEmpty else {
+            return nil
+        }
+
+        return languageHint
+            .split(whereSeparator: \.isWhitespace)
+            .first
+            .map(String.init)
     }
 
     private func attributedBlock(for block: Block) -> NSAttributedString {

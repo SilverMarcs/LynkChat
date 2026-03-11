@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 085E58772E700DD20024AA4B /* SwiftMarkdownView */; };
 		085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 085E587A2E70113F0024AA4B /* SwiftMarkdownView */; };
+		089A3FA72F61E60E00136E46 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = 089A3FA62F61E60E00136E46 /* Highlightr */; };
 		08DAD9C62E908D3D00BC04A1 /* LynkShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 08DAD9BC2E908D3D00BC04A1 /* LynkShare.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -181,6 +182,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				085E587B2E70113F0024AA4B /* SwiftMarkdownView in Frameworks */,
+				089A3FA72F61E60E00136E46 /* Highlightr in Frameworks */,
 				085E58782E700DD20024AA4B /* SwiftMarkdownView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,6 +239,7 @@
 			packageProductDependencies = (
 				085E58772E700DD20024AA4B /* SwiftMarkdownView */,
 				085E587A2E70113F0024AA4B /* SwiftMarkdownView */,
+				089A3FA62F61E60E00136E46 /* Highlightr */,
 			);
 			productName = LynkChat;
 			productReference = 08A2227F2C2AB4FD00D76C8B /* LynkChat.app */;
@@ -293,6 +296,7 @@
 			mainGroup = 08A222762C2AB4FD00D76C8B;
 			packageReferences = (
 				085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */,
+				089A3FA52F61E60E00136E46 /* XCRemoteSwiftPackageReference "Highlightr" */,
 			);
 			productRefGroup = 08A222802C2AB4FD00D76C8B /* Products */;
 			projectDirPath = "";
@@ -725,6 +729,14 @@
 				kind = branch;
 			};
 		};
+		089A3FA52F61E60E00136E46 /* XCRemoteSwiftPackageReference "Highlightr" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/raspu/Highlightr";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -736,6 +748,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 085E58792E70113F0024AA4B /* XCRemoteSwiftPackageReference "SwiftMarkdownView" */;
 			productName = SwiftMarkdownView;
+		};
+		089A3FA62F61E60E00136E46 /* Highlightr */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 089A3FA52F61E60E00136E46 /* XCRemoteSwiftPackageReference "Highlightr" */;
+			productName = Highlightr;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
