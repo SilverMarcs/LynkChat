@@ -25,6 +25,7 @@ final class MarkdownPlainTextView: NSTextView {
     func update(document: MarkdownRenderedDocument) {
         markdownLayoutManager.codeBlocks = document.codeBlocks
         markdownLayoutManager.quoteBlocks = document.quoteBlocks
+        markdownLayoutManager.tableBlocks = document.tableBlocks
         markdownTextStorage.setAttributedString(document.attributedString)
     }
 
@@ -47,12 +48,14 @@ final class MarkdownPlainTextView: NSTextView {
     func codeBlockFrames() -> [(codeBlock: MarkdownCodeBlock, frame: NSRect)] {
         markdownLayoutManager.codeBlockFrames(in: markdownTextContainer)
     }
+
 }
 
 final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     private enum Layout {
         static let cornerRadius: CGFloat = 12
         static let verticalPadding: CGFloat = 16
+        static let tableVerticalPadding: CGFloat = 2
         static let quoteIndentStep: CGFloat = 16
         static let quoteLineWidth: CGFloat = 3
         static let quoteLineInset: CGFloat = 6
@@ -63,10 +66,12 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     var codeBlockBackgroundColor: NSColor = .clear
     var quoteBlocks: [MarkdownQuoteBlock] = []
     var quoteLineColor: NSColor = .clear
+    var tableBlocks: [MarkdownTableBlock] = []
 
     override func drawBackground(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
         super.drawBackground(forGlyphRange: glyphsToShow, at: origin)
         drawCodeBlockBackgrounds(forGlyphRange: glyphsToShow, at: origin)
+        drawTableBackgrounds(forGlyphRange: glyphsToShow, at: origin)
         drawQuoteLines(forGlyphRange: glyphsToShow, at: origin)
     }
 
@@ -98,6 +103,70 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
             }
 
             return (codeBlock, rect)
+        }
+    }
+
+    private func drawTableBackgrounds(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
+        guard !tableBlocks.isEmpty else { return }
+
+        let visibleCharacterRange = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
+        let visibleTables = tableBlocks.filter {
+            NSIntersectionRange($0.range, visibleCharacterRange).length > 0
+        }
+
+        guard !visibleTables.isEmpty else { return }
+
+        for table in visibleTables {
+            let glyphRange = glyphRange(forCharacterRange: table.range, actualCharacterRange: nil)
+            guard glyphRange.length > 0 else { continue }
+
+            var lineRects: [NSRect] = []
+            enumerateLineFragments(forGlyphRange: glyphRange) { lineRect, _, _, effectiveRange, _ in
+                guard NSIntersectionRange(effectiveRange, glyphRange).length > 0 else { return }
+                lineRects.append(lineRect.offsetBy(dx: origin.x, dy: origin.y))
+            }
+            guard !lineRects.isEmpty else { continue }
+
+            let unionRect = lineRects.reduce(lineRects[0]) { $0.union($1) }
+            let blockRect = NSRect(
+                x: unionRect.minX,
+                y: unionRect.minY - Layout.tableVerticalPadding / 2,
+                width: table.contentWidth,
+                height: unionRect.height + Layout.tableVerticalPadding
+            ).integral
+
+            codeBlockBackgroundColor.setFill()
+            let bgPath = NSBezierPath(
+                roundedRect: blockRect,
+                xRadius: Layout.cornerRadius,
+                yRadius: Layout.cornerRadius
+            )
+            bgPath.fill()
+
+            NSColor.labelColor.withAlphaComponent(0.08).setStroke()
+            bgPath.lineWidth = 1
+            bgPath.stroke()
+
+            let gridColor = NSColor.labelColor.withAlphaComponent(0.06)
+            gridColor.setStroke()
+
+            for i in 0..<(lineRects.count - 1) {
+                let y = ceil((lineRects[i].maxY + lineRects[i + 1].minY) / 2)
+                let linePath = NSBezierPath()
+                linePath.move(to: NSPoint(x: blockRect.minX + 1, y: y))
+                linePath.line(to: NSPoint(x: blockRect.maxX - 1, y: y))
+                linePath.lineWidth = 1
+                linePath.stroke()
+            }
+
+            for separatorX in table.columnSeparatorPositions {
+                let x = ceil(origin.x + separatorX)
+                let linePath = NSBezierPath()
+                linePath.move(to: NSPoint(x: x, y: blockRect.minY + 1))
+                linePath.line(to: NSPoint(x: x, y: blockRect.maxY - 1))
+                linePath.lineWidth = 1
+                linePath.stroke()
+            }
         }
     }
 

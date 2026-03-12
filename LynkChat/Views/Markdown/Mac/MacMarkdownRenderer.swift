@@ -9,6 +9,7 @@ struct MarkdownRenderedDocument: @unchecked Sendable {
     let attributedString: NSAttributedString
     let codeBlocks: [MarkdownCodeBlock]
     let quoteBlocks: [MarkdownQuoteBlock]
+    let tableBlocks: [MarkdownTableBlock]
 }
 
 struct MarkdownCodeBlock: Sendable {
@@ -23,12 +24,22 @@ struct MarkdownQuoteBlock: Sendable {
     let identity: Int
 }
 
+struct MarkdownTableBlock: Sendable {
+    let id: Int
+    let range: NSRange
+    let content: String
+    let headerCharacterCount: Int
+    let columnSeparatorPositions: [CGFloat]
+    let contentWidth: CGFloat
+}
+
 extension MarkdownRenderedDocument {
     static func placeholder(text: String, fontSize: CGFloat) -> MarkdownRenderedDocument {
         return MarkdownRenderedDocument(
             attributedString: plainTextFragment(text, fontSize: fontSize),
             codeBlocks: [],
-            quoteBlocks: []
+            quoteBlocks: [],
+            tableBlocks: []
         )
     }
 
@@ -41,7 +52,8 @@ extension MarkdownRenderedDocument {
         return MarkdownRenderedDocument(
             attributedString: attributedString,
             codeBlocks: codeBlocks,
-            quoteBlocks: quoteBlocks
+            quoteBlocks: quoteBlocks,
+            tableBlocks: tableBlocks
         )
     }
 
@@ -103,6 +115,7 @@ struct MacMarkdownRenderer: Sendable {
     private enum Segment {
         case markdown(String)
         case codeBlock(String, language: String?)
+        case table(headers: [String], rows: [[String]], rawContent: String)
     }
 
     private struct RenderedTextUnit {
@@ -174,10 +187,13 @@ struct MacMarkdownRenderer: Sendable {
         let output = NSMutableAttributedString()
         var codeBlocks: [MarkdownCodeBlock] = []
         var quoteBlocks: [MarkdownQuoteBlock] = []
+        var tableBlocks: [MarkdownTableBlock] = []
         var nextCodeBlockID = 0
+        var nextTableBlockID = 0
 
         for segment in parseSegments(markdown) {
             let attributedSegment: NSAttributedString?
+            var currentTableResult: RenderedTableResult?
 
             switch segment {
             case .markdown(let markdown):
@@ -189,6 +205,15 @@ struct MacMarkdownRenderer: Sendable {
                     blockID: nextCodeBlockID
                 )
                 nextCodeBlockID += 1
+            case .table(let headers, let rows, _):
+                let tableResult = renderedTableResult(
+                    headers: headers,
+                    rows: rows,
+                    blockID: nextTableBlockID
+                )
+                currentTableResult = tableResult
+                attributedSegment = tableResult.attributedString
+                nextTableBlockID += 1
             }
 
             guard let attributedSegment, attributedSegment.length > 0 else { continue }
@@ -210,6 +235,19 @@ struct MacMarkdownRenderer: Sendable {
                 )
             }
 
+            if case .table(_, _, let rawContent) = segment, let tableResult = currentTableResult {
+                tableBlocks.append(
+                    MarkdownTableBlock(
+                        id: nextTableBlockID - 1,
+                        range: range,
+                        content: rawContent,
+                        headerCharacterCount: tableResult.headerCharacterCount,
+                        columnSeparatorPositions: tableResult.columnSeparatorPositions,
+                        contentWidth: tableResult.contentWidth
+                    )
+                )
+            }
+
             if case .markdown(let markdownSegment) = segment {
                 mergeQuoteBlocks(
                     &quoteBlocks,
@@ -225,7 +263,8 @@ struct MacMarkdownRenderer: Sendable {
         return MarkdownRenderedDocument(
             attributedString: output,
             codeBlocks: codeBlocks,
-            quoteBlocks: quoteBlocks
+            quoteBlocks: quoteBlocks,
+            tableBlocks: tableBlocks
         )
     }
 
@@ -310,6 +349,31 @@ struct MacMarkdownRenderer: Sendable {
                 continue
             }
 
+            if isTableRow(trimmed),
+               index + 1 < lines.count,
+               isTableSeparator(lines[index + 1]) {
+                flushMarkdownLines()
+
+                let headers = parseTableCells(trimmed)
+                let separatorLine = lines[index + 1]
+                var tableLines = [line, separatorLine]
+                index += 2
+
+                var rows: [[String]] = []
+                while index < lines.count, isTableRow(lines[index]) {
+                    rows.append(parseTableCells(lines[index]))
+                    tableLines.append(lines[index])
+                    index += 1
+                }
+
+                segments.append(.table(
+                    headers: headers,
+                    rows: rows,
+                    rawContent: tableLines.joined(separator: "\n")
+                ))
+                continue
+            }
+
             markdownLines.append(line)
             index += 1
         }
@@ -331,6 +395,131 @@ struct MacMarkdownRenderer: Sendable {
             .split(whereSeparator: \.isWhitespace)
             .first
             .map(String.init)
+    }
+
+    private nonisolated func isTableRow(_ line: String) -> Bool {
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        return trimmed.contains("|") && !trimmed.hasPrefix("```")
+    }
+
+    private nonisolated func isTableSeparator(_ line: String) -> Bool {
+        let cells = parseTableCells(line)
+        guard !cells.isEmpty else { return false }
+        return cells.allSatisfy { cell in
+            let stripped = cell
+                .trimmingCharacters(in: CharacterSet(charactersIn: ": "))
+            return !stripped.isEmpty && stripped.allSatisfy({ $0 == "-" })
+        }
+    }
+
+    private nonisolated func parseTableCells(_ line: String) -> [String] {
+        var content = line.trimmingCharacters(in: .whitespaces)
+        if content.hasPrefix("|") { content = String(content.dropFirst()) }
+        if content.hasSuffix("|") { content = String(content.dropLast()) }
+        return content.components(separatedBy: "|").map { $0.trimmingCharacters(in: .whitespaces) }
+    }
+
+    private struct RenderedTableResult {
+        let attributedString: NSAttributedString
+        let headerCharacterCount: Int
+        let columnSeparatorPositions: [CGFloat]
+        let contentWidth: CGFloat
+    }
+
+    private nonisolated func renderedTableResult(
+        headers: [String],
+        rows: [[String]],
+        blockID: Int
+    ) -> RenderedTableResult {
+        let columnCount = max(headers.count, rows.map(\.count).max() ?? 0)
+        guard columnCount > 0 else {
+            return RenderedTableResult(
+                attributedString: NSAttributedString(),
+                headerCharacterCount: 0,
+                columnSeparatorPositions: [],
+                contentWidth: 0
+            )
+        }
+
+        let paddedHeaders = headers + Array(repeating: "", count: max(0, columnCount - headers.count))
+        let paddedRows = rows.map { row in
+            row + Array(repeating: "", count: max(0, columnCount - row.count))
+        }
+
+        let headerFont = NSFont.systemFont(ofSize: bodyFontSize, weight: .semibold)
+        let cellFont = bodyFont()
+
+        var columnWidths = [CGFloat](repeating: 0, count: columnCount)
+        for (i, header) in paddedHeaders.enumerated() {
+            columnWidths[i] = max(columnWidths[i], (header as NSString).size(withAttributes: [.font: headerFont]).width)
+        }
+        for row in paddedRows {
+            for (i, cell) in row.enumerated() {
+                columnWidths[i] = max(columnWidths[i], (cell as NSString).size(withAttributes: [.font: cellFont]).width)
+            }
+        }
+
+        let horizontalPadding: CGFloat = 12
+        let columnGap: CGFloat = 24
+
+        var tabLocations: [CGFloat] = []
+        var columnSeparatorPositions: [CGFloat] = []
+        var x = horizontalPadding
+        for i in 0..<columnCount {
+            x += columnWidths[i]
+            if i < columnCount - 1 {
+                columnSeparatorPositions.append(x + columnGap / 2)
+                x += columnGap
+                tabLocations.append(x)
+            }
+        }
+
+        let contentWidth = x + horizontalPadding
+
+        let style = NSMutableParagraphStyle()
+        style.tabStops = tabLocations.map { NSTextTab(textAlignment: .left, location: $0) }
+        style.defaultTabInterval = 100
+        style.firstLineHeadIndent = horizontalPadding
+        style.headIndent = horizontalPadding
+        style.tailIndent = -horizontalPadding
+        style.lineSpacing = 4
+        style.paragraphSpacing = 6
+        style.paragraphSpacingBefore = 6
+        style.lineBreakMode = .byClipping
+
+        let output = NSMutableAttributedString()
+
+        let headerText = paddedHeaders.joined(separator: "\t")
+        output.append(NSAttributedString(
+            string: headerText,
+            attributes: [
+                .font: headerFont,
+                .foregroundColor: NSColor.labelColor,
+            ]
+        ))
+
+        for row in paddedRows {
+            output.append(NSAttributedString(string: "\n"))
+            output.append(NSAttributedString(
+                string: row.joined(separator: "\t"),
+                attributes: [
+                    .font: cellFont,
+                    .foregroundColor: NSColor.labelColor,
+                ]
+            ))
+        }
+
+        output.addAttributes([
+            .paragraphStyle: style,
+            .markdownTableBlockID: blockID,
+        ], range: output.fullRange)
+
+        return RenderedTableResult(
+            attributedString: output,
+            headerCharacterCount: headerText.count,
+            columnSeparatorPositions: columnSeparatorPositions,
+            contentWidth: contentWidth
+        )
     }
 
     private nonisolated func styledMarkdown(_ markdown: String) -> NSAttributedString {
@@ -932,5 +1121,6 @@ private extension NSAttributedString.Key {
     nonisolated static let markdownListItemDelimiter = Self("NSListItemDelimiter")
     nonisolated static let markdownPresentationIntent = Self("NSPresentationIntent")
     nonisolated static let markdownCodeBlockID = Self("LynkChatMarkdownCodeBlockID")
+    nonisolated static let markdownTableBlockID = Self("LynkChatMarkdownTableBlockID")
 }
 #endif
