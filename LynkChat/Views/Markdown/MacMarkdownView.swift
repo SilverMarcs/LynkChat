@@ -2,6 +2,7 @@ import SwiftUI
 
 #if os(macOS)
 import AppKit
+import Foundation
 import Highlightr
 
 struct MacMarkdownView: View {
@@ -18,10 +19,16 @@ struct MacMarkdownView: View {
     }
 }
 
-private struct MarkdownRenderCache {
+private final class MarkdownRenderCache {
     let text: String
     let fontSize: CGFloat
     let blocks: [MarkdownRenderedBlock]
+
+    init(text: String, fontSize: CGFloat, blocks: [MarkdownRenderedBlock]) {
+        self.text = text
+        self.fontSize = fontSize
+        self.blocks = blocks
+    }
 }
 
 private struct MacMarkdownRepresentable: NSViewRepresentable {
@@ -32,14 +39,18 @@ private struct MacMarkdownRepresentable: NSViewRepresentable {
     final class Coordinator {
         private var cachedRender: MarkdownRenderCache?
 
-        func blocks(for text: String, fontSize: CGFloat) -> [MarkdownRenderedBlock] {
+        func render(for text: String, fontSize: CGFloat) -> MarkdownRenderCache {
             if let cachedRender, cachedRender.text == text, cachedRender.fontSize == fontSize {
-                return cachedRender.blocks
+                return cachedRender
             }
 
-            let blocks = MacMarkdownRenderer(fontSize: fontSize).render(text)
-            cachedRender = MarkdownRenderCache(text: text, fontSize: fontSize, blocks: blocks)
-            return blocks
+            let render = MarkdownRenderCache(
+                text: text,
+                fontSize: fontSize,
+                blocks: MacMarkdownRenderer(fontSize: fontSize).render(text)
+            )
+            cachedRender = render
+            return render
         }
     }
 
@@ -52,17 +63,17 @@ private struct MacMarkdownRepresentable: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: MarkdownContainerView, context: Context) {
-        let blocks = context.coordinator.blocks(for: text, fontSize: fontSize)
+        let render = context.coordinator.render(for: text, fontSize: fontSize)
         nsView.onHeightChange = { newHeight in
             guard let calculatedHeight, calculatedHeight.wrappedValue != newHeight else { return }
             calculatedHeight.wrappedValue = newHeight
         }
-        nsView.update(blocks: blocks)
+        nsView.update(render: render)
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, nsView: MarkdownContainerView, context: Context) -> CGSize? {
         guard let width = proposal.width else { return nil }
-        nsView.update(blocks: context.coordinator.blocks(for: text, fontSize: fontSize))
+        nsView.update(render: context.coordinator.render(for: text, fontSize: fontSize))
         return nsView.measuredSize(for: width)
     }
 }
@@ -72,6 +83,8 @@ private final class MarkdownContainerView: NSView {
     private var currentWidth: CGFloat = 0
     private var lastReportedHeight: CGFloat = 0
     private var lastMeasuredSize: CGSize = .zero
+    private var currentRender: MarkdownRenderCache?
+    private var needsMeasurement = false
     var onHeightChange: ((CGFloat) -> Void)?
 
     override init(frame frameRect: NSRect) {
@@ -98,7 +111,14 @@ private final class MarkdownContainerView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(blocks: [MarkdownRenderedBlock]) {
+    func update(render: MarkdownRenderCache) {
+        guard currentRender !== render else {
+            recalculateIfNeeded(for: currentWidth, reportHeight: true)
+            return
+        }
+
+        currentRender = render
+        let blocks = render.blocks
         let existingViews = stackView.arrangedSubviews
         if existingViews.count > blocks.count {
             for view in existingViews.suffix(existingViews.count - blocks.count) {
@@ -118,24 +138,15 @@ private final class MarkdownContainerView: NSView {
             }
         }
 
+        needsMeasurement = true
         needsLayout = true
         invalidateIntrinsicContentSize()
-
-        if currentWidth > 0 {
-            applyPreferredWidth(currentWidth)
-            let measuredHeight = measureHeight()
-            lastMeasuredSize = CGSize(width: currentWidth, height: measuredHeight)
-            reportHeightIfNeeded(measuredHeight)
-        }
+        recalculateIfNeeded(for: currentWidth, reportHeight: true)
     }
 
     func measuredSize(for width: CGFloat) -> CGSize {
-        currentWidth = width
-        applyPreferredWidth(width)
-        let measuredHeight = measureHeight()
-        let measuredSize = CGSize(width: width, height: measuredHeight)
-        lastMeasuredSize = measuredSize
-        return measuredSize
+        recalculateIfNeeded(for: width, reportHeight: false)
+        return lastMeasuredSize
     }
 
     override func layout() {
@@ -144,11 +155,7 @@ private final class MarkdownContainerView: NSView {
         let width = bounds.width > 0 ? bounds.width : currentWidth
         guard width > 0 else { return }
 
-        currentWidth = width
-        applyPreferredWidth(width)
-        let measuredHeight = measureHeight()
-        lastMeasuredSize = CGSize(width: width, height: measuredHeight)
-        reportHeightIfNeeded(measuredHeight)
+        recalculateIfNeeded(for: width, reportHeight: true)
     }
 
     override var intrinsicContentSize: NSSize {
@@ -158,6 +165,29 @@ private final class MarkdownContainerView: NSView {
     private func applyPreferredWidth(_ width: CGFloat) {
         for case let measurable as MarkdownMeasurable in stackView.arrangedSubviews {
             measurable.update(preferredWidth: width)
+        }
+    }
+
+    private func recalculateIfNeeded(for width: CGFloat, reportHeight: Bool) {
+        let resolvedWidth = ceil(width)
+        guard resolvedWidth > 0 else { return }
+
+        currentWidth = resolvedWidth
+
+        guard needsMeasurement || lastMeasuredSize.width != resolvedWidth else {
+            if reportHeight {
+                reportHeightIfNeeded(lastMeasuredSize.height)
+            }
+            return
+        }
+
+        applyPreferredWidth(resolvedWidth)
+        let measuredHeight = measureHeight()
+        lastMeasuredSize = CGSize(width: resolvedWidth, height: measuredHeight)
+        needsMeasurement = false
+
+        if reportHeight {
+            reportHeightIfNeeded(measuredHeight)
         }
     }
 
@@ -180,8 +210,8 @@ private final class MarkdownContainerView: NSView {
 
     private func makeView(for block: MarkdownRenderedBlock) -> NSView {
         switch block {
-        case .text(let attributedStrings):
-            return MarkdownTextBlockView(attributedStrings: attributedStrings)
+        case .text(let attributedString):
+            return MarkdownTextBlockView(attributedString: attributedString)
         case .code(let content, let language, let fontSize):
             return MarkdownCodeBlockView(content: content, language: language, codeFontSize: fontSize)
         }
@@ -189,8 +219,8 @@ private final class MarkdownContainerView: NSView {
 
     private func configure(view: NSView, with block: MarkdownRenderedBlock) {
         switch (view, block) {
-        case let (textView as MarkdownTextBlockView, .text(attributedStrings)):
-            textView.update(attributedStrings: attributedStrings)
+        case let (textView as MarkdownTextBlockView, .text(attributedString)):
+            textView.update(attributedString: attributedString)
         case let (codeView as MarkdownCodeBlockView, .code(content, language, fontSize)):
             codeView.update(content: content, language: language, codeFontSize: fontSize)
         default:
@@ -319,10 +349,10 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
     private let textView = MarkdownPlainTextView()
     private var widthConstraint: NSLayoutConstraint?
     private var preferredWidth: CGFloat = 0
-    private var currentAttributedStrings: [NSAttributedString] = []
+    private var currentAttributedString = NSAttributedString()
     private var currentMeasuredSize: NSSize = .zero
 
-    init(attributedStrings: [NSAttributedString]) {
+    init(attributedString: NSAttributedString) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
 
@@ -351,7 +381,7 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
             widthConstraint
         ])
 
-        update(attributedStrings: attributedStrings)
+        update(attributedString: attributedString)
     }
 
     @available(*, unavailable)
@@ -359,20 +389,11 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(attributedStrings: [NSAttributedString]) {
-        guard !markdownAttributedStringsEqual(currentAttributedStrings, attributedStrings) else { return }
+    func update(attributedString: NSAttributedString) {
+        guard !currentAttributedString.isEqual(attributedString) else { return }
 
-        currentAttributedStrings = attributedStrings
-        let combinedString = NSMutableAttributedString()
-
-        for (index, attributedString) in attributedStrings.enumerated() {
-            if index > 0 {
-                combinedString.append(NSAttributedString(string: "\n\n"))
-            }
-            combinedString.append(attributedString)
-        }
-
-        textView.markdownTextStorage.setAttributedString(combinedString)
+        currentAttributedString = attributedString
+        textView.markdownTextStorage.setAttributedString(attributedString)
         if preferredWidth > 0 {
             refreshMeasuredSize(for: preferredWidth)
         }
@@ -646,167 +667,145 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 }
 
 private enum MarkdownRenderedBlock {
-    case text([NSAttributedString])
+    case text(NSAttributedString)
     case code(String, language: String?, fontSize: CGFloat)
 }
 
-private func markdownAttributedStringsEqual(_ lhs: [NSAttributedString], _ rhs: [NSAttributedString]) -> Bool {
-    guard lhs.count == rhs.count else { return false }
-
-    for (left, right) in zip(lhs, rhs) {
-        guard left.isEqual(right) else { return false }
-    }
-
-    return true
-}
-
 private struct MacMarkdownRenderer {
-    private enum Block {
-        case paragraph(String)
-        case heading(level: Int, text: String)
-        case list(items: [Item])
-        case quote([Block])
+    private enum Segment {
+        case markdown(String)
         case codeBlock(String, language: String?)
-        case thematicBreak
     }
 
-    private struct Item {
-        enum Marker {
-            case bullet
-            case ordered(Int)
+    private struct RenderedTextUnit {
+        let attributedString: NSAttributedString
+        let context: BlockContext
+    }
+
+    private struct BlockContext: Equatable {
+        enum Kind: Equatable {
+            case paragraph
+            case heading(Int)
+            case listItem(ListContext)
+            case thematicBreak
         }
 
-        let marker: Marker
-        let content: String
-        let level: Int
+        struct ListContext: Equatable {
+            enum Marker: Equatable {
+                case bullet
+                case ordered(Int)
+            }
+
+            let marker: Marker
+            let level: Int
+            let groupIdentity: Int
+        }
+
+        let kind: Kind
+        let quoteDepth: Int
+        let blockIdentity: Int
     }
 
-    private let fontSize: CGFloat
+    private enum ListMarker {
+        case bullet
+        case ordered(Int)
+    }
+
+    private struct MarkdownListContext {
+        let marker: ListMarker
+        let level: Int
+        let groupIdentity: Int
+    }
+
+    private struct MarkdownPresentationContext {
+        enum Kind {
+            case paragraph
+            case heading(Int)
+            case thematicBreak
+        }
+
+        let kind: Kind
+        let quoteDepth: Int
+        let blockIdentity: Int
+        let listContext: MarkdownListContext?
+    }
+
     private let bodyFontSize: CGFloat
     private let codeFontSize: CGFloat
 
     init(fontSize: CGFloat) {
-        self.fontSize = fontSize
-        self.bodyFontSize = max(fontSize, 13)
-        self.codeFontSize = max(self.bodyFontSize - 1, 12)
+        bodyFontSize = max(fontSize, 13)
+        codeFontSize = max(bodyFontSize - 1, 12)
     }
 
     func render(_ markdown: String) -> [MarkdownRenderedBlock] {
-        renderBlocks(parseBlocks(markdown), quoteDepth: 0)
-    }
-
-    private func renderBlocks(_ blocks: [Block], quoteDepth: Int) -> [MarkdownRenderedBlock] {
-        var renderedBlocks: [MarkdownRenderedBlock] = []
-        var pendingTextBlocks: [NSAttributedString] = []
-
-        func flushPendingTextBlocks() {
-            guard !pendingTextBlocks.isEmpty else { return }
-            renderedBlocks.append(.text(pendingTextBlocks))
-            pendingTextBlocks.removeAll(keepingCapacity: true)
-        }
-
-        for block in blocks {
-            switch block {
+        parseSegments(markdown).compactMap { segment in
+            switch segment {
+            case .markdown(let markdown):
+                renderedMarkdownBlock(from: markdown)
             case .codeBlock(let code, let language):
-                flushPendingTextBlocks()
-                renderedBlocks.append(.code(code, language: language, fontSize: codeFontSize))
-            case .quote(let nestedBlocks):
-                for renderedQuoteBlock in renderBlocks(nestedBlocks, quoteDepth: quoteDepth + 1) {
-                    switch renderedQuoteBlock {
-                    case .text(let attributedStrings):
-                        pendingTextBlocks.append(contentsOf: attributedStrings)
-                    case .code:
-                        flushPendingTextBlocks()
-                        renderedBlocks.append(renderedQuoteBlock)
-                    }
-                }
-            default:
-                pendingTextBlocks.append(attributedBlock(for: block, quoteDepth: quoteDepth))
+                .code(code, language: language, fontSize: codeFontSize)
             }
         }
-
-        flushPendingTextBlocks()
-        return renderedBlocks
     }
 
-    private func parseBlocks(_ markdown: String) -> [Block] {
+    private func renderedMarkdownBlock(from markdown: String) -> MarkdownRenderedBlock? {
+        guard !markdown.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
+
+        let attributedString = styledMarkdown(markdown)
+        guard attributedString.length > 0 else { return nil }
+        return .text(attributedString)
+    }
+
+    private func parseSegments(_ markdown: String) -> [Segment] {
         let lines = markdown.components(separatedBy: .newlines)
-        var blocks: [Block] = []
+        var segments: [Segment] = []
+        var markdownLines: [String] = []
         var index = 0
+
+        func flushMarkdownLines() {
+            let chunk = markdownLines.joined(separator: "\n")
+            guard !chunk.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                markdownLines.removeAll(keepingCapacity: true)
+                return
+            }
+
+            segments.append(.markdown(chunk))
+            markdownLines.removeAll(keepingCapacity: true)
+        }
 
         while index < lines.count {
             let line = lines[index]
             let trimmed = line.trimmingCharacters(in: .whitespaces)
 
-            if trimmed.isEmpty {
-                index += 1
-                continue
-            }
-
             if trimmed.hasPrefix("```") {
+                flushMarkdownLines()
+
                 let language = parseCodeBlockLanguage(from: trimmed)
                 var codeLines: [String] = []
                 index += 1
+
                 while index < lines.count, lines[index].trimmingCharacters(in: .whitespaces) != "```" {
                     codeLines.append(lines[index])
                     index += 1
                 }
-                index += 1
-                blocks.append(.codeBlock(codeLines.joined(separator: "\n"), language: language))
-                continue
-            }
 
-            if isThematicBreak(trimmed) {
-                blocks.append(.thematicBreak)
-                index += 1
-                continue
-            }
-
-            if let heading = parseHeading(line: line) {
-                blocks.append(.heading(level: heading.level, text: heading.text))
-                index += 1
-                continue
-            }
-
-            if isQuoteLine(line) {
-                let (quote, nextIndex) = parseQuote(from: index, lines: lines)
-                blocks.append(.quote(quote))
-                index = nextIndex
-                continue
-            }
-
-            if isListLine(line) {
-                let (items, nextIndex) = parseList(from: index, lines: lines)
-                blocks.append(.list(items: items))
-                index = nextIndex
-                continue
-            }
-
-            var paragraphLines: [String] = []
-            while index < lines.count {
-                let currentLine = lines[index]
-                let currentTrimmed = currentLine.trimmingCharacters(in: .whitespaces)
-                if currentTrimmed.isEmpty
-                    || currentTrimmed.hasPrefix("```")
-                    || isThematicBreak(currentTrimmed)
-                    || parseHeading(line: currentLine) != nil
-                    || isQuoteLine(currentLine)
-                    || isListLine(currentLine)
-                {
-                    break
+                if index < lines.count {
+                    index += 1
                 }
-                paragraphLines.append(currentLine)
-                index += 1
+
+                segments.append(.codeBlock(codeLines.joined(separator: "\n"), language: language))
+                continue
             }
 
-            if !paragraphLines.isEmpty {
-                blocks.append(.paragraph(paragraphLines.joined(separator: "\n")))
-            } else {
-                index += 1
-            }
+            markdownLines.append(line)
+            index += 1
         }
 
-        return blocks
+        flushMarkdownLines()
+        return segments
     }
 
     private func parseCodeBlockLanguage(from trimmedFenceLine: String) -> String? {
@@ -824,123 +823,7 @@ private struct MacMarkdownRenderer {
             .map(String.init)
     }
 
-    private func attributedBlock(for block: Block, quoteDepth: Int) -> NSAttributedString {
-        switch block {
-        case .paragraph(let text):
-            return attributedMarkdown(
-                text,
-                paragraphStyle: paragraphStyle(),
-                quoteDepth: quoteDepth
-            )
-        case .heading(let level, let text):
-            return attributedHeading(level: level, text: text, quoteDepth: quoteDepth)
-        case .list(let items):
-            return attributedList(items, quoteDepth: quoteDepth)
-        case .quote:
-            return NSAttributedString(string: "")
-        case .codeBlock:
-            return NSAttributedString(string: "")
-        case .thematicBreak:
-            return NSAttributedString(
-                string: String(repeating: "─", count: 18),
-                attributes: [
-                    .font: bodyFont(),
-                    .foregroundColor: quoteDepth > 0 ? quoteTextColor() : separatorColor(),
-                    .paragraphStyle: paragraphStyle(
-                        centeredParagraphStyle(),
-                        adjustedForQuoteDepth: quoteDepth
-                    )
-                ]
-            )
-        }
-    }
-
-    private func attributedList(_ items: [Item], quoteDepth: Int) -> NSAttributedString {
-        let output = NSMutableAttributedString()
-
-        for (index, item) in items.enumerated() {
-            if index > 0 {
-                output.append(NSAttributedString(string: "\n"))
-            }
-
-            let marker = markerText(for: item.marker)
-            let markerIndent = CGFloat(max(0, item.level - 1)) * 20
-            let style = paragraphStyle(
-                listParagraphStyle(markerIndent: markerIndent, marker: marker),
-                adjustedForQuoteDepth: quoteDepth
-            )
-
-            let prefix = NSAttributedString(
-                string: "\(marker)\t",
-                attributes: [
-                    .font: bodyFont(),
-                    .paragraphStyle: style,
-                    .foregroundColor: quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor
-                ]
-            )
-
-            let content = NSMutableAttributedString(
-                attributedString: attributedMarkdown(
-                    item.content,
-                    paragraphStyle: style,
-                    quoteDepth: quoteDepth
-                )
-            )
-            content.addAttribute(.paragraphStyle, value: style, range: content.fullRange)
-
-            output.append(prefix)
-            output.append(content)
-        }
-
-        return output
-    }
-
-    private func attributedHeading(level: Int, text: String, quoteDepth: Int) -> NSAttributedString {
-        let font = headingFont(for: level)
-
-        guard let markerDetails = headingMarkerDetails(from: text, font: font) else {
-            let heading = NSMutableAttributedString(
-                attributedString: attributedMarkdown(
-                    text,
-                    paragraphStyle: paragraphStyle(),
-                    quoteDepth: quoteDepth
-                )
-            )
-            heading.addAttribute(.font, value: font, range: heading.fullRange)
-            return heading
-        }
-
-        let output = NSMutableAttributedString(
-            string: "\(markerDetails.marker)\t",
-            attributes: [
-                .font: font,
-                .paragraphStyle: paragraphStyle(
-                    markerDetails.style,
-                    adjustedForQuoteDepth: quoteDepth
-                ),
-                .foregroundColor: quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor
-            ]
-        )
-
-        let style = paragraphStyle(markerDetails.style, adjustedForQuoteDepth: quoteDepth)
-        let headingContent = NSMutableAttributedString(
-            attributedString: attributedMarkdown(
-                markerDetails.content,
-                paragraphStyle: style,
-                quoteDepth: quoteDepth
-            )
-        )
-        headingContent.addAttribute(.font, value: font, range: headingContent.fullRange)
-        headingContent.addAttribute(.paragraphStyle, value: style, range: headingContent.fullRange)
-        output.append(headingContent)
-        return output
-    }
-
-    private func attributedMarkdown(
-        _ markdown: String,
-        paragraphStyle: NSParagraphStyle,
-        quoteDepth: Int
-    ) -> NSAttributedString {
+    private func styledMarkdown(_ markdown: String) -> NSAttributedString {
         let parsed: NSMutableAttributedString
 
         if let attributed = try? NSAttributedString(
@@ -957,15 +840,306 @@ private struct MacMarkdownRenderer {
             parsed = NSMutableAttributedString(string: markdown)
         }
 
-        normalizeFonts(in: parsed)
-        parsed.addAttribute(.paragraphStyle, value: paragraphStyle, range: parsed.fullRange)
-        parsed.addAttribute(
-            .foregroundColor,
-            value: quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor,
-            range: parsed.fullRange
+        let units = renderedTextUnits(from: parsed)
+        let output = NSMutableAttributedString()
+        var index = 0
+
+        while index < units.count {
+            let unit = units[index]
+
+            switch unit.context.kind {
+            case .listItem(let listContext):
+                if output.length > 0 {
+                    output.append(NSAttributedString(string: "\n\n"))
+                }
+
+                var isFirstItem = true
+                while index < units.count {
+                    guard case .listItem(let candidateContext) = units[index].context.kind,
+                          candidateContext.groupIdentity == listContext.groupIdentity else {
+                        break
+                    }
+
+                    if !isFirstItem {
+                        output.append(NSAttributedString(string: "\n"))
+                    }
+
+                    output.append(styledListItem(units[index]))
+                    isFirstItem = false
+                    index += 1
+                }
+
+            default:
+                if output.length > 0 {
+                    output.append(NSAttributedString(string: "\n\n"))
+                }
+
+                output.append(styledBlock(unit))
+                index += 1
+            }
+        }
+
+        return output
+    }
+
+    private func renderedTextUnits(from attributedString: NSAttributedString) -> [RenderedTextUnit] {
+        let fullRange = attributedString.fullRange
+        guard fullRange.length > 0 else { return [] }
+
+        var units: [RenderedTextUnit] = []
+        var currentContext: BlockContext?
+        var currentString = NSMutableAttributedString()
+
+        func flushCurrentUnit() {
+            guard let currentContext, currentString.length > 0 else { return }
+            units.append(
+                RenderedTextUnit(
+                    attributedString: NSAttributedString(attributedString: currentString),
+                    context: currentContext
+                )
+            )
+            currentString = NSMutableAttributedString()
+        }
+
+        unsafe attributedString.enumerateAttributes(in: fullRange) { attributes, range, _ in
+            let context = blockContext(for: attributes[.markdownPresentationIntent] as? PresentationIntent)
+            let substring = NSMutableAttributedString(
+                attributedString: attributedString.attributedSubstring(from: range)
+            )
+            substring.removeAttribute(.markdownPresentationIntent, range: substring.fullRange)
+            substring.removeAttribute(.markdownListItemDelimiter, range: substring.fullRange)
+
+            if currentContext == context {
+                currentString.append(substring)
+            } else {
+                flushCurrentUnit()
+                currentContext = context
+                currentString = substring
+            }
+        }
+
+        flushCurrentUnit()
+        return units
+    }
+
+    private func blockContext(for presentationIntent: PresentationIntent?) -> BlockContext {
+        let context = presentationContext(for: presentationIntent)
+
+        if let listContext = context.listContext {
+            return BlockContext(
+                kind: .listItem(
+                    .init(
+                        marker: listMarker(for: listContext.marker),
+                        level: listContext.level,
+                        groupIdentity: listContext.groupIdentity
+                    )
+                ),
+                quoteDepth: context.quoteDepth,
+                blockIdentity: context.blockIdentity
+            )
+        }
+
+        let kind: BlockContext.Kind
+        switch context.kind {
+        case .paragraph:
+            kind = .paragraph
+        case .heading(let level):
+            kind = .heading(level)
+        case .thematicBreak:
+            kind = .thematicBreak
+        }
+
+        return BlockContext(kind: kind, quoteDepth: context.quoteDepth, blockIdentity: context.blockIdentity)
+    }
+
+    private func presentationContext(for presentationIntent: PresentationIntent?) -> MarkdownPresentationContext {
+        let components = presentationIntent?.components ?? []
+        let quoteDepth = components.reduce(into: 0) { count, component in
+            if case .blockQuote = component.kind {
+                count += 1
+            }
+        }
+
+        if let thematicBreak = components.first(where: isThematicBreak) {
+            return MarkdownPresentationContext(
+                kind: .thematicBreak,
+                quoteDepth: quoteDepth,
+                blockIdentity: thematicBreak.identity,
+                listContext: nil
+            )
+        }
+
+        if let header = components.first(where: isHeader) {
+            guard case let .header(level) = header.kind else {
+                return MarkdownPresentationContext(
+                    kind: .paragraph,
+                    quoteDepth: quoteDepth,
+                    blockIdentity: header.identity,
+                    listContext: nil
+                )
+            }
+
+            return MarkdownPresentationContext(
+                kind: .heading(level),
+                quoteDepth: quoteDepth,
+                blockIdentity: header.identity,
+                listContext: nil
+            )
+        }
+
+        let paragraph = components.first(where: isParagraph)
+        let listItem = components.first(where: isListItem)
+        let list = components.first(where: isList)
+
+        let listContext: MarkdownListContext?
+        if let listItem, let list {
+            let marker: ListMarker
+            switch (list.kind, listItem.kind) {
+            case (.orderedList, .listItem(let ordinal)):
+                marker = .ordered(ordinal)
+            default:
+                marker = .bullet
+            }
+
+            listContext = MarkdownListContext(
+                marker: marker,
+                level: max(presentationIntent?.indentationLevel ?? 1, 1),
+                groupIdentity: list.identity
+            )
+        } else {
+            listContext = nil
+        }
+
+        return MarkdownPresentationContext(
+            kind: .paragraph,
+            quoteDepth: quoteDepth,
+            blockIdentity: paragraph?.identity ?? components.first?.identity ?? 0,
+            listContext: listContext
         )
-        applyInlineCodeStyling(to: parsed)
-        return parsed
+    }
+
+    private func isParagraph(_ component: PresentationIntent.IntentType) -> Bool {
+        if case .paragraph = component.kind {
+            true
+        } else {
+            false
+        }
+    }
+
+    private func isHeader(_ component: PresentationIntent.IntentType) -> Bool {
+        if case .header = component.kind {
+            true
+        } else {
+            false
+        }
+    }
+
+    private func isList(_ component: PresentationIntent.IntentType) -> Bool {
+        switch component.kind {
+        case .orderedList, .unorderedList:
+            true
+        default:
+            false
+        }
+    }
+
+    private func isListItem(_ component: PresentationIntent.IntentType) -> Bool {
+        if case .listItem = component.kind {
+            true
+        } else {
+            false
+        }
+    }
+
+    private func isThematicBreak(_ component: PresentationIntent.IntentType) -> Bool {
+        if case .thematicBreak = component.kind {
+            true
+        } else {
+            false
+        }
+    }
+
+    private func styledBlock(_ unit: RenderedTextUnit) -> NSAttributedString {
+        switch unit.context.kind {
+        case .listItem:
+            return styledListItem(unit)
+        case .thematicBreak:
+            return thematicBreakAttributedString(quoteDepth: unit.context.quoteDepth)
+        case .paragraph, .heading:
+            let output = NSMutableAttributedString(attributedString: unit.attributedString)
+            normalizeFonts(in: output)
+
+            let paragraphStyle = paragraphStyle(
+                paragraphStyle(),
+                adjustedForQuoteDepth: unit.context.quoteDepth
+            )
+            let foregroundColor = unit.context.quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor
+
+            output.addAttribute(.paragraphStyle, value: paragraphStyle, range: output.fullRange)
+            output.addAttribute(.foregroundColor, value: foregroundColor, range: output.fullRange)
+
+            if case .heading(let level) = unit.context.kind {
+                output.addAttribute(.font, value: headingFont(for: level), range: output.fullRange)
+            }
+
+            applyInlineCodeStyling(to: output)
+            return output
+        }
+    }
+
+    private func styledListItem(_ unit: RenderedTextUnit) -> NSAttributedString {
+        guard case .listItem(let listContext) = unit.context.kind else {
+            return styledBlock(unit)
+        }
+
+        let marker = markerText(for: listContext.marker)
+        let markerIndent = CGFloat(max(0, listContext.level - 1)) * 20
+        let style = paragraphStyle(
+            listParagraphStyle(markerIndent: markerIndent, marker: marker),
+            adjustedForQuoteDepth: unit.context.quoteDepth
+        )
+        let foregroundColor = unit.context.quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor
+
+        let output = NSMutableAttributedString(
+            string: "\(marker)\t",
+            attributes: [
+                .font: bodyFont(),
+                .paragraphStyle: style,
+                .foregroundColor: foregroundColor
+            ]
+        )
+
+        let content = NSMutableAttributedString(attributedString: unit.attributedString)
+        normalizeFonts(in: content)
+        content.addAttribute(.paragraphStyle, value: style, range: content.fullRange)
+        content.addAttribute(.foregroundColor, value: foregroundColor, range: content.fullRange)
+        applyInlineCodeStyling(to: content)
+
+        output.append(content)
+        return output
+    }
+
+    private func thematicBreakAttributedString(quoteDepth: Int) -> NSAttributedString {
+        NSAttributedString(
+            string: String(repeating: "─", count: 18),
+            attributes: [
+                .font: bodyFont(),
+                .foregroundColor: quoteDepth > 0 ? quoteTextColor() : separatorColor(),
+                .paragraphStyle: paragraphStyle(
+                    centeredParagraphStyle(),
+                    adjustedForQuoteDepth: quoteDepth
+                )
+            ]
+        )
+    }
+
+    private func listMarker(for marker: ListMarker) -> BlockContext.ListContext.Marker {
+        switch marker {
+        case .bullet:
+            return .bullet
+        case .ordered(let value):
+            return .ordered(value)
+        }
     }
 
     private func normalizeFonts(in attributedString: NSMutableAttributedString) {
@@ -975,7 +1149,7 @@ private struct MacMarkdownRenderer {
             return
         }
 
-        attributedString.enumerateAttribute(.font, in: fullRange) { value, range, _ in
+        unsafe attributedString.enumerateAttribute(.font, in: fullRange) { value, range, _ in
             guard let font = value as? NSFont else {
                 attributedString.addAttribute(.font, value: bodyFont(), range: range)
                 return
@@ -1004,10 +1178,16 @@ private struct MacMarkdownRenderer {
         let fullRange = attributedString.fullRange
         guard fullRange.length > 0 else { return }
 
-        attributedString.enumerateAttribute(.inlinePresentationIntent, in: fullRange) { value, range, _ in
-            let rawValue = (value as? NSNumber)?.intValue ?? 0
-            guard rawValue & 4 != 0
-            else {
+        unsafe attributedString.enumerateAttribute(.markdownInlinePresentationIntent, in: fullRange) { value, range, _ in
+            let isInlineCode: Bool
+            if let intent = value as? InlinePresentationIntent {
+                isInlineCode = intent.contains(.code)
+            } else {
+                let rawValue = (value as? NSNumber)?.intValue ?? 0
+                isInlineCode = rawValue & 4 != 0
+            }
+
+            guard isInlineCode else {
                 return
             }
 
@@ -1018,113 +1198,13 @@ private struct MacMarkdownRenderer {
         }
     }
 
-    private func parseHeading(line: String) -> (level: Int, text: String)? {
-        let trimmed = line.trimmingCharacters(in: .whitespaces)
-        guard trimmed.first == "#" else { return nil }
-        let hashes = trimmed.prefix { $0 == "#" }
-        guard (1...6).contains(hashes.count) else { return nil }
-        let remainder = trimmed.dropFirst(hashes.count)
-        guard remainder.first == " " else { return nil }
-        return (hashes.count, String(remainder.dropFirst()).trimmingCharacters(in: .whitespaces))
-    }
-
-    private func isListLine(_ line: String) -> Bool {
-        line.range(of: #"^\s*(?:[-*+]\s+|\d+\.\s+)"#, options: .regularExpression) != nil
-    }
-
-    private func isQuoteLine(_ line: String) -> Bool {
-        line.range(of: #"^\s*>\s?"#, options: .regularExpression) != nil
-    }
-
-    private func parseQuote(from startIndex: Int, lines: [String]) -> ([Block], Int) {
-        var index = startIndex
-        var quoteLines: [String] = []
-
-        while index < lines.count, isQuoteLine(lines[index]) {
-            let line = lines[index]
-            let trimmed = line.trimmingCharacters(in: .whitespaces)
-            let content = String(trimmed.drop(while: { $0 == ">" || $0 == " " }))
-            quoteLines.append(content)
-            index += 1
-        }
-
-        return (parseBlocks(quoteLines.joined(separator: "\n")), index)
-    }
-
-    private func parseList(from startIndex: Int, lines: [String]) -> ([Item], Int) {
-        var items: [Item] = []
-        var index = startIndex
-
-        while index < lines.count {
-            let line = lines[index]
-            if line.trimmingCharacters(in: .whitespaces).isEmpty { break }
-            guard let item = parseListItem(line) else { break }
-            items.append(item)
-            index += 1
-        }
-
-        return (items, index)
-    }
-
-    private func parseListItem(_ line: String) -> Item? {
-        let spaces = leadingIndent(in: line)
-        let level = max(1, spaces / 2 + 1)
-        let trimmed = String(line.dropFirst(spaces))
-
-        if let range = trimmed.range(of: #"^\d+\.\s+"#, options: .regularExpression) {
-            let markerText = String(trimmed[range]).trimmingCharacters(in: .whitespaces)
-            let number = Int(markerText.dropLast()) ?? 1
-            let content = String(trimmed[range.upperBound...]).trimmingCharacters(in: .whitespaces)
-            return Item(marker: .ordered(number), content: content, level: level)
-        }
-
-        if let range = trimmed.range(of: #"^[-*+]\s+"#, options: .regularExpression) {
-            let content = String(trimmed[range.upperBound...]).trimmingCharacters(in: .whitespaces)
-            return Item(marker: .bullet, content: content, level: level)
-        }
-
-        return nil
-    }
-
-    private func leadingIndent(in line: String) -> Int {
-        var count = 0
-        for character in line {
-            if character == " " { count += 1 }
-            else if character == "\t" { count += 4 }
-            else { break }
-        }
-        return count
-    }
-
-    private func isThematicBreak(_ line: String) -> Bool {
-        line.range(of: #"^(?:-{3,}|\*{3,}|_{3,})$"#, options: .regularExpression) != nil
-    }
-
-    private func markerText(for marker: Item.Marker) -> String {
+    private func markerText(for marker: BlockContext.ListContext.Marker) -> String {
         switch marker {
-        case .bullet: return "•"
-        case .ordered(let value): return "\(value)."
+        case .bullet:
+            "•"
+        case .ordered(let value):
+            "\(value)."
         }
-    }
-
-    private func headingMarkerDetails(from text: String, font: NSFont) -> (marker: String, content: String, style: NSParagraphStyle)? {
-        let trimmed = text.trimmingCharacters(in: .whitespaces)
-
-        if let range = trimmed.range(of: #"^\d+\.\s+"#, options: .regularExpression) {
-            let marker = String(trimmed[range]).trimmingCharacters(in: .whitespaces)
-            let content = String(trimmed[range.upperBound...]).trimmingCharacters(in: .whitespaces)
-            let style = listParagraphStyle(markerIndent: 0, marker: marker, font: font)
-            return (marker, content, style)
-        }
-
-        if let range = trimmed.range(of: #"^[-*+]\s+"#, options: .regularExpression) {
-            let marker = String(trimmed[range].trimmingCharacters(in: .whitespaces).first ?? "•")
-            let content = String(trimmed[range.upperBound...]).trimmingCharacters(in: .whitespaces)
-            let style = listParagraphStyle(markerIndent: 0, marker: marker, font: font)
-            return (marker, content, style)
-        }
-
-        return nil
     }
 
     private func paragraphStyle() -> NSParagraphStyle {
@@ -1195,5 +1275,11 @@ private extension NSAttributedString {
     var fullRange: NSRange {
         NSRange(location: 0, length: length)
     }
+}
+
+private extension NSAttributedString.Key {
+    static let markdownInlinePresentationIntent = Self("NSInlinePresentationIntent")
+    static let markdownListItemDelimiter = Self("NSListItemDelimiter")
+    static let markdownPresentationIntent = Self("NSPresentationIntent")
 }
 #endif
