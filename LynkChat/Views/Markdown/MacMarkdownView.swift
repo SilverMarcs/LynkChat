@@ -274,6 +274,7 @@ private final class MarkdownBackgroundView: NSView {
 private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
     private let textView = MarkdownPlainTextView()
     private var widthConstraint: NSLayoutConstraint?
+    private var preferredWidth: CGFloat = 0
 
     init(attributedStrings: [NSAttributedString]) {
         super.init(frame: .zero)
@@ -327,9 +328,14 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
     }
 
     func update(preferredWidth: CGFloat) {
-        widthConstraint?.constant = preferredWidth
-        textView.frame.size.width = preferredWidth
-        textView.markdownTextContainer.containerSize = CGSize(width: preferredWidth, height: .greatestFiniteMagnitude)
+        guard preferredWidth > 0 else { return }
+        let resolvedWidth = ceil(preferredWidth)
+        guard resolvedWidth != self.preferredWidth else { return }
+
+        self.preferredWidth = resolvedWidth
+        widthConstraint?.constant = resolvedWidth
+        textView.frame.size.width = resolvedWidth
+        textView.markdownTextContainer.containerSize = CGSize(width: resolvedWidth, height: .greatestFiniteMagnitude)
         textView.markdownLayoutManager.ensureLayout(for: textView.markdownTextContainer)
         invalidateIntrinsicContentSize()
     }
@@ -376,6 +382,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
     private var content: String
     private var language: String?
     private var codeFontSize: CGFloat
+    private var preferredWidth: CGFloat = 0
 
     init(content: String, language: String?, codeFontSize: CGFloat) {
         self.content = content
@@ -479,7 +486,12 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
     }
 
     func update(preferredWidth: CGFloat) {
-        widthConstraint?.constant = preferredWidth
+        guard preferredWidth > 0 else { return }
+        let resolvedWidth = ceil(preferredWidth)
+        guard resolvedWidth != self.preferredWidth else { return }
+
+        self.preferredWidth = resolvedWidth
+        widthConstraint?.constant = resolvedWidth
         updateTextViewFrame()
         invalidateIntrinsicContentSize()
     }
@@ -557,7 +569,7 @@ private struct MacMarkdownRenderer {
         case paragraph(String)
         case heading(level: Int, text: String)
         case list(items: [Item])
-        case quote(String)
+        case quote([Block])
         case codeBlock(String, language: String?)
         case thematicBreak
     }
@@ -584,6 +596,10 @@ private struct MacMarkdownRenderer {
     }
 
     func render(_ markdown: String) -> [MarkdownRenderedBlock] {
+        renderBlocks(parseBlocks(markdown), quoteDepth: 0)
+    }
+
+    private func renderBlocks(_ blocks: [Block], quoteDepth: Int) -> [MarkdownRenderedBlock] {
         var renderedBlocks: [MarkdownRenderedBlock] = []
         var pendingTextBlocks: [NSAttributedString] = []
 
@@ -593,13 +609,23 @@ private struct MacMarkdownRenderer {
             pendingTextBlocks.removeAll(keepingCapacity: true)
         }
 
-        for block in parseBlocks(markdown) {
+        for block in blocks {
             switch block {
             case .codeBlock(let code, let language):
                 flushPendingTextBlocks()
                 renderedBlocks.append(.code(code, language: language, fontSize: codeFontSize))
+            case .quote(let nestedBlocks):
+                for renderedQuoteBlock in renderBlocks(nestedBlocks, quoteDepth: quoteDepth + 1) {
+                    switch renderedQuoteBlock {
+                    case .text(let attributedStrings):
+                        pendingTextBlocks.append(contentsOf: attributedStrings)
+                    case .code:
+                        flushPendingTextBlocks()
+                        renderedBlocks.append(renderedQuoteBlock)
+                    }
+                }
             default:
-                pendingTextBlocks.append(attributedBlock(for: block))
+                pendingTextBlocks.append(attributedBlock(for: block, quoteDepth: quoteDepth))
             }
         }
 
@@ -702,21 +728,20 @@ private struct MacMarkdownRenderer {
             .map(String.init)
     }
 
-    private func attributedBlock(for block: Block) -> NSAttributedString {
+    private func attributedBlock(for block: Block, quoteDepth: Int) -> NSAttributedString {
         switch block {
         case .paragraph(let text):
-            return attributedMarkdown(text, paragraphStyle: paragraphStyle())
-        case .heading(let level, let text):
-            return attributedHeading(level: level, text: text)
-        case .list(let items):
-            return attributedList(items)
-        case .quote(let text):
-            let quote = NSMutableAttributedString(
-                attributedString: attributedMarkdown(text, paragraphStyle: quoteParagraphStyle())
+            return attributedMarkdown(
+                text,
+                paragraphStyle: paragraphStyle(),
+                quoteDepth: quoteDepth
             )
-            quote.addAttribute(.backgroundColor, value: NSColor.quaternaryLabelColor.withAlphaComponent(0.12), range: quote.fullRange)
-            quote.addAttribute(.foregroundColor, value: NSColor.secondaryLabelColor, range: quote.fullRange)
-            return quote
+        case .heading(let level, let text):
+            return attributedHeading(level: level, text: text, quoteDepth: quoteDepth)
+        case .list(let items):
+            return attributedList(items, quoteDepth: quoteDepth)
+        case .quote:
+            return NSAttributedString(string: "")
         case .codeBlock:
             return NSAttributedString(string: "")
         case .thematicBreak:
@@ -724,14 +749,17 @@ private struct MacMarkdownRenderer {
                 string: String(repeating: "─", count: 18),
                 attributes: [
                     .font: bodyFont(),
-                    .foregroundColor: separatorColor(),
-                    .paragraphStyle: centeredParagraphStyle()
+                    .foregroundColor: quoteDepth > 0 ? quoteTextColor() : separatorColor(),
+                    .paragraphStyle: paragraphStyle(
+                        centeredParagraphStyle(),
+                        adjustedForQuoteDepth: quoteDepth
+                    )
                 ]
             )
         }
     }
 
-    private func attributedList(_ items: [Item]) -> NSAttributedString {
+    private func attributedList(_ items: [Item], quoteDepth: Int) -> NSAttributedString {
         let output = NSMutableAttributedString()
 
         for (index, item) in items.enumerated() {
@@ -741,19 +769,26 @@ private struct MacMarkdownRenderer {
 
             let marker = markerText(for: item.marker)
             let markerIndent = CGFloat(max(0, item.level - 1)) * 20
-            let style = listParagraphStyle(markerIndent: markerIndent, marker: marker)
+            let style = paragraphStyle(
+                listParagraphStyle(markerIndent: markerIndent, marker: marker),
+                adjustedForQuoteDepth: quoteDepth
+            )
 
             let prefix = NSAttributedString(
                 string: "\(marker)\t",
                 attributes: [
                     .font: bodyFont(),
                     .paragraphStyle: style,
-                    .foregroundColor: NSColor.labelColor
+                    .foregroundColor: quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor
                 ]
             )
 
             let content = NSMutableAttributedString(
-                attributedString: attributedMarkdown(item.content, paragraphStyle: style)
+                attributedString: attributedMarkdown(
+                    item.content,
+                    paragraphStyle: style,
+                    quoteDepth: quoteDepth
+                )
             )
             content.addAttribute(.paragraphStyle, value: style, range: content.fullRange)
 
@@ -764,12 +799,16 @@ private struct MacMarkdownRenderer {
         return output
     }
 
-    private func attributedHeading(level: Int, text: String) -> NSAttributedString {
+    private func attributedHeading(level: Int, text: String, quoteDepth: Int) -> NSAttributedString {
         let font = headingFont(for: level)
 
         guard let markerDetails = headingMarkerDetails(from: text, font: font) else {
             let heading = NSMutableAttributedString(
-                attributedString: attributedMarkdown(text, paragraphStyle: paragraphStyle())
+                attributedString: attributedMarkdown(
+                    text,
+                    paragraphStyle: paragraphStyle(),
+                    quoteDepth: quoteDepth
+                )
             )
             heading.addAttribute(.font, value: font, range: heading.fullRange)
             return heading
@@ -779,21 +818,33 @@ private struct MacMarkdownRenderer {
             string: "\(markerDetails.marker)\t",
             attributes: [
                 .font: font,
-                .paragraphStyle: markerDetails.style,
-                .foregroundColor: NSColor.labelColor
+                .paragraphStyle: paragraphStyle(
+                    markerDetails.style,
+                    adjustedForQuoteDepth: quoteDepth
+                ),
+                .foregroundColor: quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor
             ]
         )
 
+        let style = paragraphStyle(markerDetails.style, adjustedForQuoteDepth: quoteDepth)
         let headingContent = NSMutableAttributedString(
-            attributedString: attributedMarkdown(markerDetails.content, paragraphStyle: markerDetails.style)
+            attributedString: attributedMarkdown(
+                markerDetails.content,
+                paragraphStyle: style,
+                quoteDepth: quoteDepth
+            )
         )
         headingContent.addAttribute(.font, value: font, range: headingContent.fullRange)
-        headingContent.addAttribute(.paragraphStyle, value: markerDetails.style, range: headingContent.fullRange)
+        headingContent.addAttribute(.paragraphStyle, value: style, range: headingContent.fullRange)
         output.append(headingContent)
         return output
     }
 
-    private func attributedMarkdown(_ markdown: String, paragraphStyle: NSParagraphStyle) -> NSAttributedString {
+    private func attributedMarkdown(
+        _ markdown: String,
+        paragraphStyle: NSParagraphStyle,
+        quoteDepth: Int
+    ) -> NSAttributedString {
         let parsed: NSMutableAttributedString
 
         if let attributed = try? NSAttributedString(
@@ -813,7 +864,11 @@ private struct MacMarkdownRenderer {
         normalizeFonts(in: parsed)
         applyInlineCodeStyling(to: parsed)
         parsed.addAttribute(.paragraphStyle, value: paragraphStyle, range: parsed.fullRange)
-        parsed.addAttribute(.foregroundColor, value: NSColor.labelColor, range: parsed.fullRange)
+        parsed.addAttribute(
+            .foregroundColor,
+            value: quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor,
+            range: parsed.fullRange
+        )
         return parsed
     }
 
@@ -888,7 +943,7 @@ private struct MacMarkdownRenderer {
         line.range(of: #"^\s*>\s?"#, options: .regularExpression) != nil
     }
 
-    private func parseQuote(from startIndex: Int, lines: [String]) -> (String, Int) {
+    private func parseQuote(from startIndex: Int, lines: [String]) -> ([Block], Int) {
         var index = startIndex
         var quoteLines: [String] = []
 
@@ -900,7 +955,7 @@ private struct MacMarkdownRenderer {
             index += 1
         }
 
-        return (quoteLines.joined(separator: "\n"), index)
+        return (parseBlocks(quoteLines.joined(separator: "\n")), index)
     }
 
     private func parseList(from startIndex: Int, lines: [String]) -> ([Item], Int) {
@@ -986,14 +1041,6 @@ private struct MacMarkdownRenderer {
         return style
     }
 
-    private func quoteParagraphStyle() -> NSParagraphStyle {
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 4
-        style.paragraphSpacing = 4
-        style.paragraphSpacingBefore = 4
-        return style
-    }
-
     private func centeredParagraphStyle() -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.alignment = .center
@@ -1008,6 +1055,10 @@ private struct MacMarkdownRenderer {
         NSColor.quaternaryLabelColor.withAlphaComponent(0.2)
     }
 
+    private func quoteTextColor() -> NSColor {
+        NSColor.secondaryLabelColor
+    }
+
     private func listParagraphStyle(markerIndent: CGFloat, marker: String, font: NSFont? = nil) -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         let markerFont = font ?? bodyFont()
@@ -1018,6 +1069,21 @@ private struct MacMarkdownRenderer {
         style.tabStops = [NSTextTab(textAlignment: .left, location: contentIndent)]
         style.defaultTabInterval = contentIndent
         style.lineSpacing = 4
+        return style
+    }
+
+    private func paragraphStyle(
+        _ baseStyle: NSParagraphStyle,
+        adjustedForQuoteDepth quoteDepth: Int
+    ) -> NSParagraphStyle {
+        guard quoteDepth > 0 else { return baseStyle }
+
+        let style = baseStyle.mutableCopy() as? NSMutableParagraphStyle ?? NSMutableParagraphStyle()
+        let quoteIndent = CGFloat(quoteDepth) * 16
+        style.headIndent += quoteIndent
+        style.firstLineHeadIndent += quoteIndent
+        style.paragraphSpacing = max(style.paragraphSpacing, 4)
+        style.paragraphSpacingBefore = max(style.paragraphSpacingBefore, 2)
         return style
     }
 
