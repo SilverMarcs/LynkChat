@@ -53,11 +53,16 @@ actor MarkdownRenderScheduler {
 struct MacMarkdownRepresentable: NSViewRepresentable {
     let text: String
     let fontSize: CGFloat
+    let isStreaming: Bool
     var calculatedHeight: Binding<CGFloat>?
 
     @MainActor
     final class Coordinator {
+        private let streamingRenderDelay: Duration = .milliseconds(180)
         private var currentRequest: MarkdownRenderRequest?
+        private var pendingRenderRequest: MarkdownRenderRequest?
+        private var lastRenderedRequest: MarkdownRenderRequest?
+        private var lastRenderedDocument: MarkdownRenderedDocument?
         private var renderTask: Task<Void, Never>?
 
         deinit {
@@ -68,27 +73,44 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
             nsView: MarkdownContainerView,
             text: String,
             fontSize: CGFloat,
-            themeName: String
+            themeName: String,
+            isStreaming: Bool
         ) {
             let request = MarkdownRenderRequest(text: text, fontSize: fontSize, themeName: themeName)
 
             if let cachedDocument = MarkdownRenderCacheStore.document(for: request) {
-                currentRequest = request
                 renderTask?.cancel()
                 renderTask = nil
-                nsView.apply(document: cachedDocument, for: request)
+                pendingRenderRequest = nil
+                applyRenderedDocument(cachedDocument, for: request, to: nsView)
                 return
             }
 
-            nsView.showPlaceholder(text: text, fontSize: fontSize, for: request)
+            if isStreaming, let streamedDocument = streamedDocument(for: request) {
+                currentRequest = request
+                nsView.apply(document: streamedDocument, for: request)
+            } else if lastRenderedDocument == nil {
+                currentRequest = request
+                nsView.showPlaceholder(text: text, fontSize: fontSize, for: request)
+            } else {
+                currentRequest = request
+            }
 
-            guard currentRequest != request else {
+            guard pendingRenderRequest != request || !isStreaming else {
                 return
             }
 
-            currentRequest = request
+            let renderDelay = isStreaming && shouldCoalesceStreamingRender(for: request)
+                ? streamingRenderDelay
+                : .zero
+            pendingRenderRequest = request
             renderTask?.cancel()
             renderTask = Task { [weak nsView] in
+                if renderDelay > .zero {
+                    try? await Task.sleep(for: renderDelay)
+                }
+
+                guard !Task.isCancelled else { return }
                 let document = await MarkdownRenderScheduler.shared.document(for: request)
                 guard !Task.isCancelled else { return }
 
@@ -96,9 +118,47 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
                     MarkdownRenderCacheStore.store(document, for: request)
 
                     guard let nsView, self.currentRequest == request else { return }
-                    nsView.apply(document: document, for: request)
+                    self.pendingRenderRequest = nil
+                    self.applyRenderedDocument(document, for: request, to: nsView)
                 }
             }
+        }
+
+        private func streamedDocument(for request: MarkdownRenderRequest) -> MarkdownRenderedDocument? {
+            guard let lastRenderedRequest,
+                  let lastRenderedDocument,
+                  lastRenderedRequest.fontSize == request.fontSize,
+                  lastRenderedRequest.themeName == request.themeName,
+                  request.text.hasPrefix(lastRenderedRequest.text),
+                  request.text != lastRenderedRequest.text else {
+                return nil
+            }
+
+            let appendedText = String(request.text.dropFirst(lastRenderedRequest.text.count))
+            guard !appendedText.isEmpty else {
+                return lastRenderedDocument
+            }
+
+            return lastRenderedDocument.appendingPlainText(appendedText, fontSize: request.fontSize)
+        }
+
+        private func shouldCoalesceStreamingRender(for request: MarkdownRenderRequest) -> Bool {
+            guard let lastRenderedRequest else { return false }
+            return lastRenderedRequest.fontSize == request.fontSize &&
+                lastRenderedRequest.themeName == request.themeName &&
+                request.text.hasPrefix(lastRenderedRequest.text) &&
+                request.text != lastRenderedRequest.text
+        }
+
+        private func applyRenderedDocument(
+            _ document: MarkdownRenderedDocument,
+            for request: MarkdownRenderRequest,
+            to nsView: MarkdownContainerView
+        ) {
+            currentRequest = request
+            lastRenderedRequest = request
+            lastRenderedDocument = document
+            nsView.apply(document: document, for: request)
         }
     }
 
@@ -117,7 +177,8 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
                 nsView: nsView,
                 text: text,
                 fontSize: fontSize,
-                themeName: themeName
+                themeName: themeName,
+                isStreaming: isStreaming
             )
         }
         nsView.onHeightChange = { newHeight in
@@ -128,7 +189,8 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
             nsView: nsView,
             text: text,
             fontSize: fontSize,
-            themeName: nsView.activeThemeName
+            themeName: nsView.activeThemeName,
+            isStreaming: isStreaming
         )
     }
 
@@ -142,7 +204,8 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
             nsView: nsView,
             text: text,
             fontSize: fontSize,
-            themeName: nsView.activeThemeName
+            themeName: nsView.activeThemeName,
+            isStreaming: isStreaming
         )
         return nsView.measuredSize(for: width)
     }

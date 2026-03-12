@@ -29,7 +29,11 @@ struct AssistantMessage: View {
                     ReasoningView(reason: reason)
                 }
             
-                MDView(content: message.content, calculatedHeight: $height)
+                MDView(
+                    content: message.content,
+                    isStreaming: message.isReplying,
+                    calculatedHeight: $height
+                )
                     .transaction { $0.animation = nil }
                     #if os(macOS)
 //                    .frame(height: message.height, alignment: .top)

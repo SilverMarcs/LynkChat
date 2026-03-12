@@ -25,22 +25,37 @@ struct MarkdownQuoteBlock: Sendable {
 
 extension MarkdownRenderedDocument {
     static func placeholder(text: String, fontSize: CGFloat) -> MarkdownRenderedDocument {
+        return MarkdownRenderedDocument(
+            attributedString: plainTextFragment(text, fontSize: fontSize),
+            codeBlocks: [],
+            quoteBlocks: []
+        )
+    }
+
+    func appendingPlainText(_ text: String, fontSize: CGFloat) -> MarkdownRenderedDocument {
+        guard !text.isEmpty else { return self }
+
+        let attributedString = NSMutableAttributedString(attributedString: attributedString)
+        attributedString.append(Self.plainTextFragment(text, fontSize: fontSize))
+
+        return MarkdownRenderedDocument(
+            attributedString: attributedString,
+            codeBlocks: codeBlocks,
+            quoteBlocks: quoteBlocks
+        )
+    }
+
+    private static func plainTextFragment(_ text: String, fontSize: CGFloat) -> NSAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 4
 
-        let attributedString = NSAttributedString(
+        return NSAttributedString(
             string: text,
             attributes: [
                 .font: NSFont.systemFont(ofSize: max(fontSize, 13), weight: .regular),
                 .foregroundColor: NSColor.labelColor,
                 .paragraphStyle: paragraphStyle
             ]
-        )
-
-        return MarkdownRenderedDocument(
-            attributedString: attributedString,
-            codeBlocks: [],
-            quoteBlocks: []
         )
     }
 }
