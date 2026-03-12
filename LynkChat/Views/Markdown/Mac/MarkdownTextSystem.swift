@@ -171,6 +171,7 @@ final class MarkdownPlainTextView: NSTextView {
         markdownLayoutManager.codeBlocks = document.codeBlocks
         markdownLayoutManager.quoteBlocks = document.quoteBlocks
         markdownLayoutManager.tableBlocks = document.tableBlocks
+        markdownLayoutManager.hasThematicBreaks = document.hasThematicBreaks
         markdownTextStorage.setAttributedString(document.attributedString)
     }
 
@@ -198,6 +199,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     var quoteBlocks: [MarkdownQuoteBlock] = []
     var quoteLineColor: NSColor = .tertiaryLabelColor
     var tableBlocks: [MarkdownTableBlock] = []
+    var hasThematicBreaks = false
 
     override func drawBackground(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
         super.drawBackground(forGlyphRange: glyphsToShow, at: origin)
@@ -413,7 +415,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     }
 
     private func drawThematicBreaks(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
-        guard let textStorage, let textContainer = textContainers.first else { return }
+        guard hasThematicBreaks, let textStorage, let textContainer = textContainers.first else { return }
 
         let visibleCharRange = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
         guard visibleCharRange.length > 0 else { return }

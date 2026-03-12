@@ -156,7 +156,6 @@ final class MarkdownContainerView: NSView {
         needsLayout = true
         invalidateIntrinsicContentSize()
         recalculateIfNeeded(for: currentWidth, reportHeight: true)
-        layoutCodeBlockButtons()
     }
 
     private func updateAppearance() {

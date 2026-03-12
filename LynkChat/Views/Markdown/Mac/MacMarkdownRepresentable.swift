@@ -65,6 +65,8 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
         private var pendingRenderRequest: MarkdownRenderRequest?
         private var lastRenderedRequest: MarkdownRenderRequest?
         private var lastRenderedDocument: MarkdownRenderedDocument?
+        private var streamingBuffer: NSMutableAttributedString?
+        private var lastStreamedTextLength: Int = 0
         private var renderTask: Task<Void, Never>?
 
         deinit {
@@ -133,15 +135,28 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
                   lastRenderedRequest.themeName == request.themeName,
                   request.text.hasPrefix(lastRenderedRequest.text),
                   request.text != lastRenderedRequest.text else {
+                streamingBuffer = nil
                 return nil
             }
 
-            let appendedText = String(request.text.dropFirst(lastRenderedRequest.text.count))
-            guard !appendedText.isEmpty else {
-                return lastRenderedDocument
+            if streamingBuffer == nil {
+                streamingBuffer = NSMutableAttributedString(attributedString: lastRenderedDocument.attributedString)
+                lastStreamedTextLength = lastRenderedRequest.text.count
             }
 
-            return lastRenderedDocument.appendingPlainText(appendedText, fontSize: request.fontSize)
+            let newText = String(request.text.dropFirst(lastStreamedTextLength))
+            if !newText.isEmpty {
+                streamingBuffer!.append(MarkdownRenderedDocument.plainTextFragment(newText, fontSize: request.fontSize))
+                lastStreamedTextLength = request.text.count
+            }
+
+            return MarkdownRenderedDocument(
+                attributedString: streamingBuffer!,
+                codeBlocks: lastRenderedDocument.codeBlocks,
+                quoteBlocks: lastRenderedDocument.quoteBlocks,
+                tableBlocks: lastRenderedDocument.tableBlocks,
+                hasThematicBreaks: lastRenderedDocument.hasThematicBreaks
+            )
         }
 
         private func shouldCoalesceStreamingRender(for request: MarkdownRenderRequest) -> Bool {
@@ -157,6 +172,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
             for request: MarkdownRenderRequest,
             to nsView: MarkdownContainerView
         ) {
+            streamingBuffer = nil
             currentRequest = request
             lastRenderedRequest = request
             lastRenderedDocument = document

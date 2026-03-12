@@ -10,6 +10,7 @@ struct MarkdownRenderedDocument: @unchecked Sendable {
     let codeBlocks: [MarkdownCodeBlock]
     let quoteBlocks: [MarkdownQuoteBlock]
     let tableBlocks: [MarkdownTableBlock]
+    let hasThematicBreaks: Bool
 }
 
 struct MarkdownCodeBlock: Sendable {
@@ -55,34 +56,24 @@ extension MarkdownRenderedDocument {
             attributedString: plainTextFragment(text, fontSize: fontSize),
             codeBlocks: [],
             quoteBlocks: [],
-            tableBlocks: []
+            tableBlocks: [],
+            hasThematicBreaks: false
         )
     }
 
-    func appendingPlainText(_ text: String, fontSize: CGFloat) -> MarkdownRenderedDocument {
-        guard !text.isEmpty else { return self }
+    private static let plainTextParagraphStyle: NSParagraphStyle = {
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 4
+        return style.copy() as! NSParagraphStyle
+    }()
 
-        let attributedString = NSMutableAttributedString(attributedString: attributedString)
-        attributedString.append(Self.plainTextFragment(text, fontSize: fontSize))
-
-        return MarkdownRenderedDocument(
-            attributedString: attributedString,
-            codeBlocks: codeBlocks,
-            quoteBlocks: quoteBlocks,
-            tableBlocks: tableBlocks
-        )
-    }
-
-    private static func plainTextFragment(_ text: String, fontSize: CGFloat) -> NSAttributedString {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 4
-
+    static func plainTextFragment(_ text: String, fontSize: CGFloat) -> NSAttributedString {
         return NSAttributedString(
             string: text,
             attributes: [
                 .font: NSFont.systemFont(ofSize: max(fontSize, 13), weight: .regular),
                 .foregroundColor: NSColor.labelColor,
-                .paragraphStyle: paragraphStyle
+                .paragraphStyle: plainTextParagraphStyle
             ]
         )
     }
@@ -219,6 +210,7 @@ struct MacMarkdownRenderer: Sendable {
         var codeBlocks: [MarkdownCodeBlock] = []
         var quoteBlocks: [MarkdownQuoteBlock] = []
         var tableBlocks: [MarkdownTableBlock] = []
+        var hasThematicBreaks = false
         var nextCodeBlockID = 0
         var nextTableBlockID = 0
 
@@ -232,6 +224,7 @@ struct MacMarkdownRenderer: Sendable {
                 if let result = renderedMarkdownSegment(from: markdown) {
                     attributedSegment = result.attributedString
                     segmentQuoteBlocks = result.quoteBlocks
+                    if result.hasThematicBreaks { hasThematicBreaks = true }
                 } else {
                     attributedSegment = nil
                 }
@@ -310,7 +303,8 @@ struct MacMarkdownRenderer: Sendable {
             attributedString: output,
             codeBlocks: codeBlocks,
             quoteBlocks: quoteBlocks,
-            tableBlocks: tableBlocks
+            tableBlocks: tableBlocks,
+            hasThematicBreaks: hasThematicBreaks
         )
     }
 
@@ -331,6 +325,7 @@ struct MacMarkdownRenderer: Sendable {
     private struct RenderedMarkdownResult {
         let attributedString: NSAttributedString
         let quoteBlocks: [MarkdownQuoteBlock]
+        let hasThematicBreaks: Bool
     }
 
     private nonisolated func renderedMarkdownSegment(from markdown: String) -> RenderedMarkdownResult? {
@@ -598,6 +593,7 @@ struct MacMarkdownRenderer: Sendable {
         let units = renderedTextUnits(from: parsed)
         let output = NSMutableAttributedString()
         var quoteBlocks: [MarkdownQuoteBlock] = []
+        var hasThematicBreaks = false
         var index = 0
 
         while index < units.count {
@@ -642,6 +638,10 @@ struct MacMarkdownRenderer: Sendable {
                     output.append(NSAttributedString(string: "\n\n"))
                 }
 
+                if case .thematicBreak = unit.context.kind {
+                    hasThematicBreaks = true
+                }
+
                 let blockStart = output.length
                 output.append(styledBlock(unit))
 
@@ -660,7 +660,7 @@ struct MacMarkdownRenderer: Sendable {
             }
         }
 
-        return RenderedMarkdownResult(attributedString: output, quoteBlocks: quoteBlocks)
+        return RenderedMarkdownResult(attributedString: output, quoteBlocks: quoteBlocks, hasThematicBreaks: hasThematicBreaks)
     }
 
     private nonisolated func renderedTextUnits(from attributedString: NSAttributedString) -> [RenderedTextUnit] {
@@ -932,12 +932,6 @@ struct MacMarkdownRenderer: Sendable {
                 .markdownThematicBreak: true
             ]
         )
-    }
-
-    private nonisolated func centeredParagraphStyle() -> NSParagraphStyle {
-        let style = NSMutableParagraphStyle()
-        style.alignment = .center
-        return style
     }
 
     private nonisolated func listMarker(for marker: ListMarker) -> BlockContext.ListContext.Marker {
