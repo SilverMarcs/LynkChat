@@ -917,9 +917,9 @@ struct MacMarkdownRenderer: Sendable {
     private nonisolated func codeBlockParagraphStyle() -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 3
-        style.firstLineHeadIndent = 14
-        style.headIndent = 14
-        style.tailIndent = -14
+        style.firstLineHeadIndent = 10
+        style.headIndent = 10
+        style.tailIndent = -10
         style.lineBreakMode = .byCharWrapping
         return style
     }

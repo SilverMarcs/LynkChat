@@ -3,8 +3,8 @@ import AppKit
 #if os(macOS)
 final class MarkdownContainerView: NSView {
     private enum Layout {
-        static let copyButtonInset: CGFloat = 10
-        static let copyButtonSize: CGFloat = 28
+        static let copyButtonInset: CGFloat = 4
+        static let copyButtonSize: CGFloat = 23
     }
 
     private let textView = MarkdownPlainTextView()

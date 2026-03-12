@@ -22,6 +22,110 @@ final class MarkdownPlainTextView: NSTextView {
         markdownAncestorMenu(from: self)
     }
 
+    override func copy(_ sender: Any?) {
+        let selection = selectedRange()
+        guard selection.length > 0 else { return }
+
+        let tableBlocks = markdownLayoutManager.tableBlocks
+        let intersecting = tableBlocks.filter {
+            NSIntersectionRange($0.range, selection).length > 0
+        }.sorted { $0.range.location < $1.range.location }
+
+        guard !intersecting.isEmpty else {
+            super.copy(sender)
+            return
+        }
+
+        let fullString = markdownTextStorage.string as NSString
+        let selEnd = selection.location + selection.length
+        var plainText = ""
+        var html = ""
+        var cursor = selection.location
+
+        for table in intersecting {
+            let tableStart = table.range.location
+            let tableEnd = table.range.location + table.range.length
+
+            if cursor < tableStart {
+                let pre = fullString.substring(with: NSRange(location: cursor, length: min(tableStart, selEnd) - cursor))
+                plainText += pre
+                html += Self.htmlEscaped(pre)
+            }
+
+            let (tablePlain, tableHTML) = Self.tablePasteboardRepresentations(from: table.content)
+            plainText += tablePlain
+            html += tableHTML
+            cursor = min(tableEnd, selEnd)
+        }
+
+        if cursor < selEnd {
+            let post = fullString.substring(with: NSRange(location: cursor, length: selEnd - cursor))
+            plainText += post
+            html += Self.htmlEscaped(post)
+        }
+
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(plainText, forType: .string)
+        if let htmlData = html.data(using: .utf8) {
+            pasteboard.setData(htmlData, forType: .html)
+        }
+    }
+
+    private static func tablePasteboardRepresentations(from rawMarkdown: String) -> (plain: String, html: String) {
+        let lines = rawMarkdown.components(separatedBy: .newlines)
+        guard lines.count >= 2 else { return (rawMarkdown, htmlEscaped(rawMarkdown)) }
+
+        func parseCells(_ line: String) -> [String] {
+            var content = line.trimmingCharacters(in: .whitespaces)
+            if content.hasPrefix("|") { content = String(content.dropFirst()) }
+            if content.hasSuffix("|") { content = String(content.dropLast()) }
+            return content.components(separatedBy: "|").map { $0.trimmingCharacters(in: .whitespaces) }
+        }
+
+        func isSeparator(_ line: String) -> Bool {
+            let cells = parseCells(line)
+            guard !cells.isEmpty else { return false }
+            return cells.allSatisfy { cell in
+                let stripped = cell.trimmingCharacters(in: CharacterSet(charactersIn: ": "))
+                return !stripped.isEmpty && stripped.allSatisfy({ $0 == "-" })
+            }
+        }
+
+        let headers = parseCells(lines[0])
+        let bodyLines = lines.dropFirst(isSeparator(lines[1]) ? 2 : 1)
+        let rows = bodyLines.map { parseCells($0) }
+
+        var plain = headers.joined(separator: "\t")
+        for row in rows {
+            plain += "\n" + row.joined(separator: "\t")
+        }
+
+        var html = "<table><thead><tr>"
+        for header in headers {
+            html += "<th>\(htmlEscaped(header))</th>"
+        }
+        html += "</tr></thead><tbody>"
+        for row in rows {
+            html += "<tr>"
+            for cell in row {
+                html += "<td>\(htmlEscaped(cell))</td>"
+            }
+            html += "</tr>"
+        }
+        html += "</tbody></table>"
+
+        return (plain, html)
+    }
+
+    private static func htmlEscaped(_ string: String) -> String {
+        string
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+            .replacingOccurrences(of: "\"", with: "&quot;")
+    }
+
     func update(document: MarkdownRenderedDocument) {
         markdownLayoutManager.codeBlocks = document.codeBlocks
         markdownLayoutManager.quoteBlocks = document.quoteBlocks
@@ -55,6 +159,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     private enum Layout {
         static let cornerRadius: CGFloat = 12
         static let verticalPadding: CGFloat = 16
+        static let codeBlockHorizontalPadding: CGFloat = 10
         static let tableVerticalPadding: CGFloat = 2
         static let quoteIndentStep: CGFloat = 16
         static let quoteLineWidth: CGFloat = 3
@@ -92,18 +197,6 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
         guard !lineEndsDocument(at: glyphIndex) else { return 0 }
         guard let paragraphStyle = paragraphStyle(at: glyphIndex) else { return 0 }
         return paragraphStyle.paragraphSpacing
-    }
-
-    func codeBlockFrames(in textContainer: NSTextContainer) -> [(codeBlock: MarkdownCodeBlock, frame: NSRect)] {
-        codeBlocks.compactMap { codeBlock in
-            let glyphRange = glyphRange(forCharacterRange: codeBlock.range, actualCharacterRange: nil)
-            guard glyphRange.length > 0,
-                  let rect = codeBlockRect(forGlyphRange: glyphRange, in: textContainer, at: .zero) else {
-                return nil
-            }
-
-            return (codeBlock, rect)
-        }
     }
 
     private func drawTableBackgrounds(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
@@ -171,7 +264,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     }
 
     private func drawCodeBlockBackgrounds(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
-        guard !codeBlocks.isEmpty, let textContainer = textContainers.first else { return }
+        guard !codeBlocks.isEmpty else { return }
 
         let visibleCharacterRange = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
         let visibleCodeBlocks = codeBlocks.filter {
@@ -180,43 +273,60 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
 
         guard !visibleCodeBlocks.isEmpty else { return }
 
-        codeBlockBackgroundColor.setFill()
-
         for codeBlock in visibleCodeBlocks {
             let glyphRange = glyphRange(forCharacterRange: codeBlock.range, actualCharacterRange: nil)
             guard glyphRange.length > 0,
-                  let blockRect = codeBlockRect(forGlyphRange: glyphRange, in: textContainer, at: origin) else {
+                  let blockRect = codeBlockRect(forGlyphRange: glyphRange, at: origin) else {
                 continue
             }
 
-            NSBezierPath(
+            let path = NSBezierPath(
                 roundedRect: blockRect,
                 xRadius: Layout.cornerRadius,
                 yRadius: Layout.cornerRadius
-            ).fill()
+            )
+            codeBlockBackgroundColor.setFill()
+            path.fill()
+            NSColor.labelColor.withAlphaComponent(0.08).setStroke()
+            path.lineWidth = 1
+            path.stroke()
+        }
+    }
+
+    func codeBlockFrames(in textContainer: NSTextContainer) -> [(codeBlock: MarkdownCodeBlock, frame: NSRect)] {
+        codeBlocks.compactMap { codeBlock in
+            let glyphRange = glyphRange(forCharacterRange: codeBlock.range, actualCharacterRange: nil)
+            guard glyphRange.length > 0,
+                  let rect = codeBlockRect(forGlyphRange: glyphRange, at: .zero) else {
+                return nil
+            }
+            return (codeBlock, rect)
         }
     }
 
     private func codeBlockRect(
         forGlyphRange glyphRange: NSRange,
-        in textContainer: NSTextContainer,
         at origin: CGPoint
     ) -> NSRect? {
-        var blockRect: NSRect?
+        var unionRect: NSRect?
+        var maxUsedWidth: CGFloat = 0
 
-        enumerateLineFragments(forGlyphRange: glyphRange) { lineRect, _, _, effectiveGlyphRange, _ in
+        enumerateLineFragments(forGlyphRange: glyphRange) { lineRect, usedRect, _, effectiveGlyphRange, _ in
             guard NSIntersectionRange(effectiveGlyphRange, glyphRange).length > 0 else { return }
             let adjustedRect = lineRect.offsetBy(dx: origin.x, dy: origin.y)
-            blockRect = blockRect.map { $0.union(adjustedRect) } ?? adjustedRect
+            unionRect = unionRect.map { $0.union(adjustedRect) } ?? adjustedRect
+            maxUsedWidth = max(maxUsedWidth, usedRect.maxX)
         }
 
-        guard var blockRect else { return nil }
+        guard let unionRect else { return nil }
 
-        blockRect.origin.x += textContainer.lineFragmentPadding
-        blockRect.size.width = max(0, blockRect.size.width - (textContainer.lineFragmentPadding * 2))
-        blockRect.origin.y -= Layout.verticalPadding / 2
-        blockRect.size.height += Layout.verticalPadding
-        return blockRect.integral
+        let contentWidth = maxUsedWidth + Layout.codeBlockHorizontalPadding
+        return NSRect(
+            x: unionRect.minX,
+            y: unionRect.minY - Layout.verticalPadding / 2,
+            width: contentWidth,
+            height: unionRect.height + Layout.verticalPadding
+        ).integral
     }
 
     private func drawQuoteLines(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
