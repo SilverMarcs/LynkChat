@@ -258,6 +258,15 @@ struct MacMarkdownRenderer: Sendable {
                     )
                 )
             }
+
+            switch segment {
+            case .codeBlock:
+                appendBlockOverhangSpacer(to: output, height: 8)
+            case .table:
+                appendBlockOverhangSpacer(to: output, height: 1)
+            default:
+                break
+            }
         }
 
         return MarkdownRenderedDocument(
@@ -266,6 +275,20 @@ struct MacMarkdownRenderer: Sendable {
             quoteBlocks: quoteBlocks,
             tableBlocks: tableBlocks
         )
+    }
+
+    private nonisolated func appendBlockOverhangSpacer(to output: NSMutableAttributedString, height: CGFloat) {
+        let style = NSMutableParagraphStyle()
+        style.minimumLineHeight = height
+        style.maximumLineHeight = height
+        output.append(NSAttributedString(
+            string: "\n\u{200B}",
+            attributes: [
+                .font: NSFont.systemFont(ofSize: 0.1),
+                .foregroundColor: NSColor.clear,
+                .paragraphStyle: style
+            ]
+        ))
     }
 
     private nonisolated func renderedMarkdownSegment(from markdown: String) -> NSAttributedString? {
