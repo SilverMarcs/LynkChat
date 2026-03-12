@@ -1,0 +1,290 @@
+import AppKit
+
+#if os(macOS)
+final class MarkdownContainerView: NSView {
+    private enum Layout {
+        static let copyButtonInset: CGFloat = 10
+        static let copyButtonSize: CGFloat = 28
+    }
+
+    private let textView = MarkdownPlainTextView()
+    private var currentWidth: CGFloat = 0
+    private var lastReportedHeight: CGFloat = 0
+    private var lastMeasuredSize: CGSize = .zero
+    private var currentRender: MarkdownRenderCache?
+    private var currentThemeName: String?
+    private var sourceText = ""
+    private var sourceFontSize: CGFloat = 0
+    private var needsMeasurement = false
+    private var codeBlockButtons: [Int: NSButton] = [:]
+    var renderProvider: ((String, CGFloat, String) -> MarkdownRenderCache)?
+    var onHeightChange: ((CGFloat) -> Void)?
+
+    private var widthConstraint: NSLayoutConstraint?
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        translatesAutoresizingMaskIntoConstraints = false
+
+        textView.drawsBackground = false
+        textView.isEditable = false
+        textView.isSelectable = true
+        textView.isRichText = true
+        textView.importsGraphics = false
+        textView.textContainerInset = .zero
+        textView.markdownTextContainer.lineFragmentPadding = 0
+        textView.markdownTextContainer.widthTracksTextView = true
+        textView.isHorizontallyResizable = false
+        textView.isVerticallyResizable = true
+        textView.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(textView)
+
+        let widthConstraint = textView.widthAnchor.constraint(equalToConstant: 0)
+        self.widthConstraint = widthConstraint
+
+        NSLayoutConstraint.activate([
+            textView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            textView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            textView.topAnchor.constraint(equalTo: topAnchor),
+            textView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            widthConstraint
+        ])
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+
+        let themeName = colorSchemeThemeName
+        guard currentThemeName != themeName else { return }
+        currentThemeName = themeName
+        updateAppearance()
+        refreshRenderIfNeeded(force: true)
+    }
+
+    override func layout() {
+        super.layout()
+
+        let width = bounds.width > 0 ? bounds.width : currentWidth
+        guard width > 0 else { return }
+
+        recalculateIfNeeded(for: width, reportHeight: true)
+        layoutCodeBlockButtons()
+    }
+
+    override var intrinsicContentSize: NSSize {
+        NSSize(width: lastMeasuredSize.width, height: lastMeasuredSize.height)
+    }
+
+    func update(text: String, fontSize: CGFloat) {
+        sourceText = text
+        sourceFontSize = fontSize
+        refreshRenderIfNeeded(force: false)
+    }
+
+    func measuredSize(for width: CGFloat) -> CGSize {
+        recalculateIfNeeded(for: width, reportHeight: false)
+        return lastMeasuredSize
+    }
+
+    private func refreshRenderIfNeeded(force: Bool) {
+        let themeName = colorSchemeThemeName
+        currentThemeName = themeName
+
+        guard let renderProvider else {
+            recalculateIfNeeded(for: currentWidth, reportHeight: true)
+            return
+        }
+
+        let render = renderProvider(sourceText, sourceFontSize, themeName)
+        updateAppearance()
+
+        guard force || currentRender !== render else {
+            recalculateIfNeeded(for: currentWidth, reportHeight: true)
+            return
+        }
+
+        currentRender = render
+        textView.update(document: render.document)
+        syncCodeBlockButtons(with: render.document.codeBlocks)
+        needsMeasurement = true
+        needsLayout = true
+        invalidateIntrinsicContentSize()
+        recalculateIfNeeded(for: currentWidth, reportHeight: true)
+        layoutCodeBlockButtons()
+    }
+
+    private func updateAppearance() {
+        textView.codeBlockBackgroundColor = codeBlockBackgroundColor
+        textView.quoteLineColor = quoteLineColor
+        updateCopyButtonAppearance()
+    }
+
+    private func recalculateIfNeeded(for width: CGFloat, reportHeight: Bool) {
+        let resolvedWidth = ceil(width)
+        guard resolvedWidth > 0 else { return }
+
+        currentWidth = resolvedWidth
+
+        guard needsMeasurement || lastMeasuredSize.width != resolvedWidth else {
+            if reportHeight {
+                reportHeightIfNeeded(lastMeasuredSize.height)
+            }
+            return
+        }
+
+        widthConstraint?.constant = resolvedWidth
+        let measuredHeight = measureHeight()
+        lastMeasuredSize = CGSize(width: resolvedWidth, height: measuredHeight)
+        needsMeasurement = false
+
+        if reportHeight {
+            reportHeightIfNeeded(measuredHeight)
+        }
+    }
+
+    private func measureHeight() -> CGFloat {
+        guard currentWidth > 0 else { return 0 }
+
+        textView.frame.size.width = currentWidth
+        textView.markdownTextContainer.containerSize = CGSize(
+            width: currentWidth,
+            height: CGFloat.greatestFiniteMagnitude
+        )
+        textView.markdownLayoutManager.ensureLayout(for: textView.markdownTextContainer)
+        let usedRect = textView.markdownLayoutManager.usedRect(for: textView.markdownTextContainer)
+        return ceil(usedRect.height)
+    }
+
+    private func reportHeightIfNeeded(_ measuredHeight: CGFloat) {
+        guard measuredHeight > 0, measuredHeight != lastReportedHeight else { return }
+
+        lastReportedHeight = measuredHeight
+        Task { @MainActor in
+            self.onHeightChange?(measuredHeight)
+        }
+    }
+
+    private func syncCodeBlockButtons(with codeBlocks: [MarkdownCodeBlock]) {
+        let nextIDs = Set(codeBlocks.map(\.id))
+
+        for id in codeBlockButtons.keys where !nextIDs.contains(id) {
+            codeBlockButtons[id]?.removeFromSuperview()
+            codeBlockButtons[id] = nil
+        }
+
+        for codeBlock in codeBlocks where codeBlockButtons[codeBlock.id] == nil {
+            let button = NSButton(
+                image: NSImage(
+                    systemSymbolName: "clipboard",
+                    accessibilityDescription: "Copy code"
+                ) ?? NSImage(),
+                target: self,
+                action: #selector(copyCodeBlock(_:))
+            )
+            button.identifier = NSUserInterfaceItemIdentifier(String(codeBlock.id))
+            button.imagePosition = .imageOnly
+            button.bezelStyle = .regularSquare
+            button.controlSize = .small
+            button.translatesAutoresizingMaskIntoConstraints = true
+            button.wantsLayer = true
+            button.layer?.cornerRadius = 8
+            addSubview(button)
+            codeBlockButtons[codeBlock.id] = button
+        }
+
+        updateCopyButtonAppearance()
+    }
+
+    private func updateCopyButtonAppearance() {
+        for button in codeBlockButtons.values {
+            button.contentTintColor = .labelColor
+            button.layer?.backgroundColor = .clear
+        }
+    }
+
+    private func layoutCodeBlockButtons() {
+        let codeBlockRects = Dictionary(
+            uniqueKeysWithValues: textView.codeBlockFrames().map { ($0.codeBlock.id, $0.frame) }
+        )
+
+        for (id, button) in codeBlockButtons {
+            guard let codeBlockRect = codeBlockRects[id] else {
+                button.isHidden = true
+                continue
+            }
+
+            let convertedRect = textView.convert(codeBlockRect, to: self)
+            button.frame = NSRect(
+                x: convertedRect.maxX - Layout.copyButtonSize - Layout.copyButtonInset,
+                y: convertedRect.minY + Layout.copyButtonInset,
+                width: Layout.copyButtonSize,
+                height: Layout.copyButtonSize
+            ).integral
+            button.isHidden = false
+        }
+    }
+
+    @objc
+    private func copyCodeBlock(_ sender: NSButton) {
+        guard let identifier = sender.identifier?.rawValue,
+              let codeBlockID = Int(identifier),
+              let codeBlock = currentRender?.document.codeBlocks.first(where: { $0.id == codeBlockID }) else {
+            return
+        }
+
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(codeBlock.content, forType: .string)
+    }
+
+    private var colorSchemeThemeName: String {
+        switch effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) {
+        case .darkAqua:
+            "atom-one-dark"
+        default:
+            "atom-one-light"
+        }
+    }
+
+    private var codeBlockBackgroundColor: NSColor {
+        let windowColor = NSColor.windowBackgroundColor.usingColorSpace(.deviceRGB) ?? .windowBackgroundColor
+        let shadowColor = NSColor.black.withAlphaComponent(0.28).usingColorSpace(.deviceRGB) ?? .black
+        let lightModeShadow = NSColor.labelColor.withAlphaComponent(0.08).usingColorSpace(.deviceRGB) ?? .labelColor
+
+        switch effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) {
+        case .darkAqua:
+            return windowColor.blended(withFraction: 0.14, of: shadowColor) ?? windowColor
+        default:
+            return windowColor.blended(withFraction: 0.06, of: lightModeShadow) ?? windowColor
+        }
+    }
+
+    private var quoteLineColor: NSColor {
+        switch effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) {
+        case .darkAqua:
+            return NSColor.tertiaryLabelColor.withAlphaComponent(0.4)
+        default:
+            return NSColor.secondaryLabelColor.withAlphaComponent(0.45)
+        }
+    }
+}
+
+func markdownAncestorMenu(from view: NSView) -> NSMenu? {
+    var currentView = unsafe view.superview
+
+    while let candidate = currentView {
+        if let menu = candidate.menu {
+            return menu
+        }
+
+        currentView = unsafe candidate.superview
+    }
+
+    return nil
+}
+#endif
