@@ -45,6 +45,45 @@ extension MarkdownRenderedDocument {
     }
 }
 
+struct MarkdownHighlightedCode: @unchecked Sendable {
+    let attributedString: NSAttributedString
+}
+
+actor MarkdownHighlighterPool {
+    static let shared = MarkdownHighlighterPool()
+
+    private var highlightersByTheme: [String: Highlightr] = [:]
+
+    func highlightedCode(
+        _ content: String,
+        language: String?,
+        themeName: String
+    ) -> MarkdownHighlightedCode? {
+        let highlighter = highlighter(for: themeName)
+
+        guard let highlighted = highlighter?.highlight(content, as: language) else {
+            return nil
+        }
+
+        return MarkdownHighlightedCode(attributedString: highlighted)
+    }
+
+    private func highlighter(for themeName: String) -> Highlightr? {
+        if let cachedHighlighter = highlightersByTheme[themeName] {
+            return cachedHighlighter
+        }
+
+        let highlighter = Highlightr()
+        highlighter?.setTheme(to: themeName)
+
+        if let highlighter {
+            highlightersByTheme[themeName] = highlighter
+        }
+
+        return highlighter
+    }
+}
+
 struct MacMarkdownRenderer: Sendable {
     private enum Segment {
         case markdown(String)
@@ -116,12 +155,11 @@ struct MacMarkdownRenderer: Sendable {
         self.themeName = themeName
     }
 
-    nonisolated func render(_ markdown: String) -> MarkdownRenderedDocument {
+    nonisolated func render(_ markdown: String) async -> MarkdownRenderedDocument {
         let output = NSMutableAttributedString()
         var codeBlocks: [MarkdownCodeBlock] = []
         var quoteBlocks: [MarkdownQuoteBlock] = []
         var nextCodeBlockID = 0
-        let highlighter = configuredHighlighter()
 
         for segment in parseSegments(markdown) {
             let attributedSegment: NSAttributedString?
@@ -130,11 +168,10 @@ struct MacMarkdownRenderer: Sendable {
             case .markdown(let markdown):
                 attributedSegment = renderedMarkdownSegment(from: markdown)
             case .codeBlock(let code, let language):
-                attributedSegment = renderedCodeBlock(
+                attributedSegment = await renderedCodeBlock(
                     content: code,
                     language: language,
-                    blockID: nextCodeBlockID,
-                    highlighter: highlighter
+                    blockID: nextCodeBlockID
                 )
                 nextCodeBlockID += 1
             }
@@ -190,13 +227,16 @@ struct MacMarkdownRenderer: Sendable {
     private nonisolated func renderedCodeBlock(
         content: String,
         language: String?,
-        blockID: Int,
-        highlighter: Highlightr?
-    ) -> NSAttributedString {
+        blockID: Int
+    ) async -> NSAttributedString {
         let codeFont = NSFont.monospacedSystemFont(ofSize: codeFontSize, weight: .regular)
         let output: NSMutableAttributedString
 
-        if let highlighted = highlighter?.highlight(content, as: language) {
+        if let highlighted = await MarkdownHighlighterPool.shared.highlightedCode(
+            content,
+            language: language,
+            themeName: themeName
+        )?.attributedString {
             output = NSMutableAttributedString(attributedString: highlighted)
         } else {
             output = NSMutableAttributedString(
@@ -212,12 +252,6 @@ struct MacMarkdownRenderer: Sendable {
         ], range: output.fullRange)
 
         return output
-    }
-
-    private nonisolated func configuredHighlighter() -> Highlightr? {
-        let highlighter = Highlightr()
-        highlighter?.setTheme(to: themeName)
-        return highlighter
     }
 
     private nonisolated func parseSegments(_ markdown: String) -> [Segment] {
@@ -873,15 +907,15 @@ struct MacMarkdownRenderer: Sendable {
 }
 
 private extension NSAttributedString {
-    var fullRange: NSRange {
+    nonisolated var fullRange: NSRange {
         NSRange(location: 0, length: length)
     }
 }
 
 private extension NSAttributedString.Key {
-    static let markdownInlinePresentationIntent = Self("NSInlinePresentationIntent")
-    static let markdownListItemDelimiter = Self("NSListItemDelimiter")
-    static let markdownPresentationIntent = Self("NSPresentationIntent")
-    static let markdownCodeBlockID = Self("LynkChatMarkdownCodeBlockID")
+    nonisolated static let markdownInlinePresentationIntent = Self("NSInlinePresentationIntent")
+    nonisolated static let markdownListItemDelimiter = Self("NSListItemDelimiter")
+    nonisolated static let markdownPresentationIntent = Self("NSPresentationIntent")
+    nonisolated static let markdownCodeBlockID = Self("LynkChatMarkdownCodeBlockID")
 }
 #endif

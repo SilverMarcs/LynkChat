@@ -40,7 +40,7 @@ actor MarkdownRenderScheduler {
         }
 
         let renderTask = Task.detached(priority: .utility) {
-            MacMarkdownRenderer(fontSize: request.fontSize, themeName: request.themeName).render(request.text)
+            await MacMarkdownRenderer(fontSize: request.fontSize, themeName: request.themeName).render(request.text)
         }
 
         inFlightTasks[request] = renderTask
