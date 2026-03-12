@@ -41,7 +41,7 @@ struct ChatDetailMac: View {
                     EmptyChat(chat: chat, namespace: inputNS)
                 }
             }
-            .contentMargins(.all, 15, for: .scrollContent)
+//            .contentMargins(.all, 15, for: .scrollContent)
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
             .navigationSubtitle(chat.config.systemPrompt.prefix(100))
             .task {

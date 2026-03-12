@@ -887,13 +887,13 @@ private struct MacMarkdownRenderer {
         }
 
         normalizeFonts(in: parsed)
-        applyInlineCodeStyling(to: parsed)
         parsed.addAttribute(.paragraphStyle, value: paragraphStyle, range: parsed.fullRange)
         parsed.addAttribute(
             .foregroundColor,
             value: quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor,
             range: parsed.fullRange
         )
+        applyInlineCodeStyling(to: parsed)
         return parsed
     }
 
@@ -936,16 +936,16 @@ private struct MacMarkdownRenderer {
         let fullRange = attributedString.fullRange
         guard fullRange.length > 0 else { return }
 
-        attributedString.enumerateAttribute(.font, in: fullRange) { value, range, _ in
-            guard let font = value as? NSFont,
-                  font.fontDescriptor.symbolicTraits.contains(.monoSpace)
+        attributedString.enumerateAttribute(.inlinePresentationIntent, in: fullRange) { value, range, _ in
+            let rawValue = (value as? NSNumber)?.intValue ?? 0
+            guard rawValue & 4 != 0
             else {
                 return
             }
 
             attributedString.addAttributes([
-                .backgroundColor: inlineCodeBackgroundColor(),
-                .foregroundColor: NSColor.labelColor
+                .font: NSFont.monospacedSystemFont(ofSize: bodyFontSize, weight: .regular),
+                .foregroundColor: NSColor.controlAccentColor
             ], range: range)
         }
     }
@@ -1074,10 +1074,6 @@ private struct MacMarkdownRenderer {
 
     private func separatorColor() -> NSColor {
         NSColor.labelColor.withAlphaComponent(0.3)
-    }
-
-    private func inlineCodeBackgroundColor() -> NSColor {
-        NSColor.quaternaryLabelColor.withAlphaComponent(0.2)
     }
 
     private func quoteTextColor() -> NSColor {
