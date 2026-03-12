@@ -133,21 +133,6 @@ final class MarkdownPlainTextView: NSTextView {
         markdownTextStorage.setAttributedString(document.attributedString)
     }
 
-    var codeBlockBackgroundColor: NSColor {
-        get { markdownLayoutManager.codeBlockBackgroundColor }
-        set {
-            markdownLayoutManager.codeBlockBackgroundColor = newValue
-            needsDisplay = true
-        }
-    }
-
-    var quoteLineColor: NSColor {
-        get { markdownLayoutManager.quoteLineColor }
-        set {
-            markdownLayoutManager.quoteLineColor = newValue
-            needsDisplay = true
-        }
-    }
 
     func codeBlockFrames() -> [(codeBlock: MarkdownCodeBlock, frame: NSRect)] {
         markdownLayoutManager.codeBlockFrames(in: markdownTextContainer)
@@ -168,9 +153,9 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     }
 
     var codeBlocks: [MarkdownCodeBlock] = []
-    var codeBlockBackgroundColor: NSColor = .clear
+    var codeBlockBackgroundColor: NSColor = .quaternarySystemFill
     var quoteBlocks: [MarkdownQuoteBlock] = []
-    var quoteLineColor: NSColor = .clear
+    var quoteLineColor: NSColor = .tertiaryLabelColor
     var tableBlocks: [MarkdownTableBlock] = []
 
     override func drawBackground(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
@@ -236,12 +221,11 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
             )
             bgPath.fill()
 
-            NSColor.labelColor.withAlphaComponent(0.08).setStroke()
+            NSColor.separatorColor.setStroke()
             bgPath.lineWidth = 1
             bgPath.stroke()
 
-            let gridColor = NSColor.labelColor.withAlphaComponent(0.06)
-            gridColor.setStroke()
+            NSColor.quaternaryLabelColor.setStroke()
 
             for i in 0..<(lineRects.count - 1) {
                 let y = ceil((lineRects[i].maxY + lineRects[i + 1].minY) / 2)
@@ -287,7 +271,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
             )
             codeBlockBackgroundColor.setFill()
             path.fill()
-            NSColor.labelColor.withAlphaComponent(0.08).setStroke()
+            NSColor.separatorColor.setStroke()
             path.lineWidth = 1
             path.stroke()
         }

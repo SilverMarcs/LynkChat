@@ -42,6 +42,7 @@ struct ChatListMac: View {
                 chatVM.selections = [first]
             }
         }
+        .toolbar(removing: .sidebarToggle)
         .toolbar {
             ToolbarItem(placement: .keyboard) {
                 Button {
@@ -55,6 +56,8 @@ struct ChatListMac: View {
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
                 .disabled(chatVM.selections.isEmpty)
             }
+            
+            ToolbarSpacer()
             
             ToolbarItem(placement: .automatic) {
                 Menu {

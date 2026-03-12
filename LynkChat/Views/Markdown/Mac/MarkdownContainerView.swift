@@ -157,9 +157,7 @@ final class MarkdownContainerView: NSView {
     }
 
     private func updateAppearance() {
-        textView.codeBlockBackgroundColor = codeBlockBackgroundColor
-        textView.quoteLineColor = quoteLineColor
-//        updateCopyButtonAppearance()
+        textView.needsDisplay = true
     }
 
     private func recalculateIfNeeded(for width: CGFloat, reportHeight: Bool) {
@@ -308,13 +306,6 @@ final class MarkdownContainerView: NSView {
         }
     }
 
-    private var codeBlockBackgroundColor: NSColor {
-        .quaternarySystemFill
-    }
-
-    private var quoteLineColor: NSColor {
-        .tertiaryLabelColor
-    }
 }
 
 func markdownAncestorMenu(from view: NSView) -> NSMenu? {
