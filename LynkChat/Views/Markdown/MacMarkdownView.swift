@@ -138,8 +138,8 @@ private final class MarkdownContainerView: NSView {
         switch block {
         case .text(let attributedStrings):
             return MarkdownTextBlockView(attributedStrings: attributedStrings)
-        case .code(let content, let language):
-            return MarkdownCodeBlockView(content: content, language: language)
+        case .code(let content, let language, let fontSize):
+            return MarkdownCodeBlockView(content: content, language: language, codeFontSize: fontSize)
         }
     }
 
@@ -147,8 +147,8 @@ private final class MarkdownContainerView: NSView {
         switch (view, block) {
         case let (textView as MarkdownTextBlockView, .text(attributedStrings)):
             textView.update(attributedStrings: attributedStrings)
-        case let (codeView as MarkdownCodeBlockView, .code(content, language)):
-            codeView.update(content: content, language: language)
+        case let (codeView as MarkdownCodeBlockView, .code(content, language, fontSize)):
+            codeView.update(content: content, language: language, codeFontSize: fontSize)
         default:
             if let index = stackView.arrangedSubviews.firstIndex(of: view) {
                 stackView.removeArrangedSubview(view)
@@ -203,16 +203,13 @@ private final class MarkdownCodeTextView: NSTextView {
     let markdownTextStorage = NSTextStorage()
     let markdownLayoutManager = NSLayoutManager()
     let markdownTextContainer = NSTextContainer()
-    static let codeFont = NSFont.monospacedSystemFont(
-        ofSize: NSFont.preferredFont(forTextStyle: .body).pointSize,
-        weight: .regular
-    )
+    private(set) var codeFont = MarkdownCodeTextView.makeCodeFont(size: NSFont.preferredFont(forTextStyle: .body).pointSize)
 
     init() {
         markdownLayoutManager.addTextContainer(markdownTextContainer)
         markdownTextStorage.addLayoutManager(markdownLayoutManager)
         super.init(frame: .zero, textContainer: markdownTextContainer)
-        font = Self.codeFont
+        font = codeFont
     }
 
     @available(*, unavailable)
@@ -222,6 +219,17 @@ private final class MarkdownCodeTextView: NSTextView {
 
     override func menu(for event: NSEvent) -> NSMenu? {
         markdownAncestorMenu(from: self)
+    }
+
+    func setCodeFontSize(_ size: CGFloat) {
+        let resolvedFont = Self.makeCodeFont(size: size)
+        guard resolvedFont != codeFont else { return }
+        codeFont = resolvedFont
+        font = resolvedFont
+    }
+
+    private static func makeCodeFont(size: CGFloat) -> NSFont {
+        .monospacedSystemFont(ofSize: size, weight: .regular)
     }
 }
 
@@ -367,10 +375,12 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
     private var widthConstraint: NSLayoutConstraint?
     private var content: String
     private var language: String?
+    private var codeFontSize: CGFloat
 
-    init(content: String, language: String?) {
+    init(content: String, language: String?, codeFontSize: CGFloat) {
         self.content = content
         self.language = language
+        self.codeFontSize = codeFontSize
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
 
@@ -456,9 +466,13 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(content: String, language: String?) {
+    func update(content: String, language: String?, codeFontSize: CGFloat? = nil) {
         self.content = content
         self.language = language
+        if let codeFontSize {
+            self.codeFontSize = codeFontSize
+        }
+        textView.setCodeFontSize(self.codeFontSize)
         textView.markdownTextStorage.setAttributedString(attributedCode())
         updateTextViewFrame()
         invalidateIntrinsicContentSize()
@@ -479,16 +493,17 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
     }
 
     private func attributedCode() -> NSAttributedString {
+        let codeFont = textView.codeFont
         if let highlighted = Self.syntaxHighlighter?.highlight(content, as: language) {
             let output = NSMutableAttributedString(attributedString: highlighted)
-            output.addAttribute(.font, value: MarkdownCodeTextView.codeFont, range: output.fullRange)
+            output.addAttribute(.font, value: codeFont, range: output.fullRange)
             return output
         }
 
         return NSAttributedString(
             string: content,
             attributes: [
-                .font: textView.font ?? MarkdownCodeTextView.codeFont,
+                .font: codeFont,
                 .foregroundColor: NSColor.white
             ]
         )
@@ -534,7 +549,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 
 private enum MarkdownRenderedBlock {
     case text([NSAttributedString])
-    case code(String, language: String?)
+    case code(String, language: String?, fontSize: CGFloat)
 }
 
 private struct MacMarkdownRenderer {
@@ -560,10 +575,12 @@ private struct MacMarkdownRenderer {
 
     private let fontSize: CGFloat
     private let bodyFontSize: CGFloat
+    private let codeFontSize: CGFloat
 
     init(fontSize: CGFloat) {
         self.fontSize = fontSize
-        self.bodyFontSize = max(fontSize + 1, 14)
+        self.bodyFontSize = max(fontSize, 13)
+        self.codeFontSize = max(self.bodyFontSize - 1, 12)
     }
 
     func render(_ markdown: String) -> [MarkdownRenderedBlock] {
@@ -580,7 +597,7 @@ private struct MacMarkdownRenderer {
             switch block {
             case .codeBlock(let code, let language):
                 flushPendingTextBlocks()
-                renderedBlocks.append(.code(code, language: language))
+                renderedBlocks.append(.code(code, language: language, fontSize: codeFontSize))
             default:
                 pendingTextBlocks.append(attributedBlock(for: block))
             }
@@ -690,11 +707,7 @@ private struct MacMarkdownRenderer {
         case .paragraph(let text):
             return attributedMarkdown(text, paragraphStyle: paragraphStyle())
         case .heading(let level, let text):
-            let heading = NSMutableAttributedString(
-                attributedString: attributedMarkdown(text, paragraphStyle: paragraphStyle())
-            )
-            heading.addAttribute(.font, value: headingFont(for: level), range: heading.fullRange)
-            return heading
+            return attributedHeading(level: level, text: text)
         case .list(let items):
             return attributedList(items)
         case .quote(let text):
@@ -711,7 +724,7 @@ private struct MacMarkdownRenderer {
                 string: String(repeating: "─", count: 18),
                 attributes: [
                     .font: bodyFont(),
-                    .foregroundColor: NSColor.secondaryLabelColor,
+                    .foregroundColor: separatorColor(),
                     .paragraphStyle: centeredParagraphStyle()
                 ]
             )
@@ -751,6 +764,35 @@ private struct MacMarkdownRenderer {
         return output
     }
 
+    private func attributedHeading(level: Int, text: String) -> NSAttributedString {
+        let font = headingFont(for: level)
+
+        guard let markerDetails = headingMarkerDetails(from: text, font: font) else {
+            let heading = NSMutableAttributedString(
+                attributedString: attributedMarkdown(text, paragraphStyle: paragraphStyle())
+            )
+            heading.addAttribute(.font, value: font, range: heading.fullRange)
+            return heading
+        }
+
+        let output = NSMutableAttributedString(
+            string: "\(markerDetails.marker)\t",
+            attributes: [
+                .font: font,
+                .paragraphStyle: markerDetails.style,
+                .foregroundColor: NSColor.labelColor
+            ]
+        )
+
+        let headingContent = NSMutableAttributedString(
+            attributedString: attributedMarkdown(markerDetails.content, paragraphStyle: markerDetails.style)
+        )
+        headingContent.addAttribute(.font, value: font, range: headingContent.fullRange)
+        headingContent.addAttribute(.paragraphStyle, value: markerDetails.style, range: headingContent.fullRange)
+        output.append(headingContent)
+        return output
+    }
+
     private func attributedMarkdown(_ markdown: String, paragraphStyle: NSParagraphStyle) -> NSAttributedString {
         let parsed: NSMutableAttributedString
 
@@ -769,6 +811,7 @@ private struct MacMarkdownRenderer {
         }
 
         normalizeFonts(in: parsed)
+        applyInlineCodeStyling(to: parsed)
         parsed.addAttribute(.paragraphStyle, value: paragraphStyle, range: parsed.fullRange)
         parsed.addAttribute(.foregroundColor, value: NSColor.labelColor, range: parsed.fullRange)
         return parsed
@@ -800,12 +843,30 @@ private struct MacMarkdownRenderer {
 
             let normalizedFont: NSFont
             if font.fontDescriptor.symbolicTraits.contains(.monoSpace) {
-                normalizedFont = .monospacedSystemFont(ofSize: bodyFontSize, weight: weight)
+                normalizedFont = .monospacedSystemFont(ofSize: codeFontSize, weight: weight)
             } else {
                 normalizedFont = .systemFont(ofSize: bodyFontSize, weight: weight)
             }
 
             attributedString.addAttribute(.font, value: normalizedFont, range: range)
+        }
+    }
+
+    private func applyInlineCodeStyling(to attributedString: NSMutableAttributedString) {
+        let fullRange = attributedString.fullRange
+        guard fullRange.length > 0 else { return }
+
+        attributedString.enumerateAttribute(.font, in: fullRange) { value, range, _ in
+            guard let font = value as? NSFont,
+                  font.fontDescriptor.symbolicTraits.contains(.monoSpace)
+            else {
+                return
+            }
+
+            attributedString.addAttributes([
+                .backgroundColor: inlineCodeBackgroundColor(),
+                .foregroundColor: NSColor.labelColor
+            ], range: range)
         }
     }
 
@@ -898,6 +959,26 @@ private struct MacMarkdownRenderer {
         }
     }
 
+    private func headingMarkerDetails(from text: String, font: NSFont) -> (marker: String, content: String, style: NSParagraphStyle)? {
+        let trimmed = text.trimmingCharacters(in: .whitespaces)
+
+        if let range = trimmed.range(of: #"^\d+\.\s+"#, options: .regularExpression) {
+            let marker = String(trimmed[range]).trimmingCharacters(in: .whitespaces)
+            let content = String(trimmed[range.upperBound...]).trimmingCharacters(in: .whitespaces)
+            let style = listParagraphStyle(markerIndent: 0, marker: marker, font: font)
+            return (marker, content, style)
+        }
+
+        if let range = trimmed.range(of: #"^[-*+]\s+"#, options: .regularExpression) {
+            let marker = String(trimmed[range].trimmingCharacters(in: .whitespaces).first ?? "•")
+            let content = String(trimmed[range.upperBound...]).trimmingCharacters(in: .whitespaces)
+            let style = listParagraphStyle(markerIndent: 0, marker: marker, font: font)
+            return (marker, content, style)
+        }
+
+        return nil
+    }
+
     private func paragraphStyle() -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4
@@ -919,9 +1000,18 @@ private struct MacMarkdownRenderer {
         return style
     }
 
-    private func listParagraphStyle(markerIndent: CGFloat, marker: String) -> NSParagraphStyle {
+    private func separatorColor() -> NSColor {
+        NSColor.labelColor.withAlphaComponent(0.3)
+    }
+
+    private func inlineCodeBackgroundColor() -> NSColor {
+        NSColor.quaternaryLabelColor.withAlphaComponent(0.2)
+    }
+
+    private func listParagraphStyle(markerIndent: CGFloat, marker: String, font: NSFont? = nil) -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
-        let markerWidth = marker.size(withAttributes: [.font: bodyFont()]).width
+        let markerFont = font ?? bodyFont()
+        let markerWidth = marker.size(withAttributes: [.font: markerFont]).width
         let contentIndent = markerIndent + markerWidth + 10
         style.firstLineHeadIndent = markerIndent
         style.headIndent = contentIndent
