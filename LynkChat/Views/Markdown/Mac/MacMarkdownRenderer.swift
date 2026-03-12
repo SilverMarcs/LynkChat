@@ -31,6 +31,22 @@ struct MarkdownTableBlock: Sendable {
     let headerCharacterCount: Int
     let columnSeparatorPositions: [CGFloat]
     let contentWidth: CGFloat
+
+    static func parseCells(from line: String) -> [String] {
+        var content = line.trimmingCharacters(in: .whitespaces)
+        if content.hasPrefix("|") { content = String(content.dropFirst()) }
+        if content.hasSuffix("|") { content = String(content.dropLast()) }
+        return content.components(separatedBy: "|").map { $0.trimmingCharacters(in: .whitespaces) }
+    }
+
+    static func isSeparatorLine(_ line: String) -> Bool {
+        let cells = parseCells(from: line)
+        guard !cells.isEmpty else { return false }
+        return cells.allSatisfy { cell in
+            let stripped = cell.trimmingCharacters(in: CharacterSet(charactersIn: ": "))
+            return !stripped.isEmpty && stripped.allSatisfy({ $0 == "-" })
+        }
+    }
 }
 
 extension MarkdownRenderedDocument {
@@ -176,11 +192,26 @@ struct MacMarkdownRenderer: Sendable {
     private let bodyFontSize: CGFloat
     private let codeFontSize: CGFloat
     private let themeName: String
+    private nonisolated(unsafe) let cachedDefaultParagraphStyle: NSParagraphStyle
+    private nonisolated(unsafe) let cachedCodeBlockParagraphStyle: NSParagraphStyle
 
     nonisolated init(fontSize: CGFloat, themeName: String) {
         bodyFontSize = max(fontSize, 13)
         codeFontSize = max(bodyFontSize - 1, 12)
         self.themeName = themeName
+
+        let defaultStyle = NSMutableParagraphStyle()
+        defaultStyle.lineSpacing = 4
+        defaultStyle.paragraphSpacing = 0
+        cachedDefaultParagraphStyle = defaultStyle.copy() as! NSParagraphStyle
+
+        let codeStyle = NSMutableParagraphStyle()
+        codeStyle.lineSpacing = 3
+        codeStyle.firstLineHeadIndent = 10
+        codeStyle.headIndent = 10
+        codeStyle.tailIndent = -10
+        codeStyle.lineBreakMode = .byCharWrapping
+        cachedCodeBlockParagraphStyle = codeStyle.copy() as! NSParagraphStyle
     }
 
     nonisolated func render(_ markdown: String) async -> MarkdownRenderedDocument {
@@ -194,10 +225,16 @@ struct MacMarkdownRenderer: Sendable {
         for segment in parseSegments(markdown) {
             let attributedSegment: NSAttributedString?
             var currentTableResult: RenderedTableResult?
+            var segmentQuoteBlocks: [MarkdownQuoteBlock]?
 
             switch segment {
             case .markdown(let markdown):
-                attributedSegment = renderedMarkdownSegment(from: markdown)
+                if let result = renderedMarkdownSegment(from: markdown) {
+                    attributedSegment = result.attributedString
+                    segmentQuoteBlocks = result.quoteBlocks
+                } else {
+                    attributedSegment = nil
+                }
             case .codeBlock(let code, let language):
                 attributedSegment = await renderedCodeBlock(
                     content: code,
@@ -248,15 +285,15 @@ struct MacMarkdownRenderer: Sendable {
                 )
             }
 
-            if case .markdown(let markdownSegment) = segment {
-                mergeQuoteBlocks(
-                    &quoteBlocks,
-                    with: renderedQuoteBlocks(
-                        from: markdownSegment,
-                        in: attributedSegment,
-                        at: range.location
+            if let segmentQuoteBlocks {
+                let offsetBlocks = segmentQuoteBlocks.map { block in
+                    MarkdownQuoteBlock(
+                        range: NSRange(location: block.range.location + range.location, length: block.range.length),
+                        depth: block.depth,
+                        identity: block.identity
                     )
-                )
+                }
+                mergeQuoteBlocks(&quoteBlocks, with: offsetBlocks)
             }
 
             switch segment {
@@ -291,14 +328,19 @@ struct MacMarkdownRenderer: Sendable {
         ))
     }
 
-    private nonisolated func renderedMarkdownSegment(from markdown: String) -> NSAttributedString? {
+    private struct RenderedMarkdownResult {
+        let attributedString: NSAttributedString
+        let quoteBlocks: [MarkdownQuoteBlock]
+    }
+
+    private nonisolated func renderedMarkdownSegment(from markdown: String) -> RenderedMarkdownResult? {
         guard !markdown.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return nil
         }
 
-        let attributedString = styledMarkdown(markdown)
-        guard attributedString.length > 0 else { return nil }
-        return attributedString
+        let result = styledMarkdown(markdown)
+        guard result.attributedString.length > 0 else { return nil }
+        return result
     }
 
     private nonisolated func renderedCodeBlock(
@@ -426,20 +468,11 @@ struct MacMarkdownRenderer: Sendable {
     }
 
     private nonisolated func isTableSeparator(_ line: String) -> Bool {
-        let cells = parseTableCells(line)
-        guard !cells.isEmpty else { return false }
-        return cells.allSatisfy { cell in
-            let stripped = cell
-                .trimmingCharacters(in: CharacterSet(charactersIn: ": "))
-            return !stripped.isEmpty && stripped.allSatisfy({ $0 == "-" })
-        }
+        MarkdownTableBlock.isSeparatorLine(line)
     }
 
     private nonisolated func parseTableCells(_ line: String) -> [String] {
-        var content = line.trimmingCharacters(in: .whitespaces)
-        if content.hasPrefix("|") { content = String(content.dropFirst()) }
-        if content.hasSuffix("|") { content = String(content.dropLast()) }
-        return content.components(separatedBy: "|").map { $0.trimmingCharacters(in: .whitespaces) }
+        MarkdownTableBlock.parseCells(from: line)
     }
 
     private struct RenderedTableResult {
@@ -545,7 +578,7 @@ struct MacMarkdownRenderer: Sendable {
         )
     }
 
-    private nonisolated func styledMarkdown(_ markdown: String) -> NSAttributedString {
+    private nonisolated func styledMarkdown(_ markdown: String) -> RenderedMarkdownResult {
         let parsed: NSMutableAttributedString
 
         if let attributed = try? NSAttributedString(
@@ -564,6 +597,7 @@ struct MacMarkdownRenderer: Sendable {
 
         let units = renderedTextUnits(from: parsed)
         let output = NSMutableAttributedString()
+        var quoteBlocks: [MarkdownQuoteBlock] = []
         var index = 0
 
         while index < units.count {
@@ -575,6 +609,7 @@ struct MacMarkdownRenderer: Sendable {
                     output.append(NSAttributedString(string: "\n\n"))
                 }
 
+                let blockStart = output.length
                 var isFirstItem = true
                 while index < units.count {
                     guard case .listItem(let candidateContext) = units[index].context.kind,
@@ -591,17 +626,41 @@ struct MacMarkdownRenderer: Sendable {
                     index += 1
                 }
 
+                if unit.context.quoteDepth > 0 {
+                    let length = output.length - blockStart
+                    if length > 0 {
+                        quoteBlocks.append(MarkdownQuoteBlock(
+                            range: NSRange(location: blockStart, length: length),
+                            depth: unit.context.quoteDepth,
+                            identity: unit.context.quoteIdentity ?? unit.context.blockIdentity
+                        ))
+                    }
+                }
+
             default:
                 if output.length > 0 {
                     output.append(NSAttributedString(string: "\n\n"))
                 }
 
+                let blockStart = output.length
                 output.append(styledBlock(unit))
+
+                if unit.context.quoteDepth > 0 {
+                    let length = output.length - blockStart
+                    if length > 0 {
+                        quoteBlocks.append(MarkdownQuoteBlock(
+                            range: NSRange(location: blockStart, length: length),
+                            depth: unit.context.quoteDepth,
+                            identity: unit.context.quoteIdentity ?? unit.context.blockIdentity
+                        ))
+                    }
+                }
+
                 index += 1
             }
         }
 
-        return output
+        return RenderedMarkdownResult(attributedString: output, quoteBlocks: quoteBlocks)
     }
 
     private nonisolated func renderedTextUnits(from attributedString: NSAttributedString) -> [RenderedTextUnit] {
@@ -859,15 +918,18 @@ struct MacMarkdownRenderer: Sendable {
     }
 
     private nonisolated func thematicBreakAttributedString(quoteDepth: Int) -> NSAttributedString {
-        NSAttributedString(
-            string: String(repeating: "─", count: 18),
+        let style = NSMutableParagraphStyle()
+        style.minimumLineHeight = 16
+        style.maximumLineHeight = 16
+        let adjustedStyle = paragraphStyle(style, adjustedForQuoteDepth: quoteDepth)
+
+        return NSAttributedString(
+            string: "\u{200B}",
             attributes: [
-                .font: bodyFont(),
-                .foregroundColor: quoteDepth > 0 ? quoteTextColor() : NSColor.quaternaryLabelColor,
-                .paragraphStyle: paragraphStyle(
-                    centeredParagraphStyle(),
-                    adjustedForQuoteDepth: quoteDepth
-                )
+                .font: NSFont.systemFont(ofSize: 1),
+                .foregroundColor: NSColor.clear,
+                .paragraphStyle: adjustedStyle,
+                .markdownThematicBreak: true
             ]
         )
     }
@@ -909,7 +971,7 @@ struct MacMarkdownRenderer: Sendable {
             }
 
             let normalizedFont: NSFont
-            if font.fontDescriptor.symbolicTraits.contains(.monoSpace) {
+            if traits.contains(.monoSpace) {
                 normalizedFont = .monospacedSystemFont(ofSize: codeFontSize, weight: weight)
             } else {
                 normalizedFont = .systemFont(ofSize: bodyFontSize, weight: weight)
@@ -944,98 +1006,7 @@ struct MacMarkdownRenderer: Sendable {
     }
 
     private nonisolated func codeBlockParagraphStyle() -> NSParagraphStyle {
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 3
-        style.firstLineHeadIndent = 10
-        style.headIndent = 10
-        style.tailIndent = -10
-        style.lineBreakMode = .byCharWrapping
-        return style
-    }
-
-    private nonisolated func renderedQuoteBlocks(
-        from markdown: String,
-        in attributedString: NSAttributedString,
-        at location: Int
-    ) -> [MarkdownQuoteBlock] {
-        guard !markdown.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return []
-        }
-
-        let parsed: NSMutableAttributedString
-        if let attributed = try? NSAttributedString(
-            markdown: markdown,
-            options: .init(
-                allowsExtendedAttributes: true,
-                interpretedSyntax: .full,
-                failurePolicy: .returnPartiallyParsedIfPossible
-            ),
-            baseURL: nil
-        ) {
-            parsed = NSMutableAttributedString(attributedString: attributed)
-        } else {
-            parsed = NSMutableAttributedString(string: markdown)
-        }
-
-        let units = renderedTextUnits(from: parsed)
-        guard !units.isEmpty else { return [] }
-
-        var quoteBlocks: [MarkdownQuoteBlock] = []
-        var renderedLocation = location
-        var index = 0
-
-        while index < units.count {
-            let unit = units[index]
-            let hasLeadingSpacing = renderedLocation > location
-            let segmentStart = renderedLocation + (hasLeadingSpacing ? 2 : 0)
-            let segmentLength: Int
-
-            switch unit.context.kind {
-            case .listItem(let listContext):
-                var length = 0
-                var isFirstItem = true
-
-                while index < units.count {
-                    guard case .listItem(let candidateContext) = units[index].context.kind,
-                          candidateContext.groupIdentity == listContext.groupIdentity else {
-                        break
-                    }
-
-                    if !isFirstItem {
-                        length += 1
-                    }
-
-                    length += styledListItem(units[index]).length
-                    isFirstItem = false
-                    index += 1
-                }
-
-                segmentLength = length
-
-            default:
-                segmentLength = styledBlock(unit).length
-                index += 1
-            }
-
-            if unit.context.quoteDepth > 0, segmentLength > 0 {
-                let maxLength = max(0, (location + attributedString.length) - segmentStart)
-                let clampedLength = min(segmentLength, maxLength)
-
-                if clampedLength > 0 {
-                    quoteBlocks.append(
-                        MarkdownQuoteBlock(
-                            range: NSRange(location: segmentStart, length: clampedLength),
-                            depth: unit.context.quoteDepth,
-                            identity: unit.context.quoteIdentity ?? unit.context.blockIdentity
-                        )
-                    )
-                }
-            }
-
-            renderedLocation = segmentStart + segmentLength
-        }
-
-        return quoteBlocks
+        cachedCodeBlockParagraphStyle
     }
 
     private nonisolated func mergeQuoteBlocks(_ quoteBlocks: inout [MarkdownQuoteBlock], with newBlocks: [MarkdownQuoteBlock]) {
@@ -1076,10 +1047,7 @@ struct MacMarkdownRenderer: Sendable {
     }
 
     private nonisolated func paragraphStyle() -> NSParagraphStyle {
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 4
-        style.paragraphSpacing = 0
-        return style
+        cachedDefaultParagraphStyle
     }
 
     private nonisolated func quoteTextColor() -> NSColor {
@@ -1141,5 +1109,6 @@ extension NSAttributedString.Key {
     fileprivate nonisolated static let markdownPresentationIntent = Self("NSPresentationIntent")
     fileprivate nonisolated static let markdownCodeBlockID = Self("LynkChatMarkdownCodeBlockID")
     fileprivate nonisolated static let markdownTableBlockID = Self("LynkChatMarkdownTableBlockID")
+    static let markdownThematicBreak = Self("LynkChatMarkdownThematicBreak")
 }
 #endif

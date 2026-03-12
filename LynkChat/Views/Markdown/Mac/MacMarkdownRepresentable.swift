@@ -19,10 +19,12 @@ private enum MarkdownRenderCacheStore {
 
     static func store(_ document: MarkdownRenderedDocument, for request: MarkdownRenderRequest) {
         cachedDocuments[request] = document
-        cacheOrder.removeAll { $0 == request }
+        if let existingIndex = cacheOrder.firstIndex(of: request) {
+            cacheOrder.remove(at: existingIndex)
+        }
         cacheOrder.append(request)
 
-        while cacheOrder.count > cacheLimit {
+        if cacheOrder.count > cacheLimit {
             let evictedRequest = cacheOrder.removeFirst()
             cachedDocuments.removeValue(forKey: evictedRequest)
         }

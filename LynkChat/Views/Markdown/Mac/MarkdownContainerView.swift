@@ -17,6 +17,7 @@ final class MarkdownContainerView: NSView {
     private var isShowingPlaceholder = false
     private var needsMeasurement = false
     private var codeBlockButtons: [Int: NSButton] = [:]
+    private var cachedCodeBlockFrames: [(codeBlock: MarkdownCodeBlock, frame: NSRect)] = []
     private var hoveredCodeBlockID: Int?
     private var trackingArea: NSTrackingArea?
     var onThemeChange: ((String) -> Void)?
@@ -230,20 +231,12 @@ final class MarkdownContainerView: NSView {
             addSubview(button)
             codeBlockButtons[codeBlock.id] = button
         }
-
-//        updateCopyButtonAppearance()
     }
 
-//    private func updateCopyButtonAppearance() {
-//        for button in codeBlockButtons.values {
-//            button.contentTintColor = .labelColor
-//            button.layer?.backgroundColor = .clear
-//        }
-//    }
-
     private func layoutCodeBlockButtons() {
+        cachedCodeBlockFrames = textView.codeBlockFrames()
         let codeBlockRects = Dictionary(
-            uniqueKeysWithValues: textView.codeBlockFrames().map { ($0.codeBlock.id, $0.frame) }
+            uniqueKeysWithValues: cachedCodeBlockFrames.map { ($0.codeBlock.id, $0.frame) }
         )
 
         for (id, button) in codeBlockButtons {
@@ -267,7 +260,7 @@ final class MarkdownContainerView: NSView {
         let locationInTextView = textView.convert(event.locationInWindow, from: nil)
         var newHoveredID: Int?
 
-        for (codeBlock, frame) in textView.codeBlockFrames() {
+        for (codeBlock, frame) in cachedCodeBlockFrames {
             if frame.contains(locationInTextView) {
                 newHoveredID = codeBlock.id
                 break

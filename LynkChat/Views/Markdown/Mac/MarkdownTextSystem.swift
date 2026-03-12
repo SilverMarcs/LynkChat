@@ -31,7 +31,12 @@ final class MarkdownPlainTextView: NSTextView {
             NSIntersectionRange($0.range, selection).length > 0
         }.sorted { $0.range.location < $1.range.location }
 
-        guard !intersecting.isEmpty else {
+        let hasThematicBreaks = Self.selectionContainsThematicBreak(
+            in: markdownTextStorage,
+            range: selection
+        )
+
+        guard !intersecting.isEmpty || hasThematicBreaks else {
             super.copy(sender)
             return
         }
@@ -64,6 +69,14 @@ final class MarkdownPlainTextView: NSTextView {
             html += Self.htmlEscaped(post)
         }
 
+        if hasThematicBreaks {
+            plainText = Self.replaceThematicBreakCharacters(
+                in: plainText,
+                storage: markdownTextStorage,
+                selectionRange: selection
+            )
+        }
+
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         pasteboard.setString(plainText, forType: .string)
@@ -72,29 +85,57 @@ final class MarkdownPlainTextView: NSTextView {
         }
     }
 
+    private static func selectionContainsThematicBreak(
+        in storage: NSTextStorage,
+        range: NSRange
+    ) -> Bool {
+        var found = false
+        storage.enumerateAttribute(.markdownThematicBreak, in: range) { value, _, stop in
+            if value != nil {
+                found = true
+                stop.pointee = true
+            }
+        }
+        return found
+    }
+
+    private static func replaceThematicBreakCharacters(
+        in plainText: String,
+        storage: NSTextStorage,
+        selectionRange: NSRange
+    ) -> String {
+        // Collect character offsets within the selection that are thematic breaks
+        var breakOffsets: [Int] = []
+        storage.enumerateAttribute(.markdownThematicBreak, in: selectionRange) { value, range, _ in
+            guard value != nil else { return }
+            for i in 0..<range.length {
+                breakOffsets.append(range.location + i - selectionRange.location)
+            }
+        }
+
+        guard !breakOffsets.isEmpty else { return plainText }
+
+        let breakSet = Set(breakOffsets)
+        var result = ""
+        var offset = 0
+        for char in plainText.unicodeScalars {
+            if breakSet.contains(offset) && char == "\u{200B}" {
+                result += "---"
+            } else {
+                result += String(char)
+            }
+            offset += 1
+        }
+        return result
+    }
+
     private static func tablePasteboardRepresentations(from rawMarkdown: String) -> (plain: String, html: String) {
         let lines = rawMarkdown.components(separatedBy: .newlines)
         guard lines.count >= 2 else { return (rawMarkdown, htmlEscaped(rawMarkdown)) }
 
-        func parseCells(_ line: String) -> [String] {
-            var content = line.trimmingCharacters(in: .whitespaces)
-            if content.hasPrefix("|") { content = String(content.dropFirst()) }
-            if content.hasSuffix("|") { content = String(content.dropLast()) }
-            return content.components(separatedBy: "|").map { $0.trimmingCharacters(in: .whitespaces) }
-        }
-
-        func isSeparator(_ line: String) -> Bool {
-            let cells = parseCells(line)
-            guard !cells.isEmpty else { return false }
-            return cells.allSatisfy { cell in
-                let stripped = cell.trimmingCharacters(in: CharacterSet(charactersIn: ": "))
-                return !stripped.isEmpty && stripped.allSatisfy({ $0 == "-" })
-            }
-        }
-
-        let headers = parseCells(lines[0])
-        let bodyLines = lines.dropFirst(isSeparator(lines[1]) ? 2 : 1)
-        let rows = bodyLines.map { parseCells($0) }
+        let headers = MarkdownTableBlock.parseCells(from: lines[0])
+        let bodyLines = lines.dropFirst(MarkdownTableBlock.isSeparatorLine(lines[1]) ? 2 : 1)
+        let rows = bodyLines.map { MarkdownTableBlock.parseCells(from: $0) }
 
         var plain = headers.joined(separator: "\t")
         for row in rows {
@@ -163,6 +204,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
         drawCodeBlockBackgrounds(forGlyphRange: glyphsToShow, at: origin)
         drawTableBackgrounds(forGlyphRange: glyphsToShow, at: origin)
         drawQuoteLines(forGlyphRange: glyphsToShow, at: origin)
+        drawThematicBreaks(forGlyphRange: glyphsToShow, at: origin)
     }
 
     func layoutManager(
@@ -368,6 +410,34 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
         blockRect.origin.x += textContainer.lineFragmentPadding
         blockRect.size.width = max(0, blockRect.size.width - (textContainer.lineFragmentPadding * 2))
         return blockRect.integral
+    }
+
+    private func drawThematicBreaks(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
+        guard let textStorage, let textContainer = textContainers.first else { return }
+
+        let visibleCharRange = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
+        guard visibleCharRange.length > 0 else { return }
+
+        textStorage.enumerateAttribute(.markdownThematicBreak, in: visibleCharRange) { value, range, _ in
+            guard value != nil else { return }
+
+            let glyphRange = self.glyphRange(forCharacterRange: range, actualCharacterRange: nil)
+            guard glyphRange.length > 0 else { return }
+
+            self.enumerateLineFragments(forGlyphRange: glyphRange) { lineRect, _, _, _, _ in
+                let adjustedRect = lineRect.offsetBy(dx: origin.x, dy: origin.y)
+                let lineY = round(adjustedRect.midY)
+                let lineX = adjustedRect.minX + textContainer.lineFragmentPadding
+                let lineWidth = adjustedRect.width - (textContainer.lineFragmentPadding * 2)
+
+                let linePath = NSBezierPath()
+                linePath.move(to: NSPoint(x: lineX, y: lineY))
+                linePath.line(to: NSPoint(x: lineX + lineWidth, y: lineY))
+                linePath.lineWidth = 1
+                NSColor.separatorColor.setStroke()
+                linePath.stroke()
+            }
+        }
     }
 
     private func spacingAfterLineEndingGlyph(
