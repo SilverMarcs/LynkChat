@@ -11,21 +11,48 @@ struct MacMarkdownView: View {
 
     var body: some View {
         MacMarkdownRepresentable(
-            blocks: MacMarkdownRenderer(fontSize: fontSize).render(text),
+            text: text,
+            fontSize: fontSize,
             calculatedHeight: calculatedHeight
         )
     }
 }
 
-private struct MacMarkdownRepresentable: NSViewRepresentable {
+private struct MarkdownRenderCache {
+    let text: String
+    let fontSize: CGFloat
     let blocks: [MarkdownRenderedBlock]
+}
+
+private struct MacMarkdownRepresentable: NSViewRepresentable {
+    let text: String
+    let fontSize: CGFloat
     var calculatedHeight: Binding<CGFloat>?
+
+    final class Coordinator {
+        private var cachedRender: MarkdownRenderCache?
+
+        func blocks(for text: String, fontSize: CGFloat) -> [MarkdownRenderedBlock] {
+            if let cachedRender, cachedRender.text == text, cachedRender.fontSize == fontSize {
+                return cachedRender.blocks
+            }
+
+            let blocks = MacMarkdownRenderer(fontSize: fontSize).render(text)
+            cachedRender = MarkdownRenderCache(text: text, fontSize: fontSize, blocks: blocks)
+            return blocks
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
 
     func makeNSView(context: Context) -> MarkdownContainerView {
         MarkdownContainerView()
     }
 
     func updateNSView(_ nsView: MarkdownContainerView, context: Context) {
+        let blocks = context.coordinator.blocks(for: text, fontSize: fontSize)
         nsView.onHeightChange = { newHeight in
             guard let calculatedHeight, calculatedHeight.wrappedValue != newHeight else { return }
             calculatedHeight.wrappedValue = newHeight
@@ -35,6 +62,7 @@ private struct MacMarkdownRepresentable: NSViewRepresentable {
 
     func sizeThatFits(_ proposal: ProposedViewSize, nsView: MarkdownContainerView, context: Context) -> CGSize? {
         guard let width = proposal.width else { return nil }
+        nsView.update(blocks: context.coordinator.blocks(for: text, fontSize: fontSize))
         return nsView.measuredSize(for: width)
     }
 }
@@ -43,6 +71,7 @@ private final class MarkdownContainerView: NSView {
     private let stackView = NSStackView()
     private var currentWidth: CGFloat = 0
     private var lastReportedHeight: CGFloat = 0
+    private var lastMeasuredSize: CGSize = .zero
     var onHeightChange: ((CGFloat) -> Void)?
 
     override init(frame frameRect: NSRect) {
@@ -93,22 +122,20 @@ private final class MarkdownContainerView: NSView {
         invalidateIntrinsicContentSize()
 
         if currentWidth > 0 {
-            reportHeightIfNeeded(for: currentWidth)
+            applyPreferredWidth(currentWidth)
+            let measuredHeight = measureHeight()
+            lastMeasuredSize = CGSize(width: currentWidth, height: measuredHeight)
+            reportHeightIfNeeded(measuredHeight)
         }
     }
 
     func measuredSize(for width: CGFloat) -> CGSize {
         currentWidth = width
-
-        for case let measurable as MarkdownMeasurable in stackView.arrangedSubviews {
-            measurable.update(preferredWidth: width)
-        }
-
-        let fittingHeight = stackView.arrangedSubviews.reduce(CGFloat.zero) { partial, view in
-            partial + view.fittingSize.height
-        } + CGFloat(max(0, stackView.arrangedSubviews.count - 1)) * stackView.spacing
-
-        return CGSize(width: width, height: ceil(fittingHeight))
+        applyPreferredWidth(width)
+        let measuredHeight = measureHeight()
+        let measuredSize = CGSize(width: width, height: measuredHeight)
+        lastMeasuredSize = measuredSize
+        return measuredSize
     }
 
     override func layout() {
@@ -117,15 +144,32 @@ private final class MarkdownContainerView: NSView {
         let width = bounds.width > 0 ? bounds.width : currentWidth
         guard width > 0 else { return }
 
+        currentWidth = width
+        applyPreferredWidth(width)
+        let measuredHeight = measureHeight()
+        lastMeasuredSize = CGSize(width: width, height: measuredHeight)
+        reportHeightIfNeeded(measuredHeight)
+    }
+
+    override var intrinsicContentSize: NSSize {
+        NSSize(width: lastMeasuredSize.width, height: lastMeasuredSize.height)
+    }
+
+    private func applyPreferredWidth(_ width: CGFloat) {
         for case let measurable as MarkdownMeasurable in stackView.arrangedSubviews {
             measurable.update(preferredWidth: width)
         }
-
-        reportHeightIfNeeded(for: width)
     }
 
-    private func reportHeightIfNeeded(for width: CGFloat) {
-        let measuredHeight = measuredSize(for: width).height
+    private func measureHeight() -> CGFloat {
+        let fittingHeight = stackView.arrangedSubviews.reduce(CGFloat.zero) { partial, view in
+            partial + view.fittingSize.height
+        } + CGFloat(max(0, stackView.arrangedSubviews.count - 1)) * stackView.spacing
+
+        return ceil(fittingHeight)
+    }
+
+    private func reportHeightIfNeeded(_ measuredHeight: CGFloat) {
         guard measuredHeight > 0, measuredHeight != lastReportedHeight else { return }
 
         lastReportedHeight = measuredHeight
@@ -275,6 +319,8 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
     private let textView = MarkdownPlainTextView()
     private var widthConstraint: NSLayoutConstraint?
     private var preferredWidth: CGFloat = 0
+    private var currentAttributedStrings: [NSAttributedString] = []
+    private var currentMeasuredSize: NSSize = .zero
 
     init(attributedStrings: [NSAttributedString]) {
         super.init(frame: .zero)
@@ -314,6 +360,9 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
     }
 
     func update(attributedStrings: [NSAttributedString]) {
+        guard !markdownAttributedStringsEqual(currentAttributedStrings, attributedStrings) else { return }
+
+        currentAttributedStrings = attributedStrings
         let combinedString = NSMutableAttributedString()
 
         for (index, attributedString) in attributedStrings.enumerated() {
@@ -324,6 +373,9 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
         }
 
         textView.markdownTextStorage.setAttributedString(combinedString)
+        if preferredWidth > 0 {
+            refreshMeasuredSize(for: preferredWidth)
+        }
         invalidateIntrinsicContentSize()
     }
 
@@ -334,29 +386,29 @@ private final class MarkdownTextBlockView: NSView, MarkdownMeasurable {
 
         self.preferredWidth = resolvedWidth
         widthConstraint?.constant = resolvedWidth
-        textView.frame.size.width = resolvedWidth
-        textView.markdownTextContainer.containerSize = CGSize(width: resolvedWidth, height: .greatestFiniteMagnitude)
-        textView.markdownLayoutManager.ensureLayout(for: textView.markdownTextContainer)
+        refreshMeasuredSize(for: resolvedWidth)
         invalidateIntrinsicContentSize()
     }
 
     override var intrinsicContentSize: NSSize {
-        measuredSize(for: widthConstraint?.constant ?? bounds.width)
+        currentMeasuredSize
     }
 
     override var fittingSize: NSSize {
-        measuredSize(for: widthConstraint?.constant ?? bounds.width)
+        currentMeasuredSize
     }
 
-    private func measuredSize(for width: CGFloat) -> NSSize {
+    private func refreshMeasuredSize(for width: CGFloat) {
         guard width > 0 else {
-            return .zero
+            currentMeasuredSize = .zero
+            return
         }
 
+        textView.frame.size.width = width
         textView.markdownTextContainer.containerSize = CGSize(width: width, height: .greatestFiniteMagnitude)
         textView.markdownLayoutManager.ensureLayout(for: textView.markdownTextContainer)
         let usedRect = textView.markdownLayoutManager.usedRect(for: textView.markdownTextContainer)
-        return NSSize(width: width, height: ceil(usedRect.height))
+        currentMeasuredSize = NSSize(width: width, height: ceil(usedRect.height))
     }
 }
 
@@ -378,6 +430,9 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
     private var language: String?
     private var codeFontSize: CGFloat
     private var preferredWidth: CGFloat = 0
+    private var currentThemeName: String?
+    private var currentMeasuredSize: NSSize = .zero
+    private var renderedContentHeight: CGFloat = 0
 
     init(content: String, language: String?, codeFontSize: CGFloat) {
         self.content = content
@@ -454,8 +509,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             copyButton.heightAnchor.constraint(equalToConstant: Layout.buttonSize)
         ])
 
-        updateAppearance()
-        update(content: content, language: language)
+        update(content: content, language: language, codeFontSize: codeFontSize)
     }
 
     @available(*, unavailable)
@@ -465,19 +519,28 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 
     override func viewDidChangeEffectiveAppearance() {
         super.viewDidChangeEffectiveAppearance()
-        updateAppearance()
-        update(content: content, language: language)
+        update(content: content, language: language, codeFontSize: codeFontSize)
     }
 
     func update(content: String, language: String?, codeFontSize: CGFloat? = nil) {
+        let resolvedCodeFontSize = codeFontSize ?? self.codeFontSize
+        let themeName = colorSchemeThemeName
+        let needsContentRefresh = content != self.content
+            || language != self.language
+            || resolvedCodeFontSize != self.codeFontSize
+            || themeName != currentThemeName
+
         self.content = content
         self.language = language
-        if let codeFontSize {
-            self.codeFontSize = codeFontSize
-        }
+        self.codeFontSize = resolvedCodeFontSize
+        updateAppearance(themeName: themeName)
+
+        guard needsContentRefresh else { return }
+
         textView.setCodeFontSize(self.codeFontSize)
         textView.markdownTextStorage.setAttributedString(attributedCode())
         updateTextViewFrame()
+        refreshMeasuredSize(for: preferredWidth)
         invalidateIntrinsicContentSize()
     }
 
@@ -488,16 +551,16 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 
         self.preferredWidth = resolvedWidth
         widthConstraint?.constant = resolvedWidth
-        updateTextViewFrame()
+        refreshMeasuredSize(for: resolvedWidth)
         invalidateIntrinsicContentSize()
     }
 
     override var intrinsicContentSize: NSSize {
-        measuredSize(for: widthConstraint?.constant ?? bounds.width)
+        currentMeasuredSize
     }
 
     override var fittingSize: NSSize {
-        measuredSize(for: widthConstraint?.constant ?? bounds.width)
+        currentMeasuredSize
     }
 
     private func attributedCode() -> NSAttributedString {
@@ -517,8 +580,11 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         )
     }
 
-    private func updateAppearance() {
-        syntaxHighlighter?.setTheme(to: colorSchemeThemeName)
+    private func updateAppearance(themeName: String) {
+        if currentThemeName != themeName {
+            syntaxHighlighter?.setTheme(to: themeName)
+            currentThemeName = themeName
+        }
         backgroundView.layer?.backgroundColor = codeBlockBackgroundColor.cgColor
         copyButton.contentTintColor = .labelColor
         copyButton.layer?.backgroundColor = .clear
@@ -559,22 +625,17 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             height: ceil(usedRect.height)
         )
 
+        renderedContentHeight = fittedSize.height
         textView.setFrameSize(fittedSize)
     }
 
-    private func measuredSize(for width: CGFloat) -> NSSize {
-        guard width > 0 else { return .zero }
-
-        textView.markdownTextContainer.containerSize = CGSize(
-            width: CGFloat.greatestFiniteMagnitude,
-            height: CGFloat.greatestFiniteMagnitude
-        )
-        textView.markdownLayoutManager.ensureLayout(for: textView.markdownTextContainer)
-        let codeSize = textView.markdownLayoutManager.usedRect(for: textView.markdownTextContainer).size
-
-        let bodyHeight = ceil(codeSize.height)
-        let totalHeight = (Layout.contentPadding * 2) + bodyHeight
-        return NSSize(width: width, height: totalHeight)
+    private func refreshMeasuredSize(for width: CGFloat) {
+        guard width > 0 else {
+            currentMeasuredSize = .zero
+            return
+        }
+        let totalHeight = (Layout.contentPadding * 2) + renderedContentHeight
+        currentMeasuredSize = NSSize(width: width, height: totalHeight)
     }
 
     @objc
@@ -587,6 +648,16 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 private enum MarkdownRenderedBlock {
     case text([NSAttributedString])
     case code(String, language: String?, fontSize: CGFloat)
+}
+
+private func markdownAttributedStringsEqual(_ lhs: [NSAttributedString], _ rhs: [NSAttributedString]) -> Bool {
+    guard lhs.count == rhs.count else { return false }
+
+    for (left, right) in zip(lhs, rhs) {
+        guard left.isEqual(right) else { return false }
+    }
+
+    return true
 }
 
 private struct MacMarkdownRenderer {
@@ -904,13 +975,10 @@ private struct MacMarkdownRenderer {
             return
         }
 
-        for location in 0..<fullRange.length {
-            let range = NSRange(location: location, length: 1)
-            let value = attributedString.attribute(.font, at: location, effectiveRange: nil)
-
+        attributedString.enumerateAttribute(.font, in: fullRange) { value, range, _ in
             guard let font = value as? NSFont else {
                 attributedString.addAttribute(.font, value: bodyFont(), range: range)
-                continue
+                return
             }
 
             let traits = font.fontDescriptor.symbolicTraits
