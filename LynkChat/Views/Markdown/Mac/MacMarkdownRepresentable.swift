@@ -90,7 +90,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
 
             if isStreaming, let streamedDocument = streamedDocument(for: request) {
                 currentRequest = request
-                nsView.apply(document: streamedDocument, for: request)
+                nsView.apply(document: streamedDocument, for: request, isStreamed: true)
             } else if lastRenderedDocument == nil {
                 currentRequest = request
                 nsView.showPlaceholder(text: text, fontSize: fontSize, for: request)

@@ -15,6 +15,7 @@ final class MarkdownContainerView: NSView {
     private var currentRequest: MarkdownRenderRequest?
     private var currentThemeName: String?
     private var isShowingPlaceholder = false
+    private var isShowingStreamedContent = false
     private var needsMeasurement = false
     private var codeBlockButtons: [Int: NSButton] = [:]
     private var cachedCodeBlockFrames: [(codeBlock: MarkdownCodeBlock, frame: NSRect)] = []
@@ -127,11 +128,11 @@ final class MarkdownContainerView: NSView {
         display(document: .placeholder(text: text, fontSize: fontSize))
     }
 
-    func apply(document: MarkdownRenderedDocument, for request: MarkdownRenderRequest) {
+    func apply(document: MarkdownRenderedDocument, for request: MarkdownRenderRequest, isStreamed: Bool = false) {
         currentThemeName = request.themeName
         updateAppearance()
 
-        guard currentRequest != request || isShowingPlaceholder || currentDocument == nil else {
+        guard currentRequest != request || isShowingPlaceholder || currentDocument == nil || isShowingStreamedContent else {
             recalculateIfNeeded(for: currentWidth, reportHeight: true)
             return
         }
@@ -139,6 +140,7 @@ final class MarkdownContainerView: NSView {
         currentRequest = request
         currentDocument = document
         isShowingPlaceholder = false
+        isShowingStreamedContent = isStreamed
         display(document: document)
     }
 
