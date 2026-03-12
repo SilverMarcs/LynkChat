@@ -17,6 +17,8 @@ final class MarkdownContainerView: NSView {
     private var isShowingPlaceholder = false
     private var needsMeasurement = false
     private var codeBlockButtons: [Int: NSButton] = [:]
+    private var hoveredCodeBlockID: Int?
+    private var trackingArea: NSTrackingArea?
     var onThemeChange: ((String) -> Void)?
     var onHeightChange: ((CGFloat) -> Void)?
 
@@ -65,6 +67,30 @@ final class MarkdownContainerView: NSView {
         currentThemeName = themeName
         updateAppearance()
         onThemeChange?(themeName)
+    }
+
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        if let trackingArea { removeTrackingArea(trackingArea) }
+        let area = NSTrackingArea(
+            rect: bounds,
+            options: [.mouseMoved, .mouseEnteredAndExited, .activeInActiveApp],
+            owner: self,
+            userInfo: nil
+        )
+        addTrackingArea(area)
+        trackingArea = area
+    }
+
+    override func mouseMoved(with event: NSEvent) {
+        super.mouseMoved(with: event)
+        updateHoveredCodeBlock(for: event)
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
+        hoveredCodeBlockID = nil
+        updateCopyButtonVisibility()
     }
 
     override func layout() {
@@ -235,7 +261,29 @@ final class MarkdownContainerView: NSView {
                 width: Layout.copyButtonSize,
                 height: Layout.copyButtonSize
             ).integral
-            button.isHidden = false
+            button.isHidden = id != hoveredCodeBlockID
+        }
+    }
+
+    private func updateHoveredCodeBlock(for event: NSEvent) {
+        let locationInTextView = textView.convert(event.locationInWindow, from: nil)
+        var newHoveredID: Int?
+
+        for (codeBlock, frame) in textView.codeBlockFrames() {
+            if frame.contains(locationInTextView) {
+                newHoveredID = codeBlock.id
+                break
+            }
+        }
+
+        guard hoveredCodeBlockID != newHoveredID else { return }
+        hoveredCodeBlockID = newHoveredID
+        updateCopyButtonVisibility()
+    }
+
+    private func updateCopyButtonVisibility() {
+        for (id, button) in codeBlockButtons {
+            button.isHidden = id != hoveredCodeBlockID
         }
     }
 

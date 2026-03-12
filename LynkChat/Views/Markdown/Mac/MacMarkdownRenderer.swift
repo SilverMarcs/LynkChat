@@ -840,13 +840,19 @@ struct MacMarkdownRenderer: Sendable {
             string: String(repeating: "─", count: 18),
             attributes: [
                 .font: bodyFont(),
-                .foregroundColor: quoteDepth > 0 ? quoteTextColor() : separatorColor(),
+                .foregroundColor: quoteDepth > 0 ? quoteTextColor() : NSColor.quaternaryLabelColor,
                 .paragraphStyle: paragraphStyle(
                     centeredParagraphStyle(),
                     adjustedForQuoteDepth: quoteDepth
                 )
             ]
         )
+    }
+
+    private nonisolated func centeredParagraphStyle() -> NSParagraphStyle {
+        let style = NSMutableParagraphStyle()
+        style.alignment = .center
+        return style
     }
 
     private nonisolated func listMarker(for marker: ListMarker) -> BlockContext.ListContext.Marker {
@@ -1053,16 +1059,6 @@ struct MacMarkdownRenderer: Sendable {
         return style
     }
 
-    private nonisolated func centeredParagraphStyle() -> NSParagraphStyle {
-        let style = NSMutableParagraphStyle()
-        style.alignment = .center
-        return style
-    }
-
-    private nonisolated func separatorColor() -> NSColor {
-        NSColor.labelColor.withAlphaComponent(0.3)
-    }
-
     private nonisolated func quoteTextColor() -> NSColor {
         NSColor.secondaryLabelColor
     }
@@ -1116,11 +1112,11 @@ private extension NSAttributedString {
     }
 }
 
-private extension NSAttributedString.Key {
-    nonisolated static let markdownInlinePresentationIntent = Self("NSInlinePresentationIntent")
-    nonisolated static let markdownListItemDelimiter = Self("NSListItemDelimiter")
-    nonisolated static let markdownPresentationIntent = Self("NSPresentationIntent")
-    nonisolated static let markdownCodeBlockID = Self("LynkChatMarkdownCodeBlockID")
-    nonisolated static let markdownTableBlockID = Self("LynkChatMarkdownTableBlockID")
+extension NSAttributedString.Key {
+    fileprivate nonisolated static let markdownInlinePresentationIntent = Self("NSInlinePresentationIntent")
+    fileprivate nonisolated static let markdownListItemDelimiter = Self("NSListItemDelimiter")
+    fileprivate nonisolated static let markdownPresentationIntent = Self("NSPresentationIntent")
+    fileprivate nonisolated static let markdownCodeBlockID = Self("LynkChatMarkdownCodeBlockID")
+    fileprivate nonisolated static let markdownTableBlockID = Self("LynkChatMarkdownTableBlockID")
 }
 #endif
