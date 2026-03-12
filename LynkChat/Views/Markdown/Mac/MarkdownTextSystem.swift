@@ -117,14 +117,14 @@ final class MarkdownPlainTextView: NSTextView {
 
         let breakSet = Set(breakOffsets)
         var result = ""
-        var offset = 0
-        for char in plainText.unicodeScalars {
-            if breakSet.contains(offset) && char == "\u{200B}" {
+        var utf16Offset = 0
+        for char in plainText {
+            if breakSet.contains(utf16Offset) && char == "\u{200B}" {
                 result += "---"
             } else {
                 result += String(char)
             }
-            offset += 1
+            utf16Offset += char.utf16.count
         }
         return result
     }

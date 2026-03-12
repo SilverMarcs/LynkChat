@@ -8,26 +8,71 @@ struct MarkdownRenderRequest: Hashable, Sendable {
 }
 
 @MainActor
-private enum MarkdownRenderCacheStore {
-    private static let cacheLimit = 120
-    private static var cachedDocuments: [MarkdownRenderRequest: MarkdownRenderedDocument] = [:]
-    private static var cacheOrder: [MarkdownRenderRequest] = []
+private final class MarkdownRenderCacheStore {
+    private final class Node {
+        let key: MarkdownRenderRequest
+        var value: MarkdownRenderedDocument
+        var prev: Node?
+        var next: Node?
 
-    static func document(for request: MarkdownRenderRequest) -> MarkdownRenderedDocument? {
-        cachedDocuments[request]
+        init(key: MarkdownRenderRequest, value: MarkdownRenderedDocument) {
+            self.key = key
+            self.value = value
+        }
     }
 
-    static func store(_ document: MarkdownRenderedDocument, for request: MarkdownRenderRequest) {
-        cachedDocuments[request] = document
-        if let existingIndex = cacheOrder.firstIndex(of: request) {
-            cacheOrder.remove(at: existingIndex)
-        }
-        cacheOrder.append(request)
+    static let shared = MarkdownRenderCacheStore()
 
-        if cacheOrder.count > cacheLimit {
-            let evictedRequest = cacheOrder.removeFirst()
-            cachedDocuments.removeValue(forKey: evictedRequest)
+    private let cacheLimit = 120
+    private var map: [MarkdownRenderRequest: Node] = [:]
+    private var head: Node? // most recently used
+    private var tail: Node? // least recently used
+
+    func document(for request: MarkdownRenderRequest) -> MarkdownRenderedDocument? {
+        guard let node = map[request] else { return nil }
+        moveToHead(node)
+        return node.value
+    }
+
+    func store(_ document: MarkdownRenderedDocument, for request: MarkdownRenderRequest) {
+        if let node = map[request] {
+            node.value = document
+            moveToHead(node)
+        } else {
+            let node = Node(key: request, value: document)
+            map[request] = node
+            insertAtHead(node)
+
+            if map.count > cacheLimit {
+                if let evicted = tail {
+                    removeNode(evicted)
+                    map.removeValue(forKey: evicted.key)
+                }
+            }
         }
+    }
+
+    private func moveToHead(_ node: Node) {
+        guard node !== head else { return }
+        removeNode(node)
+        insertAtHead(node)
+    }
+
+    private func insertAtHead(_ node: Node) {
+        node.prev = nil
+        node.next = head
+        head?.prev = node
+        head = node
+        if tail == nil { tail = node }
+    }
+
+    private func removeNode(_ node: Node) {
+        node.prev?.next = node.next
+        node.next?.prev = node.prev
+        if node === head { head = node.next }
+        if node === tail { tail = node.prev }
+        node.prev = nil
+        node.next = nil
     }
 }
 
@@ -82,7 +127,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
         ) {
             let request = MarkdownRenderRequest(text: text, fontSize: fontSize, themeName: themeName)
 
-            if let cachedDocument = MarkdownRenderCacheStore.document(for: request) {
+            if let cachedDocument = MarkdownRenderCacheStore.shared.document(for: request) {
                 renderTask?.cancel()
                 renderTask = nil
                 pendingRenderRequest = nil
@@ -119,7 +164,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
                 guard !Task.isCancelled else { return }
 
                 await MainActor.run {
-                    MarkdownRenderCacheStore.store(document, for: request)
+                    MarkdownRenderCacheStore.shared.store(document, for: request)
 
                     guard let nsView, self.currentRequest == request else { return }
                     self.pendingRenderRequest = nil

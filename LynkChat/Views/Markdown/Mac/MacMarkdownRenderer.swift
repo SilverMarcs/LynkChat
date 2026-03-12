@@ -185,6 +185,8 @@ struct MacMarkdownRenderer: Sendable {
     private let themeName: String
     private nonisolated(unsafe) let cachedDefaultParagraphStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedCodeBlockParagraphStyle: NSParagraphStyle
+    private nonisolated(unsafe) let cachedCodeBlockSpacerStyle: NSParagraphStyle
+    private nonisolated(unsafe) let cachedTableSpacerStyle: NSParagraphStyle
 
     nonisolated init(fontSize: CGFloat, themeName: String) {
         bodyFontSize = max(fontSize, 13)
@@ -203,6 +205,16 @@ struct MacMarkdownRenderer: Sendable {
         codeStyle.tailIndent = -10
         codeStyle.lineBreakMode = .byCharWrapping
         cachedCodeBlockParagraphStyle = codeStyle.copy() as! NSParagraphStyle
+
+        cachedCodeBlockSpacerStyle = Self.makeSpacerStyle(height: 8)
+        cachedTableSpacerStyle = Self.makeSpacerStyle(height: 1)
+    }
+
+    private static func makeSpacerStyle(height: CGFloat) -> NSParagraphStyle {
+        let style = NSMutableParagraphStyle()
+        style.minimumLineHeight = height
+        style.maximumLineHeight = height
+        return style.copy() as! NSParagraphStyle
     }
 
     nonisolated func render(_ markdown: String) async -> MarkdownRenderedDocument {
@@ -291,9 +303,9 @@ struct MacMarkdownRenderer: Sendable {
 
             switch segment {
             case .codeBlock:
-                appendBlockOverhangSpacer(to: output, height: 8)
+                appendBlockOverhangSpacer(to: output, style: cachedCodeBlockSpacerStyle)
             case .table:
-                appendBlockOverhangSpacer(to: output, height: 1)
+                appendBlockOverhangSpacer(to: output, style: cachedTableSpacerStyle)
             default:
                 break
             }
@@ -308,10 +320,7 @@ struct MacMarkdownRenderer: Sendable {
         )
     }
 
-    private nonisolated func appendBlockOverhangSpacer(to output: NSMutableAttributedString, height: CGFloat) {
-        let style = NSMutableParagraphStyle()
-        style.minimumLineHeight = height
-        style.maximumLineHeight = height
+    private nonisolated func appendBlockOverhangSpacer(to output: NSMutableAttributedString, style: NSParagraphStyle) {
         output.append(NSAttributedString(
             string: "\n\u{200B}",
             attributes: [
@@ -992,8 +1001,16 @@ struct MacMarkdownRenderer: Sendable {
                 return
             }
 
+            let weight: NSFont.Weight
+            if let existingFont = attributedString.attribute(.font, at: range.location, effectiveRange: nil) as? NSFont,
+               existingFont.fontDescriptor.symbolicTraits.contains(.bold) {
+                weight = .semibold
+            } else {
+                weight = .regular
+            }
+
             attributedString.addAttributes([
-                .font: NSFont.monospacedSystemFont(ofSize: bodyFontSize, weight: .regular),
+                .font: NSFont.monospacedSystemFont(ofSize: bodyFontSize, weight: weight),
                 .foregroundColor: NSColor.controlAccentColor
             ], range: range)
         }
