@@ -887,7 +887,7 @@ struct MacMarkdownRenderer: Sendable {
         style.headIndent = contentIndent
         style.tabStops = [NSTextTab(textAlignment: .left, location: contentIndent)]
         style.defaultTabInterval = contentIndent
-        style.lineSpacing = 4
+        style.paragraphSpacing = 5
         return style
     }
 

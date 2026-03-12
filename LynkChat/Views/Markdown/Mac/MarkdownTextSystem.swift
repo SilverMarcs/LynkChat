@@ -7,6 +7,7 @@ final class MarkdownPlainTextView: NSTextView {
     let markdownTextContainer = NSTextContainer()
 
     init() {
+        markdownLayoutManager.delegate = markdownLayoutManager
         markdownLayoutManager.addTextContainer(markdownTextContainer)
         markdownTextStorage.addLayoutManager(markdownLayoutManager)
         super.init(frame: .zero, textContainer: markdownTextContainer)
@@ -48,7 +49,7 @@ final class MarkdownPlainTextView: NSTextView {
     }
 }
 
-final class MarkdownLayoutManager: NSLayoutManager {
+final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     private enum Layout {
         static let cornerRadius: CGFloat = 12
         static let verticalPadding: CGFloat = 16
@@ -67,6 +68,25 @@ final class MarkdownLayoutManager: NSLayoutManager {
         super.drawBackground(forGlyphRange: glyphsToShow, at: origin)
         drawCodeBlockBackgrounds(forGlyphRange: glyphsToShow, at: origin)
         drawQuoteLines(forGlyphRange: glyphsToShow, at: origin)
+    }
+
+    func layoutManager(
+        _ layoutManager: NSLayoutManager,
+        lineSpacingAfterGlyphAt glyphIndex: Int,
+        withProposedLineFragmentRect rect: NSRect
+    ) -> CGFloat {
+        spacingAfterLineEndingGlyph(at: glyphIndex, keyPath: \.lineSpacing)
+    }
+
+    func layoutManager(
+        _ layoutManager: NSLayoutManager,
+        paragraphSpacingAfterGlyphAt glyphIndex: Int,
+        withProposedLineFragmentRect rect: NSRect
+    ) -> CGFloat {
+        guard lineEndsParagraph(at: glyphIndex) else { return 0 }
+        guard !lineEndsDocument(at: glyphIndex) else { return 0 }
+        guard let paragraphStyle = paragraphStyle(at: glyphIndex) else { return 0 }
+        return paragraphStyle.paragraphSpacing
     }
 
     func codeBlockFrames(in textContainer: NSTextContainer) -> [(codeBlock: MarkdownCodeBlock, frame: NSRect)] {
@@ -185,6 +205,60 @@ final class MarkdownLayoutManager: NSLayoutManager {
         blockRect.origin.x += textContainer.lineFragmentPadding
         blockRect.size.width = max(0, blockRect.size.width - (textContainer.lineFragmentPadding * 2))
         return blockRect.integral
+    }
+
+    private func spacingAfterLineEndingGlyph(
+        at glyphIndex: Int,
+        keyPath: KeyPath<NSParagraphStyle, CGFloat>
+    ) -> CGFloat {
+        guard !lineEndsParagraph(at: glyphIndex) else { return 0 }
+        guard let paragraphStyle = paragraphStyle(at: glyphIndex) else { return 0 }
+        return paragraphStyle[keyPath: keyPath]
+    }
+
+    private func paragraphStyle(at glyphIndex: Int) -> NSParagraphStyle? {
+        guard let textStorage else { return nil }
+        let characterIndex = characterIndexForGlyph(at: glyphIndex)
+        guard characterIndex < textStorage.length else { return nil }
+        return textStorage.attribute(.paragraphStyle, at: characterIndex, effectiveRange: nil) as? NSParagraphStyle
+    }
+
+    private func lineEndsParagraph(at glyphIndex: Int) -> Bool {
+        guard let textStorage else { return true }
+        let string = textStorage.string as NSString
+        let characterIndex = characterIndexForGlyph(at: glyphIndex)
+
+        guard characterIndex < string.length else { return true }
+
+        if string.character(at: characterIndex).isMarkdownParagraphTerminator {
+            return true
+        }
+
+        let nextCharacterIndex = characterIndex + 1
+        guard nextCharacterIndex < string.length else { return true }
+        return string.character(at: nextCharacterIndex).isMarkdownParagraphTerminator
+    }
+
+    private func lineEndsDocument(at glyphIndex: Int) -> Bool {
+        guard let textStorage else { return true }
+        let string = textStorage.string as NSString
+        let characterIndex = characterIndexForGlyph(at: glyphIndex)
+
+        guard characterIndex < string.length else { return true }
+
+        if !string.character(at: characterIndex).isMarkdownParagraphTerminator {
+            return characterIndex == string.length - 1
+        }
+
+        let nextCharacterIndex = characterIndex + 1
+        return nextCharacterIndex >= string.length
+    }
+}
+
+private extension unichar {
+    var isMarkdownParagraphTerminator: Bool {
+        guard let scalar = UnicodeScalar(self) else { return false }
+        return CharacterSet.newlines.contains(scalar)
     }
 }
 #endif
