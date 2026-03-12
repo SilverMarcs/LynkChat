@@ -133,7 +133,7 @@ final class MarkdownContainerView: NSView {
     private func updateAppearance() {
         textView.codeBlockBackgroundColor = codeBlockBackgroundColor
         textView.quoteLineColor = quoteLineColor
-        updateCopyButtonAppearance()
+//        updateCopyButtonAppearance()
     }
 
     private func recalculateIfNeeded(for width: CGFloat, reportHeight: Bool) {
@@ -207,15 +207,15 @@ final class MarkdownContainerView: NSView {
             codeBlockButtons[codeBlock.id] = button
         }
 
-        updateCopyButtonAppearance()
+//        updateCopyButtonAppearance()
     }
 
-    private func updateCopyButtonAppearance() {
-        for button in codeBlockButtons.values {
-            button.contentTintColor = .labelColor
-            button.layer?.backgroundColor = .clear
-        }
-    }
+//    private func updateCopyButtonAppearance() {
+//        for button in codeBlockButtons.values {
+//            button.contentTintColor = .labelColor
+//            button.layer?.backgroundColor = .clear
+//        }
+//    }
 
     private func layoutCodeBlockButtons() {
         let codeBlockRects = Dictionary(
@@ -261,25 +261,11 @@ final class MarkdownContainerView: NSView {
     }
 
     private var codeBlockBackgroundColor: NSColor {
-        let windowColor = NSColor.windowBackgroundColor.usingColorSpace(.deviceRGB) ?? .windowBackgroundColor
-        let shadowColor = NSColor.black.withAlphaComponent(0.28).usingColorSpace(.deviceRGB) ?? .black
-        let lightModeShadow = NSColor.labelColor.withAlphaComponent(0.08).usingColorSpace(.deviceRGB) ?? .labelColor
-
-        switch effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) {
-        case .darkAqua:
-            return windowColor.blended(withFraction: 0.14, of: shadowColor) ?? windowColor
-        default:
-            return windowColor.blended(withFraction: 0.06, of: lightModeShadow) ?? windowColor
-        }
+        .quaternarySystemFill
     }
 
     private var quoteLineColor: NSColor {
-        switch effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) {
-        case .darkAqua:
-            return NSColor.tertiaryLabelColor.withAlphaComponent(0.4)
-        default:
-            return NSColor.secondaryLabelColor.withAlphaComponent(0.45)
-        }
+        .tertiaryLabelColor
     }
 }
 
