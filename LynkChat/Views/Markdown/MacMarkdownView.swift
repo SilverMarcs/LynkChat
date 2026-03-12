@@ -368,16 +368,11 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         static let minimumContentWidth: CGFloat = 160
     }
 
-    private static let syntaxHighlighter: Highlightr? = {
-        let highlighter = Highlightr()
-        highlighter?.setTheme(to: "atom-one-dark")
-        return highlighter
-    }()
-
     private let backgroundView = MarkdownBackgroundView()
     private let scrollView = MarkdownHorizontalScrollView()
     private let textView = MarkdownCodeTextView()
     private let copyButton = NSButton()
+    private let syntaxHighlighter = Highlightr()
     private var widthConstraint: NSLayoutConstraint?
     private var content: String
     private var language: String?
@@ -395,10 +390,6 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 
         backgroundView.wantsLayer = true
         backgroundView.layer?.cornerRadius = 12
-        backgroundView.layer?.backgroundColor = NSColor(
-            calibratedWhite: 0.12,
-            alpha: 1
-        ).cgColor
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
 
         copyButton.image = NSImage(
@@ -410,10 +401,8 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
         copyButton.controlSize = .small
         copyButton.target = self
         copyButton.action = #selector(copyCode)
-        copyButton.contentTintColor = .white
         copyButton.wantsLayer = true
         copyButton.layer?.cornerRadius = 8
-        copyButton.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
         copyButton.translatesAutoresizingMaskIntoConstraints = false
 
         scrollView.drawsBackground = false
@@ -465,12 +454,19 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             copyButton.heightAnchor.constraint(equalToConstant: Layout.buttonSize)
         ])
 
+        updateAppearance()
         update(content: content, language: language)
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateAppearance()
+        update(content: content, language: language)
     }
 
     func update(content: String, language: String?, codeFontSize: CGFloat? = nil) {
@@ -506,7 +502,7 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
 
     private func attributedCode() -> NSAttributedString {
         let codeFont = textView.codeFont
-        if let highlighted = Self.syntaxHighlighter?.highlight(content, as: language) {
+        if let highlighted = syntaxHighlighter?.highlight(content, as: language) {
             let output = NSMutableAttributedString(attributedString: highlighted)
             output.addAttribute(.font, value: codeFont, range: output.fullRange)
             return output
@@ -516,9 +512,38 @@ private final class MarkdownCodeBlockView: NSView, MarkdownMeasurable {
             string: content,
             attributes: [
                 .font: codeFont,
-                .foregroundColor: NSColor.white
+                .foregroundColor: NSColor.labelColor
             ]
         )
+    }
+
+    private func updateAppearance() {
+        syntaxHighlighter?.setTheme(to: colorSchemeThemeName)
+        backgroundView.layer?.backgroundColor = codeBlockBackgroundColor.cgColor
+        copyButton.contentTintColor = .labelColor
+        copyButton.layer?.backgroundColor = .clear
+    }
+
+    private var colorSchemeThemeName: String {
+        switch effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) {
+        case .darkAqua:
+            "atom-one-dark"
+        default:
+            "atom-one-light"
+        }
+    }
+
+    private var codeBlockBackgroundColor: NSColor {
+        let windowColor = NSColor.windowBackgroundColor.usingColorSpace(.deviceRGB) ?? .windowBackgroundColor
+        let shadowColor = NSColor.black.withAlphaComponent(0.28).usingColorSpace(.deviceRGB) ?? .black
+        let lightModeShadow = NSColor.labelColor.withAlphaComponent(0.08).usingColorSpace(.deviceRGB) ?? .labelColor
+
+        switch effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) {
+        case .darkAqua:
+            return windowColor.blended(withFraction: 0.14, of: shadowColor) ?? windowColor
+        default:
+            return windowColor.blended(withFraction: 0.06, of: lightModeShadow) ?? windowColor
+        }
     }
 
     private func updateTextViewFrame() {
@@ -1089,10 +1114,10 @@ private struct MacMarkdownRenderer {
 
     private func headingFont(for level: Int) -> NSFont {
         switch level {
-        case 1: return .systemFont(ofSize: bodyFontSize + 14, weight: .bold)
-        case 2: return .systemFont(ofSize: bodyFontSize + 9, weight: .bold)
-        case 3: return .systemFont(ofSize: bodyFontSize + 6, weight: .semibold)
-        case 4: return .systemFont(ofSize: bodyFontSize + 3, weight: .semibold)
+        case 1: return .systemFont(ofSize: bodyFontSize + 11, weight: .bold)
+        case 2: return .systemFont(ofSize: bodyFontSize + 6, weight: .bold)
+        case 3: return .systemFont(ofSize: bodyFontSize + 3, weight: .semibold)
+        case 4: return .systemFont(ofSize: bodyFontSize, weight: .semibold)
         default: return .systemFont(ofSize: bodyFontSize, weight: .regular)
         }
     }
