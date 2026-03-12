@@ -11,13 +11,13 @@ final class MarkdownContainerView: NSView {
     private var currentWidth: CGFloat = 0
     private var lastReportedHeight: CGFloat = 0
     private var lastMeasuredSize: CGSize = .zero
-    private var currentRender: MarkdownRenderCache?
+    private var currentDocument: MarkdownRenderedDocument?
+    private var currentRequest: MarkdownRenderRequest?
     private var currentThemeName: String?
-    private var sourceText = ""
-    private var sourceFontSize: CGFloat = 0
+    private var isShowingPlaceholder = false
     private var needsMeasurement = false
     private var codeBlockButtons: [Int: NSButton] = [:]
-    var renderProvider: ((String, CGFloat, String) -> MarkdownRenderCache)?
+    var onThemeChange: ((String) -> Void)?
     var onHeightChange: ((CGFloat) -> Void)?
 
     private var widthConstraint: NSLayoutConstraint?
@@ -64,7 +64,7 @@ final class MarkdownContainerView: NSView {
         guard currentThemeName != themeName else { return }
         currentThemeName = themeName
         updateAppearance()
-        refreshRenderIfNeeded(force: true)
+        onThemeChange?(themeName)
     }
 
     override func layout() {
@@ -81,10 +81,38 @@ final class MarkdownContainerView: NSView {
         NSSize(width: lastMeasuredSize.width, height: lastMeasuredSize.height)
     }
 
-    func update(text: String, fontSize: CGFloat) {
-        sourceText = text
-        sourceFontSize = fontSize
-        refreshRenderIfNeeded(force: false)
+    var activeThemeName: String {
+        currentThemeName ?? colorSchemeThemeName
+    }
+
+    func showPlaceholder(text: String, fontSize: CGFloat, for request: MarkdownRenderRequest) {
+        currentThemeName = request.themeName
+        updateAppearance()
+
+        guard currentRequest != request || !isShowingPlaceholder else {
+            recalculateIfNeeded(for: currentWidth, reportHeight: true)
+            return
+        }
+
+        currentRequest = request
+        currentDocument = nil
+        isShowingPlaceholder = true
+        display(document: .placeholder(text: text, fontSize: fontSize))
+    }
+
+    func apply(document: MarkdownRenderedDocument, for request: MarkdownRenderRequest) {
+        currentThemeName = request.themeName
+        updateAppearance()
+
+        guard currentRequest != request || isShowingPlaceholder || currentDocument == nil else {
+            recalculateIfNeeded(for: currentWidth, reportHeight: true)
+            return
+        }
+
+        currentRequest = request
+        currentDocument = document
+        isShowingPlaceholder = false
+        display(document: document)
     }
 
     func measuredSize(for width: CGFloat) -> CGSize {
@@ -92,26 +120,9 @@ final class MarkdownContainerView: NSView {
         return lastMeasuredSize
     }
 
-    private func refreshRenderIfNeeded(force: Bool) {
-        let themeName = colorSchemeThemeName
-        currentThemeName = themeName
-
-        guard let renderProvider else {
-            recalculateIfNeeded(for: currentWidth, reportHeight: true)
-            return
-        }
-
-        let render = renderProvider(sourceText, sourceFontSize, themeName)
-        updateAppearance()
-
-        guard force || currentRender !== render else {
-            recalculateIfNeeded(for: currentWidth, reportHeight: true)
-            return
-        }
-
-        currentRender = render
-        textView.update(document: render.document)
-        syncCodeBlockButtons(with: render.document.codeBlocks)
+    private func display(document: MarkdownRenderedDocument) {
+        textView.update(document: document)
+        syncCodeBlockButtons(with: document.codeBlocks)
         needsMeasurement = true
         needsLayout = true
         invalidateIntrinsicContentSize()
@@ -165,9 +176,7 @@ final class MarkdownContainerView: NSView {
         guard measuredHeight > 0, measuredHeight != lastReportedHeight else { return }
 
         lastReportedHeight = measuredHeight
-        Task { @MainActor in
-            self.onHeightChange?(measuredHeight)
-        }
+        onHeightChange?(measuredHeight)
     }
 
     private func syncCodeBlockButtons(with codeBlocks: [MarkdownCodeBlock]) {
@@ -234,7 +243,7 @@ final class MarkdownContainerView: NSView {
     private func copyCodeBlock(_ sender: NSButton) {
         guard let identifier = sender.identifier?.rawValue,
               let codeBlockID = Int(identifier),
-              let codeBlock = currentRender?.document.codeBlocks.first(where: { $0.id == codeBlockID }) else {
+              let codeBlock = currentDocument?.codeBlocks.first(where: { $0.id == codeBlockID }) else {
             return
         }
 

@@ -3,25 +3,49 @@ import Foundation
 import Highlightr
 
 #if os(macOS)
-struct MarkdownRenderedDocument {
+struct MarkdownRenderedDocument: @unchecked Sendable {
+    // This is an immutable render snapshot that is produced off the main actor
+    // and then handed to the main actor for display without subsequent mutation.
     let attributedString: NSAttributedString
     let codeBlocks: [MarkdownCodeBlock]
     let quoteBlocks: [MarkdownQuoteBlock]
 }
 
-struct MarkdownCodeBlock {
+struct MarkdownCodeBlock: Sendable {
     let id: Int
     let range: NSRange
     let content: String
 }
 
-struct MarkdownQuoteBlock {
+struct MarkdownQuoteBlock: Sendable {
     let range: NSRange
     let depth: Int
     let identity: Int
 }
 
-struct MacMarkdownRenderer {
+extension MarkdownRenderedDocument {
+    static func placeholder(text: String, fontSize: CGFloat) -> MarkdownRenderedDocument {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4
+
+        let attributedString = NSAttributedString(
+            string: text,
+            attributes: [
+                .font: NSFont.systemFont(ofSize: max(fontSize, 13), weight: .regular),
+                .foregroundColor: NSColor.labelColor,
+                .paragraphStyle: paragraphStyle
+            ]
+        )
+
+        return MarkdownRenderedDocument(
+            attributedString: attributedString,
+            codeBlocks: [],
+            quoteBlocks: []
+        )
+    }
+}
+
+struct MacMarkdownRenderer: Sendable {
     private enum Segment {
         case markdown(String)
         case codeBlock(String, language: String?)
@@ -86,17 +110,18 @@ struct MacMarkdownRenderer {
     private let codeFontSize: CGFloat
     private let themeName: String
 
-    init(fontSize: CGFloat, themeName: String) {
+    nonisolated init(fontSize: CGFloat, themeName: String) {
         bodyFontSize = max(fontSize, 13)
         codeFontSize = max(bodyFontSize - 1, 12)
         self.themeName = themeName
     }
 
-    func render(_ markdown: String) -> MarkdownRenderedDocument {
+    nonisolated func render(_ markdown: String) -> MarkdownRenderedDocument {
         let output = NSMutableAttributedString()
         var codeBlocks: [MarkdownCodeBlock] = []
         var quoteBlocks: [MarkdownQuoteBlock] = []
         var nextCodeBlockID = 0
+        let highlighter = configuredHighlighter()
 
         for segment in parseSegments(markdown) {
             let attributedSegment: NSAttributedString?
@@ -108,7 +133,8 @@ struct MacMarkdownRenderer {
                 attributedSegment = renderedCodeBlock(
                     content: code,
                     language: language,
-                    blockID: nextCodeBlockID
+                    blockID: nextCodeBlockID,
+                    highlighter: highlighter
                 )
                 nextCodeBlockID += 1
             }
@@ -151,7 +177,7 @@ struct MacMarkdownRenderer {
         )
     }
 
-    private func renderedMarkdownSegment(from markdown: String) -> NSAttributedString? {
+    private nonisolated func renderedMarkdownSegment(from markdown: String) -> NSAttributedString? {
         guard !markdown.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return nil
         }
@@ -161,10 +187,12 @@ struct MacMarkdownRenderer {
         return attributedString
     }
 
-    private func renderedCodeBlock(content: String, language: String?, blockID: Int) -> NSAttributedString {
-        let highlighter = Highlightr()
-        highlighter?.setTheme(to: themeName)
-
+    private nonisolated func renderedCodeBlock(
+        content: String,
+        language: String?,
+        blockID: Int,
+        highlighter: Highlightr?
+    ) -> NSAttributedString {
         let codeFont = NSFont.monospacedSystemFont(ofSize: codeFontSize, weight: .regular)
         let output: NSMutableAttributedString
 
@@ -186,7 +214,13 @@ struct MacMarkdownRenderer {
         return output
     }
 
-    private func parseSegments(_ markdown: String) -> [Segment] {
+    private nonisolated func configuredHighlighter() -> Highlightr? {
+        let highlighter = Highlightr()
+        highlighter?.setTheme(to: themeName)
+        return highlighter
+    }
+
+    private nonisolated func parseSegments(_ markdown: String) -> [Segment] {
         let lines = markdown.components(separatedBy: .newlines)
         var segments: [Segment] = []
         var markdownLines: [String] = []
@@ -235,7 +269,7 @@ struct MacMarkdownRenderer {
         return segments
     }
 
-    private func parseCodeBlockLanguage(from trimmedFenceLine: String) -> String? {
+    private nonisolated func parseCodeBlockLanguage(from trimmedFenceLine: String) -> String? {
         let languageHint = trimmedFenceLine
             .dropFirst(3)
             .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -250,7 +284,7 @@ struct MacMarkdownRenderer {
             .map(String.init)
     }
 
-    private func styledMarkdown(_ markdown: String) -> NSAttributedString {
+    private nonisolated func styledMarkdown(_ markdown: String) -> NSAttributedString {
         let parsed: NSMutableAttributedString
 
         if let attributed = try? NSAttributedString(
@@ -309,7 +343,7 @@ struct MacMarkdownRenderer {
         return output
     }
 
-    private func renderedTextUnits(from attributedString: NSAttributedString) -> [RenderedTextUnit] {
+    private nonisolated func renderedTextUnits(from attributedString: NSAttributedString) -> [RenderedTextUnit] {
         let fullRange = attributedString.fullRange
         guard fullRange.length > 0 else { return [] }
 
@@ -349,7 +383,7 @@ struct MacMarkdownRenderer {
         return units
     }
 
-    private func blockContext(for presentationIntent: PresentationIntent?) -> BlockContext {
+    private nonisolated func blockContext(for presentationIntent: PresentationIntent?) -> BlockContext {
         let context = presentationContext(for: presentationIntent)
 
         if let listContext = context.listContext {
@@ -385,7 +419,7 @@ struct MacMarkdownRenderer {
         )
     }
 
-    private func presentationContext(for presentationIntent: PresentationIntent?) -> MarkdownPresentationContext {
+    private nonisolated func presentationContext(for presentationIntent: PresentationIntent?) -> MarkdownPresentationContext {
         let components = presentationIntent?.components ?? []
         let quoteIdentity = components.first { component in
             if case .blockQuote = component.kind {
@@ -462,7 +496,7 @@ struct MacMarkdownRenderer {
         )
     }
 
-    private func isParagraph(_ component: PresentationIntent.IntentType) -> Bool {
+    private nonisolated func isParagraph(_ component: PresentationIntent.IntentType) -> Bool {
         if case .paragraph = component.kind {
             true
         } else {
@@ -470,7 +504,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func isHeader(_ component: PresentationIntent.IntentType) -> Bool {
+    private nonisolated func isHeader(_ component: PresentationIntent.IntentType) -> Bool {
         if case .header = component.kind {
             true
         } else {
@@ -478,7 +512,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func isList(_ component: PresentationIntent.IntentType) -> Bool {
+    private nonisolated func isList(_ component: PresentationIntent.IntentType) -> Bool {
         switch component.kind {
         case .orderedList, .unorderedList:
             true
@@ -487,7 +521,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func isListItem(_ component: PresentationIntent.IntentType) -> Bool {
+    private nonisolated func isListItem(_ component: PresentationIntent.IntentType) -> Bool {
         if case .listItem = component.kind {
             true
         } else {
@@ -495,7 +529,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func isThematicBreak(_ component: PresentationIntent.IntentType) -> Bool {
+    private nonisolated func isThematicBreak(_ component: PresentationIntent.IntentType) -> Bool {
         if case .thematicBreak = component.kind {
             true
         } else {
@@ -503,7 +537,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func styledBlock(_ unit: RenderedTextUnit) -> NSAttributedString {
+    private nonisolated func styledBlock(_ unit: RenderedTextUnit) -> NSAttributedString {
         switch unit.context.kind {
         case .listItem:
             return styledListItem(unit)
@@ -531,7 +565,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func styledListItem(_ unit: RenderedTextUnit) -> NSAttributedString {
+    private nonisolated func styledListItem(_ unit: RenderedTextUnit) -> NSAttributedString {
         guard case .listItem(let listContext) = unit.context.kind else {
             return styledBlock(unit)
         }
@@ -563,7 +597,7 @@ struct MacMarkdownRenderer {
         return output
     }
 
-    private func thematicBreakAttributedString(quoteDepth: Int) -> NSAttributedString {
+    private nonisolated func thematicBreakAttributedString(quoteDepth: Int) -> NSAttributedString {
         NSAttributedString(
             string: String(repeating: "─", count: 18),
             attributes: [
@@ -577,7 +611,7 @@ struct MacMarkdownRenderer {
         )
     }
 
-    private func listMarker(for marker: ListMarker) -> BlockContext.ListContext.Marker {
+    private nonisolated func listMarker(for marker: ListMarker) -> BlockContext.ListContext.Marker {
         switch marker {
         case .bullet:
             return .bullet
@@ -586,7 +620,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func normalizeFonts(in attributedString: NSMutableAttributedString) {
+    private nonisolated func normalizeFonts(in attributedString: NSMutableAttributedString) {
         let fullRange = attributedString.fullRange
 
         if fullRange.length == 0 {
@@ -618,7 +652,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func applyInlineCodeStyling(to attributedString: NSMutableAttributedString) {
+    private nonisolated func applyInlineCodeStyling(to attributedString: NSMutableAttributedString) {
         let fullRange = attributedString.fullRange
         guard fullRange.length > 0 else { return }
 
@@ -642,7 +676,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func codeBlockParagraphStyle() -> NSParagraphStyle {
+    private nonisolated func codeBlockParagraphStyle() -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 3
         style.firstLineHeadIndent = 14
@@ -652,7 +686,7 @@ struct MacMarkdownRenderer {
         return style
     }
 
-    private func renderedQuoteBlocks(
+    private nonisolated func renderedQuoteBlocks(
         from markdown: String,
         in attributedString: NSAttributedString,
         at location: Int
@@ -737,7 +771,7 @@ struct MacMarkdownRenderer {
         return quoteBlocks
     }
 
-    private func mergeQuoteBlocks(_ quoteBlocks: inout [MarkdownQuoteBlock], with newBlocks: [MarkdownQuoteBlock]) {
+    private nonisolated func mergeQuoteBlocks(_ quoteBlocks: inout [MarkdownQuoteBlock], with newBlocks: [MarkdownQuoteBlock]) {
         for block in newBlocks {
             guard let lastBlock = quoteBlocks.last else {
                 quoteBlocks.append(block)
@@ -765,7 +799,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func markerText(for marker: BlockContext.ListContext.Marker) -> String {
+    private nonisolated func markerText(for marker: BlockContext.ListContext.Marker) -> String {
         switch marker {
         case .bullet:
             "•"
@@ -774,28 +808,28 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func paragraphStyle() -> NSParagraphStyle {
+    private nonisolated func paragraphStyle() -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4
         style.paragraphSpacing = 0
         return style
     }
 
-    private func centeredParagraphStyle() -> NSParagraphStyle {
+    private nonisolated func centeredParagraphStyle() -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.alignment = .center
         return style
     }
 
-    private func separatorColor() -> NSColor {
+    private nonisolated func separatorColor() -> NSColor {
         NSColor.labelColor.withAlphaComponent(0.3)
     }
 
-    private func quoteTextColor() -> NSColor {
+    private nonisolated func quoteTextColor() -> NSColor {
         NSColor.secondaryLabelColor
     }
 
-    private func listParagraphStyle(markerIndent: CGFloat, marker: String, font: NSFont? = nil) -> NSParagraphStyle {
+    private nonisolated func listParagraphStyle(markerIndent: CGFloat, marker: String, font: NSFont? = nil) -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
         let markerFont = font ?? bodyFont()
         let markerWidth = marker.size(withAttributes: [.font: markerFont]).width
@@ -808,7 +842,7 @@ struct MacMarkdownRenderer {
         return style
     }
 
-    private func paragraphStyle(
+    private nonisolated func paragraphStyle(
         _ baseStyle: NSParagraphStyle,
         adjustedForQuoteDepth quoteDepth: Int
     ) -> NSParagraphStyle {
@@ -823,7 +857,7 @@ struct MacMarkdownRenderer {
         return style
     }
 
-    private func headingFont(for level: Int) -> NSFont {
+    private nonisolated func headingFont(for level: Int) -> NSFont {
         switch level {
         case 1: return .systemFont(ofSize: bodyFontSize + 11, weight: .bold)
         case 2: return .systemFont(ofSize: bodyFontSize + 6, weight: .bold)
@@ -833,7 +867,7 @@ struct MacMarkdownRenderer {
         }
     }
 
-    private func bodyFont() -> NSFont {
+    private nonisolated func bodyFont() -> NSFont {
         .systemFont(ofSize: bodyFontSize, weight: .regular)
     }
 }
