@@ -17,6 +17,7 @@ class ShareViewController: UIViewController {
     private enum Const {
         static let groupID = "group.com.temporary.lynkchat"
         static let contentKey = "sharedContent"
+        static let imagePathsKey = "sharedImagePaths"
         static let dateKey = "sharedContentDate"
         static let schemeURL = "lynkchat://share"
     }
@@ -39,13 +40,25 @@ class ShareViewController: UIViewController {
             return
         }
 
-        // Collect first URL or text from each provider (usually only one in real-world share sheet usage)
+        // Collect text/URL strings and image file paths from each provider
         var collected: [String] = []
+        var imagePaths: [String] = []
         let group = DispatchGroup()
         let lock = NSLock()
 
         for provider in providers {
-            // Prioritize URL over text for each provider
+            // Prioritize image over URL/text for each provider
+            if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
+                group.enter()
+                provider.loadItem(forTypeIdentifier: UTType.image.identifier, options: nil) { item, error in
+                    defer { group.leave() }
+                    guard let imageData = Self.imageData(from: item) else { return }
+                    if let path = Self.saveImageToSharedContainer(imageData) {
+                        lock.lock(); imagePaths.append(path); lock.unlock()
+                    }
+                }
+                continue
+            }
             if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
                 group.enter()
                 provider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { item, error in
@@ -70,24 +83,64 @@ class ShareViewController: UIViewController {
 
         group.notify(queue: .main) { [weak self] in
             guard let self else { return }
-            guard let first = collected.first else {
+            let hasText = !collected.isEmpty
+            let hasImages = !imagePaths.isEmpty
+            guard hasText || hasImages else {
                 self.finish()
                 return
             }
-            // If multiple, join with newlines so main app can parse later.
-            let payload = collected.count > 1 ? collected.joined(separator: "\n") : first
-            self.store(payload)
+            if hasText {
+                let payload = collected.count > 1 ? collected.joined(separator: "\n") : collected.first!
+                self.storeText(payload)
+            }
+            if hasImages {
+                self.storeImagePaths(imagePaths)
+            }
             self.openHostAppAndFinish()
         }
     }
 
-    private func store(_ string: String) {
-        guard let ud = UserDefaults(suiteName: Const.groupID) else {
-            return
-        }
+    private func storeText(_ string: String) {
+        guard let ud = UserDefaults(suiteName: Const.groupID) else { return }
         ud.set(string, forKey: Const.contentKey)
         ud.set(Date(), forKey: Const.dateKey)
         ud.synchronize()
+    }
+
+    private func storeImagePaths(_ paths: [String]) {
+        guard let ud = UserDefaults(suiteName: Const.groupID) else { return }
+        ud.set(paths, forKey: Const.imagePathsKey)
+        ud.set(Date(), forKey: Const.dateKey)
+        ud.synchronize()
+    }
+
+    /// Convert the loaded item into JPEG data regardless of its original form.
+    private static func imageData(from item: NSSecureCoding?) -> Data? {
+        if let url = item as? URL, let data = try? Data(contentsOf: url) {
+            return UIImage(data: data)?.jpegData(compressionQuality: 0.85)
+        }
+        if let image = item as? UIImage {
+            return image.jpegData(compressionQuality: 0.85)
+        }
+        if let data = item as? Data {
+            return UIImage(data: data)?.jpegData(compressionQuality: 0.85)
+        }
+        return nil
+    }
+
+    /// Save image data into the shared App Group container and return the file path.
+    private static func saveImageToSharedContainer(_ data: Data) -> String? {
+        guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Const.groupID) else { return nil }
+        let imagesDir = containerURL.appendingPathComponent("SharedImages", isDirectory: true)
+        try? FileManager.default.createDirectory(at: imagesDir, withIntermediateDirectories: true)
+        let fileName = UUID().uuidString + ".jpg"
+        let fileURL = imagesDir.appendingPathComponent(fileName)
+        do {
+            try data.write(to: fileURL)
+            return fileURL.path
+        } catch {
+            return nil
+        }
     }
 
     private func openHostAppAndFinish() {

@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import UniformTypeIdentifiers
 
 #if os(iOS)
 import UIKit
 
 extension Notification.Name {
     static let sharedContentReceived = Notification.Name("sharedContentReceived")
+    static let sharedImagesReceived = Notification.Name("sharedImagesReceived")
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -35,19 +37,29 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     private func checkForSharedContent() {
         guard let ud = UserDefaults(suiteName: "group.com.temporary.lynkchat") else { return }
-        guard let payload = ud.string(forKey: "sharedContent"), !payload.isEmpty else {
-            return
+
+        let payload = ud.string(forKey: "sharedContent")
+        let imagePaths = ud.stringArray(forKey: "sharedImagePaths")
+
+        if let payload, !payload.isEmpty {
+            NotificationCenter.default.post(
+                name: .sharedContentReceived,
+                object: nil,
+                userInfo: ["payload": payload]
+            )
         }
 
-        // Post notification with the payload
-        NotificationCenter.default.post(
-            name: .sharedContentReceived,
-            object: nil,
-            userInfo: ["payload": payload]
-        )
+        if let imagePaths, !imagePaths.isEmpty {
+            NotificationCenter.default.post(
+                name: .sharedImagesReceived,
+                object: nil,
+                userInfo: ["imagePaths": imagePaths]
+            )
+        }
 
         // Clear after handling
         ud.removeObject(forKey: "sharedContent")
+        ud.removeObject(forKey: "sharedImagePaths")
         ud.removeObject(forKey: "sharedContentDate")
         ud.synchronize()
     }
@@ -83,19 +95,29 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
     
     private func checkForSharedContent() {
         guard let ud = UserDefaults(suiteName: "group.com.temporary.lynkchat") else { return }
-        guard let payload = ud.string(forKey: "sharedContent"), !payload.isEmpty else {
-            return
+
+        let payload = ud.string(forKey: "sharedContent")
+        let imagePaths = ud.stringArray(forKey: "sharedImagePaths")
+
+        if let payload, !payload.isEmpty {
+            NotificationCenter.default.post(
+                name: .sharedContentReceived,
+                object: nil,
+                userInfo: ["payload": payload]
+            )
         }
 
-        // Post notification with the payload
-        NotificationCenter.default.post(
-            name: .sharedContentReceived,
-            object: nil,
-            userInfo: ["payload": payload]
-        )
+        if let imagePaths, !imagePaths.isEmpty {
+            NotificationCenter.default.post(
+                name: .sharedImagesReceived,
+                object: nil,
+                userInfo: ["imagePaths": imagePaths]
+            )
+        }
 
         // Clear after handling
         ud.removeObject(forKey: "sharedContent")
+        ud.removeObject(forKey: "sharedImagePaths")
         ud.removeObject(forKey: "sharedContentDate")
         ud.synchronize()
     }

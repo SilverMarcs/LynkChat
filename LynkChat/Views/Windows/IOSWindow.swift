@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct IOSWindow: Scene {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
@@ -36,6 +37,19 @@ struct IOSWindow: Scene {
                 if let payload = notification.userInfo?["payload"] as? String {
                     let newChat = chatVM.createNewChat(delay: true)
                     newChat.inputManager.prompt = payload
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .sharedImagesReceived)) { notification in
+                if let paths = notification.userInfo?["imagePaths"] as? [String] {
+                    let newChat = chatVM.createNewChat(delay: true)
+                    for path in paths {
+                        let url = URL(fileURLWithPath: path)
+                        guard let data = try? Data(contentsOf: url) else { continue }
+                        let typedData = TypedData(data: data, fileType: .jpeg, fileName: url.lastPathComponent)
+                        newChat.inputManager.dataFiles.append(typedData)
+                        // Clean up the shared file
+                        try? FileManager.default.removeItem(at: url)
+                    }
                 }
             }
         }
@@ -120,6 +134,18 @@ struct IOSWindow: Scene {
             if let payload = notification.userInfo?["payload"] as? String {
                 let newChat = chatVM.createNewChat(delay: true)
                 newChat.inputManager.prompt = payload
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .sharedImagesReceived)) { notification in
+            if let paths = notification.userInfo?["imagePaths"] as? [String] {
+                let newChat = chatVM.createNewChat(delay: true)
+                for path in paths {
+                    let url = URL(fileURLWithPath: path)
+                    guard let data = try? Data(contentsOf: url) else { continue }
+                    let typedData = TypedData(data: data, fileType: .jpeg, fileName: url.lastPathComponent)
+                    newChat.inputManager.dataFiles.append(typedData)
+                    try? FileManager.default.removeItem(at: url)
+                }
             }
         }
 //            .onAppIntentExecution(CreateChatIntent.self) { intent in
