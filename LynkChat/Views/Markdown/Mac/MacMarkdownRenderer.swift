@@ -2,7 +2,6 @@ import AppKit
 import Foundation
 import Highlightr
 
-#if os(macOS)
 struct MarkdownRenderedDocument: @unchecked Sendable {
     // This is an immutable render snapshot that is produced off the main actor
     // and then handed to the main actor for display without subsequent mutation.
@@ -187,6 +186,7 @@ struct MacMarkdownRenderer: Sendable {
     private nonisolated(unsafe) let cachedCodeBlockParagraphStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedCodeBlockSpacerStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedTableSpacerStyle: NSParagraphStyle
+    private nonisolated(unsafe) let cachedBulletMarkerWidth: CGFloat
 
     nonisolated init(fontSize: CGFloat, themeName: String) {
         bodyFontSize = max(fontSize, 13)
@@ -208,6 +208,9 @@ struct MacMarkdownRenderer: Sendable {
 
         cachedCodeBlockSpacerStyle = Self.makeSpacerStyle(height: 8)
         cachedTableSpacerStyle = Self.makeSpacerStyle(height: 1)
+
+        let bodyFont = NSFont.systemFont(ofSize: bodyFontSize, weight: .regular)
+        cachedBulletMarkerWidth = "•".size(withAttributes: [.font: bodyFont]).width
     }
 
     private static func makeSpacerStyle(height: CGFloat) -> NSParagraphStyle {
@@ -966,21 +969,12 @@ struct MacMarkdownRenderer: Sendable {
             }
 
             let traits = font.fontDescriptor.symbolicTraits
-            let weight: NSFont.Weight
-            if traits.contains(.bold) {
-                weight = .semibold
-            } else {
-                weight = .regular
-            }
 
-            let normalizedFont: NSFont
-            if traits.contains(.monoSpace) {
-                normalizedFont = .monospacedSystemFont(ofSize: codeFontSize, weight: weight)
-            } else {
-                normalizedFont = .systemFont(ofSize: bodyFontSize, weight: weight)
-            }
+            // Skip monospace ranges — applyInlineCodeStyling handles inline code fonts
+            guard !traits.contains(.monoSpace) else { return }
 
-            attributedString.addAttribute(.font, value: normalizedFont, range: range)
+            let weight: NSFont.Weight = traits.contains(.bold) ? .semibold : .regular
+            attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: bodyFontSize, weight: weight), range: range)
         }
     }
 
@@ -1065,10 +1059,14 @@ struct MacMarkdownRenderer: Sendable {
         NSColor.secondaryLabelColor
     }
 
-    private nonisolated func listParagraphStyle(markerIndent: CGFloat, marker: String, font: NSFont? = nil) -> NSParagraphStyle {
+    private nonisolated func listParagraphStyle(markerIndent: CGFloat, marker: String) -> NSParagraphStyle {
         let style = NSMutableParagraphStyle()
-        let markerFont = font ?? bodyFont()
-        let markerWidth = marker.size(withAttributes: [.font: markerFont]).width
+        let markerWidth: CGFloat
+        if marker == "•" {
+            markerWidth = cachedBulletMarkerWidth
+        } else {
+            markerWidth = marker.size(withAttributes: [.font: bodyFont()]).width
+        }
         let contentIndent = markerIndent + markerWidth + 10
         style.firstLineHeadIndent = markerIndent
         style.headIndent = contentIndent
@@ -1122,4 +1120,3 @@ extension NSAttributedString.Key {
     fileprivate nonisolated static let markdownTableBlockID = Self("LynkChatMarkdownTableBlockID")
     static let markdownThematicBreak = Self("LynkChatMarkdownThematicBreak")
 }
-#endif

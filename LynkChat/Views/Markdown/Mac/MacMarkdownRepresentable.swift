@@ -1,6 +1,5 @@
 import SwiftUI
 
-#if os(macOS)
 struct MarkdownRenderRequest: Hashable, Sendable {
     let text: String
     let fontSize: CGFloat
@@ -196,7 +195,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
             }
 
             return MarkdownRenderedDocument(
-                attributedString: streamingBuffer!,
+                attributedString: NSAttributedString(attributedString: streamingBuffer!),
                 codeBlocks: lastRenderedDocument.codeBlocks,
                 quoteBlocks: lastRenderedDocument.quoteBlocks,
                 tableBlocks: lastRenderedDocument.tableBlocks,
@@ -263,14 +262,6 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
         context: Context
     ) -> CGSize? {
         guard let width = proposal.width else { return nil }
-        context.coordinator.update(
-            nsView: nsView,
-            text: text,
-            fontSize: fontSize,
-            themeName: nsView.activeThemeName,
-            isStreaming: isStreaming
-        )
         return nsView.measuredSize(for: width)
     }
 }
-#endif

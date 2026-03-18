@@ -1,6 +1,5 @@
 import AppKit
 
-#if os(macOS)
 final class MarkdownContainerView: NSView {
     private enum Layout {
         static let copyButtonInset: CGFloat = 4
@@ -253,8 +252,9 @@ final class MarkdownContainerView: NSView {
                 width: Layout.copyButtonSize,
                 height: Layout.copyButtonSize
             ).integral
-            button.isHidden = id != hoveredCodeBlockID
         }
+
+        updateCopyButtonVisibility()
     }
 
     private func updateHoveredCodeBlock(for event: NSEvent) {
@@ -315,4 +315,3 @@ func markdownAncestorMenu(from view: NSView) -> NSMenu? {
 
     return nil
 }
-#endif
