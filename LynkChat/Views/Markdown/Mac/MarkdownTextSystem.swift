@@ -1,6 +1,5 @@
 import AppKit
 
-#if os(macOS)
 final class MarkdownPlainTextView: NSTextView {
     let markdownTextStorage = NSTextStorage()
     let markdownLayoutManager = MarkdownLayoutManager()
@@ -496,4 +495,3 @@ private extension unichar {
         return CharacterSet.newlines.contains(scalar)
     }
 }
-#endif

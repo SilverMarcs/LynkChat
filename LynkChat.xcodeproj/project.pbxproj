@@ -119,7 +119,13 @@
 				Views/Markdown/Mac/MacMarkdownRepresentable.swift = (
 					macos,
 				);
+				Views/Markdown/Mac/MacMarkdownView.swift = (
+					macos,
+				);
 				Views/Markdown/Mac/MarkdownContainerView.swift = (
+					macos,
+				);
+				Views/Markdown/Mac/MarkdownTextSystem.swift = (
 					macos,
 				);
 				Views/Onboarding/PermissionsOnboarding.swift = (

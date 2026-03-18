@@ -1,6 +1,5 @@
 import SwiftUI
 
-#if os(macOS)
 struct MacMarkdownView: View {
     let text: String
     let fontSize: CGFloat
@@ -16,4 +15,3 @@ struct MacMarkdownView: View {
         )
     }
 }
-#endif
