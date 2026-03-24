@@ -156,6 +156,12 @@ final class Chat: Equatable, Identifiable, Hashable {
             content = inputManager.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         
+        // Bangs: !g switches to perplexity
+        if content.hasPrefix("!g ") {
+            content = String(content.dropFirst(3))
+            config.model = .perplexity
+        }
+
         guard !content.isEmpty else {
             return
         }
