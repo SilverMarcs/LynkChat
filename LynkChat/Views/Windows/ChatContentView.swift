@@ -33,6 +33,7 @@ struct ChatContentView: View {
                          : "Select or create a chat to get started")
                     .font(.title)
                 }
+				 .defaultScrollAnchor(.center)
             }
         }
         .onAppear {
