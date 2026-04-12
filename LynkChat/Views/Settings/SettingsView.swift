@@ -80,7 +80,7 @@ struct SettingsView: View {
         }
         
         Section("Services") {
-            let services: [SettingsCategory] = godMode.isActivated ? [.audioService, .chatService, .imageService] : [.audioService, .chatService]
+            let services: [SettingsCategory] = godMode.isActivated ? [.chatService, .imageService] : [.chatService]
             ForEach(services, id: \.self) { category in
                 NavigationLink(value: category) {
                     Label(category.rawValue, systemImage: category.systemImage)
