@@ -51,8 +51,6 @@ struct ChatListCards: View {
         case .images:
             openWindow(id: WindowID.chats)
             dismissWindow(id: WindowID.images)
-        case .audio:
-            print("TBI")
         }
     }
     

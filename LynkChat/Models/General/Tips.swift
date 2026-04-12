@@ -106,24 +106,6 @@ struct ContextMenuTip: Tip {
     }
 }
 
-struct AudioUploadingTip: Tip {
-    var title: Text {
-        Text("Audio Files")
-    }
-    
-    var message: Text? {
-        Text("Uploading audio files may take a moment. Please wait a moment after sending the message.")
-    }
-    
-    var image: Image? {
-        Image(systemName: "waveform")
-    }
-    
-    var options: [Option] {
-        MaxDisplayCount(2)
-    }
-}
-
 struct TemporaryChatTip: Tip {
     var title: Text {
         Text("Temporary Chat")

@@ -26,8 +26,6 @@ struct IOSWindow: Scene {
                     chatRootView
                 case .images:
                     imageRootView
-                case .audio:
-                    LiveAudioView()
                 }
             }
             .fullScreenCover(isPresented: .constant(!hasCompletedOnboarding)) {
@@ -116,10 +114,6 @@ struct IOSWindow: Scene {
             
             Tab("Images", systemImage: "photo.on.rectangle.angled") {
                 ImageList(selection: $selection)
-            }
-            
-            Tab("Live", systemImage: "waveform") {
-                LiveAudioView()
             }
             
             // Settings Tab

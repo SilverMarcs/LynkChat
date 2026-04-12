@@ -11,7 +11,6 @@ enum SettingsCategory: String, Hashable, CaseIterable {
     case general = "General"
     case quickPanel = "Quick Panel"
     case shortcuts = "Shortcuts"
-    case audioService = "Audio Service"
     case chatService = "Chat Service"
     case imageService = "Image Service"
     case about = "About"
@@ -22,7 +21,6 @@ enum SettingsCategory: String, Hashable, CaseIterable {
         case .general: return "gear"
         case .quickPanel: return "bolt.fill"
         case .shortcuts: return "command"
-        case .audioService: return "waveform"
         case .chatService: return "quote.bubble"
         case .imageService: return "photo"
         case .about: return "info.circle"
@@ -36,7 +34,6 @@ enum SettingsCategory: String, Hashable, CaseIterable {
         case .general: GeneralSettings()
         case .quickPanel: QuickPanelSettings()
         case .shortcuts: ShortcutSettings()
-        case .audioService: AudioServiceSettings()
         case .chatService: ChatServiceSettings()
         case .imageService: ImageServiceSettings()
         case .about: AboutSettings()

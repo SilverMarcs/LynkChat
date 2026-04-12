@@ -15,7 +15,6 @@ extension WindowID {
     static let settings = "settings"
     static let chats = "chats"
     static let images = "images"
-    static let audio = "audio"
     static let help = "help"
     static let debugWeb = "debugWeb"
 }

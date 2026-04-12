@@ -20,8 +20,7 @@ struct ChatDetailMobile: View {
     @State private var searchScope: SearchScope = .regular
     @State private var showingExpandedSearch: Bool = false
     @State private var showCamera: Bool = false
-    @State private var showVoice: Bool = false
-    
+
     @AppStorage("focusChatOnAppear") var focusChatOnAppear: Bool = false
     
     var body: some View {
@@ -139,26 +138,12 @@ struct ChatDetailMobile: View {
                                 .foregroundStyle(.red)
                         }
                     }
-                } else {
-                    ToolbarItem(placement: .bottomBar) {
-                        Button {
-                            showVoice = true
-                        } label: {
-                            Image(systemName: "waveform")
-                        }
-                    }
-                    .matchedTransitionSource(id: "live-button", in: transition)
                 }
             }
             .toolbar(.hidden, for: .tabBar)
             .fullScreenCover(isPresented: $showCamera) {
                 CameraView(chat: chat, isPresented: $showCamera)
                     .ignoresSafeArea()
-            }
-            .sheet(isPresented: $showVoice) {
-                LiveAudioView()
-                    .presentationDetents([.medium])
-                    .navigationTransition(.zoom(sourceID: "live-button", in: transition))
             }
         }
     }

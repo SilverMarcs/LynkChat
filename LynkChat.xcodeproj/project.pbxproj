@@ -138,9 +138,6 @@
 				Views/Windows/AboutWindow.swift = (
 					macos,
 				);
-				Views/Windows/AudioWindow.swift = (
-					macos,
-				);
 				Views/Windows/ChatContentView.swift = (
 					macos,
 				);
@@ -531,7 +528,6 @@
 				INFOPLIST_FILE = LynkChat/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Describe images using computer vision";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To enable live audio conversation with AI";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To save AI Generated images to gallery";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -598,7 +594,6 @@
 				INFOPLIST_FILE = LynkChat/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Describe images using computer vision";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To enable live audio conversation with AI";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To save AI Generated images to gallery";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

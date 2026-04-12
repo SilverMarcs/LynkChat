@@ -20,5 +20,4 @@ extension EnvironmentValues {
 enum WindowType: String, CaseIterable {
     case chats
     case images
-    case audio
 }
