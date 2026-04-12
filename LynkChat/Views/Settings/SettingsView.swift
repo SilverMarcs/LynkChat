@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(GodMode.self) var godMode
     @SceneStorage("selectedCategory") var selectedCategory: SettingsCategory = .general
     
     var body: some View {
@@ -79,15 +80,17 @@ struct SettingsView: View {
         }
         
         Section("Services") {
-            ForEach([SettingsCategory.audioService, .chatService, .imageService], id: \.self) { category in
+            let services: [SettingsCategory] = godMode.isActivated ? [.audioService, .chatService, .imageService] : [.audioService, .chatService]
+            ForEach(services, id: \.self) { category in
                 NavigationLink(value: category) {
                     Label(category.rawValue, systemImage: category.systemImage)
                 }
             }
         }
-        
+
         Section("Info") {
-            ForEach([SettingsCategory.about, .debug], id: \.self) { category in
+            let info: [SettingsCategory] = godMode.isActivated ? [.about, .debug] : [.about]
+            ForEach(info, id: \.self) { category in
                 NavigationLink(value: category) {
                     Label(category.rawValue, systemImage: category.systemImage)
                 }

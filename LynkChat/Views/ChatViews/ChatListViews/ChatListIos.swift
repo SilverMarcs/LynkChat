@@ -14,17 +14,18 @@ struct ChatListIos: View {
     @Environment(ChatVM.self) var chatVM
     @Environment(\.editMode) private var editMode
     @Environment(\.setWindowType) private var setWindowType
-    
+    @Environment(GodMode.self) var godMode
+
     var chats: [Chat]
     var deleteItems: (IndexSet) -> Void
-    
+
     @AppStorage("autoCreateChatOnLaunch") var autoCreateChatOnLaunch: Bool = false
- 
+
     @State private var showSettings = false
     @State private var initedLaunch = false
-    
+
     @Namespace private var transition
-    
+
     var body: some View {
         @Bindable var chatVM = chatVM
 
@@ -121,7 +122,7 @@ struct ChatListIos: View {
             if editMode?.wrappedValue.isEditing == false {
                 ToolbarItem(placement: .bottomBar) {
                     Menu {
-                        ForEach(ChatModel.allCases) { model in
+                        ForEach(godMode.availableCases) { model in
                             Button {
                                 chatVM.createNewChat(model: model)
                             } label: {

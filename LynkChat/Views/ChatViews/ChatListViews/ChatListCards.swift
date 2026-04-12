@@ -20,6 +20,7 @@ struct ChatListCards: View {
     @State private var isFlashing = false
     
     @Environment(ChatVM.self) var chatVM
+    @Environment(GodMode.self) var godMode
 
     var body: some View {
         HStack(spacing: 8) {
@@ -36,6 +37,7 @@ struct ChatListCards: View {
                 count: imageSessionsCount) {
                     handleImagePress()
                 }
+                .disabled(!godMode.isActivated)
         }
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 0, leading: -5, bottom: 0, trailing: -5))

@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct AboutSettings: View {
+    @Environment(GodMode.self) var godMode
+    @State private var tapCount = 0
+    @State private var showGodModeSheet = false
+
     var body: some View {
         Form {
             VStack(spacing: 10) {
@@ -16,15 +20,26 @@ struct AboutSettings: View {
                     Image("AppIconPng")
                         .resizable()
                         .frame(width: 100, height: 100)
+                        .onTapGesture {
+                            tapCount += 1
+                            if tapCount >= 5 {
+                                tapCount = 0
+                                showGodModeSheet = true
+                            }
+                        }
+                        .popover(isPresented: $showGodModeSheet) {
+                            GodModeActivationSheet()
+                                .frame(width: 300)
+                        }
                     Spacer()
                 }
-                    
+
                 Text("LynkChat")
                     .font(.title.bold())
-                
+
                 Text("Access multiple AI models in one place")
                     .font(.subheadline)
-                
+
                 Text("© \(String(Calendar.current.component(.year, from: Date()))) LynkSphere")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -48,28 +63,6 @@ struct AboutSettings: View {
                     Link("Follow on Instagram", destination: URL(string: "https://www.instagram.com/lynksphere")!)
                 } label: {
                     Text("\(Image(systemName: "person")) Social")
-                }
-            }
-            
-            Section("Acknowledgements") {
-                ForEach(Acknowledgement.acknowledgements, id: \.name) { acknowledgement in
-                    Link(destination: URL(string: acknowledgement.url)!) {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(acknowledgement.name)
-                                    .font(.headline)
-                                Text(acknowledgement.description)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.secondary)
-                        }
-                    }
                 }
             }
         }

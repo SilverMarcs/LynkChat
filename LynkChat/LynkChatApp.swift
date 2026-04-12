@@ -19,7 +19,8 @@ struct LynkChatApp: App {
     #endif
     
     let chatVM = ChatVM()
-    
+    let godMode = GodMode()
+
     var body: some Scene {
         Group {
             #if os(macOS)
@@ -29,6 +30,7 @@ struct LynkChatApp: App {
             #endif
         }
         .environment(chatVM)
+        .environment(godMode)
         .commands { MenuCommands() }
         .modelContainer(globalContainer)
     }
@@ -37,7 +39,7 @@ struct LynkChatApp: App {
         try? Tips.configure()
 
         #if os(macOS)
-        QuickPanelWindow(chatVM: chatVM)
+        QuickPanelWindow(chatVM: chatVM, godMode: godMode)
         #endif
     }
 }

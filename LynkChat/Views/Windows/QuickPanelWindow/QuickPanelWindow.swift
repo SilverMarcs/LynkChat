@@ -11,6 +11,7 @@ import SwiftData
 class QuickPanelWindow: NSPanel {
     private var heightConstraint: NSLayoutConstraint?
     private var chatVM: ChatVM
+    private var godMode: GodMode
     var chat: Chat // The chat object for the quick panel
     private var currentHeightState: QuickPanelHeight = .collapsed()
 
@@ -19,9 +20,11 @@ class QuickPanelWindow: NSPanel {
         contentRect: NSRect = NSRect(x: 0, y: 0, width: 650, height: 57),
         backing: NSWindow.BackingStoreType = .buffered,
         defer flag: Bool = false,
-        chatVM: ChatVM
+        chatVM: ChatVM,
+        godMode: GodMode
     ) {
         self.chatVM = chatVM
+        self.godMode = godMode
         self.chat = chatVM.getOrCreateQuickPanelChat()
         
         super.init(contentRect: NSRect(x: 0, y: 0, width: 650, height: 57),
@@ -54,6 +57,7 @@ class QuickPanelWindow: NSPanel {
                 }
             )
             .environment(chatVM)
+            .environment(godMode)
             .ignoresSafeArea()
         )
 

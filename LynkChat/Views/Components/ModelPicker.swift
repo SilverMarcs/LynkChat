@@ -10,10 +10,11 @@ import SwiftUI
 struct ModelPicker: View {
     @Binding var selectedModel: ChatModel
     var label: String = "Model"
-    
+    @Environment(GodMode.self) var godMode
+
     var body: some View {
         Picker(selection: $selectedModel) {
-            ForEach(ChatModel.allCases, id: \.self) { model in
+            ForEach(godMode.availableCases, id: \.self) { model in
                 Label(model.name, image: model.imageName)
                     .labelStyle(.titleAndIcon)
                     .tag(model)
@@ -28,17 +29,18 @@ struct ModelPicker: View {
 
 struct ModelSinglePicker: View {
     @Binding var selectedModel: ChatModel
-    
+    @Environment(GodMode.self) var godMode
+
     var body: some View {
         Menu {
-            ForEach(ChatModel.allCases, id: \.self) { model in
+            ForEach(godMode.availableCases, id: \.self) { model in
                 Button(action: {
                     selectedModel = model
                 }) {
                     HStack {
                         Label(model.name, image: model.imageName)
                             .labelStyle(.titleAndIcon)
-                        
+
                         if model == selectedModel {
                             Image(systemName: "checkmark")
                         }
@@ -57,7 +59,8 @@ struct ModelSinglePicker: View {
 struct ModelMenuPicker: View {
     @Binding var selectedModels: Set<ChatModel>
     @State var showingPopover: Bool = false
-    
+    @Environment(GodMode.self) var godMode
+
     var body: some View {
         HStack {
             Text("Models")
@@ -66,9 +69,9 @@ struct ModelMenuPicker: View {
                     .foregroundStyle(Color(hex: model.color))
                     .labelStyle(.iconOnly)
             }
-            
+
             Spacer()
-            
+
             Button {
                 showingPopover.toggle()
             } label: {
@@ -76,7 +79,7 @@ struct ModelMenuPicker: View {
             }
             .popover(isPresented: $showingPopover) {
                 VStack(alignment: .leading) {
-                    ForEach(ChatModel.allCases, id: \.self) { model in
+                    ForEach(godMode.availableCases, id: \.self) { model in
                         Toggle(isOn: Binding(
                             get: { selectedModels.contains(model) },
                             set: { isOn in
@@ -93,10 +96,10 @@ struct ModelMenuPicker: View {
                     }
                 }
                 .padding(8)
-            }        
+            }
         }
     }
-    
+
     private var labelText: String {
         switch selectedModels.count {
         case 0:

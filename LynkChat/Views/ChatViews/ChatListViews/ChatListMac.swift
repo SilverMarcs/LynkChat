@@ -10,15 +10,16 @@ import SwiftData
 
 struct ChatListMac: View {
     @Environment(\.openWindow) var openWindow
-    
+    @Environment(GodMode.self) var godMode
+
     var chats: [Chat]
     var deleteItems: (IndexSet) -> Void
-    
+
     @Environment(ChatVM.self) var chatVM: ChatVM
-    
+
     var body: some View {
         @Bindable var chatVM = chatVM
-        
+
         List(selection: $chatVM.selections) {
             ChatListCards(chatCount: String(chats.count), imageSessionsCount: "↗")
             
@@ -61,7 +62,7 @@ struct ChatListMac: View {
             
             ToolbarItem(placement: .automatic) {
                 Menu {
-                    ForEach(ChatModel.allCases) { model in
+                    ForEach(godMode.availableCases) { model in
                         Button {
                             chatVM.createNewChat(model: model)
                         } label: {

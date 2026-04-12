@@ -11,12 +11,13 @@ import SwiftData
 struct QuickPanelView: View {
     @Environment(ChatVM.self) var chatVM
     @Environment(\.openWindow) private var openWindow
-    
+    @Environment(GodMode.self) var godMode
+
     @Bindable var chat: Chat
     var updateHeightState: (QuickPanelHeight) -> Void
 
     @FocusState private var isFocused: FocusedField?
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             textfieldView
@@ -70,7 +71,7 @@ struct QuickPanelView: View {
     var textfieldView: some View {
         HStack(spacing: 12) {
             Menu {
-                ForEach(ChatModel.allCases, id: \.self) { model in
+                ForEach(godMode.availableCases, id: \.self) { model in
                     Button {
                         chat.config.model = model
                     } label: {

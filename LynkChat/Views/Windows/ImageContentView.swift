@@ -10,32 +10,38 @@ import SwiftUI
 struct ImageContentView: View {
     @State var showingInspector: Bool = true
     @State var selection: ImageSession?
-    
+
+    @Environment(GodMode.self) var godMode
+
     var body: some View {
-        NavigationSplitView {
-            ImageList(selection: $selection)
-                #if os(macOS)
-                .navigationSplitViewColumnWidth(min: 240, ideal: 280, max: 400)
-                #endif
-        } detail: {
-            if let imageSession = selection {
-                ImageDetail(session: imageSession)
-                    .id(imageSession.id)
-            } else {
-                ScrollView {
-                    Text("Select or create an image session")
-                        .font(.title)
+        if godMode.isActivated {
+            NavigationSplitView {
+                ImageList(selection: $selection)
+                    #if os(macOS)
+                    .navigationSplitViewColumnWidth(min: 240, ideal: 280, max: 400)
+                    #endif
+            } detail: {
+                if let imageSession = selection {
+                    ImageDetail(session: imageSession)
+                        .id(imageSession.id)
+                } else {
+                    ScrollView {
+                        Text("Select or create an image session")
+                            .font(.title)
+                    }
                 }
             }
-        }
-        .inspector(isPresented: $showingInspector) {
-            if let imageSession = selection {
-                ImageInspector(session: imageSession, showingInspector: $showingInspector)
-                    .id(imageSession.id)
-            } else {
-                Image(systemName: "gear")
-                    .imageScale(.large)
+            .inspector(isPresented: $showingInspector) {
+                if let imageSession = selection {
+                    ImageInspector(session: imageSession, showingInspector: $showingInspector)
+                        .id(imageSession.id)
+                } else {
+                    Image(systemName: "gear")
+                        .imageScale(.large)
+                }
             }
+        } else {
+            ContentUnavailableView("Coming Soon", systemImage: "photo.badge.plus", description: Text("Image generation is not available yet."))
         }
     }
 }

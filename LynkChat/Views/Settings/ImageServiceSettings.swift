@@ -12,37 +12,43 @@ struct ImageServiceSettings: View {
     @AppStorage("defaultImageModel") private var defaultModel: ImageModel = .seedreamV50Lite
     @AppStorage("defaultEditingModel") private var defaultEditingModel: ImageEditingModel = .seedreamV50Lite
     @AppStorage("wavespeedApiKey") private var wavespeedApiKey: String = ""
-    
+
+    @Environment(GodMode.self) var godMode
+
     var body: some View {
-        Form {
-            Section {
-                Picker("Default Model", selection: $defaultModel) {
-                    ForEach(ImageModel.allCases) { model in
-                        Label(model.name, image: model.imageName)
-                            .tag(model)
+        Group {
+            if godMode.isActivated {
+                Form {
+                    Section {
+                        Picker("Default Model", selection: $defaultModel) {
+                            ForEach(ImageModel.allCases) { model in
+                                Label(model.name, image: model.imageName)
+                                    .tag(model)
+                            }
+                        }
+
+                        Picker("Default Editing Model", selection: $defaultEditingModel) {
+                            ForEach(ImageEditingModel.allCases) { model in
+                                Label(model.name, image: model.imageName)
+                                    .tag(model)
+                            }
+                        }
+                    }
+
+                    Toggle(isOn: $saveToPhotos) {
+                        Text("Save to Photos Library")
+                        Text("Images will be saved to Downloads folder otherwise")
+                    }
+
+                    Section(header: Text("API Keys")) {
+                        SecureField("Wavespeed API Key", text: $wavespeedApiKey)
                     }
                 }
-                
-                Picker("Default Editing Model", selection: $defaultEditingModel) {
-                    ForEach(ImageEditingModel.allCases) { model in
-                        Label(model.name, image: model.imageName)
-                            .tag(model)
-                    }
-                }
-            }
-            
-            
-            
-            Toggle(isOn: $saveToPhotos) {
-                Text("Save to Photos Library")
-                Text("Images will be saved to Downloads folder otherwise")
-            }
-            
-            Section(header: Text("API Keys")) {
-                SecureField("Wavespeed API Key", text: $wavespeedApiKey)
+                .formStyle(.grouped)
+            } else {
+                ContentUnavailableView("Coming Soon", systemImage: "photo.badge.plus", description: Text("Image generation is not available yet."))
             }
         }
-        .formStyle(.grouped)
         .navigationTitle("Image Parameters")
         .toolbarTitleDisplayMode(.inline)
     }
