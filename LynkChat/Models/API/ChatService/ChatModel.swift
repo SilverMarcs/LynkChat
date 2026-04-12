@@ -13,6 +13,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
     case gemini_pro
     case gpt
     case gpt_mini
+    case claude_haiku
     case claude_sonnet
     case claude_opus
     case perplexity
@@ -23,6 +24,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         .gemini_pro,
         .gpt,
         .gpt_mini,
+        .claude_haiku,
         .claude_sonnet,
         .claude_opus,
         .perplexity,
@@ -35,6 +37,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gemini_pro: "gemini-pro"
         case .gpt: "gpt"
         case .gpt_mini: "gpt-mini"
+        case .claude_haiku: "claude-haiku"
         case .claude_sonnet: "claude-sonnet"
         case .claude_opus: "claude-opus"
         case .perplexity: "perplexity"
@@ -48,6 +51,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         case .gemini_pro: "Gemini Pro"
         case .gpt: "GPT"
         case .gpt_mini: "GPT Mini"
+        case .claude_haiku: "Claude Haiku"
         case .claude_sonnet: "Claude Sonnet"
         case .claude_opus: "Claude Opus"
         case .perplexity: "Perplexity"
@@ -59,7 +63,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         switch self {
         case .gpt, .gpt_mini: "openai.symbols"
         case .gemini_flash, .gemini_pro: "gemini.symbols"
-        case .claude_sonnet, .claude_opus: "claude.symbols"
+        case .claude_haiku, .claude_sonnet, .claude_opus: "claude.symbols"
         case .perplexity, .perplexity_pro: "perplexity.symbols"
         }
     }
@@ -68,7 +72,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         switch self {
         case .gpt, .gpt_mini: "#00947A"
         case .gemini_flash, .gemini_pro: "#E64335"
-        case .claude_sonnet, .claude_opus: "#D6683B"
+        case .claude_haiku, .claude_sonnet, .claude_opus: "#D6683B"
         case .perplexity, .perplexity_pro: "#47808a"
         }
     }
@@ -77,7 +81,7 @@ enum ChatModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable
         switch self {
         case .gemini_flash, .gemini_pro:
             [.text, .image, .pdf, .audio, .video]
-        case .gpt, .gpt_mini, .claude_sonnet, .claude_opus:
+        case .gpt, .gpt_mini, .claude_haiku, .claude_sonnet, .claude_opus:
             [.text, .image, .pdf]
         case .perplexity, .perplexity_pro:
             [.text, .image]
