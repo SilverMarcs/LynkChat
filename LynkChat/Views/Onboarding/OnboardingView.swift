@@ -10,11 +10,26 @@ import SwiftData
 
 struct OnboardingView: View {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
-    
+    @Environment(GodMode.self) var godMode
+
     @Namespace private var skipButtonSpace
-    
+
     @State private var currentPage = OnboardingPage.welcome
     @State private var navigationDirection = NavigationDirection.forward
+
+    private var visiblePages: [OnboardingPage] {
+        OnboardingPage.allCases.filter { page in
+            if page == .plugins { return false }
+            if !godMode.isActivated {
+                return page != .apiKey && page != .imageGen
+            }
+            return true
+        }
+    }
+
+    private var currentIndex: Int {
+        visiblePages.firstIndex(of: currentPage) ?? 0
+    }
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -77,11 +92,11 @@ struct OnboardingView: View {
     private var navigationControls: some View {
         ZStack {
             HStack(spacing: 20) {
-                if currentPage != .welcome {
+                if currentIndex > 0 {
                     Button("Previous") {
                         navigationDirection = .backward
                         withAnimation {
-                            currentPage = OnboardingPage(rawValue: currentPage.rawValue - 1) ?? .welcome
+                            currentPage = visiblePages[currentIndex - 1]
                         }
                     }
                 }
@@ -98,10 +113,10 @@ struct OnboardingView: View {
                 Spacer()
                 
                 Button(currentPage != .ready ? "Next" : "Get Started") {
-                    if currentPage != .ready {
+                    if currentIndex < visiblePages.count - 1 {
                         navigationDirection = .forward
                         withAnimation {
-                            currentPage = OnboardingPage(rawValue: currentPage.rawValue + 1) ?? .ready
+                            currentPage = visiblePages[currentIndex + 1]
                         }
                     } else {
                         hasCompletedOnboarding = true
@@ -109,8 +124,8 @@ struct OnboardingView: View {
                 }
                 .keyboardShortcut(currentPage == .ready ? .defaultAction : nil)
             }
-            
-            PageDots(current: currentPage.rawValue, total: OnboardingPage.allCases.count)
+
+            PageDots(current: currentIndex, total: visiblePages.count)
         }
     }
 }
