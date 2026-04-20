@@ -30,17 +30,17 @@ struct OnboardingView: View {
     private var currentIndex: Int {
         visiblePages.firstIndex(of: currentPage) ?? 0
     }
-    
+
     var body: some View {
         ZStack(alignment: .topLeading) {
             VStack {
                 pageContent
-                
+
                 Spacer()
-                
+
                 navigationControls
             }
-            
+
             if currentPage != .welcome && currentPage != .ready {
                 Button("Skip") {
                     hasCompletedOnboarding = true
@@ -57,13 +57,15 @@ struct OnboardingView: View {
         .frame(width: 500, height: 500)
         #endif
     }
-    
+
     @ViewBuilder
     private var pageContent: some View {
         Group {
             switch currentPage {
             case .welcome:
                 WelcomeOnboarding()
+            case .dataPrivacy:
+                DataPrivacyOnboarding()
             case .apiKey:
                 ModelOnboarding()
             case .plugins:
@@ -88,7 +90,7 @@ struct OnboardingView: View {
                 .move(edge: .leading) : .move(edge: .trailing)
         ))
     }
-    
+
     private var navigationControls: some View {
         ZStack {
             HStack(spacing: 20) {
@@ -100,7 +102,7 @@ struct OnboardingView: View {
                         }
                     }
                 }
-                
+
                 if currentPage == .welcome {
                     Button("Skip") {
                         hasCompletedOnboarding = true
@@ -109,9 +111,9 @@ struct OnboardingView: View {
                     .foregroundStyle(.secondary)
                     .matchedGeometryEffect(id: "skipButton", in: skipButtonSpace)
                 }
-                
+
                 Spacer()
-                
+
                 Button(currentPage != .ready ? "Next" : "Get Started") {
                     if currentIndex < visiblePages.count - 1 {
                         navigationDirection = .forward
