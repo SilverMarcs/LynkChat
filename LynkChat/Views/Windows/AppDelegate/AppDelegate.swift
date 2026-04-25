@@ -144,10 +144,12 @@ class MacAppDelegate: NSObject, NSApplicationDelegate {
             forName: NSWindow.willCloseNotification,
             object: nil,
             queue: .main
-        ) { [weak self] _ in
-            // Delay slightly to allow window count to update
+        ) { [weak self] notification in
+            // willCloseNotification fires BEFORE the window's isVisible flips
+            // to false, so exclude the closing window from the count explicitly.
+            let closingWindow = notification.object as? NSWindow
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self?.updateDockVisibility()
+                self?.updateDockVisibility(excluding: closingWindow)
             }
         }
 
@@ -161,14 +163,14 @@ class MacAppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    private func updateDockVisibility() {
+    private func updateDockVisibility(excluding closingWindow: NSWindow? = nil) {
         let hideWhenClosed = UserDefaults.standard.bool(forKey: "hideDockIconWhenWindowClosed")
 
         let windows = NSApp.windows.filter { window in
-            // Count only regular windows, not panels (like the quick panel)
-            // and not hidden/minimized windows
+            window !== closingWindow &&
             window.isVisible &&
             !window.isKind(of: NSPanel.self) &&
+            window.level == .normal &&
             window.title != "" &&
             window.identifier?.rawValue != "quickPanel"
         }

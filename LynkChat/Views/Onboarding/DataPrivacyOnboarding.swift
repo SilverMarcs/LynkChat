@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct DataPrivacyOnboarding: View {
+    @AppStorage("didAcceptAIDataConsent") private var didAcceptAIDataConsent = false
+
     var body: some View {
         VStack(spacing: 20) {
             Spacer()
@@ -43,6 +45,14 @@ struct DataPrivacyOnboarding: View {
                 )
             }
             .padding(.horizontal)
+
+            Toggle(isOn: $didAcceptAIDataConsent) {
+                Text("I understand and agree that my messages, attachments, and conversation history will be sent to Google's Gemini AI to generate responses.")
+                    .font(.footnote)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.horizontal)
+            .padding(.top, 4)
 
             Spacer()
         }

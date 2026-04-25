@@ -10,6 +10,7 @@ import SwiftData
 
 struct OnboardingView: View {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
+    @AppStorage("didAcceptAIDataConsent") private var didAcceptAIDataConsent = false
     @Environment(GodMode.self) var godMode
 
     @Namespace private var skipButtonSpace
@@ -41,7 +42,7 @@ struct OnboardingView: View {
                 navigationControls
             }
 
-            if currentPage != .welcome && currentPage != .ready {
+            if currentPage != .welcome && currentPage != .ready && currentPage != .dataPrivacy {
                 Button("Skip") {
                     hasCompletedOnboarding = true
                 }
@@ -103,15 +104,6 @@ struct OnboardingView: View {
                     }
                 }
 
-                if currentPage == .welcome {
-                    Button("Skip") {
-                        hasCompletedOnboarding = true
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.secondary)
-                    .matchedGeometryEffect(id: "skipButton", in: skipButtonSpace)
-                }
-
                 Spacer()
 
                 Button(currentPage != .ready ? "Next" : "Get Started") {
@@ -125,6 +117,7 @@ struct OnboardingView: View {
                     }
                 }
                 .keyboardShortcut(currentPage == .ready ? .defaultAction : nil)
+                .disabled(currentPage == .dataPrivacy && !didAcceptAIDataConsent)
             }
 
             PageDots(current: currentIndex, total: visiblePages.count)
