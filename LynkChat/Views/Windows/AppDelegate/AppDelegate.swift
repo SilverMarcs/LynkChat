@@ -129,7 +129,7 @@ import AppKit
 
 class MacAppDelegate: NSObject, NSApplicationDelegate {
     private var windowObserver: NSObjectProtocol?
-    
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Observe window changes to automatically hide/show from dock
         windowObserver = NotificationCenter.default.addObserver(
@@ -139,7 +139,7 @@ class MacAppDelegate: NSObject, NSApplicationDelegate {
         ) { [weak self] _ in
             self?.updateDockVisibility()
         }
-        
+
         NotificationCenter.default.addObserver(
             forName: NSWindow.willCloseNotification,
             object: nil,
@@ -150,18 +150,20 @@ class MacAppDelegate: NSObject, NSApplicationDelegate {
                 self?.updateDockVisibility()
             }
         }
-        
+
         // Initial check
         updateDockVisibility()
     }
-    
+
     deinit {
         if let observer = windowObserver {
             NotificationCenter.default.removeObserver(observer)
         }
     }
-    
+
     private func updateDockVisibility() {
+        let hideWhenClosed = UserDefaults.standard.bool(forKey: "hideDockIconWhenWindowClosed")
+
         let windows = NSApp.windows.filter { window in
             // Count only regular windows, not panels (like the quick panel)
             // and not hidden/minimized windows
@@ -170,10 +172,8 @@ class MacAppDelegate: NSObject, NSApplicationDelegate {
             window.title != "" &&
             window.identifier?.rawValue != "quickPanel"
         }
-        
-        // If no regular windows are visible, hide from dock
-        // Otherwise, show in dock
-        if windows.isEmpty {
+
+        if windows.isEmpty && hideWhenClosed {
             NSApp.setActivationPolicy(.accessory)
         } else {
             if NSApp.activationPolicy() != .regular {

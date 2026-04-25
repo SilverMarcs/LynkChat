@@ -16,6 +16,7 @@ struct GeneralSettings: View {
     @AppStorage("fontSize") var fontSize: Double = 13
     @AppStorage("autoCreateChatOnLaunch") var autoCreateChatOnLaunch: Bool = false
     @AppStorage("focusChatOnAppear") var focusChatOnAppear: Bool = false
+    @AppStorage("hideDockIconWhenWindowClosed") var hideDockIconWhenWindowClosed: Bool = false
     
     var body: some View {
         Form {
@@ -36,9 +37,15 @@ struct GeneralSettings: View {
                 Toggle(isOn: $autoCreateChatOnLaunch) {
                     Text("Auto create chat on App Launch")
                 }
-                
+
                 Toggle(isOn: $focusChatOnAppear) {
                     Text("Focus chat input when appears")
+                }
+                #endif
+
+                #if os(macOS)
+                Toggle(isOn: $hideDockIconWhenWindowClosed) {
+                    Text("Hide Dock icon when window is closed")
                 }
                 #endif
             }
