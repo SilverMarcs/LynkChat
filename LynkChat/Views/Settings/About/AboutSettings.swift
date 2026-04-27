@@ -48,12 +48,6 @@ struct AboutSettings: View {
             
             Section("Connect") {
                 LabeledContent{
-                    Link("Product Page", destination: URL(string: "https://lynkSphere.com/products/lynkchat")!)
-                } label: {
-                    Text("\(Image(systemName: "apps.iphone")) Product")
-                }
-                
-                LabeledContent{
                     Link("Company Website", destination: URL(string: "https://lynkSphere.com")!)
                 } label: {
                     Text("\(Image(systemName: "link")) Visit")

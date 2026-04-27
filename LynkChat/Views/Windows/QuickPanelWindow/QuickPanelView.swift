@@ -104,14 +104,27 @@ struct QuickPanelView: View {
                 .opacity(0)
             )
         
-            TextField("Ask Anything...", text: $chat.inputManager.prompt, axis: .vertical)
-                .allowsTightening(true)
-                .focused($isFocused, equals: .quickPanel)
-                .font(.system(size: 25))
-                .textFieldStyle(.plain)
-                .onSubmit {
-                    send()
+            ZStack(alignment: .leading) {
+                if chat.inputManager.prompt.isEmpty {
+                    Text("Ask Anything...")
+                        .foregroundStyle(.placeholder)
+                        .padding(.leading, 1)
+                        .allowsHitTesting(false)
                 }
+
+                TextEditor(text: $chat.inputManager.prompt)
+                    .focused($isFocused, equals: .quickPanel)
+                    .scrollContentBackground(.hidden)
+                    .padding(.leading, -4)
+                    .onKeyPress(.return) {
+                        if NSEvent.modifierFlags.contains(.shift) {
+                            return .ignored
+                        }
+                        send()
+                        return .handled
+                    }
+            }
+            .font(.system(size: 25))
             
             Button(action: chat.isReplying ? chat.stopStreaming : send) {
                 Image(systemName: chat.isReplying ? "stop.circle.fill" : "arrow.up.circle.fill")
