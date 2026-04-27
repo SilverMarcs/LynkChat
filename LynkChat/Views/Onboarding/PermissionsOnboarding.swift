@@ -37,7 +37,7 @@ struct PermissionsOnboarding: View {
                             
                             Spacer()
                             
-                            Button(isCameraAllowed ? "Allowed" : "Allow") {
+                            Button(isCameraAllowed ? "Granted" : "Request") {
                                 requestCameraPermission()
                             }
                             .buttonStyle(.bordered)
@@ -62,7 +62,7 @@ struct PermissionsOnboarding: View {
                             
                             Spacer()
                             
-                            Button(isPhotoLibraryAllowed ? "Allowed" : "Allow") {
+                            Button(isPhotoLibraryAllowed ? "Granted" : "Request") {
                                 requestPhotoLibraryPermission()
                             }
                             .buttonStyle(.bordered)
