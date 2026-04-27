@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MDView: View {
     @AppStorage("fontSize") var fontSize: Double = 13
+    @Environment(\.markdownSurface) private var surface
     var content: String
     var isStreaming: Bool = false
     var calculatedHeight: Binding<CGFloat>? = nil
@@ -18,6 +19,7 @@ struct MDView: View {
         MacMarkdownView(
             text: content,
             fontSize: CGFloat(fontSize),
+            surface: surface,
             isStreaming: isStreaming,
             calculatedHeight: calculatedHeight
         )

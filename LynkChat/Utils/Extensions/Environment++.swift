@@ -15,9 +15,15 @@ extension EnvironmentValues {
     @Entry var setWindowType: (WindowType) -> Void = { _ in }
     @Entry var imageSearchText: String = ""
     @Entry var chatSearchText: String = "" // not used atm
+    @Entry var markdownSurface: MarkdownSurface = .window
 }
 
 enum WindowType: String, CaseIterable {
     case chats
     case images
+}
+
+enum MarkdownSurface: Hashable, Sendable {
+    case window
+    case glass
 }

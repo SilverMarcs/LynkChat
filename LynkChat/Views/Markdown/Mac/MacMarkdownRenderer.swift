@@ -180,16 +180,18 @@ struct MacMarkdownRenderer: Sendable {
     private let bodyFontSize: CGFloat
     private let codeFontSize: CGFloat
     private let themeName: String
+    private let surface: MarkdownSurface
     private nonisolated(unsafe) let cachedDefaultParagraphStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedCodeBlockParagraphStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedCodeBlockSpacerStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedTableSpacerStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedBulletMarkerWidth: CGFloat
 
-    nonisolated init(fontSize: CGFloat, themeName: String) {
+    nonisolated init(fontSize: CGFloat, themeName: String, surface: MarkdownSurface = .window) {
         bodyFontSize = max(fontSize, 13)
         codeFontSize = max(bodyFontSize - 1, 12)
         self.themeName = themeName
+        self.surface = surface
 
         let defaultStyle = NSMutableParagraphStyle()
         defaultStyle.lineSpacing = 4
@@ -528,7 +530,7 @@ struct MacMarkdownRenderer: Sendable {
             ? columnWidths.map { ($0 / totalWidth) * 100 }
             : [CGFloat](repeating: 100 / CGFloat(columnCount), count: columnCount)
 
-        let alternateRowColor = NSColor.quaternarySystemFill
+        let alternateRowColor = surface.blockFillColor
         let output = NSMutableAttributedString()
 
         func makeCellString(row: Int, col: Int, text: String, font: NSFont, isHeader: Bool) -> NSAttributedString {
@@ -551,7 +553,7 @@ struct MacMarkdownRenderer: Sendable {
             block.setBorderColor(.separatorColor)
 
             if isHeader {
-                block.backgroundColor = .quaternarySystemFill
+                block.backgroundColor = alternateRowColor
             } else {
                 // row is 1-based for data rows; even data rows (row 2, 4, ...) get alternate bg
                 block.backgroundColor = row % 2 == 0 ? alternateRowColor : .clear

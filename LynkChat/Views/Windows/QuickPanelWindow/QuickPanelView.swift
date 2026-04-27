@@ -46,6 +46,7 @@ struct QuickPanelView: View {
         }
         .transaction { $0.animation = nil }
         .frame(width: 650)
+        .environment(\.markdownSurface, .glass)
         .task {
             isFocused = .quickPanel
         }

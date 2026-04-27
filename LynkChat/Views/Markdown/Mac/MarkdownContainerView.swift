@@ -23,6 +23,14 @@ final class MarkdownContainerView: NSView {
     var onThemeChange: ((String) -> Void)?
     var onHeightChange: ((CGFloat) -> Void)?
 
+    var surface: MarkdownSurface = .window {
+        didSet {
+            guard surface != oldValue else { return }
+            textView.markdownLayoutManager.codeBlockBackgroundColor = surface.blockFillColor
+            textView.needsDisplay = true
+        }
+    }
+
     private var widthConstraint: NSLayoutConstraint?
 
     override init(frame frameRect: NSRect) {

@@ -4,6 +4,7 @@ struct MarkdownRenderRequest: Hashable, Sendable {
     let text: String
     let fontSize: CGFloat
     let themeName: String
+    let surface: MarkdownSurface
 }
 
 @MainActor
@@ -86,7 +87,11 @@ actor MarkdownRenderScheduler {
         }
 
         let renderTask = Task.detached(priority: .utility) {
-            await MacMarkdownRenderer(fontSize: request.fontSize, themeName: request.themeName).render(request.text)
+            await MacMarkdownRenderer(
+                fontSize: request.fontSize,
+                themeName: request.themeName,
+                surface: request.surface
+            ).render(request.text)
         }
 
         inFlightTasks[request] = renderTask
@@ -99,6 +104,7 @@ actor MarkdownRenderScheduler {
 struct MacMarkdownRepresentable: NSViewRepresentable {
     let text: String
     let fontSize: CGFloat
+    let surface: MarkdownSurface
     let isStreaming: Bool
     var calculatedHeight: Binding<CGFloat>?
 
@@ -122,9 +128,16 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
             text: String,
             fontSize: CGFloat,
             themeName: String,
+            surface: MarkdownSurface,
             isStreaming: Bool
         ) {
-            let request = MarkdownRenderRequest(text: text, fontSize: fontSize, themeName: themeName)
+            nsView.surface = surface
+            let request = MarkdownRenderRequest(
+                text: text,
+                fontSize: fontSize,
+                themeName: themeName,
+                surface: surface
+            )
 
             if let cachedDocument = MarkdownRenderCacheStore.shared.document(for: request) {
                 renderTask?.cancel()
@@ -177,6 +190,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
                   let lastRenderedDocument,
                   lastRenderedRequest.fontSize == request.fontSize,
                   lastRenderedRequest.themeName == request.themeName,
+                  lastRenderedRequest.surface == request.surface,
                   request.text.hasPrefix(lastRenderedRequest.text),
                   request.text != lastRenderedRequest.text else {
                 streamingBuffer = nil
@@ -207,6 +221,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
             guard let lastRenderedRequest else { return false }
             return lastRenderedRequest.fontSize == request.fontSize &&
                 lastRenderedRequest.themeName == request.themeName &&
+                lastRenderedRequest.surface == request.surface &&
                 request.text.hasPrefix(lastRenderedRequest.text) &&
                 request.text != lastRenderedRequest.text
         }
@@ -233,6 +248,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: MarkdownContainerView, context: Context) {
+        let surface = self.surface
         nsView.onThemeChange = { [weak nsView] themeName in
             guard let nsView else { return }
             context.coordinator.update(
@@ -240,6 +256,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
                 text: text,
                 fontSize: fontSize,
                 themeName: themeName,
+                surface: surface,
                 isStreaming: isStreaming
             )
         }
@@ -252,6 +269,7 @@ struct MacMarkdownRepresentable: NSViewRepresentable {
             text: text,
             fontSize: fontSize,
             themeName: nsView.activeThemeName,
+            surface: surface,
             isStreaming: isStreaming
         )
     }

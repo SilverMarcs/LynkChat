@@ -1,5 +1,21 @@
 import AppKit
 
+extension MarkdownSurface {
+    var blockFillColor: NSColor {
+        switch self {
+        case .window:
+            return .quaternarySystemFill
+        case .glass:
+            return NSColor(name: nil) { appearance in
+                let isDark = appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+                return isDark
+                    ? NSColor(white: 1.0, alpha: 0.10)
+                    : NSColor(white: 0.0, alpha: 0.05)
+            }
+        }
+    }
+}
+
 final class MarkdownPlainTextView: NSTextView {
     let markdownTextStorage = NSTextStorage()
     let markdownLayoutManager = MarkdownLayoutManager()
@@ -193,7 +209,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     }
 
     var codeBlocks: [MarkdownCodeBlock] = []
-    var codeBlockBackgroundColor: NSColor = .quaternarySystemFill
+    var codeBlockBackgroundColor: NSColor = MarkdownSurface.window.blockFillColor
     var quoteBlocks: [MarkdownQuoteBlock] = []
     var quoteLineColor: NSColor = .tertiaryLabelColor
     var tableBlocks: [MarkdownTableBlock] = []
