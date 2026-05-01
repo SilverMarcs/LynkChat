@@ -84,6 +84,9 @@ struct StreamHandler {
             if now.timeIntervalSince(lastUpdateTime) >= updateInterval {
                 updateUI()
                 lastUpdateTime = now
+                #if !os(macOS)
+                BackgroundStreamTask.tickProgress()
+                #endif
             }
         }
         

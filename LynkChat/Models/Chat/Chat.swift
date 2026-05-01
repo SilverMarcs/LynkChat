@@ -90,7 +90,7 @@ final class Chat: Equatable, Identifiable, Hashable {
         date = Date()
         streamingTask = Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 // Check if we have secondary models to process
                 if let assistantGroup = currentThread.last {
@@ -98,18 +98,7 @@ final class Chat: Equatable, Identifiable, Hashable {
                     let multiHandler = MultiStreamHandler(chat: self, assistantGroup: assistantGroup, user: user)
                     try await multiHandler.handleMultipleRequests()
                 }
-                
-                #if !os(macOS)
-                let backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
-                    self?.streamingTask?.cancel()
-                }
 
-                defer {
-                    // Ensure we end the background task when done
-                    UIApplication.shared.endBackgroundTask(backgroundTaskId)
-                }
-                #endif
-                
                 // Generate title after streaming is complete
                 if AppConfig().autogenTitle {
                     await generateTitle()
@@ -119,10 +108,16 @@ final class Chat: Equatable, Identifiable, Hashable {
             } catch {
                 handleError(error)
             }
-            
+
             streamingTask?.cancel()
             streamingTask = nil
         }
+
+        #if !os(macOS)
+        if let task = streamingTask {
+            BackgroundStreamTask.submit(streamingTask: task, subtitle: user.content)
+        }
+        #endif
     }
 
     @MainActor
