@@ -2,6 +2,9 @@
 
 A cross-platform chat app for Apple platforms for talking with AI models, built with SwiftUI and SwiftData.
 
+<a href="https://apps.apple.com/app/id6762092593"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us" alt="Download on the App Store" height="50"></a>
+<a href="https://apps.apple.com/app/id6762092593?mt=12"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-mac-app-store/black/en-us" alt="Download on the Mac App Store" height="50"></a>
+
 ## Requirements
 
 - iOS 26.0+
