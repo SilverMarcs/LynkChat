@@ -37,10 +37,9 @@ struct QuickPanelView: View {
                 Spacer()
             } else {
                 Divider()
-                
-                ChatDetail(chat: chat)
-                    .scrollContentBackground(.hidden)
-                
+
+                invertedThread
+
                 bottomView
             }
         }
@@ -69,6 +68,28 @@ struct QuickPanelView: View {
         updateHeightState(newState)
     }
     
+    /// Inverted message list for the Quick Panel: newest message on top so
+    /// streaming updates stay in view without the floating-input spacer hack
+    /// `ChatDetailMac` uses. Keeps the main-chat detail view untouched.
+    private var invertedThread: some View {
+        ScrollViewReader { proxy in
+            List {
+                Color.clear.frame(height: 1).id("top").listRowSeparator(.hidden)
+                ErrorMessageView(chat: chat)
+                    .listRowSeparator(.hidden)
+                ForEach(chat.currentThread.reversed(), id: \.self) { group in
+                    MessageView(group: group)
+                        .environment(\.chat, chat)
+                        .listRowSeparator(.hidden)
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .onChange(of: chat.currentThread.count) {
+                withAnimation { proxy.scrollTo("top", anchor: .top) }
+            }
+        }
+    }
+
     var textfieldView: some View {
         HStack(spacing: 12) {
             Menu {
