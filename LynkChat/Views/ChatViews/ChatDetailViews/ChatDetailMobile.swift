@@ -159,7 +159,8 @@ struct ChatDetailMobile: View {
     func onAppearStuff(proxy: ScrollViewProxy) {
         chatVM.activeChat = chat
         chat.expandColor = false
-        proxy.scrollTo(String.bottomID, anchor: .bottom)
+        chat.scrollProxy = proxy
+        Scroller.scrollToBottom(with: proxy, animated: false)
         if focusChatOnAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                 isFocused = true
