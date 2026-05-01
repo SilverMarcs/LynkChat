@@ -58,6 +58,12 @@ struct AboutSettings: View {
                 } label: {
                     Text("\(Image(systemName: "person")) Social")
                 }
+
+                LabeledContent {
+                    Link("View on GitHub", destination: URL(string: "https://github.com/SilverMarcs/LynkChat")!)
+                } label: {
+                    Text("\(Image(systemName: "chevron.left.forwardslash.chevron.right")) Source")
+                }
             }
         }
         .formStyle(.grouped)

@@ -61,7 +61,7 @@ struct ImageDetail: View {
             }
             .matchedTransitionSource(id: "image-inspector-button", in: transition)
         }
-        .navigationTitle(session.title)
+        .navigationTitle(session.inputImages.isEmpty ? session.config.model.name : session.config.editingModel.name)
         .toolbarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingInspector) {
             ImageInspector(session: session, showingInspector: $showingInspector)

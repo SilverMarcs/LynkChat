@@ -45,6 +45,7 @@ struct ImageList: View {
         }
         .navigationTitle("Images")
         .toolbarTitleDisplayMode(.inlineLarge)
+        .toolbar(removing: .sidebarToggle)
         .toolbar {
             toolbar
         }
