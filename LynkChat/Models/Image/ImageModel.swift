@@ -10,10 +10,10 @@ import Foundation
 enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterable, ModelImageProvider {
     case seedreamV50Lite = "seedream_v5_0_lite"
     case seedreamV45 = "seedream_v4_5"
-    case klingImageO3 = "kling_image_o3"
     case grokImagine = "grok_imagine"
-    case gptImage15 = "gpt_image_1_5"
-    case nanoBanana2 = "nano_banana_2"
+    case gptImage2 = "gpt_image_2"
+    case nanoBananaPro = "nano_banana_pro"
+    case wan27 = "wan_2_7"
 
     var id: String { rawValue }
 
@@ -21,29 +21,29 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
         switch self {
         case .seedreamV50Lite: "Seedream V5 Lite"
         case .seedreamV45: "Seedream V4.5"
-        case .klingImageO3: "Kling Image O3"
         case .grokImagine: "Grok Imagine"
-        case .gptImage15: "GPT Image 1.5"
-        case .nanoBanana2: "Nano Banana 2"
+        case .gptImage2: "GPT Image 2"
+        case .nanoBananaPro: "Nano Banana Pro"
+        case .wan27: "Wan 2.7"
         }
     }
 
     var imageName: String {
         switch self {
         case .seedreamV50Lite, .seedreamV45: "bytedance.symbols"
-        case .klingImageO3: "kling.symbols"
-        case .grokImagine, .gptImage15: "openai.symbols"
-        case .nanoBanana2: "gemini.symbols"
+        case .grokImagine, .gptImage2: "openai.symbols"
+        case .nanoBananaPro: "gemini.symbols"
+        case .wan27: "qwen.symbols"
         }
     }
 
     var color: String {
         switch self {
         case .seedreamV50Lite, .seedreamV45: "#00A8B2"
-        case .klingImageO3: "#70EECD"
         case .grokImagine: "#111111"
-        case .gptImage15: "#00947A"
-        case .nanoBanana2: "#E64335"
+        case .gptImage2: "#00947A"
+        case .nanoBananaPro: "#E64335"
+        case .wan27: "#615CED"
         }
     }
 
@@ -53,14 +53,14 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
             "/api/v3/bytedance/seedream-v5.0-lite"
         case .seedreamV45:
             "/api/v3/bytedance/seedream-v4.5"
-        case .klingImageO3:
-            "/api/v3/kwaivgi/kling-image-o3/text-to-image"
         case .grokImagine:
             "/api/v3/x-ai/grok-imagine-image/text-to-image"
-        case .gptImage15:
-            "/api/v3/openai/gpt-image-1.5/text-to-image"
-        case .nanoBanana2:
-            "/api/v3/google/nano-banana-2/text-to-image"
+        case .gptImage2:
+            "/api/v3/openai/gpt-image-2/text-to-image"
+        case .nanoBananaPro:
+            "/api/v3/google/nano-banana-pro/text-to-image"
+        case .wan27:
+            "/api/v3/alibaba/wan-2.7/text-to-image"
         }
     }
 
@@ -80,30 +80,22 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
                 "enable_sync_mode": false,
                 "enable_base64_output": false
             ]
-        case .klingImageO3:
-            return [
-                "prompt": prompt,
-                "aspect_ratio": "9:16",
-                "resolution": "1k",
-                "num_images": 1,
-                "output_format": "png"
-            ]
         case .grokImagine:
             return [
                 "prompt": prompt,
                 "aspect_ratio": "9:16",
                 "output_format": "jpeg"
             ]
-        case .gptImage15:
+        case .gptImage2:
             return [
                 "prompt": prompt,
-                "size": "1024*1536",
+                "aspect_ratio": "9:16",
+                "resolution": "1k",
                 "quality": "medium",
-                "output_format": "jpeg",
                 "enable_sync_mode": false,
                 "enable_base64_output": false
             ]
-        case .nanoBanana2:
+        case .nanoBananaPro:
             return [
                 "prompt": prompt,
                 "aspect_ratio": "9:16",
@@ -111,6 +103,13 @@ enum ImageModel: String, Identifiable, Hashable, Codable, Equatable, CaseIterabl
                 "output_format": "png",
                 "enable_sync_mode": false,
                 "enable_base64_output": false
+            ]
+        case .wan27:
+            return [
+                "prompt": prompt,
+                "size": "1440*2560",
+                "thinking_mode": false,
+                "seed": -1
             ]
         }
     }

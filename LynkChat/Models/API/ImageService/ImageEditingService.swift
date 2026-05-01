@@ -37,16 +37,6 @@ enum ImageEditingService {
                 "enable_base64_output": false
             ]
 
-        case .klingImageO3:
-            apiPath = model.apiPath
-            requestBody = [
-                "prompt": prompt,
-                "images": imageURLs,
-                "aspect_ratio": "9:16",
-                "resolution": "1k",
-                "output_format": "png"
-            ]
-
         case .grokImagine:
             apiPath = model.apiPath
             requestBody = [
@@ -57,19 +47,19 @@ enum ImageEditingService {
                 "enable_base64_output": false
             ]
 
-        case .gptImage15:
+        case .gptImage2:
             apiPath = model.apiPath
             requestBody = [
                 "prompt": prompt,
                 "images": imageURLs,
-                "size": "1024*1536",
+                "aspect_ratio": "9:16",
+                "resolution": "1k",
                 "quality": "medium",
-                "output_format": "jpeg",
                 "enable_sync_mode": false,
                 "enable_base64_output": false
             ]
 
-        case .nanoBanana2:
+        case .nanoBananaPro:
             apiPath = model.apiPath
             requestBody = [
                 "prompt": prompt,
@@ -79,6 +69,16 @@ enum ImageEditingService {
                 "output_format": "png",
                 "enable_sync_mode": false,
                 "enable_base64_output": false
+            ]
+
+        case .wan27:
+            apiPath = model.apiPath
+            let size = try calculateOptimalSize(from: inputImages[0], maxDimension: 2048)
+            requestBody = [
+                "prompt": prompt,
+                "images": imageURLs,
+                "size": size,
+                "seed": -1
             ]
         }
 
