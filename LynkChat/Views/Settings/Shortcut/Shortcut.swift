@@ -13,7 +13,7 @@ struct Shortcut: Identifiable {
     let action: String
     
     static let quickPanelShortcuts: [Shortcut] = [
-        Shortcut(key: "⌥ + Space", action: "Open Quick Panel")
+        Shortcut(key: "⌃ + Space", action: "Open Quick Panel")
     ]
 
     static let chatInteractionShortcuts: [Shortcut] = [

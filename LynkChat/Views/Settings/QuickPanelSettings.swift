@@ -15,7 +15,7 @@ struct QuickPanelSettings: View {
         Form {
             Section("Launch") {
                 LabeledContent {
-                    Text("⌥ + Space")
+                    Text("⌃ + Space")
                         .monospaced()
                 } label: {
                     Text("Global shortcut")

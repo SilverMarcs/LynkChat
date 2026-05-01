@@ -26,10 +26,10 @@ import Carbon
         // Create hot key ID
         let hotKeyID = EventHotKeyID(signature: hotKeySignature, id: self.hotKeyID)
         
-        // Register Option + Space
+        // Register Control + Space
         let registerError = unsafe RegisterEventHotKey(
             UInt32(kVK_Space), // Space key
-            UInt32(optionKey), // Option modifier
+            UInt32(controlKey), // Control modifier
             hotKeyID,
             GetEventDispatcherTarget(),
             0,
