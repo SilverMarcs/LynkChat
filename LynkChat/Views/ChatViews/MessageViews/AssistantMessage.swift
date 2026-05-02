@@ -14,7 +14,6 @@ struct AssistantMessage: View {
     
     @State private var height: CGFloat = 0
     @State private var showingTextSelection = false
-    @Namespace private var transition
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -87,13 +86,11 @@ struct AssistantMessage: View {
             .padding()
             .frame(maxWidth: 500)
         }
-        .matchedTransitionSource(id: "assistant-text-selection", in: transition)
         .padding(.leading, 5)
         .padding(.trailing, 30)
         #if !os(macOS)
         .sheet(isPresented: $showingTextSelection) {
             TextSelectionView(content: group.content)
-                .navigationTransition(.zoom(sourceID: "assistant-text-selection", in: transition))
         }
         #endif
     }
