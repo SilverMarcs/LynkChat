@@ -33,18 +33,20 @@ struct IOSWindow: Scene {
             }
             .onReceive(NotificationCenter.default.publisher(for: .sharedContentReceived)) { notification in
                 if let payload = notification.userInfo?["payload"] as? String {
-                    let newChat = chatVM.createNewChat(delay: true)
-                    newChat.inputManager.prompt = payload
+                    let chat = chatVM.reuseEmptyOrCreateChat(delay: true)
+                    chat.inputManager.prompt = payload
+                    chat.inputManager.pendingFocus = true
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: .sharedImagesReceived)) { notification in
                 if let paths = notification.userInfo?["imagePaths"] as? [String] {
-                    let newChat = chatVM.createNewChat(delay: true)
+                    let chat = chatVM.reuseEmptyOrCreateChat(delay: true)
+                    chat.inputManager.pendingFocus = true
                     for path in paths {
                         let url = URL(fileURLWithPath: path)
                         guard let data = try? Data(contentsOf: url) else { continue }
                         let typedData = TypedData(data: data, fileType: .jpeg, fileName: url.lastPathComponent)
-                        newChat.inputManager.dataFiles.append(typedData)
+                        chat.inputManager.dataFiles.append(typedData)
                         // Clean up the shared file
                         try? FileManager.default.removeItem(at: url)
                     }
@@ -126,18 +128,18 @@ struct IOSWindow: Scene {
         }
         .onReceive(NotificationCenter.default.publisher(for: .sharedContentReceived)) { notification in
             if let payload = notification.userInfo?["payload"] as? String {
-                let newChat = chatVM.createNewChat(delay: true)
-                newChat.inputManager.prompt = payload
+                let chat = chatVM.reuseEmptyOrCreateChat(delay: true)
+                chat.inputManager.prompt = payload
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .sharedImagesReceived)) { notification in
             if let paths = notification.userInfo?["imagePaths"] as? [String] {
-                let newChat = chatVM.createNewChat(delay: true)
+                let chat = chatVM.reuseEmptyOrCreateChat(delay: true)
                 for path in paths {
                     let url = URL(fileURLWithPath: path)
                     guard let data = try? Data(contentsOf: url) else { continue }
                     let typedData = TypedData(data: data, fileType: .jpeg, fileName: url.lastPathComponent)
-                    newChat.inputManager.dataFiles.append(typedData)
+                    chat.inputManager.dataFiles.append(typedData)
                     try? FileManager.default.removeItem(at: url)
                 }
             }

@@ -14,7 +14,11 @@ enum InputState {
 
 @Observable class InputManager {
     var state: InputState = .normal
-    
+
+    /// Set to true to request the input field be focused on next appear,
+    /// regardless of the focusChatOnAppear preference (e.g. after sharing).
+    var pendingFocus: Bool = false
+
     var normalPrompt: String = ""
     var editingPrompt: String = ""
     

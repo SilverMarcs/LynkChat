@@ -56,6 +56,26 @@ import Combine
         return newChat
     }
 
+    /// Reuses the most recent normal chat if its thread is empty; otherwise
+    /// creates a new chat. Mirrors the auto-create-on-launch reuse behavior.
+    @discardableResult
+    func reuseEmptyOrCreateChat(delay: Bool = false) -> Chat {
+        let normalId = ChatStatus.normal.id
+        var descriptor = FetchDescriptor<Chat>(
+            predicate: #Predicate { $0.statusId == normalId },
+            sortBy: [SortDescriptor(\.date, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+
+        if let recent = try? globalContainer.mainContext.fetch(descriptor).first,
+           recent.currentThread.isEmpty {
+            let delayDuration: Duration? = delay ? .milliseconds(500) : nil
+            selectChat(recent, delay: delayDuration)
+            return recent
+        }
+        return createNewChat(delay: delay)
+    }
+
     func createTemporaryChat() {
         let newChat = Chat()
         newChat.status = .temporary

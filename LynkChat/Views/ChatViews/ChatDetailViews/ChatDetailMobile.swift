@@ -161,7 +161,9 @@ struct ChatDetailMobile: View {
         chat.expandColor = false
         chat.scrollProxy = proxy
         Scroller.scrollToBottom(with: proxy, animated: false)
-        if focusChatOnAppear {
+        let shouldFocus = focusChatOnAppear || chat.inputManager.pendingFocus
+        chat.inputManager.pendingFocus = false
+        if shouldFocus {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                 isFocused = true
                 Scroller.scrollToBottom(with: proxy, animated: true, delay: 0.3)
