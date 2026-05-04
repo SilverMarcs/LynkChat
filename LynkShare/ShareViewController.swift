@@ -15,7 +15,7 @@ import UniformTypeIdentifiers
 /// 4. Immediately completes the request (no custom UI)
 class ShareViewController: UIViewController {
     private enum Const {
-        static let groupID = "group.com.temporary.lynkchat"
+        static let groupID = "group.com.SilverMarcs.LynkChatApp"
         static let contentKey = "sharedContent"
         static let imagePathsKey = "sharedImagePaths"
         static let dateKey = "sharedContentDate"

@@ -36,7 +36,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     private func checkForSharedContent() {
-        guard let ud = UserDefaults(suiteName: "group.com.temporary.lynkchat") else { return }
+        guard let ud = UserDefaults(suiteName: "group.com.SilverMarcs.LynkChatApp") else { return }
 
         let payload = ud.string(forKey: "sharedContent")
         let imagePaths = ud.stringArray(forKey: "sharedImagePaths")
@@ -94,7 +94,7 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
     }
     
     private func checkForSharedContent() {
-        guard let ud = UserDefaults(suiteName: "group.com.temporary.lynkchat") else { return }
+        guard let ud = UserDefaults(suiteName: "group.com.SilverMarcs.LynkChatApp") else { return }
 
         let payload = ud.string(forKey: "sharedContent")
         let imagePaths = ud.stringArray(forKey: "sharedImagePaths")

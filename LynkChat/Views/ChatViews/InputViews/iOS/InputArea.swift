@@ -40,7 +40,8 @@ struct InputArea: View {
             
             Spacer()
         }
-        .padding()
+        .padding(.vertical, 5)
+        .padding(.horizontal)
     }
     
     private func sendInput() {
