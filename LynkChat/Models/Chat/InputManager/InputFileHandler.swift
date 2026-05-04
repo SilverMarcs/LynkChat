@@ -87,29 +87,43 @@ extension InputManager {
 extension InputManager {
     func handleDrop(_ providers: [NSItemProvider]) throws -> Bool {
         guard !providers.isEmpty else { return false }
-        
+
         for provider in providers {
-            // First, get the file name using loadFileRepresentation
+            // Prefer a concrete image type if the provider advertises one.
+            // Screenshot drag thumbnails list a private identifier first, which
+            // would otherwise be loaded as a .dat blob and skip ImageProcessor.
+            if let imageType = preferredImageType(for: provider) {
+                provider.loadDataRepresentation(forTypeIdentifier: imageType.identifier) { [weak self] data, _ in
+                    guard let self, let data else { return }
+                    let ext = imageType.preferredFilenameExtension ?? "png"
+                    let fileName = "Image_\(UUID().uuidString).\(ext)"
+                    Task {
+                        try? await self.processData(data, fileType: imageType, fileName: fileName)
+                    }
+                }
+                continue
+            }
+
+            // Fall back: generic file representation for non-image files
             provider.loadFileRepresentation(forTypeIdentifier: UTType.item.identifier) { url, _ in
                 guard let url = url else { return }
-                
-                // Check file size before proceeding
+
                 guard let fileAttributes = try? FileManager.default.attributesOfItem(atPath: url.path),
                       let fileSize = fileAttributes[.size] as? Int,
                       fileSize <= Constants.maxFileSizeBytes else {
                     print("File size exceeds maximum limit")
                     return
                 }
-                
+
                 let fileName = url.lastPathComponent
                 let typeIdentifier = provider.registeredTypeIdentifiers.first
-                
+
                 provider.loadDataRepresentation(forTypeIdentifier: UTType.item.identifier) { data, error in
                     guard let data = data else {
                         print("Failed to load data representation")
                         return
                     }
-                    
+
                     Task { [weak self] in
                         guard let self else { return }
                         let fileType = typeIdentifier.flatMap { UTType($0) } ?? .data
@@ -118,8 +132,17 @@ extension InputManager {
                 }
             }
         }
-        
+
         return true
+    }
+
+    private func preferredImageType(for provider: NSItemProvider) -> UTType? {
+        // Specific types first, then a generic .image fallback so the
+        // most accurate extension wins when multiple are advertised.
+        let candidates: [UTType] = [.png, .jpeg, .heic, .heif, .gif, .tiff, .webP, .bmp, .image]
+        return candidates.first { type in
+            provider.hasItemConformingToTypeIdentifier(type.identifier)
+        }
     }
     
     func loadTransferredPhotos(from selectedPhotos: [PhotosPickerItem]) async throws {
