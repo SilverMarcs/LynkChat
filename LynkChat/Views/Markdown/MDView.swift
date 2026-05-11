@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftMarkdownView
 
 struct MDView: View {
     #if os(macOS)

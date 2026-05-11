@@ -76,7 +76,7 @@ struct AssistantMessage: View {
         } preview: {
             VStack(alignment: .leading, spacing: 8) {
                 AssistantLabel(model: message.model)
-                MDView(content: String(message.content.prefix(800)))
+                Text(String(message.content.prefix(800)))
             }
             .padding()
             .frame(maxWidth: 500)
