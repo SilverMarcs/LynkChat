@@ -1,201 +1,10 @@
+import Foundation
+
+#if os(macOS)
 import AppKit
-
-extension MarkdownSurface {
-    var blockFillColor: NSColor {
-        switch self {
-        case .window:
-            return .quaternarySystemFill
-        case .glass:
-            return NSColor(name: nil) { appearance in
-                let isDark = appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
-                return isDark
-                    ? NSColor(white: 1.0, alpha: 0.10)
-                    : NSColor(white: 0.0, alpha: 0.05)
-            }
-        }
-    }
-}
-
-final class MarkdownPlainTextView: NSTextView {
-    let markdownTextStorage = NSTextStorage()
-    let markdownLayoutManager = MarkdownLayoutManager()
-    let markdownTextContainer = NSTextContainer()
-
-    init() {
-        markdownLayoutManager.delegate = markdownLayoutManager
-        markdownLayoutManager.addTextContainer(markdownTextContainer)
-        markdownTextStorage.addLayoutManager(markdownLayoutManager)
-        super.init(frame: .zero, textContainer: markdownTextContainer)
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func menu(for event: NSEvent) -> NSMenu? {
-        markdownAncestorMenu(from: self)
-    }
-
-    override func copy(_ sender: Any?) {
-        let selection = selectedRange()
-        guard selection.length > 0 else { return }
-
-        let tableBlocks = markdownLayoutManager.tableBlocks
-        let intersecting = tableBlocks.filter {
-            NSIntersectionRange($0.range, selection).length > 0
-        }.sorted { $0.range.location < $1.range.location }
-
-        let hasThematicBreaks = Self.selectionContainsThematicBreak(
-            in: markdownTextStorage,
-            range: selection
-        )
-
-        guard !intersecting.isEmpty || hasThematicBreaks else {
-            super.copy(sender)
-            return
-        }
-
-        let fullString = markdownTextStorage.string as NSString
-        let selEnd = selection.location + selection.length
-        var plainText = ""
-        var html = ""
-        var cursor = selection.location
-
-        for table in intersecting {
-            let tableStart = table.range.location
-            let tableEnd = table.range.location + table.range.length
-
-            if cursor < tableStart {
-                let pre = fullString.substring(with: NSRange(location: cursor, length: min(tableStart, selEnd) - cursor))
-                plainText += pre
-                html += Self.htmlEscaped(pre)
-            }
-
-            let (tablePlain, tableHTML) = Self.tablePasteboardRepresentations(from: table.content)
-            plainText += tablePlain
-            html += tableHTML
-            cursor = min(tableEnd, selEnd)
-        }
-
-        if cursor < selEnd {
-            let post = fullString.substring(with: NSRange(location: cursor, length: selEnd - cursor))
-            plainText += post
-            html += Self.htmlEscaped(post)
-        }
-
-        if hasThematicBreaks {
-            plainText = Self.replaceThematicBreakCharacters(
-                in: plainText,
-                storage: markdownTextStorage,
-                selectionRange: selection
-            )
-        }
-
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString(plainText, forType: .string)
-        if let htmlData = html.data(using: .utf8) {
-            pasteboard.setData(htmlData, forType: .html)
-        }
-    }
-
-    private static func selectionContainsThematicBreak(
-        in storage: NSTextStorage,
-        range: NSRange
-    ) -> Bool {
-        var found = false
-        storage.enumerateAttribute(.markdownThematicBreak, in: range) { value, _, stop in
-            if value != nil {
-                found = true
-                stop.pointee = true
-            }
-        }
-        return found
-    }
-
-    private static func replaceThematicBreakCharacters(
-        in plainText: String,
-        storage: NSTextStorage,
-        selectionRange: NSRange
-    ) -> String {
-        // Collect character offsets within the selection that are thematic breaks
-        var breakOffsets: [Int] = []
-        storage.enumerateAttribute(.markdownThematicBreak, in: selectionRange) { value, range, _ in
-            guard value != nil else { return }
-            for i in 0..<range.length {
-                breakOffsets.append(range.location + i - selectionRange.location)
-            }
-        }
-
-        guard !breakOffsets.isEmpty else { return plainText }
-
-        let breakSet = Set(breakOffsets)
-        var result = ""
-        var utf16Offset = 0
-        for char in plainText {
-            if breakSet.contains(utf16Offset) && char == "\u{200B}" {
-                result += "---"
-            } else {
-                result += String(char)
-            }
-            utf16Offset += char.utf16.count
-        }
-        return result
-    }
-
-    private static func tablePasteboardRepresentations(from rawMarkdown: String) -> (plain: String, html: String) {
-        let lines = rawMarkdown.components(separatedBy: .newlines)
-        guard lines.count >= 2 else { return (rawMarkdown, htmlEscaped(rawMarkdown)) }
-
-        let headers = MarkdownTableBlock.parseCells(from: lines[0])
-        let bodyLines = lines.dropFirst(MarkdownTableBlock.isSeparatorLine(lines[1]) ? 2 : 1)
-        let rows = bodyLines.map { MarkdownTableBlock.parseCells(from: $0) }
-
-        var plain = headers.joined(separator: "\t")
-        for row in rows {
-            plain += "\n" + row.joined(separator: "\t")
-        }
-
-        var html = "<table><thead><tr>"
-        for header in headers {
-            html += "<th>\(htmlEscaped(header))</th>"
-        }
-        html += "</tr></thead><tbody>"
-        for row in rows {
-            html += "<tr>"
-            for cell in row {
-                html += "<td>\(htmlEscaped(cell))</td>"
-            }
-            html += "</tr>"
-        }
-        html += "</tbody></table>"
-
-        return (plain, html)
-    }
-
-    private static func htmlEscaped(_ string: String) -> String {
-        string
-            .replacingOccurrences(of: "&", with: "&amp;")
-            .replacingOccurrences(of: "<", with: "&lt;")
-            .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: "\"", with: "&quot;")
-    }
-
-    func update(document: MarkdownRenderedDocument) {
-        markdownLayoutManager.codeBlocks = document.codeBlocks
-        markdownLayoutManager.quoteBlocks = document.quoteBlocks
-        markdownLayoutManager.tableBlocks = document.tableBlocks
-        markdownLayoutManager.hasThematicBreaks = document.hasThematicBreaks
-        markdownTextStorage.setAttributedString(document.attributedString)
-    }
-
-
-    func codeBlockFrames() -> [(codeBlock: MarkdownCodeBlock, frame: NSRect)] {
-        markdownLayoutManager.codeBlockFrames(in: markdownTextContainer)
-    }
-
-}
+#else
+import UIKit
+#endif
 
 final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     private enum Layout {
@@ -209,9 +18,9 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     }
 
     var codeBlocks: [MarkdownCodeBlock] = []
-    var codeBlockBackgroundColor: NSColor = MarkdownSurface.window.blockFillColor
+    var codeBlockBackgroundColor: PlatformColor = .quaternarySystemFill
     var quoteBlocks: [MarkdownQuoteBlock] = []
-    var quoteLineColor: NSColor = .tertiaryLabelColor
+    var quoteLineColor: PlatformColor = .markdownTertiaryLabel
     var tableBlocks: [MarkdownTableBlock] = []
     var hasThematicBreaks = false
 
@@ -225,7 +34,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     func layoutManager(
         _ layoutManager: NSLayoutManager,
         lineSpacingAfterGlyphAt glyphIndex: Int,
-        withProposedLineFragmentRect rect: NSRect
+        withProposedLineFragmentRect rect: CGRect
     ) -> CGFloat {
         spacingAfterLineEndingGlyph(at: glyphIndex, keyPath: \.lineSpacing)
     }
@@ -233,7 +42,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     func layoutManager(
         _ layoutManager: NSLayoutManager,
         paragraphSpacingAfterGlyphAt glyphIndex: Int,
-        withProposedLineFragmentRect rect: NSRect
+        withProposedLineFragmentRect rect: CGRect
     ) -> CGFloat {
         guard lineEndsParagraph(at: glyphIndex) else { return 0 }
         guard !lineEndsDocument(at: glyphIndex) else { return 0 }
@@ -258,20 +67,16 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
                 continue
             }
 
-            let path = NSBezierPath(
-                roundedRect: blockRect,
-                xRadius: Layout.cornerRadius,
-                yRadius: Layout.cornerRadius
-            )
+            let path = PlatformBezierPath(roundedRect: blockRect, cornerRadius: Layout.cornerRadius)
             codeBlockBackgroundColor.setFill()
             path.fill()
-            NSColor.separatorColor.setStroke()
+            PlatformColor.markdownSeparator.setStroke()
             path.lineWidth = 1
             path.stroke()
         }
     }
 
-    func codeBlockFrames(in textContainer: NSTextContainer) -> [(codeBlock: MarkdownCodeBlock, frame: NSRect)] {
+    func codeBlockFrames(in textContainer: NSTextContainer) -> [(codeBlock: MarkdownCodeBlock, frame: CGRect)] {
         codeBlocks.compactMap { codeBlock in
             let glyphRange = glyphRange(forCharacterRange: codeBlock.range, actualCharacterRange: nil)
             guard glyphRange.length > 0,
@@ -285,8 +90,8 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
     private func codeBlockRect(
         forGlyphRange glyphRange: NSRange,
         at origin: CGPoint
-    ) -> NSRect? {
-        var unionRect: NSRect?
+    ) -> CGRect? {
+        var unionRect: CGRect?
         var maxUsedWidth: CGFloat = 0
 
         enumerateLineFragments(forGlyphRange: glyphRange) { lineRect, usedRect, _, effectiveGlyphRange, _ in
@@ -299,7 +104,7 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
         guard let unionRect else { return nil }
 
         let contentWidth = maxUsedWidth + Layout.codeBlockHorizontalPadding
-        return NSRect(
+        return CGRect(
             x: unionRect.minX,
             y: unionRect.minY - Layout.verticalPadding / 2,
             width: contentWidth,
@@ -328,17 +133,16 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
 
             for level in 0..<quoteBlock.depth {
                 let x = blockRect.minX + Layout.quoteLineInset + (CGFloat(level) * Layout.quoteIndentStep)
-                let lineRect = NSRect(
+                let lineRect = CGRect(
                     x: x,
                     y: blockRect.minY + Layout.quoteVerticalInset,
                     width: Layout.quoteLineWidth,
                     height: max(0, blockRect.height - (Layout.quoteVerticalInset * 2))
                 ).integral
 
-                NSBezierPath(
+                PlatformBezierPath(
                     roundedRect: lineRect,
-                    xRadius: Layout.quoteLineWidth / 2,
-                    yRadius: Layout.quoteLineWidth / 2
+                    cornerRadius: Layout.quoteLineWidth / 2
                 ).fill()
             }
         }
@@ -348,8 +152,8 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
         forGlyphRange glyphRange: NSRange,
         in textContainer: NSTextContainer,
         at origin: CGPoint
-    ) -> NSRect? {
-        var blockRect: NSRect?
+    ) -> CGRect? {
+        var blockRect: CGRect?
 
         enumerateLineFragments(forGlyphRange: glyphRange) { lineRect, _, _, effectiveGlyphRange, _ in
             guard NSIntersectionRange(effectiveGlyphRange, glyphRange).length > 0 else { return }
@@ -382,11 +186,11 @@ final class MarkdownLayoutManager: NSLayoutManager, NSLayoutManagerDelegate {
                 let lineX = adjustedRect.minX + textContainer.lineFragmentPadding
                 let lineWidth = adjustedRect.width - (textContainer.lineFragmentPadding * 2)
 
-                let linePath = NSBezierPath()
-                linePath.move(to: NSPoint(x: lineX, y: lineY))
-                linePath.line(to: NSPoint(x: lineX + lineWidth, y: lineY))
+                let linePath = PlatformBezierPath()
+                linePath.move(to: CGPoint(x: lineX, y: lineY))
+                linePath.addLineTo(CGPoint(x: lineX + lineWidth, y: lineY))
                 linePath.lineWidth = 1
-                NSColor.separatorColor.setStroke()
+                PlatformColor.markdownSeparator.setStroke()
                 linePath.stroke()
             }
         }

@@ -1,10 +1,14 @@
-import AppKit
 import Foundation
 import Highlightr
+import SwiftUI
+
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 struct MarkdownRenderedDocument: @unchecked Sendable {
-    // This is an immutable render snapshot that is produced off the main actor
-    // and then handed to the main actor for display without subsequent mutation.
     let attributedString: NSAttributedString
     let codeBlocks: [MarkdownCodeBlock]
     let quoteBlocks: [MarkdownQuoteBlock]
@@ -68,8 +72,8 @@ extension MarkdownRenderedDocument {
         return NSAttributedString(
             string: text,
             attributes: [
-                .font: NSFont.systemFont(ofSize: max(fontSize, 13), weight: .regular),
-                .foregroundColor: NSColor.labelColor,
+                .font: PlatformFont.systemFont(ofSize: max(fontSize, 13), weight: .regular),
+                .foregroundColor: PlatformColor.markdownLabel,
                 .paragraphStyle: plainTextParagraphStyle
             ]
         )
@@ -90,9 +94,16 @@ actor MarkdownHighlighterPool {
         language: String?,
         themeName: String
     ) -> MarkdownHighlightedCode? {
-        let highlighter = highlighter(for: themeName)
+        // Skip Highlightr when we don't know the language. Highlightr's default
+        // path with a nil/unknown hint runs auto-detection, scoring every grammar
+        // against the source — O(grammars × length) and brutal on large blocks.
+        guard let hint = language?.lowercased(),
+              let resolvedLanguage = Self.languageName(forHint: hint) else {
+            return nil
+        }
 
-        guard let highlighted = highlighter?.highlight(content, as: language) else {
+        let highlighter = highlighter(for: themeName)
+        guard let highlighted = highlighter?.highlight(content, as: resolvedLanguage, fastRender: true) else {
             return nil
         }
 
@@ -113,9 +124,59 @@ actor MarkdownHighlighterPool {
 
         return highlighter
     }
+
+    /// Maps a lowercased fence hint or file extension to a highlight.js language name.
+    /// Returning nil signals the caller to fall back to plain monospace styling.
+    private static func languageName(forHint hint: String) -> String? {
+        switch hint {
+        case "swift":                                          return "swift"
+        case "js", "javascript", "jsx", "mjs", "node":         return "javascript"
+        case "ts", "typescript", "tsx":                        return "typescript"
+        case "py", "python", "python3":                        return "python"
+        case "rb", "ruby":                                     return "ruby"
+        case "rs", "rust":                                     return "rust"
+        case "go", "golang":                                   return "go"
+        case "c", "h":                                         return "c"
+        case "cpp", "c++", "cxx", "cc", "hpp":                 return "cpp"
+        case "objc", "objectivec", "objective-c", "m", "mm":   return "objectivec"
+        case "java":                                           return "java"
+        case "kt", "kotlin", "kts":                            return "kotlin"
+        case "cs", "csharp", "c#":                             return "csharp"
+        case "php":                                            return "php"
+        case "sh", "bash", "shell", "shellscript", "zsh", "console": return "bash"
+        case "html", "htm":                                    return "xml"
+        case "xml", "svg", "plist":                            return "xml"
+        case "css":                                            return "css"
+        case "scss", "sass":                                   return "scss"
+        case "less":                                           return "less"
+        case "json":                                           return "json"
+        case "yml", "yaml":                                    return "yaml"
+        case "toml", "ini":                                    return "ini"
+        case "md", "markdown":                                 return "markdown"
+        case "sql":                                            return "sql"
+        case "r":                                              return "r"
+        case "lua":                                            return "lua"
+        case "pl", "perl", "pm":                               return "perl"
+        case "dart":                                           return "dart"
+        case "ex", "elixir", "exs":                            return "elixir"
+        case "erl", "erlang", "hrl":                           return "erlang"
+        case "hs", "haskell":                                  return "haskell"
+        case "scala":                                          return "scala"
+        case "tf", "terraform", "hcl":                         return "hcl"
+        case "dockerfile", "docker":                           return "dockerfile"
+        case "makefile", "make", "mk":                         return "makefile"
+        case "cmake":                                          return "cmake"
+        case "groovy", "gradle":                               return "groovy"
+        case "vim", "viml":                                    return "vim"
+        case "proto", "protobuf":                              return "protobuf"
+        case "graphql", "gql":                                 return "graphql"
+        case "diff", "patch":                                  return "diff"
+        default:                                               return nil
+        }
+    }
 }
 
-struct MacMarkdownRenderer: Sendable {
+struct MarkdownRenderer: Sendable {
     private enum Segment {
         case markdown(String)
         case codeBlock(String, language: String?)
@@ -180,18 +241,18 @@ struct MacMarkdownRenderer: Sendable {
     private let bodyFontSize: CGFloat
     private let codeFontSize: CGFloat
     private let themeName: String
-    private let surface: MarkdownSurface
+    nonisolated(unsafe) let codeBlockBackground: PlatformColor
     private nonisolated(unsafe) let cachedDefaultParagraphStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedCodeBlockParagraphStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedCodeBlockSpacerStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedTableSpacerStyle: NSParagraphStyle
     private nonisolated(unsafe) let cachedBulletMarkerWidth: CGFloat
 
-    nonisolated init(fontSize: CGFloat, themeName: String, surface: MarkdownSurface = .window) {
+    nonisolated init(fontSize: CGFloat, themeName: String, codeBlockBackground: Color) {
         bodyFontSize = max(fontSize, 13)
         codeFontSize = max(bodyFontSize - 1, 12)
         self.themeName = themeName
-        self.surface = surface
+        self.codeBlockBackground = PlatformColor(codeBlockBackground)
 
         let defaultStyle = NSMutableParagraphStyle()
         defaultStyle.lineSpacing = 4
@@ -209,8 +270,8 @@ struct MacMarkdownRenderer: Sendable {
         cachedCodeBlockSpacerStyle = Self.makeSpacerStyle(height: 8)
         cachedTableSpacerStyle = Self.makeSpacerStyle(height: 1)
 
-        let bodyFont = NSFont.systemFont(ofSize: bodyFontSize, weight: .regular)
-        cachedBulletMarkerWidth = "•".size(withAttributes: [.font: bodyFont]).width
+        let bodyFont = PlatformFont.systemFont(ofSize: bodyFontSize, weight: .regular)
+        cachedBulletMarkerWidth = ("•" as NSString).size(withAttributes: [.font: bodyFont]).width
     }
 
     private static func makeSpacerStyle(height: CGFloat) -> NSParagraphStyle {
@@ -325,8 +386,8 @@ struct MacMarkdownRenderer: Sendable {
         output.append(NSAttributedString(
             string: "\n\u{200B}",
             attributes: [
-                .font: NSFont.systemFont(ofSize: 0.1),
-                .foregroundColor: NSColor.clear,
+                .font: PlatformFont.systemFont(ofSize: 0.1),
+                .foregroundColor: PlatformColor.clear,
                 .paragraphStyle: style
             ]
         ))
@@ -353,7 +414,7 @@ struct MacMarkdownRenderer: Sendable {
         language: String?,
         blockID: Int
     ) async -> NSAttributedString {
-        let codeFont = NSFont.monospacedSystemFont(ofSize: codeFontSize, weight: .regular)
+        let codeFont = PlatformFont.monospacedSystemFont(ofSize: codeFontSize, weight: .regular)
         let output: NSMutableAttributedString
 
         if let highlighted = await MarkdownHighlighterPool.shared.highlightedCode(
@@ -365,7 +426,7 @@ struct MacMarkdownRenderer: Sendable {
         } else {
             output = NSMutableAttributedString(
                 string: content,
-                attributes: [.foregroundColor: NSColor.labelColor]
+                attributes: [.foregroundColor: PlatformColor.markdownLabel]
             )
         }
 
@@ -503,25 +564,48 @@ struct MacMarkdownRenderer: Sendable {
             row + Array(repeating: "", count: max(0, columnCount - row.count))
         }
 
+        #if os(macOS)
+        return renderedTableResultMac(
+            paddedHeaders: paddedHeaders,
+            paddedRows: paddedRows,
+            columnCount: columnCount,
+            blockID: blockID
+        )
+        #else
+        return renderedTableResultTabStops(
+            paddedHeaders: paddedHeaders,
+            paddedRows: paddedRows,
+            columnCount: columnCount,
+            blockID: blockID
+        )
+        #endif
+    }
+
+    #if os(macOS)
+    private nonisolated func renderedTableResultMac(
+        paddedHeaders: [String],
+        paddedRows: [[String]],
+        columnCount: Int,
+        blockID: Int
+    ) -> RenderedTableResult {
         let table = NSTextTable()
         table.numberOfColumns = columnCount
         table.setContentWidth(100, type: .percentageValueType)
         table.hidesEmptyCells = false
         table.collapsesBorders = true
 
-        let headerFont = NSFont.systemFont(ofSize: bodyFontSize, weight: .semibold)
+        let headerFont = PlatformFont.systemFont(ofSize: bodyFontSize, weight: .semibold)
         let cellFont = bodyFont()
 
-        // Measure max text width per column for proportional sizing
-        let cellPadding: CGFloat = 16 // 8 + 8
+        let cellPadding: CGFloat = 16
         var columnWidths = [CGFloat](repeating: 0, count: columnCount)
         for (col, header) in paddedHeaders.enumerated() {
-            let width = header.size(withAttributes: [.font: headerFont]).width + cellPadding
+            let width = (header as NSString).size(withAttributes: [.font: headerFont]).width + cellPadding
             columnWidths[col] = max(columnWidths[col], width)
         }
         for row in paddedRows {
             for (col, cell) in row.enumerated() {
-                let width = cell.size(withAttributes: [.font: cellFont]).width + cellPadding
+                let width = (cell as NSString).size(withAttributes: [.font: cellFont]).width + cellPadding
                 columnWidths[col] = max(columnWidths[col], width)
             }
         }
@@ -530,10 +614,10 @@ struct MacMarkdownRenderer: Sendable {
             ? columnWidths.map { ($0 / totalWidth) * 100 }
             : [CGFloat](repeating: 100 / CGFloat(columnCount), count: columnCount)
 
-        let alternateRowColor = surface.blockFillColor
+        let alternateRowColor = codeBlockBackground
         let output = NSMutableAttributedString()
 
-        func makeCellString(row: Int, col: Int, text: String, font: NSFont, isHeader: Bool) -> NSAttributedString {
+        func makeCellString(row: Int, col: Int, text: String, font: PlatformFont, isHeader: Bool) -> NSAttributedString {
             let block = NSTextTableBlock(
                 table: table,
                 startingRow: row,
@@ -550,12 +634,11 @@ struct MacMarkdownRenderer: Sendable {
             block.setWidth(8, type: .absoluteValueType, for: .padding, edge: .maxX)
 
             block.setWidth(0.5, type: .absoluteValueType, for: .border)
-            block.setBorderColor(.separatorColor)
+            block.setBorderColor(.markdownSeparator)
 
             if isHeader {
                 block.backgroundColor = alternateRowColor
             } else {
-                // row is 1-based for data rows; even data rows (row 2, 4, ...) get alternate bg
                 block.backgroundColor = row % 2 == 0 ? alternateRowColor : .clear
             }
 
@@ -564,7 +647,6 @@ struct MacMarkdownRenderer: Sendable {
             style.lineSpacing = 2
             style.lineBreakMode = .byWordWrapping
 
-            // Parse inline markdown (bold, italic, inline code)
             let cellContent: NSMutableAttributedString
             if let parsed = try? NSAttributedString(
                 markdown: text,
@@ -582,36 +664,33 @@ struct MacMarkdownRenderer: Sendable {
                 cellContent = NSMutableAttributedString(string: text)
             }
 
-            // Apply cell-level attributes
             let fullRange = NSRange(location: 0, length: cellContent.length)
             cellContent.addAttributes([
                 .paragraphStyle: style,
                 .markdownTableBlockID: blockID
             ], range: fullRange)
 
-            // Set base font for non-styled runs, preserve bold from normalization
             cellContent.enumerateAttribute(.font, in: fullRange) { value, range, _ in
-                guard let existingFont = value as? NSFont else {
+                guard let existingFont = value as? PlatformFont else {
                     cellContent.addAttribute(.font, value: font, range: range)
                     return
                 }
                 let traits = existingFont.fontDescriptor.symbolicTraits
-                if isHeader || traits.contains(.bold) {
-                    let weight: NSFont.Weight = .semibold
-                    if traits.contains(.monoSpace) {
-                        cellContent.addAttribute(.font, value: NSFont.monospacedSystemFont(ofSize: font.pointSize, weight: weight), range: range)
+                if isHeader || traits.contains(.markdownBold) {
+                    let weight: PlatformFont.Weight = .semibold
+                    if traits.contains(.markdownMonoSpace) {
+                        cellContent.addAttribute(.font, value: PlatformFont.monospacedSystemFont(ofSize: font.pointSize, weight: weight), range: range)
                     } else {
-                        cellContent.addAttribute(.font, value: NSFont.systemFont(ofSize: font.pointSize, weight: weight), range: range)
+                        cellContent.addAttribute(.font, value: PlatformFont.systemFont(ofSize: font.pointSize, weight: weight), range: range)
                     }
-                } else if !traits.contains(.monoSpace) {
+                } else if !traits.contains(.markdownMonoSpace) {
                     cellContent.addAttribute(.font, value: font, range: range)
                 }
             }
 
-            // Set foreground color only where not already set by inline code styling
             cellContent.enumerateAttribute(.foregroundColor, in: fullRange) { value, range, _ in
                 if value == nil {
-                    cellContent.addAttribute(.foregroundColor, value: NSColor.labelColor, range: range)
+                    cellContent.addAttribute(.foregroundColor, value: PlatformColor.markdownLabel, range: range)
                 }
             }
 
@@ -619,7 +698,7 @@ struct MacMarkdownRenderer: Sendable {
                 string: "\n",
                 attributes: [
                     .font: font,
-                    .foregroundColor: NSColor.labelColor,
+                    .foregroundColor: PlatformColor.markdownLabel,
                     .paragraphStyle: style,
                     .markdownTableBlockID: blockID
                 ]
@@ -645,6 +724,150 @@ struct MacMarkdownRenderer: Sendable {
             headerCharacterCount: headerCharCount
         )
     }
+    #endif
+
+    #if !os(macOS)
+    // iOS fallback: tab-stop-based layout with per-row background colors.
+    // NSTextTable / NSTextTableBlock are AppKit-only and not rendered by
+    // UITextView's TextKit, so we emulate a table by laying out cells with
+    // tab stops and shading rows via the .backgroundColor attribute.
+    private nonisolated func renderedTableResultTabStops(
+        paddedHeaders: [String],
+        paddedRows: [[String]],
+        columnCount: Int,
+        blockID: Int
+    ) -> RenderedTableResult {
+        let headerFont = PlatformFont.systemFont(ofSize: bodyFontSize, weight: .semibold)
+        let cellFont = bodyFont()
+        let cellPadding: CGFloat = 14
+
+        // Measure column widths.
+        var columnWidths = [CGFloat](repeating: 0, count: columnCount)
+        for (col, header) in paddedHeaders.enumerated() {
+            let w = (header as NSString).size(withAttributes: [.font: headerFont]).width + cellPadding
+            columnWidths[col] = max(columnWidths[col], w)
+        }
+        for row in paddedRows {
+            for (col, cell) in row.enumerated() {
+                let w = (cell as NSString).size(withAttributes: [.font: cellFont]).width + cellPadding
+                columnWidths[col] = max(columnWidths[col], w)
+            }
+        }
+
+        // Cumulative tab stop positions; column N text ends at stop N.
+        var tabLocations: [CGFloat] = []
+        var cumulative: CGFloat = 0
+        for width in columnWidths {
+            cumulative += width
+            tabLocations.append(cumulative)
+        }
+
+        let alternateRowColor = codeBlockBackground
+        let output = NSMutableAttributedString()
+
+        func rowParagraphStyle() -> NSParagraphStyle {
+            let style = NSMutableParagraphStyle()
+            style.lineSpacing = 2
+            style.paragraphSpacing = 0
+            style.paragraphSpacingBefore = 0
+            style.lineBreakMode = .byTruncatingTail
+            style.headIndent = 0
+            style.firstLineHeadIndent = 0
+            style.tabStops = tabLocations.map { NSTextTab(textAlignment: .left, location: $0) }
+            style.defaultTabInterval = tabLocations.last ?? 0
+            return style
+        }
+
+        let paragraphStyle = rowParagraphStyle()
+
+        func appendRow(cells: [String], font: PlatformFont, background: PlatformColor, isHeader: Bool) {
+            let rowStart = output.length
+
+            for (col, cell) in cells.enumerated() {
+                let cellAttributed: NSMutableAttributedString
+                if let parsed = try? NSAttributedString(
+                    markdown: cell,
+                    options: .init(
+                        allowsExtendedAttributes: true,
+                        interpretedSyntax: .inlineOnlyPreservingWhitespace,
+                        failurePolicy: .returnPartiallyParsedIfPossible
+                    ),
+                    baseURL: nil
+                ) {
+                    cellAttributed = NSMutableAttributedString(attributedString: parsed)
+                    normalizeFonts(in: cellAttributed)
+                    applyInlineCodeStyling(to: cellAttributed)
+                } else {
+                    cellAttributed = NSMutableAttributedString(string: cell)
+                }
+
+                let cellRange = NSRange(location: 0, length: cellAttributed.length)
+                cellAttributed.enumerateAttribute(.font, in: cellRange) { value, range, _ in
+                    guard let existing = value as? PlatformFont else {
+                        cellAttributed.addAttribute(.font, value: font, range: range)
+                        return
+                    }
+                    let traits = existing.fontDescriptor.symbolicTraits
+                    if isHeader || traits.contains(.markdownBold) {
+                        let weight: PlatformFont.Weight = .semibold
+                        if traits.contains(.markdownMonoSpace) {
+                            cellAttributed.addAttribute(.font, value: PlatformFont.monospacedSystemFont(ofSize: font.pointSize, weight: weight), range: range)
+                        } else {
+                            cellAttributed.addAttribute(.font, value: PlatformFont.systemFont(ofSize: font.pointSize, weight: weight), range: range)
+                        }
+                    } else if !traits.contains(.markdownMonoSpace) {
+                        cellAttributed.addAttribute(.font, value: font, range: range)
+                    }
+                }
+                cellAttributed.enumerateAttribute(.foregroundColor, in: cellRange) { value, range, _ in
+                    if value == nil {
+                        cellAttributed.addAttribute(.foregroundColor, value: PlatformColor.markdownLabel, range: range)
+                    }
+                }
+
+                output.append(cellAttributed)
+
+                if col < cells.count - 1 {
+                    output.append(NSAttributedString(
+                        string: "\t",
+                        attributes: [.font: font, .foregroundColor: PlatformColor.markdownLabel]
+                    ))
+                }
+            }
+
+            output.append(NSAttributedString(
+                string: "\n",
+                attributes: [.font: font, .foregroundColor: PlatformColor.markdownLabel]
+            ))
+
+            let rowRange = NSRange(location: rowStart, length: output.length - rowStart)
+            output.addAttributes([
+                .paragraphStyle: paragraphStyle,
+                .backgroundColor: background,
+                .markdownTableBlockID: blockID
+            ], range: rowRange)
+        }
+
+        appendRow(cells: paddedHeaders, font: headerFont, background: alternateRowColor, isHeader: true)
+        let headerCharCount = output.length
+
+        for (rowIdx, row) in paddedRows.enumerated() {
+            let background: PlatformColor = (rowIdx + 1) % 2 == 0 ? alternateRowColor : .clear
+            appendRow(cells: row, font: cellFont, background: background, isHeader: false)
+        }
+
+        // Strip the trailing newline so the spacer logic in render() controls bottom gap.
+        if output.length > 0,
+           (output.string as NSString).character(at: output.length - 1) == 0x0A {
+            output.deleteCharacters(in: NSRange(location: output.length - 1, length: 1))
+        }
+
+        return RenderedTableResult(
+            attributedString: output,
+            headerCharacterCount: headerCharCount
+        )
+    }
+    #endif
 
     private nonisolated func styledMarkdown(_ markdown: String) -> RenderedMarkdownResult {
         let parsed: NSMutableAttributedString
@@ -755,7 +978,7 @@ struct MacMarkdownRenderer: Sendable {
             currentString = NSMutableAttributedString()
         }
 
-        unsafe attributedString.enumerateAttributes(in: fullRange) { attributes, range, _ in
+        attributedString.enumerateAttributes(in: fullRange) { attributes, range, _ in
             let context = blockContext(for: attributes[.markdownPresentationIntent] as? PresentationIntent)
             let substring = NSMutableAttributedString(
                 attributedString: attributedString.attributedSubstring(from: range)
@@ -890,44 +1113,26 @@ struct MacMarkdownRenderer: Sendable {
     }
 
     private nonisolated func isParagraph(_ component: PresentationIntent.IntentType) -> Bool {
-        if case .paragraph = component.kind {
-            true
-        } else {
-            false
-        }
+        if case .paragraph = component.kind { true } else { false }
     }
 
     private nonisolated func isHeader(_ component: PresentationIntent.IntentType) -> Bool {
-        if case .header = component.kind {
-            true
-        } else {
-            false
-        }
+        if case .header = component.kind { true } else { false }
     }
 
     private nonisolated func isList(_ component: PresentationIntent.IntentType) -> Bool {
         switch component.kind {
-        case .orderedList, .unorderedList:
-            true
-        default:
-            false
+        case .orderedList, .unorderedList: true
+        default: false
         }
     }
 
     private nonisolated func isListItem(_ component: PresentationIntent.IntentType) -> Bool {
-        if case .listItem = component.kind {
-            true
-        } else {
-            false
-        }
+        if case .listItem = component.kind { true } else { false }
     }
 
     private nonisolated func isThematicBreak(_ component: PresentationIntent.IntentType) -> Bool {
-        if case .thematicBreak = component.kind {
-            true
-        } else {
-            false
-        }
+        if case .thematicBreak = component.kind { true } else { false }
     }
 
     private nonisolated func styledBlock(_ unit: RenderedTextUnit) -> NSAttributedString {
@@ -944,7 +1149,7 @@ struct MacMarkdownRenderer: Sendable {
                 paragraphStyle(),
                 adjustedForQuoteDepth: unit.context.quoteDepth
             )
-            let foregroundColor = unit.context.quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor
+            let foregroundColor = unit.context.quoteDepth > 0 ? quoteTextColor() : PlatformColor.markdownLabel
 
             output.addAttribute(.paragraphStyle, value: paragraphStyle, range: output.fullRange)
             output.addAttribute(.foregroundColor, value: foregroundColor, range: output.fullRange)
@@ -969,7 +1174,7 @@ struct MacMarkdownRenderer: Sendable {
             listParagraphStyle(markerIndent: markerIndent, marker: marker),
             adjustedForQuoteDepth: unit.context.quoteDepth
         )
-        let foregroundColor = unit.context.quoteDepth > 0 ? quoteTextColor() : NSColor.labelColor
+        let foregroundColor = unit.context.quoteDepth > 0 ? quoteTextColor() : PlatformColor.markdownLabel
 
         let output = NSMutableAttributedString(
             string: "\(marker)\t",
@@ -999,8 +1204,8 @@ struct MacMarkdownRenderer: Sendable {
         return NSAttributedString(
             string: "\u{200B}",
             attributes: [
-                .font: NSFont.systemFont(ofSize: 1),
-                .foregroundColor: NSColor.clear,
+                .font: PlatformFont.systemFont(ofSize: 1),
+                .foregroundColor: PlatformColor.clear,
                 .paragraphStyle: adjustedStyle,
                 .markdownThematicBreak: true
             ]
@@ -1023,19 +1228,18 @@ struct MacMarkdownRenderer: Sendable {
             return
         }
 
-        unsafe attributedString.enumerateAttribute(.font, in: fullRange) { value, range, _ in
-            guard let font = value as? NSFont else {
+        attributedString.enumerateAttribute(.font, in: fullRange) { value, range, _ in
+            guard let font = value as? PlatformFont else {
                 attributedString.addAttribute(.font, value: bodyFont(), range: range)
                 return
             }
 
             let traits = font.fontDescriptor.symbolicTraits
 
-            // Skip monospace ranges — applyInlineCodeStyling handles inline code fonts
-            guard !traits.contains(.monoSpace) else { return }
+            guard !traits.contains(.markdownMonoSpace) else { return }
 
-            let weight: NSFont.Weight = traits.contains(.bold) ? .semibold : .regular
-            attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: bodyFontSize, weight: weight), range: range)
+            let weight: PlatformFont.Weight = traits.contains(.markdownBold) ? .semibold : .regular
+            attributedString.addAttribute(.font, value: PlatformFont.systemFont(ofSize: bodyFontSize, weight: weight), range: range)
         }
     }
 
@@ -1043,7 +1247,7 @@ struct MacMarkdownRenderer: Sendable {
         let fullRange = attributedString.fullRange
         guard fullRange.length > 0 else { return }
 
-        unsafe attributedString.enumerateAttribute(.markdownInlinePresentationIntent, in: fullRange) { value, range, _ in
+        attributedString.enumerateAttribute(.markdownInlinePresentationIntent, in: fullRange) { value, range, _ in
             let isInlineCode: Bool
             if let intent = value as? InlinePresentationIntent {
                 isInlineCode = intent.contains(.code)
@@ -1056,17 +1260,17 @@ struct MacMarkdownRenderer: Sendable {
                 return
             }
 
-            let weight: NSFont.Weight
-            if let existingFont = attributedString.attribute(.font, at: range.location, effectiveRange: nil) as? NSFont,
-               existingFont.fontDescriptor.symbolicTraits.contains(.bold) {
+            let weight: PlatformFont.Weight
+            if let existingFont = attributedString.attribute(.font, at: range.location, effectiveRange: nil) as? PlatformFont,
+               existingFont.fontDescriptor.symbolicTraits.contains(.markdownBold) {
                 weight = .semibold
             } else {
                 weight = .regular
             }
 
             attributedString.addAttributes([
-                .font: NSFont.monospacedSystemFont(ofSize: bodyFontSize, weight: weight),
-                .foregroundColor: NSColor.controlAccentColor
+                .font: PlatformFont.monospacedSystemFont(ofSize: bodyFontSize, weight: weight),
+                .foregroundColor: PlatformColor.markdownAccent
             ], range: range)
         }
     }
@@ -1105,10 +1309,8 @@ struct MacMarkdownRenderer: Sendable {
 
     private nonisolated func markerText(for marker: BlockContext.ListContext.Marker) -> String {
         switch marker {
-        case .bullet:
-            "•"
-        case .ordered(let value):
-            "\(value)."
+        case .bullet: "•"
+        case .ordered(let value): "\(value)."
         }
     }
 
@@ -1116,8 +1318,8 @@ struct MacMarkdownRenderer: Sendable {
         cachedDefaultParagraphStyle
     }
 
-    private nonisolated func quoteTextColor() -> NSColor {
-        NSColor.secondaryLabelColor
+    private nonisolated func quoteTextColor() -> PlatformColor {
+        PlatformColor.markdownSecondaryLabel
     }
 
     private nonisolated func listParagraphStyle(markerIndent: CGFloat, marker: String) -> NSParagraphStyle {
@@ -1126,7 +1328,7 @@ struct MacMarkdownRenderer: Sendable {
         if marker == "•" {
             markerWidth = cachedBulletMarkerWidth
         } else {
-            markerWidth = marker.size(withAttributes: [.font: bodyFont()]).width
+            markerWidth = (marker as NSString).size(withAttributes: [.font: bodyFont()]).width
         }
         let contentIndent = markerIndent + markerWidth + 10
         style.firstLineHeadIndent = markerIndent
@@ -1152,7 +1354,7 @@ struct MacMarkdownRenderer: Sendable {
         return style
     }
 
-    private nonisolated func headingFont(for level: Int) -> NSFont {
+    private nonisolated func headingFont(for level: Int) -> PlatformFont {
         switch level {
         case 1: return .systemFont(ofSize: bodyFontSize + 11, weight: .bold)
         case 2: return .systemFont(ofSize: bodyFontSize + 6, weight: .bold)
@@ -1162,14 +1364,8 @@ struct MacMarkdownRenderer: Sendable {
         }
     }
 
-    private nonisolated func bodyFont() -> NSFont {
+    private nonisolated func bodyFont() -> PlatformFont {
         .systemFont(ofSize: bodyFontSize, weight: .regular)
-    }
-}
-
-private extension NSAttributedString {
-    nonisolated var fullRange: NSRange {
-        NSRange(location: 0, length: length)
     }
 }
 
@@ -1177,7 +1373,7 @@ extension NSAttributedString.Key {
     fileprivate nonisolated static let markdownInlinePresentationIntent = Self("NSInlinePresentationIntent")
     fileprivate nonisolated static let markdownListItemDelimiter = Self("NSListItemDelimiter")
     fileprivate nonisolated static let markdownPresentationIntent = Self("NSPresentationIntent")
-    fileprivate nonisolated static let markdownCodeBlockID = Self("LynkChatMarkdownCodeBlockID")
-    fileprivate nonisolated static let markdownTableBlockID = Self("LynkChatMarkdownTableBlockID")
-    static let markdownThematicBreak = Self("LynkChatMarkdownThematicBreak")
+    nonisolated static let markdownCodeBlockID = Self("LynkChatMarkdownCodeBlockID")
+    nonisolated static let markdownTableBlockID = Self("LynkChatMarkdownTableBlockID")
+    nonisolated static let markdownThematicBreak = Self("LynkChatMarkdownThematicBreak")
 }

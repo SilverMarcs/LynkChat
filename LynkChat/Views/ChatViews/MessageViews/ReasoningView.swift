@@ -28,8 +28,7 @@ struct ReasoningView: View {
         .buttonBorderShape(.roundedRectangle)
         .popover(isPresented: $showArguments) {
             ScrollView {
-                NativeMarkdownView(text: reason)
-                    .textSelection(.enabled)
+                MDView(content: reason)
             }
             .presentationDragIndicator(.visible)
             .presentationDetents([.medium])

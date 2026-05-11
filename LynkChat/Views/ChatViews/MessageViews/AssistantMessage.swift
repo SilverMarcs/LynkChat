@@ -30,17 +30,12 @@ struct AssistantMessage: View {
             
                 MDView(
                     content: message.content,
-                    isStreaming: message.isReplying,
-                    calculatedHeight: $height
+                    onHeightChange: { newHeight in
+                        height = newHeight
+                    }
                 )
                     .transaction { $0.animation = nil }
                     #if os(macOS)
-//                    .frame(height: message.height, alignment: .top)
-//                    .onChange(of: height) {
-//                        if height > 0 {
-//                            message.height = height
-//                        }
-//                    }
                     .frame(height: message.height > 0 ? message.height : nil, alignment: .top)
                     .onChange(of: height) { _, newHeight in
                         guard newHeight > 0, message.height != newHeight else { return }
@@ -81,7 +76,7 @@ struct AssistantMessage: View {
         } preview: {
             VStack(alignment: .leading, spacing: 8) {
                 AssistantLabel(model: message.model)
-                NativeMarkdownView(text: String(message.content.prefix(800)))
+                MDView(content: String(message.content.prefix(800)))
             }
             .padding()
             .frame(maxWidth: 500)
