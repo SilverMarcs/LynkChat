@@ -22,8 +22,6 @@ struct WindowScenesCollection: Scene {
 
         AboutWindow()
 
-        HelpWindow()
-
         MenuBarExtra("LynkChat", systemImage: "bolt.fill", isInserted: $hideDockIconWhenWindowClosed) {
             MenuBarExtraContent()
         }

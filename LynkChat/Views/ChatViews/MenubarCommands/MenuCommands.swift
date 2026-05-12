@@ -23,25 +23,23 @@ struct MenuCommands: Commands {
 //        ToolbarCommands()
         
         CommandGroup(replacing: .appInfo) {
-            Button("About LynkChat") {
+            Button {
                 openWindow(id: WindowID.about)
+            } label: {
+                Label("About LynkChat", systemImage: "info.circle")
             }
         }
-        
-        CommandGroup(replacing: .help) {
-            Button("LynkChat Help") {
-                openWindow(id: WindowID.help)
-            }
-        }
-        
+
         #if os(macOS)
         CommandGroup(before: .appSettings) {
-            Button("Settings") {
+            Button {
                 openWindow(id: WindowID.settings)
+            } label: {
+                Label("Settings", systemImage: "gearshape")
             }
             .keyboardShortcut(",", modifiers: .command)
         }
-        
+
         #endif
     }
 }

@@ -15,31 +15,41 @@ struct ChatCommands: Commands {
     
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
-            Button("New Chat") {
+            Button {
                 chatVM.createNewChat()
+            } label: {
+                Label("New Chat", systemImage: "square.and.pencil")
             }
             .keyboardShortcut("n")
-            
-            Button("Temporary Chat") {
+
+            Button {
                 chatVM.createTemporaryChat()
+            } label: {
+                Label("Temporary Chat", systemImage: "bubble.left.and.bubble.right")
             }
             .keyboardShortcut("n", modifiers: [.command, .shift])
         }
-        
+
         CommandGroup(before: .toolbar) {
             Section {
-                Button("Actual Size") {
+                Button {
                     resetFontSize()
+                } label: {
+                    Label("Actual Size", systemImage: "1.magnifyingglass")
                 }
                 .keyboardShortcut("o", modifiers: .command)
-                
-                Button("Zoom In") {
+
+                Button {
                     increaseFontSize()
+                } label: {
+                    Label("Zoom In", systemImage: "plus.magnifyingglass")
                 }
                 .keyboardShortcut("+", modifiers: .command)
-                
-                Button("Zoom Out") {
+
+                Button {
                     decreaseFontSize()
+                } label: {
+                    Label("Zoom Out", systemImage: "minus.magnifyingglass")
                 }
                 .keyboardShortcut("-", modifiers: .command)
             }
