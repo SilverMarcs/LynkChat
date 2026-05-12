@@ -16,6 +16,7 @@ struct ChatWindow: Scene {
         .defaultSize(.init(width: 1200, height: 900))
         .commands {
             ChatCommands()
+            ChatActionCommands()
         }
 
         WindowGroup(for: Chat.ID.self) { $id in

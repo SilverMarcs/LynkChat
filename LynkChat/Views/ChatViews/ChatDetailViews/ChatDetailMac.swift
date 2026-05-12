@@ -8,46 +8,58 @@
 import SwiftUI
 
 struct ChatDetailMac: View {
+    @Environment(ChatVM.self) var chatVM
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.modelContext) var modelContext
     var chat: Chat
     
     @Namespace var inputNS
+    @State private var isPreparingInitialScroll = true
     
     var body: some View {
         ScrollViewReader { proxy in
             List {
-//                LazyVStack {
-//                VStack {
-                    ForEach(chat.currentThread, id: \.self) { group in
-                        MessageView(group: group)
-                            .environment(\.chat, chat)
-                            .listRowSeparator(.hidden)
-                    }
-                    
-                    ErrorMessageView(chat: chat)
-                    .listRowSeparator(.hidden)
-                    
-                    Color.clear
-                        .frame(height: chat.expandColor
-                               ? (chat.status == .quick ? 250 : 475)
-                               : 1)
-                        .id(String.bottomID)
+                ForEach(chat.currentThread, id: \.self) { group in
+                    MessageView(group: group)
+                        .environment(\.chat, chat)
                         .listRowSeparator(.hidden)
-//                }
+                }
+                
+                ErrorMessageView(chat: chat)
+                .listRowSeparator(.hidden)
+                
+                Color.clear
+                    .frame(height: chat.expandColor
+                           ? (chat.status == .quick ? 250 : 475)
+                           : 1)
+                    .id(String.bottomID)
+                    .listRowSeparator(.hidden)
             }
             .overlay(alignment: .center) {
                 if chat.isEmpty {
                     EmptyChat(chat: chat, namespace: inputNS)
                 }
             }
-//            .contentMargins(.all, 15, for: .scrollContent)
+            .overlay {
+                if isPreparingInitialScroll && !chat.isEmpty {
+                    ZStack {
+                        Rectangle().fill(.background)
+                        ProgressView().controlSize(.large)
+                    }
+                    .ignoresSafeArea()
+                }
+            }
             .navigationTitle(horizontalSizeClass == .compact ? chat.config.model.name : chat.title)
             .navigationSubtitle(chat.config.systemPrompt.prefix(100))
-            .task {
+            .task(id: chat.id) {
+                isPreparingInitialScroll = true
                 chat.expandColor = false
                 chat.scrollProxy = proxy
-                proxy.scrollTo(String.bottomID, anchor: .bottom)
+                try? await Task.sleep(for: .milliseconds(50))
+                Scroller.scrollToBottom(with: proxy, animated: false)
+                try? await Task.sleep(for: .milliseconds(100))
+                guard !Task.isCancelled else { return }
+                isPreparingInitialScroll = false
             }
             .onDisappear {
                 if chat.status == .temporary {
@@ -57,10 +69,12 @@ struct ChatDetailMac: View {
             .toolbar {
                 ChatToolbar(chat: chat)
             }
+            .focusedSceneValue(\.activeChat, chat)
             .safeAreaBar(edge: .bottom) {
                 if !chat.isEmpty && chat.status != .quick {
                     InputArea(chat: chat)
-                        .matchedGeometryEffect(id: "input", in: inputNS)
+                    .id(chat.id)
+                    .matchedGeometryEffect(id: "input", in: inputNS)
                 }
             }
 //            .onScrollPhaseChange { oldPhase, newPhase in

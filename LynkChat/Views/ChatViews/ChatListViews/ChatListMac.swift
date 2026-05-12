@@ -27,7 +27,7 @@ struct ChatListMac: View {
                 ChatListRow(chat: chat)
                     .tag(chat)
                     .deleteDisabled(chat.status == .starred)
-                    .listRowSeparator(.visible)
+                    // .listRowSeparator(.visible)
             }
             .onDelete(perform: deleteItems)
         }

@@ -19,7 +19,7 @@ struct ChatDetail: View {
             ChatDetailMobile(chat: chat)
             #endif
         }
-        .id(chat.id)
+        // .id(chat.id)
         // TODO: fix this
         .onDrop(of: [.item], isTargeted: nil) { providers in
             do {

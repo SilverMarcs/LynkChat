@@ -78,7 +78,7 @@ final class Chat: Equatable, Identifiable, Hashable {
     @MainActor
     func processRequest(message: Message, user: Message) async {
         expandColor = true
-        Scroller.scrollToBottom(with: scrollProxy)
+        Scroller.scrollToBottom(with: scrollProxy, delay: 0.1)
         
         // Cancel any existing task first and wait for it to complete
         streamingTask?.cancel()
