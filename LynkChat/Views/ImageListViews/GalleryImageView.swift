@@ -15,16 +15,17 @@ struct GalleryImageView: View {
         if let data, let platformImage = PlatformImage(data: data) {
             Image(platformImage: platformImage)
                 .resizable()
-                 .scaledToFit()
-                 .overlay(alignment: .topTrailing) {
-                     Button(action: saveImage) {
-                         Image(systemName: showCheckmark ? "checkmark" : "square.and.arrow.down")
-                     }
-                     .buttonStyle(.glass)
-                     .controlSize(.large)
-                     .buttonBorderShape(.circle)
-                     .padding(10)
-                 }
+                .scaledToFit()
+                .zoomable()
+                .overlay(alignment: .topTrailing) {
+                    Button(action: saveImage) {
+                        Image(systemName: showCheckmark ? "checkmark" : "square.and.arrow.down")
+                    }
+                    .buttonStyle(.glass)
+                    .controlSize(.large)
+                    .buttonBorderShape(.circle)
+                    .padding(10)
+                }
         }
     }
     

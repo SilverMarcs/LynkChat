@@ -21,7 +21,6 @@ struct ImageGalleryModal: View {
     var body: some View {
         #if os(macOS)
         GalleryImageView(data: generations[selectedIndex].image)
-            .zoomable()
             .overlay {
                 HStack {
                     Button(action: previous) { Image(systemName: "chevron.left") }
@@ -41,7 +40,6 @@ struct ImageGalleryModal: View {
             ForEach(generations.indices, id: \.self) { idx in
                 GalleryImageView(data: generations[idx].image)
                     .tag(idx)
-                    .zoomable()
             }
         }
         .tabViewStyle(.page)

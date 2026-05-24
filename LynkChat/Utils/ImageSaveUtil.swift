@@ -20,26 +20,20 @@ enum ImageSaveUtil {
     }
     
     private static func saveToPhotos(data: Data, completion: @escaping (Bool) -> Void) {
-        guard let image = PlatformImage(data: data) else {
-            completion(false)
-            return
-        }
-        
         PHPhotoLibrary.requestAuthorization { status in
             guard status == .authorized else {
                 completion(false)
                 return
             }
-            
+
             PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.creationRequestForAsset(from: image)
+                let request = PHAssetCreationRequest.forAsset()
+                request.addResource(with: .photo, data: data, options: nil)
             }) { success, error in
-                if success {
-                    completion(true)
-                } else if let error = error {
+                if let error = error {
                     print(error.localizedDescription)
-                    completion(false)
                 }
+                completion(success)
             }
         }
     }
